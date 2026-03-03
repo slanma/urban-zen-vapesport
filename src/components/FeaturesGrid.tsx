@@ -1,8 +1,16 @@
-import { Shield, Grip, Droplets, Maximize, Wind, Recycle } from "lucide-react";
+import { Shield, Droplets, Maximize, Wind, Recycle } from "lucide-react";
+import gekkoGripIcon from "@/assets/icon-gekkogrip.jpeg";
 
-const features = [
+type FeatureItem = {
+  icon?: React.ComponentType<{ className?: string }>;
+  image?: string;
+  title: string;
+  description: string;
+};
+
+const features: FeatureItem[] = [
   {
-    icon: Grip,
+    image: gekkoGripIcon,
     title: "GekkoGrip™",
     description: "Pevné uchycení, které hýčká lak.",
   },
@@ -51,8 +59,12 @@ const FeaturesGrid = () => {
               className="group flex flex-col items-center text-center p-8 rounded-2xl bg-card hover:bg-secondary transition-colors duration-300"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-                <feature.icon className="w-7 h-7 text-muted-foreground group-hover:text-primary-foreground transition-colors duration-300" />
+              <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center mb-6 bg-secondary group-hover:bg-primary transition-colors duration-300">
+                {feature.image ? (
+                  <img src={feature.image} alt={feature.title} className="w-full h-full object-cover" />
+                ) : feature.icon ? (
+                  <feature.icon className="w-7 h-7 text-muted-foreground group-hover:text-primary-foreground transition-colors duration-300" />
+                ) : null}
               </div>
               <h3 className="font-heading font-semibold text-lg text-foreground mb-2">
                 {feature.title}
