@@ -1,30 +1,28 @@
-import heroProduct from "@/assets/hero-product-v2.jpg";
+import heroComposite from "@/assets/hero-composite.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-start pt-32 md:pt-36 bg-gradient-to-b from-[hsl(0_0%_92%)] via-[hsl(0_0%_90%)] to-background overflow-hidden">
-      <div className="container mx-auto px-4 text-center flex-1 flex flex-col items-center justify-center -mt-8">
-        <h1 className="text-[clamp(2.8rem,8vw,8rem)] font-heading font-bold tracking-[-0.02em] text-foreground leading-[0.92] mb-6 animate-fade-in-up">
+    <section className="relative min-h-screen flex flex-col items-center justify-start pt-24 bg-gradient-to-b from-[hsl(0_0%_93%)] via-[hsl(0_0%_91%)] to-[hsl(40_5%_88%)] overflow-hidden">
+      <div className="container mx-auto px-4 text-center flex flex-col items-center mt-16 md:mt-24">
+        <h1 className="text-[clamp(2.2rem,7vw,7rem)] font-heading font-bold tracking-[-0.02em] text-[hsl(0_0%_15%)] leading-[0.9] mb-5 whitespace-nowrap">
           KVALITA VRYTÁ DO KÓDU
         </h1>
-        <p className="text-base sm:text-lg md:text-xl text-muted-foreground font-body font-medium tracking-[0.25em] mb-10 animate-fade-in-up uppercase" style={{ animationDelay: "0.15s" }}>
+        <p className="text-sm sm:text-base md:text-lg text-[hsl(0_0%_30%)] font-body font-medium tracking-[0.3em] mb-8 uppercase">
           3 ROKY. 0 REKLAMACÍ.
         </p>
-        <div className="animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-          <a
-            href="#kolekce"
-            className="inline-block bg-primary text-primary-foreground font-body font-semibold text-sm tracking-[0.15em] uppercase px-10 py-4 rounded-lg hover:bg-moss-light transition-colors duration-200"
-          >
-            PROZKOUMAT KOLEKCI
-          </a>
-        </div>
+        <a
+          href="#kolekce"
+          className="inline-block bg-[hsl(100_20%_38%)] text-primary-foreground font-body font-semibold text-[13px] tracking-[0.18em] uppercase px-9 py-3.5 rounded-md hover:bg-[hsl(100_20%_44%)] transition-colors duration-200"
+        >
+          PROZKOUMAT KOLEKCI
+        </a>
       </div>
 
-      {/* Product hero image – wider, overlapping bottom */}
-      <div className="w-full max-w-4xl mx-auto px-4 -mb-4 animate-fade-in-up" style={{ animationDelay: "0.45s" }}>
+      {/* Product image – fills bottom of viewport */}
+      <div className="mt-auto w-full max-w-4xl mx-auto px-4 pt-8">
         <img
-          src={heroProduct}
-          alt="Morseovape pouzdro na betonovém podstavci obklopené mechem"
+          src={heroComposite}
+          alt="Morseovape brašna na betonovém podstavci s mechem"
           className="w-full h-auto object-contain"
           loading="eager"
         />
