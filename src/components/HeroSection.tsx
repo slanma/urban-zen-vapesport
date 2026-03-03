@@ -1,8 +1,8 @@
-import heroComposite from "@/assets/hero-composite.jpg";
+import heroFinal from "@/assets/hero-final.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-start pt-24 bg-gradient-to-b from-[hsl(0_0%_93%)] via-[hsl(0_0%_91%)] to-[hsl(40_5%_88%)] overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-start pt-24 bg-[hsl(0_0%_92%)] overflow-hidden">
       <div className="container mx-auto px-4 text-center flex flex-col items-center mt-16 md:mt-24">
         <h1 className="text-[clamp(2.2rem,7vw,7rem)] font-heading font-bold tracking-[-0.02em] text-[hsl(0_0%_15%)] leading-[0.9] mb-5 whitespace-nowrap">
           KVALITA VRYTÁ DO KÓDU
@@ -18,12 +18,12 @@ const HeroSection = () => {
         </a>
       </div>
 
-      {/* Product image – fills bottom of viewport */}
-      <div className="mt-auto w-full max-w-4xl mx-auto px-4 pt-8">
+      {/* Product – seamlessly integrated into the background */}
+      <div className="mt-auto w-full flex justify-center pt-8">
         <img
-          src={heroComposite}
+          src={heroFinal}
           alt="Morseovape brašna na betonovém podstavci s mechem"
-          className="w-full h-auto object-contain"
+          className="w-full max-w-[900px] h-auto object-contain"
           loading="eager"
         />
       </div>
