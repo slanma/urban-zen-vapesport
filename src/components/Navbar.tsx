@@ -16,8 +16,8 @@ const Navbar = () => {
   return (
     <header className="absolute top-0 left-0 right-0 z-50 bg-transparent">
       <nav className="flex items-center justify-between h-20 px-6 lg:px-12 max-w-[1600px] mx-auto">
-        {/* Logo – bold italic like original */}
-        <a href="#" className="font-heading text-2xl font-bold italic text-foreground tracking-tight">
+        {/* Logo – bold upright */}
+        <a href="#" className="font-heading text-2xl font-bold text-foreground tracking-tight">
           Vapesport
         </a>
 
