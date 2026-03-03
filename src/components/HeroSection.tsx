@@ -1,28 +1,27 @@
-import heroProduct from "@/assets/hero-product.jpg";
+import heroProduct from "@/assets/hero-product-v2.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-16 bg-gradient-to-b from-concrete-light to-background overflow-hidden">
-      <div className="container mx-auto px-4 text-center">
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-bold tracking-tight text-foreground leading-[0.95] animate-fade-in-up mb-6">
-          KVALITA VRYTÁ
-          <br />
-          DO KÓDU
+    <section className="relative min-h-screen flex flex-col items-center justify-start pt-32 md:pt-36 bg-gradient-to-b from-[hsl(0_0%_92%)] via-[hsl(0_0%_90%)] to-background overflow-hidden">
+      <div className="container mx-auto px-4 text-center flex-1 flex flex-col items-center justify-center -mt-8">
+        <h1 className="text-[clamp(2.8rem,8vw,8rem)] font-heading font-bold tracking-[-0.02em] text-foreground leading-[0.92] mb-6 animate-fade-in-up">
+          KVALITA VRYTÁ DO KÓDU
         </h1>
-        <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-heading font-medium tracking-widest mb-10 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-          3 ROKY NA TRHU. 0 REKLAMACÍ.
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground font-body font-medium tracking-[0.25em] mb-10 animate-fade-in-up uppercase" style={{ animationDelay: "0.15s" }}>
+          3 ROKY. 0 REKLAMACÍ.
         </p>
-        <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+        <div className="animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
           <a
             href="#kolekce"
-            className="inline-block bg-primary text-primary-foreground font-heading font-semibold text-sm tracking-widest uppercase px-10 py-4 rounded-lg hover:bg-moss-light transition-colors"
+            className="inline-block bg-primary text-primary-foreground font-body font-semibold text-sm tracking-[0.15em] uppercase px-10 py-4 rounded-lg hover:bg-moss-light transition-colors duration-200"
           >
             PROZKOUMAT KOLEKCI
           </a>
         </div>
       </div>
 
-      <div className="mt-12 md:mt-16 w-full max-w-lg mx-auto animate-scale-in" style={{ animationDelay: "0.6s" }}>
+      {/* Product hero image – wider, overlapping bottom */}
+      <div className="w-full max-w-4xl mx-auto px-4 -mb-4 animate-fade-in-up" style={{ animationDelay: "0.45s" }}>
         <img
           src={heroProduct}
           alt="Morseovape pouzdro na betonovém podstavci obklopené mechem"
