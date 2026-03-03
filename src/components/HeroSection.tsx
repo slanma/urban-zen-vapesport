@@ -1,31 +1,32 @@
-import heroFinal from "@/assets/hero-final.jpg";
+import heroBg from "@/assets/hero-bg-clean.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-start pt-24 bg-[hsl(0_0%_92%)] overflow-hidden">
-      <div className="container mx-auto px-4 text-center flex flex-col items-center mt-16 md:mt-24">
-        <h1 className="text-[clamp(2.2rem,7vw,7rem)] font-heading font-bold tracking-[-0.02em] text-[hsl(0_0%_15%)] leading-[0.9] mb-5 whitespace-nowrap">
+    <section className="relative w-full min-h-screen overflow-hidden bg-[hsl(0_0%_95%)]">
+      {/* Full background image – product scene without text */}
+      <div className="absolute inset-0">
+        <img
+          src={heroBg}
+          alt="Morseovape brašna na betonovém podstavci s mechem"
+          className="w-full h-full object-cover object-center"
+          loading="eager"
+        />
+      </div>
+
+      {/* Text overlay matching reference position */}
+      <div className="relative z-10 flex flex-col items-center text-center pt-[14vh] md:pt-[13vh] px-4">
+        <h1 className="text-[clamp(2rem,7.5vw,7.5rem)] font-heading font-extrabold tracking-[-0.01em] text-[hsl(0_0%_12%)] leading-[0.92] mb-4">
           KVALITA VRYTÁ DO KÓDU
         </h1>
-        <p className="text-sm sm:text-base md:text-lg text-[hsl(0_0%_30%)] font-body font-medium tracking-[0.3em] mb-8 uppercase">
+        <p className="text-[clamp(0.75rem,1.4vw,1.1rem)] text-[hsl(0_0%_25%)] font-body font-medium tracking-[0.35em] mb-7 uppercase">
           3 ROKY. 0 REKLAMACÍ.
         </p>
         <a
           href="#kolekce"
-          className="inline-block bg-[hsl(100_20%_38%)] text-primary-foreground font-body font-semibold text-[13px] tracking-[0.18em] uppercase px-9 py-3.5 rounded-md hover:bg-[hsl(100_20%_44%)] transition-colors duration-200"
+          className="inline-block bg-[hsl(135_14%_33%)] text-[hsl(0_0%_100%)] font-body font-semibold text-[13px] tracking-[0.2em] uppercase px-10 py-4 rounded-lg hover:bg-[hsl(135_14%_40%)] transition-colors duration-200"
         >
           PROZKOUMAT KOLEKCI
         </a>
-      </div>
-
-      {/* Product – seamlessly integrated into the background */}
-      <div className="mt-auto w-full flex justify-center pt-8">
-        <img
-          src={heroFinal}
-          alt="Morseovape brašna na betonovém podstavci s mechem"
-          className="w-full max-w-[900px] h-auto object-contain"
-          loading="eager"
-        />
       </div>
     </section>
   );
