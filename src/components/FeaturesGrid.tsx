@@ -1,43 +1,70 @@
-import { Shield, Droplets, Maximize, Wind, Recycle } from "lucide-react";
 import gekkoGripIcon from "@/assets/icon-gekkogrip.jpeg";
+import smartLinkIcon from "@/assets/icon-smartlink.jpeg";
+import armourShellIcon from "@/assets/icon-armourshell.jpeg";
+import voltFitIcon from "@/assets/icon-voltfit.jpeg";
+import maxSpaceIcon from "@/assets/icon-maxspace.jpeg";
+import idLockIcon from "@/assets/icon-idlock.jpeg";
+import quickMountIcon from "@/assets/icon-quickmount.jpeg";
+import chromaPickIcon from "@/assets/icon-chromapick.jpeg";
+import aquaBlockIcon from "@/assets/icon-aquablock.jpeg";
+import aeroFlowIcon from "@/assets/icon-aeroflow.jpeg";
+import pureGuardIcon from "@/assets/icon-pureguard.jpeg";
 
-type FeatureItem = {
-  icon?: React.ComponentType<{ className?: string }>;
-  image?: string;
-  title: string;
-  description: string;
-};
-
-const features: FeatureItem[] = [
+const features = [
   {
     image: gekkoGripIcon,
     title: "GekkoGrip™",
     description: "Pevné uchycení, které hýčká lak.",
   },
   {
-    icon: Shield,
+    image: armourShellIcon,
     title: "ArmourShell™",
     description: "Tvrdá skořepina chrání obsah při nárazu.",
   },
   {
-    icon: Droplets,
+    image: aquaBlockIcon,
     title: "AquaBlock™",
     description: "Vodoodpudivý materiál pro každé počasí.",
   },
   {
-    icon: Maximize,
+    image: maxSpaceIcon,
     title: "FlexFit™",
     description: "Modulární vnitřní prostor. Vaše pravidla.",
   },
   {
-    icon: Wind,
+    image: aeroFlowIcon,
     title: "AeroFlow™",
     description: "Ventilační systém proti přehřívání.",
   },
   {
-    icon: Recycle,
+    image: pureGuardIcon,
     title: "EcoWeave™",
     description: "Recyklované materiály. Nulová kompromisace.",
+  },
+  {
+    image: smartLinkIcon,
+    title: "SmartLink™",
+    description: "Intuitivní ovládání přes aplikaci.",
+  },
+  {
+    image: voltFitIcon,
+    title: "VoltFit™",
+    description: "Navrženo pro elektrokola a gravel.",
+  },
+  {
+    image: idLockIcon,
+    title: "IDLock™",
+    description: "Jedinečná identifikace a zabezpečení.",
+  },
+  {
+    image: quickMountIcon,
+    title: "QuickMount™",
+    description: "Rychlá montáž bez nářadí.",
+  },
+  {
+    image: chromaPickIcon,
+    title: "ChromaPick™",
+    description: "Paleta barev na míru vašemu kolu.",
   },
 ];
 
@@ -52,21 +79,17 @@ const FeaturesGrid = () => {
           Každý detail je navržen s precizností švýcarského hodinářství.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
           {features.map((feature, index) => (
             <article
               key={feature.title}
-              className="group flex flex-col items-center text-center p-8 rounded-2xl bg-card hover:bg-secondary transition-colors duration-300"
+              className="group flex flex-col items-center text-center p-6 rounded-2xl bg-card hover:bg-secondary transition-colors duration-300"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center mb-6 bg-secondary group-hover:bg-primary transition-colors duration-300">
-                {feature.image ? (
-                  <img src={feature.image} alt={feature.title} className="w-full h-full object-cover" />
-                ) : feature.icon ? (
-                  <feature.icon className="w-7 h-7 text-muted-foreground group-hover:text-primary-foreground transition-colors duration-300" />
-                ) : null}
+              <div className="w-20 h-20 rounded-full overflow-hidden mb-5">
+                <img src={feature.image} alt={feature.title} className="w-full h-full object-cover" />
               </div>
-              <h3 className="font-heading font-semibold text-lg text-foreground mb-2">
+              <h3 className="font-heading font-semibold text-base text-foreground mb-1">
                 {feature.title}
               </h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
