@@ -4,7 +4,7 @@ import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
 const navItems = [
   { label: "DOMŮ", href: "#" },
   { label: "KOLEKCE (Morseovape)", href: "#kolekce" },
-  { label: "OBCHOD", href: "#obchod" },
+  { label: "OBCHOD", href: "/produkty" },
   { label: "O NÁS", href: "#onas" },
   { label: "BLOG", href: "#blog" },
   { label: "KONTAKT", href: "#kontakt" },
