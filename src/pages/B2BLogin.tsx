@@ -1,24 +1,75 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, LogIn } from "lucide-react";
+import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 const B2BLogin = () => {
   const navigate = useNavigate();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Vyplňte prosím všechna pole.");
       return;
     }
-    // Demo: navigate to dashboard
+
+    setLoading(true);
+    setError("");
+
+    const { error: authError } = await signIn(email, password);
+
+    if (authError) {
+      setLoading(false);
+      if (authError.message.includes("Invalid login")) {
+        setError("Nesprávný e-mail nebo heslo.");
+      } else if (authError.message.includes("Email not confirmed")) {
+        setError("Váš e-mail ještě nebyl potvrzen. Zkontrolujte svou schránku.");
+      } else {
+        setError("Přihlášení se nezdařilo. Zkuste to prosím znovu.");
+      }
+      return;
+    }
+
+    // Check B2B profile status
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setLoading(false);
+      setError("Přihlášení se nezdařilo.");
+      return;
+    }
+
+    const { data: status } = await supabase.rpc("get_b2b_status", { _user_id: user.id });
+
+    setLoading(false);
+
+    if (!status) {
+      setError("Nemáte B2B účet. Zaregistrujte se jako B2B partner.");
+      await supabase.auth.signOut();
+      return;
+    }
+
+    if (status === "pending") {
+      setError("Vaše registrace čeká na schválení. Budeme vás informovat e-mailem.");
+      await supabase.auth.signOut();
+      return;
+    }
+
+    if (status === "rejected") {
+      setError("Vaše B2B registrace byla zamítnuta. Kontaktujte nás pro více informací.");
+      await supabase.auth.signOut();
+      return;
+    }
+
     navigate("/b2b-dashboard");
   };
 
@@ -32,18 +83,10 @@ const B2BLogin = () => {
             "@type": "Organization",
             name: "Vapesport s.r.o.",
             url: "https://vapesport.cz",
-            description:
-              "Český výrobce cyklobrašen a příslušenství pro elektrokola a gravel od roku 1994.",
+            description: "Český výrobce cyklobrašen a příslušenství pro elektrokola a gravel od roku 1994.",
             foundingDate: "1994",
-            address: {
-              "@type": "PostalAddress",
-              addressCountry: "CZ",
-            },
-            contactPoint: {
-              "@type": "ContactPoint",
-              contactType: "B2B wholesale",
-              availableLanguage: ["cs", "en"],
-            },
+            address: { "@type": "PostalAddress", addressCountry: "CZ" },
+            contactPoint: { "@type": "ContactPoint", contactType: "B2B wholesale", availableLanguage: ["cs", "en"] },
           }),
         }}
       />
@@ -54,12 +97,12 @@ const B2BLogin = () => {
           className="w-full max-w-md bg-background border border-border rounded-lg p-8 md:p-10 shadow-sm"
         >
           <header className="text-center mb-8">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="font-heading text-2xl font-bold text-foreground tracking-tight inline-block mb-6"
             >
               Vapesport
-            </a>
+            </Link>
             <h1
               id="b2b-login-heading"
               className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2"
@@ -73,10 +116,7 @@ const B2BLogin = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             <div className="space-y-2">
-              <Label
-                htmlFor="b2b-email"
-                className="text-base font-semibold text-foreground block"
-              >
+              <Label htmlFor="b2b-email" className="text-base font-semibold text-foreground block">
                 E-mailová adresa
               </Label>
               <Input
@@ -85,20 +125,15 @@ const B2BLogin = () => {
                 autoComplete="email"
                 placeholder="vas@email.cz"
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError("");
-                }}
+                onChange={(e) => { setEmail(e.target.value); setError(""); }}
                 className="h-14 text-lg px-4 bg-secondary border-border focus-visible:ring-primary"
                 aria-required="true"
+                disabled={loading}
               />
             </div>
 
             <div className="space-y-2">
-              <Label
-                htmlFor="b2b-password"
-                className="text-base font-semibold text-foreground block"
-              >
+              <Label htmlFor="b2b-password" className="text-base font-semibold text-foreground block">
                 Heslo
               </Label>
               <div className="relative">
@@ -108,12 +143,10 @@ const B2BLogin = () => {
                   autoComplete="current-password"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setError("");
-                  }}
+                  onChange={(e) => { setPassword(e.target.value); setError(""); }}
                   className="h-14 text-lg px-4 pr-14 bg-secondary border-border focus-visible:ring-primary"
                   aria-required="true"
+                  disabled={loading}
                 />
                 <button
                   type="button"
@@ -121,11 +154,7 @@ const B2BLogin = () => {
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
                   aria-label={showPassword ? "Skrýt heslo" : "Zobrazit heslo"}
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-6 h-6" />
-                  ) : (
-                    <Eye className="w-6 h-6" />
-                  )}
+                  {showPassword ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
                 </button>
               </div>
             </div>
@@ -140,30 +169,22 @@ const B2BLogin = () => {
               type="submit"
               className="w-full h-16 text-xl font-bold tracking-wide gap-3"
               size="lg"
+              disabled={loading}
             >
-              <LogIn className="w-6 h-6" />
-              PŘIHLÁSIT SE
+              {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <LogIn className="w-6 h-6" />}
+              {loading ? "PŘIHLAŠOVÁNÍ..." : "PŘIHLÁSIT SE"}
             </Button>
-
-            <div className="text-center pt-2">
-              <a
-                href="#"
-                className="text-lg text-primary underline underline-offset-4 hover:text-primary/80 font-medium transition-colors"
-              >
-                Zapomenuté heslo?
-              </a>
-            </div>
           </form>
 
           <footer className="mt-10 pt-6 border-t border-border text-center space-y-3">
             <p className="text-base text-muted-foreground">
               Nemáte ještě B2B účet?{" "}
-              <a
-                href="/b2b-register"
+              <Link
+                to="/b2b-register"
                 className="text-primary underline underline-offset-4 font-semibold hover:text-primary/80 transition-colors"
               >
                 Registrujte se
-              </a>
+              </Link>
             </p>
           </footer>
         </section>
