@@ -101,6 +101,21 @@ const B2BRegister = () => {
       return;
     }
 
+    // 3. Send webhook notification (fire and forget)
+    supabase.functions.invoke('notify-b2b-registration', {
+      body: {
+        companyName: form.companyName,
+        ico: form.ico,
+        dic: form.dic,
+        contactPerson: form.contactName,
+        email: form.email,
+        phone: form.phone,
+        address: form.address,
+        city: form.city,
+        zip: form.zip,
+      },
+    }).catch((err) => console.error('Webhook notification failed:', err));
+
     // Sign out after registration (pending approval)
     await supabase.auth.signOut();
     setSuccess(true);
