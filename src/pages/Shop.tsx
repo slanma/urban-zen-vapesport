@@ -79,8 +79,8 @@ const hotspots: Hotspot[] = [
     categoryName: "Ochrana a baterie",
     ariaDescription:
       "Zobrazit neoprenové obaly a ochranu baterie elektrokola",
-    top: "55%",
-    left: "40%",
+    top: "50%",
+    left: "47%",
     productIds: ["neopren-baterie"],
     linkTo: "/produkty",
   },
