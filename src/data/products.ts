@@ -1,3 +1,5 @@
+import velkyTrojuhelnikImg from "@/assets/velky-trojuhelnik.jpeg";
+
 export interface Product {
   id: string;
   name: string;
