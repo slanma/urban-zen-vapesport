@@ -148,7 +148,7 @@ export const products: Product[] = [
     shortDescription: "Sportovní podsedlová brašna s expandérem pro zvětšení objemu.",
     features: [
       "Expandér pro zvětšení objemu až o 50 %",
-      "Sportovní aerodynamický tvar „Žralok"",
+      'Sportovní aerodynamický tvar „Žralok"',
       "Bezpečnostní smyčka na zadní světlo",
       "Snadné uchycení na sedlovku",
     ],
