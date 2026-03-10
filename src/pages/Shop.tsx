@@ -68,8 +68,8 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na nosič",
     ariaDescription:
       "Zobrazit brašny a tašky určené na zadní nosič elektrokola",
-    top: "22%",
-    left: "24%",
+    top: "20%",
+    left: "22%",
     productIds: ["morseo-wdb"],
     linkTo: "/produkty",
   },
