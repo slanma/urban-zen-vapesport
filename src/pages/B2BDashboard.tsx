@@ -162,8 +162,8 @@ const B2BDashboard = () => {
                       <TableHead className="text-base font-bold w-[130px]">
                         Dostupnost
                       </TableHead>
-                      <TableHead className="text-base font-bold w-[140px] text-right">
-                        B2B cena
+                      <TableHead className="text-base font-bold w-[180px] text-right">
+                        Cena
                       </TableHead>
                       <TableHead className="text-base font-bold w-[200px] text-center">
                         Počet kusů
