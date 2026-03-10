@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
 
 const navItems = [
-  { label: "DOMŮ", href: "#" },
+  { label: "DOMŮ", href: "/" },
   { label: "KOLEKCE (Morseovape)", href: "#kolekce" },
   { label: "OBCHOD", href: "/produkty" },
   { label: "O NÁS", href: "#onas" },
