@@ -24,8 +24,8 @@ const hotspots: Hotspot[] = [
     categoryName: "Rámové brašny",
     ariaDescription:
       "Zobrazit brašny umisťované do hlavního trojúhelníku rámu elektrokola",
-    top: "36%",
-    left: "43%",
+    top: "40%",
+    left: "40%",
     productIds: ["morseo-elektro-ii", "morseo-stredni-trojuhelnik"],
     linkTo: "/produkty",
   },
