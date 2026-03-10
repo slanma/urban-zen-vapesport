@@ -14,16 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      b2b_profiles: {
+        Row: {
+          address: string
+          city: string
+          company_name: string
+          contact_person: string
+          created_at: string
+          dic: string | null
+          discount_percent: number
+          ico: string
+          id: string
+          notes: string | null
+          phone: string
+          status: Database["public"]["Enums"]["b2b_status"]
+          updated_at: string
+          user_id: string
+          zip: string
+        }
+        Insert: {
+          address: string
+          city: string
+          company_name: string
+          contact_person: string
+          created_at?: string
+          dic?: string | null
+          discount_percent?: number
+          ico: string
+          id?: string
+          notes?: string | null
+          phone: string
+          status?: Database["public"]["Enums"]["b2b_status"]
+          updated_at?: string
+          user_id: string
+          zip: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          company_name?: string
+          contact_person?: string
+          created_at?: string
+          dic?: string | null
+          discount_percent?: number
+          ico?: string
+          id?: string
+          notes?: string | null
+          phone?: string
+          status?: Database["public"]["Enums"]["b2b_status"]
+          updated_at?: string
+          user_id?: string
+          zip?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_b2b_status: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["b2b_status"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      b2b_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +232,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      b2b_status: ["pending", "approved", "rejected"],
+    },
   },
 } as const
