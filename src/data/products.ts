@@ -1,3 +1,5 @@
+import velkyTrojuhelnikImg from "@/assets/velky-trojuhelnik.jpeg";
+
 export interface Product {
   id: string;
   name: string;
@@ -116,7 +118,7 @@ export const products: Product[] = [
       { label: "Materiál", value: "Ripstop nylon 600D" },
       { label: "Hmotnost", value: "280 g" },
     ],
-    image: "/placeholder.svg",
+    image: velkyTrojuhelnikImg,
   },
   {
     id: "brasna-mala-riditka",
