@@ -155,14 +155,14 @@ const B2BLogin = () => {
             </div>
           </form>
 
-          <footer className="mt-10 pt-6 border-t border-border text-center">
+          <footer className="mt-10 pt-6 border-t border-border text-center space-y-3">
             <p className="text-base text-muted-foreground">
-              Nemáte B2B účet?{" "}
+              Nemáte ještě B2B účet?{" "}
               <a
-                href="#"
-                className="text-primary underline underline-offset-4 font-medium"
+                href="/b2b-register"
+                className="text-primary underline underline-offset-4 font-semibold hover:text-primary/80 transition-colors"
               >
-                Kontaktujte nás
+                Registrujte se
               </a>
             </p>
           </footer>
