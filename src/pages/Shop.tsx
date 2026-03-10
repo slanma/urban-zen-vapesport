@@ -24,8 +24,8 @@ const hotspots: Hotspot[] = [
     categoryName: "Rámové brašny",
     ariaDescription:
       "Zobrazit brašny umisťované do hlavního trojúhelníku rámu elektrokola",
-    top: "40%",
-    left: "40%",
+    top: "33%",
+    left: "42%",
     productIds: ["morseo-elektro-ii", "morseo-stredni-trojuhelnik"],
     linkTo: "/produkty",
   },
@@ -35,7 +35,7 @@ const hotspots: Hotspot[] = [
     categoryName: "Podsedlové brašny",
     ariaDescription:
       "Zobrazit brašny uchycené pod sedlo a na sedlovku elektrokola",
-    top: "22%",
+    top: "18%",
     left: "31%",
     productIds: ["podsedlo-twist"],
     linkTo: "/produkty",
@@ -46,8 +46,8 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na řídítka",
     ariaDescription:
       "Zobrazit brašny montované na řídítka elektrokola",
-    top: "13%",
-    left: "63%",
+    top: "10%",
+    left: "62%",
     productIds: ["brasna-mala-riditka"],
     linkTo: "/produkty",
   },
@@ -57,8 +57,8 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na horní trubku",
     ariaDescription:
       "Zobrazit brašny na mobil montované na horní trubku rámu",
-    top: "22%",
-    left: "55%",
+    top: "19%",
+    left: "50%",
     productIds: ["morseo-smb-xxl"],
     linkTo: "/produkty",
   },
@@ -69,7 +69,7 @@ const hotspots: Hotspot[] = [
     ariaDescription:
       "Zobrazit brašny a tašky určené na zadní nosič elektrokola",
     top: "20%",
-    left: "22%",
+    left: "23%",
     productIds: ["morseo-wdb"],
     linkTo: "/produkty",
   },
@@ -79,8 +79,8 @@ const hotspots: Hotspot[] = [
     categoryName: "Ochrana a baterie",
     ariaDescription:
       "Zobrazit neoprenové obaly a ochranu baterie elektrokola",
-    top: "52%",
-    left: "44%",
+    top: "43%",
+    left: "46%",
     productIds: ["neopren-baterie"],
     linkTo: "/produkty",
   },
