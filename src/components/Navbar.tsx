@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
 
 const navItems = [
-  { label: "DOMŮ", href: "#" },
+  { label: "DOMŮ", href: "/" },
   { label: "KOLEKCE (Morseovape)", href: "#kolekce" },
   { label: "OBCHOD", href: "/produkty" },
   { label: "O NÁS", href: "#onas" },
@@ -17,7 +17,7 @@ const Navbar = () => {
     <header className="absolute top-0 left-0 right-0 z-50 bg-transparent">
       <nav className="flex items-center justify-between h-20 px-6 lg:px-12 max-w-[1600px] mx-auto">
         {/* Logo – bold upright */}
-        <a href="#" className="font-heading text-2xl font-bold text-foreground tracking-tight">
+        <a href="/" className="font-heading text-2xl font-bold text-foreground tracking-tight">
           Vapesport
         </a>
 
