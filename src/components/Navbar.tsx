@@ -4,24 +4,28 @@ import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
 const navItems = [
   { label: "DOMŮ", href: "/" },
   { label: "KOLEKCE (Morseovape)", href: "#kolekce" },
-  { label: "OBCHOD", href: "/produkty" },
+  { label: "OBCHOD", href: "/obchod" },
   { label: "O NÁS", href: "#onas" },
   { label: "BLOG", href: "#blog" },
   { label: "KONTAKT", href: "#kontakt" },
 ];
 
-const Navbar = () => {
+interface NavbarProps {
+  isLoggedIn?: boolean;
+}
+
+const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50 bg-transparent">
       <nav className="flex items-center justify-between h-20 px-6 lg:px-12 max-w-[1600px] mx-auto">
-        {/* Logo – bold upright */}
+        {/* Logo */}
         <a href="/" className="font-heading text-2xl font-bold text-foreground tracking-tight">
           Vapesport
         </a>
 
-        {/* Desktop nav – centered */}
+        {/* Desktop nav */}
         <ul className="hidden lg:flex items-center gap-6 xl:gap-8">
           {navItems.map((item) => (
             <li key={item.label}>
@@ -35,15 +39,21 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* Right icons with labels */}
+        {/* Right icons */}
         <div className="flex items-center gap-5">
           <a href="#" className="hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
             <Search className="w-4 h-4" />
             <span>Hledat</span>
           </a>
-          <a href="#" className="hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
+          <a href="#" className="relative hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
             <User className="w-4 h-4" />
             <span>Účet</span>
+            {isLoggedIn && (
+              <span
+                className="absolute -top-1 -right-1.5 w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_6px_2px_hsl(var(--primary)/0.45)] animate-pulse"
+                aria-label="Přihlášen"
+              />
+            )}
           </a>
           <a href="/b2b-login" className="hidden md:inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-[13px] font-bold px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
             B2B Portál
