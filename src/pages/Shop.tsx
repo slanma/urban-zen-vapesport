@@ -35,8 +35,8 @@ const hotspots: Hotspot[] = [
     categoryName: "Podsedlové brašny",
     ariaDescription:
       "Zobrazit brašny uchycené pod sedlo a na sedlovku elektrokola",
-    top: "18%",
-    left: "28%",
+    top: "16%",
+    left: "32%",
     productIds: ["podsedlo-twist"],
     linkTo: "/produkty",
   },
