@@ -45,6 +45,9 @@ const Navbar = () => {
             <User className="w-4 h-4" />
             <span>Účet</span>
           </a>
+          <a href="/b2b-login" className="hidden md:inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-[13px] font-bold px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
+            B2B Portál
+          </a>
           <a href="#" className="flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
             <ShoppingCart className="w-4 h-4" />
             <span>Košík (0)</span>
