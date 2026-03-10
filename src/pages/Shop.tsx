@@ -46,8 +46,8 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na řídítka",
     ariaDescription:
       "Zobrazit brašny montované na řídítka elektrokola",
-    top: "20%",
-    left: "72%",
+    top: "13%",
+    left: "63%",
     productIds: ["brasna-mala-riditka"],
     linkTo: "/produkty",
   },
