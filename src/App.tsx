@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import Products from "./pages/Products";
 import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import B2BLogin from "./pages/B2BLogin";
 import B2BRegister from "./pages/B2BRegister";
 import B2BDashboard from "./pages/B2BDashboard";
