@@ -9,6 +9,8 @@ import ProductDetail from "./pages/ProductDetail";
 import B2BLogin from "./pages/B2BLogin";
 import B2BRegister from "./pages/B2BRegister";
 import B2BDashboard from "./pages/B2BDashboard";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
