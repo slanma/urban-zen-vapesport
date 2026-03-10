@@ -57,8 +57,8 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na horní trubku",
     ariaDescription:
       "Zobrazit brašny na mobil montované na horní trubku rámu",
-    top: "28%",
-    left: "52%",
+    top: "24%",
+    left: "48%",
     productIds: ["morseo-smb-xxl"],
     linkTo: "/produkty",
   },
