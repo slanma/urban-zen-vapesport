@@ -162,8 +162,8 @@ const B2BDashboard = () => {
                       <TableHead className="text-base font-bold w-[130px]">
                         Dostupnost
                       </TableHead>
-                      <TableHead className="text-base font-bold w-[140px] text-right">
-                        B2B cena
+                      <TableHead className="text-base font-bold w-[180px] text-right">
+                        Cena
                       </TableHead>
                       <TableHead className="text-base font-bold w-[200px] text-center">
                         Počet kusů
@@ -220,9 +220,17 @@ const B2BDashboard = () => {
                             )}
                           </TableCell>
                           <TableCell className="text-right">
-                            <span className="text-lg font-bold text-foreground">
-                              {b2bPrice.toLocaleString("cs-CZ")}&nbsp;Kč
-                            </span>
+                            <div className="flex flex-col items-end gap-0.5">
+                              <span className="text-sm text-muted-foreground line-through">
+                                MOC {product.price.toLocaleString("cs-CZ")}&nbsp;Kč
+                              </span>
+                              <span className="text-lg font-bold text-primary">
+                                {b2bPrice.toLocaleString("cs-CZ")}&nbsp;Kč
+                              </span>
+                              <span className="text-xs font-semibold text-primary/70">
+                                Sleva 30 %
+                              </span>
+                            </div>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center justify-center gap-2">
