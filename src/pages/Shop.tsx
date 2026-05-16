@@ -13,6 +13,8 @@ interface Hotspot {
   /** Position as % from top-left of the bike image */
   top: string;
   left: string;
+  labelOffsetX: number;
+  labelOffsetY: number;
   productIds: string[];
   linkTo: string;
 }
@@ -24,8 +26,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Rámové brašny",
     ariaDescription:
       "Zobrazit brašny umisťované do hlavního trojúhelníku rámu elektrokola",
-    top: "33%",
-    left: "42%",
+    top: "50%",
+    left: "47.5%",
+    labelOffsetX: -28,
+    labelOffsetY: 30,
     productIds: ["morseo-elektro-ii", "morseo-stredni-trojuhelnik"],
     linkTo: "/produkty",
   },
@@ -35,8 +39,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Podsedlové brašny",
     ariaDescription:
       "Zobrazit brašny uchycené pod sedlo a na sedlovku elektrokola",
-    top: "18%",
-    left: "31%",
+    top: "32%",
+    left: "40.5%",
+    labelOffsetX: -18,
+    labelOffsetY: 26,
     productIds: ["podsedlo-twist"],
     linkTo: "/produkty",
   },
@@ -46,8 +52,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na řídítka",
     ariaDescription:
       "Zobrazit brašny montované na řídítka elektrokola",
-    top: "10%",
-    left: "62%",
+    top: "25.5%",
+    left: "64%",
+    labelOffsetX: 42,
+    labelOffsetY: 22,
     productIds: ["brasna-mala-riditka"],
     linkTo: "/produkty",
   },
@@ -57,8 +65,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na horní trubku",
     ariaDescription:
       "Zobrazit brašny na mobil montované na horní trubku rámu",
-    top: "19%",
-    left: "50%",
+    top: "39.5%",
+    left: "51%",
+    labelOffsetX: 0,
+    labelOffsetY: -34,
     productIds: ["morseo-smb-xxl"],
     linkTo: "/produkty",
   },
@@ -68,8 +78,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na nosič",
     ariaDescription:
       "Zobrazit brašny a tašky určené na zadní nosič elektrokola",
-    top: "20%",
-    left: "23%",
+    top: "43.5%",
+    left: "26.5%",
+    labelOffsetX: -54,
+    labelOffsetY: 0,
     productIds: ["morseo-wdb"],
     linkTo: "/produkty",
   },
@@ -79,8 +91,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Ochrana a baterie",
     ariaDescription:
       "Zobrazit neoprenové obaly a ochranu baterie elektrokola",
-    top: "43%",
-    left: "46%",
+    top: "54.5%",
+    left: "55.5%",
+    labelOffsetX: -46,
+    labelOffsetY: 32,
     productIds: ["neopren-baterie"],
     linkTo: "/produkty",
   },
@@ -153,8 +167,13 @@ const Shop = () => {
                   <span className="relative w-2.5 h-2.5 rounded-full bg-primary" />
                 </button>
 
-                {/* Label underneath */}
-                <span className="absolute top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-body font-semibold text-foreground bg-background/90 px-2 py-0.5 rounded shadow-sm pointer-events-none">
+                {/* Label */}
+                <span
+                  className="absolute whitespace-nowrap text-[11px] font-body font-semibold text-foreground bg-background/90 px-2 py-0.5 rounded shadow-sm pointer-events-none"
+                  style={{
+                    transform: `translate(calc(-50% + ${hs.labelOffsetX}px), calc(-50% + ${hs.labelOffsetY}px))`,
+                  }}
+                >
                   {hs.label}
                 </span>
 
