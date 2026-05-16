@@ -1,5 +1,5 @@
 import { useState } from "react";
-import bikeSilhouette from "@/assets/bike-silhouette.png";
+import bikeSilhouette from "@/assets/bike-silhouette-cutout.png";
 import heroProduct from "@/assets/hero-product.jpg";
 
 interface MountPoint {
@@ -11,10 +11,10 @@ interface MountPoint {
 }
 
 const mountPoints: MountPoint[] = [
-  { id: "frame", label: "Rám", description: "Ideální pro rychlý přístup během jízdy.", x: 49.2, y: 56.8 },
-  { id: "handlebar", label: "Řídítka", description: "Kompaktní uchycení pro navigaci a nabíjení.", x: 45.4, y: 43.2 },
-  { id: "saddle", label: "Sedlovka", description: "Diskrétní umístění pod sedlem.", x: 53.5, y: 43.4 },
-  { id: "rack", label: "Nosič", description: "Maximální kapacita pro delší cesty.", x: 60.2, y: 50.5 },
+  { id: "frame", label: "Rám", description: "Ideální pro rychlý přístup během jízdy.", x: 47.4, y: 47.2 },
+  { id: "handlebar", label: "Řídítka", description: "Kompaktní uchycení pro navigaci a nabíjení.", x: 37.7, y: 23.1 },
+  { id: "saddle", label: "Sedlovka", description: "Diskrétní umístění pod sedlem.", x: 58.4, y: 23.4 },
+  { id: "rack", label: "Nosič", description: "Maximální kapacita pro delší cesty.", x: 75.3, y: 36.2 },
 ];
 
 const BikeConfigurator = () => {
@@ -31,7 +31,7 @@ const BikeConfigurator = () => {
           Klikněte na zelený bod a objevte možnosti uchycení.
         </p>
 
-        <div className="relative max-w-3xl mx-auto">
+        <div className="relative max-w-xl mx-auto">
           <img
             src={bikeSilhouette}
             alt="Silueta kola s body uchycení"
