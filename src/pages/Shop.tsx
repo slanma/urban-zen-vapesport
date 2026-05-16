@@ -13,6 +13,8 @@ interface Hotspot {
   /** Position as % from top-left of the bike image */
   top: string;
   left: string;
+  labelOffsetX: number;
+  labelOffsetY: number;
   productIds: string[];
   linkTo: string;
 }
@@ -24,8 +26,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Rámové brašny",
     ariaDescription:
       "Zobrazit brašny umisťované do hlavního trojúhelníku rámu elektrokola",
-    top: "33%",
-    left: "42%",
+    top: "48%",
+    left: "43%",
+    labelOffsetX: 34,
+    labelOffsetY: 18,
     productIds: ["morseo-elektro-ii", "morseo-stredni-trojuhelnik"],
     linkTo: "/produkty",
   },
@@ -35,8 +39,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Podsedlové brašny",
     ariaDescription:
       "Zobrazit brašny uchycené pod sedlo a na sedlovku elektrokola",
-    top: "18%",
-    left: "31%",
+    top: "31%",
+    left: "39%",
+    labelOffsetX: -22,
+    labelOffsetY: 26,
     productIds: ["podsedlo-twist"],
     linkTo: "/produkty",
   },
@@ -46,8 +52,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na řídítka",
     ariaDescription:
       "Zobrazit brašny montované na řídítka elektrokola",
-    top: "10%",
-    left: "62%",
+    top: "28%",
+    left: "63%",
+    labelOffsetX: 34,
+    labelOffsetY: 24,
     productIds: ["brasna-mala-riditka"],
     linkTo: "/produkty",
   },
@@ -57,8 +65,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na horní trubku",
     ariaDescription:
       "Zobrazit brašny na mobil montované na horní trubku rámu",
-    top: "19%",
+    top: "40%",
     left: "50%",
+    labelOffsetX: 10,
+    labelOffsetY: -32,
     productIds: ["morseo-smb-xxl"],
     linkTo: "/produkty",
   },
@@ -68,8 +78,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Brašny na nosič",
     ariaDescription:
       "Zobrazit brašny a tašky určené na zadní nosič elektrokola",
-    top: "20%",
-    left: "23%",
+    top: "48%",
+    left: "28%",
+    labelOffsetX: -48,
+    labelOffsetY: -30,
     productIds: ["morseo-wdb"],
     linkTo: "/produkty",
   },
@@ -79,8 +91,10 @@ const hotspots: Hotspot[] = [
     categoryName: "Ochrana a baterie",
     ariaDescription:
       "Zobrazit neoprenové obaly a ochranu baterie elektrokola",
-    top: "43%",
-    left: "46%",
+    top: "56%",
+    left: "54%",
+    labelOffsetX: -28,
+    labelOffsetY: 30,
     productIds: ["neopren-baterie"],
     linkTo: "/produkty",
   },
