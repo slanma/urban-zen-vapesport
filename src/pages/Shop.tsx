@@ -167,8 +167,13 @@ const Shop = () => {
                   <span className="relative w-2.5 h-2.5 rounded-full bg-primary" />
                 </button>
 
-                {/* Label underneath */}
-                <span className="absolute top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-body font-semibold text-foreground bg-background/90 px-2 py-0.5 rounded shadow-sm pointer-events-none">
+                {/* Label */}
+                <span
+                  className="absolute whitespace-nowrap text-[11px] font-body font-semibold text-foreground bg-background/90 px-2 py-0.5 rounded shadow-sm pointer-events-none"
+                  style={{
+                    transform: `translate(calc(-50% + ${hs.labelOffsetX}px), calc(-50% + ${hs.labelOffsetY}px))`,
+                  }}
+                >
                   {hs.label}
                 </span>
 
