@@ -11,10 +11,10 @@ interface MountPoint {
 }
 
 const mountPoints: MountPoint[] = [
-  { id: "frame", label: "Rám", description: "Ideální pro rychlý přístup během jízdy.", x: 49.3, y: 58.6 },
-  { id: "handlebar", label: "Řídítka", description: "Kompaktní uchycení pro navigaci a nabíjení.", x: 44.9, y: 40 },
-  { id: "saddle", label: "Sedlovka", description: "Diskrétní umístění pod sedlem.", x: 53.2, y: 40 },
-  { id: "rack", label: "Nosič", description: "Maximální kapacita pro delší cesty.", x: 60.5, y: 52.7 },
+  { id: "frame", label: "Rám", description: "Ideální pro rychlý přístup během jízdy.", x: 49.2, y: 56.8 },
+  { id: "handlebar", label: "Řídítka", description: "Kompaktní uchycení pro navigaci a nabíjení.", x: 45.4, y: 43.2 },
+  { id: "saddle", label: "Sedlovka", description: "Diskrétní umístění pod sedlem.", x: 53.5, y: 43.4 },
+  { id: "rack", label: "Nosič", description: "Maximální kapacita pro delší cesty.", x: 60.2, y: 50.5 },
 ];
 
 const BikeConfigurator = () => {
