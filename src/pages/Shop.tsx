@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ebikeSilhouette from "@/assets/ebike-silhouette.png";
+import ebikeSilhouette from "@/assets/bike-lineart.png";
 import { products } from "@/data/products";
 
 interface Hotspot {
