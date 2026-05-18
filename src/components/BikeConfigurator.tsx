@@ -1,5 +1,5 @@
 import { useState } from "react";
-import bikeSilhouette from "@/assets/bike-silhouette-cutout.png";
+import bikeSilhouette from "@/assets/bike-lineart.png";
 import heroProduct from "@/assets/hero-product.jpg";
 
 interface MountPoint {
@@ -11,10 +11,10 @@ interface MountPoint {
 }
 
 const mountPoints: MountPoint[] = [
-  { id: "frame", label: "Rám", description: "Ideální pro rychlý přístup během jízdy.", x: 47.4, y: 47.2 },
-  { id: "handlebar", label: "Řídítka", description: "Kompaktní uchycení pro navigaci a nabíjení.", x: 37.7, y: 23.1 },
-  { id: "saddle", label: "Sedlovka", description: "Diskrétní umístění pod sedlem.", x: 58.4, y: 23.4 },
-  { id: "rack", label: "Nosič", description: "Maximální kapacita pro delší cesty.", x: 75.3, y: 36.2 },
+  { id: "frame", label: "Rám", description: "Ideální pro rychlý přístup během jízdy.", x: 54, y: 40 },
+  { id: "handlebar", label: "Řídítka", description: "Kompaktní uchycení pro navigaci a nabíjení.", x: 80, y: 22 },
+  { id: "saddle", label: "Sedlovka", description: "Diskrétní umístění pod sedlem.", x: 41, y: 23 },
+  { id: "rack", label: "Nosič", description: "Maximální kapacita pro delší cesty.", x: 32, y: 30 },
 ];
 
 const BikeConfigurator = () => {
