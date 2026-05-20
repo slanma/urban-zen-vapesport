@@ -1,12 +1,24 @@
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { products } from "@/data/products";
 import { ArrowRight } from "lucide-react";
 
 const Products = () => {
-  const [active, setActive] = useState<string>("all");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initial = searchParams.get("kategorie") ?? "all";
+  const [active, setActive] = useState<string>(initial);
+
+  useEffect(() => {
+    setActive(searchParams.get("kategorie") ?? "all");
+  }, [searchParams]);
+
+  const selectTab = (value: string) => {
+    setActive(value);
+    if (value === "all") setSearchParams({});
+    else setSearchParams({ kategorie: value });
+  };
 
   // Dynamic tabs built from product categoryLabels (preserves first-seen order)
   const tabs = useMemo(() => {
@@ -49,7 +61,7 @@ const Products = () => {
           {tabs.map((tab) => (
             <button
               key={tab.value}
-              onClick={() => setActive(tab.value)}
+              onClick={() => selectTab(tab.value)}
               className={`
                 px-5 py-2.5 text-sm font-body font-semibold tracking-wide rounded-full transition-all
                 ${

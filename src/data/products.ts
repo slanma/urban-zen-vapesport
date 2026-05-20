@@ -11,6 +11,7 @@ export interface Product {
   features: string[];
   specs: { label: string; value: string }[];
   image: string;
+  images?: string[];
 }
 
 export const products: Product[] = [
