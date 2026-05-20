@@ -45,7 +45,7 @@ const Products = () => {
 
       {/* Tabs */}
       <div className="px-6 lg:px-12 max-w-[1400px] mx-auto mb-10">
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {tabs.map((tab) => (
             <button
               key={tab.value}
