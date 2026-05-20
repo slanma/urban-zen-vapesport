@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { products } from "@/data/products";
@@ -14,6 +15,10 @@ import {
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = products.find((p) => p.id === id);
+  const gallery = product?.images && product.images.length > 0
+    ? product.images
+    : product ? [product.image] : [];
+  const [activeImg, setActiveImg] = useState(0);
 
   if (!product) {
     return (
@@ -53,12 +58,31 @@ const ProductDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
           {/* Image — large left side */}
           <div className="lg:col-span-7">
-            <div className="aspect-[4/3] bg-muted rounded-2xl overflow-hidden flex items-center justify-center sticky top-28">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
+            <div className="sticky top-28 flex flex-col gap-4">
+              <div className="aspect-[4/3] bg-muted rounded-2xl overflow-hidden flex items-center justify-center">
+                <img
+                  src={gallery[activeImg]}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {gallery.length > 1 && (
+                <div className="grid grid-cols-5 gap-2">
+                  {gallery.map((src, i) => (
+                    <button
+                      key={src}
+                      type="button"
+                      onClick={() => setActiveImg(i)}
+                      aria-label={`Zobrazit obrázek ${i + 1}`}
+                      className={`aspect-square bg-muted rounded-lg overflow-hidden border-2 transition-colors ${
+                        i === activeImg ? "border-primary" : "border-transparent hover:border-border"
+                      }`}
+                    >
+                      <img src={src} alt="" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
