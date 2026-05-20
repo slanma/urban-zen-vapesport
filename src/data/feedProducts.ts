@@ -12,7 +12,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: neon zelená (neon green), neon žlutá (neon yellow), červená (atom red), růžová (neon pink), neon oranžová (neon orange), žlutá (yellow_apache)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -57,7 +56,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: žlutá (yellow_apache), neon oranžová (neon orange), růžová (neon pink), tyrkysová sv. (surf blue), ktm oranžová (ktm orange)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -101,7 +99,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: neon oranžová (neon orange), tyrkysová sv. (surf blue)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -148,7 +145,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: šedá (grey), nová modrá (blue_2019), neon žlutá (neon yellow), neon oranžová (neon orange), neon zelená (neon green), růžová (neon pink)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -196,7 +192,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -237,7 +232,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black), šedá (grey)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -279,7 +273,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black), šedá (grey), modrá (blue), neon oranžová (neon orange), neon žlutá (neon yellow), neon zelená (neon green)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -327,7 +320,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Brašna je na uchycení KLICKFIX adaptér. KLICKFIX adaptér je součástí a pláštěnka také. Díky adaptéru má brašna různé možnosti uchycení jak n…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -366,7 +358,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Obal na mobilní telefon o velikosti 5,5\" s dotykovou folii. Brašna je uchycena na systém KLICKFIX Adaptér, který JE součástí balení.  Díky s…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -401,7 +392,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Součástí brašny je pláštěnka, uchopení na suchý zip. Objem - 10L Nosnost - 8Kg Rozměry: 28cm x 16cm x 17cm x  Boční kapsa: 23cm x 12cm  x 4c…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -436,7 +426,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Brašna s bočními plnohodnotnými výklopnými kapsami ze stejného materiálu, jako je celá brašna.  boční uchopení na suchý zip a uchopení boční…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -471,7 +460,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Kolekce Wasabi podsedlovka se zalitými zipy proti vodě a uchycením na suché zipy.",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -504,7 +492,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -545,7 +532,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Podsedlová brašna Vapesport s rychlým uchycením na suchý zip Kompaktní a elegantní podsedlovka navržená pro cyklisty, kteří preferují rychlo…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -582,7 +568,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Malý, skladný, nezabere hodně místa na řídítkách, představci či jinde na kole. Má dostatečně dlouhé plíšky, které obejmou i tu nejširší trub…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -616,7 +601,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Voděodolná pláštěnka na 3-dílnou nebo 2-dílnou brašnu na nosič.",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -649,7 +633,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black), šedá (grey), modrá (blue)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -693,7 +676,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Obal na Ipad o velikosti 7-8\". Uchopen na kolo za pomocí KLICKFIX adaptéru, který je součástí balení. Ochranný obal na tablet je lehce voděv…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -728,7 +710,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Golfová rukavice z klokaní kůže. Celoroční rukavice, která odvádí pot a neklouže v ní grip.",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -761,7 +742,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Návlek obyčejný se zipem VAPE vyroben v ČR",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -794,7 +774,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Taška na kolo VAPE",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -831,7 +810,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Golfová rukavice z klokaní kůže. Celoroční rukavice, která odvádí pot a neklouže v ní grip.",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -863,7 +841,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Voděodolný, prodyšný, větruvzdorný návlek ve 3 velikostech, vyroben v ČR",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -899,7 +876,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "návlek přetahovaný přes nohu na gumičku a háček, vyroben v ČR",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -931,7 +907,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "ČESKÝ VÝROBEK Lehký dětský návlek určený pro všechna roční období.  háček pro zachycení za tkaničky vrchní vstup pásek pro seřízení velikost…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -963,7 +938,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "návlek na běžky výška 20cm Háček na zachycení o botu, proti napadání sněhu do boty.",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -995,7 +969,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Ochrana před vnějšími vlivy.",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1027,7 +1000,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Vrch 3-brašny s možností vytvoření příručního batohu s nosnými popruhy.  Uchycení na trojbrašnu je pomocí spon. Výhoda uchopení na spony je …",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1060,7 +1032,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: neon zelená (neon green), ktm oranžová (ktm orange), žlutá (yellow_apache)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1100,7 +1071,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Při objednání si zadejte v poznámkách hodnotu, ve které máme poukaz vystavit.  Pošleme Vám jej na e-mail nebo si jej můžete vyzvednout u nás…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1128,7 +1098,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Velká taška na kolo nebo jako velká kabela s možností využití na nosič z boční části.   Objem: 15l   Nosnost: 8kg   Rozměry: 33cm x 14cm x 3…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1157,7 +1126,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black), neon zelená (neon green), neon oranžová (neon orange), červená (atom red), nová modrá (blue_2019), žlutá (yellow_apache)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1204,7 +1172,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "ČESKÝ VÝROBEK s unikátní filtrační membránou (minimum pro objednání je mix 10 kusů)",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1269,7 +1236,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "ČESKÝ VÝROBEK s unikátní filtrační membránou",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1301,7 +1267,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Důležité info: vzhledem k vytíženosti našeho dodavatele Respirátorů FFP2, bohužel nemůžeme zaručit, kdy dorazí jaká barva. Proto nyní nabízí…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1366,7 +1331,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Neopren na míru je vytvořen na základě Vašich požadavků. Budeme však potřebovat základní údaje, které napište do poznámky: -značka elektroko…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1405,7 +1369,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Plně vyztužená cestovní taška na 2 bagy plné holí včetně driveru.",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1439,7 +1402,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Držák na lahev, který můžete díky variabilině upevnit na širokou škálu kulatých rámů a řídítek i pokud nemáte teleskopickou sedlovku a je vy…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1472,7 +1434,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Hirzl GRIPP FIT",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1507,7 +1468,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Hirzl GRIPP FIT",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1542,7 +1502,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Hirzl GRIPP FIT dětská rukavice o velikosti S-L",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1577,7 +1536,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "PING Klobouk",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1610,7 +1568,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Neoprenový obal na suché zipy, které jsou variabilní pro uchopení od nejširšího po nejtenčí rámy. Délka neoprenu je 50cm.",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1643,7 +1600,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Neoprenový obal na display je vytvořen na Váš typ elektrokola. Po zadání rozměrů do poznámky Vám vytvoříme obal přesně na Váš typ displaye e…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1676,7 +1632,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Popruh na převoz kol na nosiči slouží k zajištění ještě pro větší bezpečnost převozu. 2metrový popruh se sponou. Využití je variabilní na co…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1709,7 +1664,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "BALÍČEK na převoz elektrokol zahrnuje obal na rám elektrokola se 3 suchými zipy pro různé obvody rámů, obal na display a popruh na zajištění…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1746,7 +1700,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Mini ledvinka s gumou na sponu vhodná na běh, brusle i na hory. Gumu Vám upravíme na míru, aby byla ledvinka držela na těle a nehýbala se. Ú…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1779,7 +1732,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Neoprenový obal na display je vytvořen na Váš typ elektrokola. Po zadání rozměrů do poznámky Vám vytvoříme obal přesně na Váš typ displaye e…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1820,7 +1772,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black), červená (red), modrá (blue), růžová (neon pink), bílá, neon zelená (neon green)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1866,7 +1817,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black), bílá, neon žlutá (neon yellow), neon zelená (neon green), růžová (neon pink), červená (red)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1915,7 +1865,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black), červená (red), modrá (blue), růžová (neon pink), neon zelená (neon green), neon žlutá (neon yellow)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -1964,7 +1913,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: červená (red), modrá (blue), růžová (neon pink), neon zelená (neon green), zlatá",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2011,7 +1959,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: bílá, červená (red), modrá (blue), růžová (neon pink), neon zelená (neon green), neon žlutá (neon yellow)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2058,7 +2005,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black), červená (red), růžová (neon pink), bílá, neon zelená (neon green), neon žlutá (neon yellow)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2104,7 +2050,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: černá (black), bílá, neon zelená (neon green), neon žlutá (neon yellow), růžová (neon pink), zlatá",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2150,7 +2095,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: zlatá, neon zelená (neon green), neon žlutá (neon yellow), modrá (blue), růžová (neon pink), červená (red)",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2201,7 +2145,6 @@ export const feedProducts: Product[] = [
     "features": [
       "Dostupné barvy: bílá, červená (red), modrá (blue), neon zelená (neon green), neon žlutá (neon yellow), zlatá",
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2248,7 +2191,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Brašna na míru pro váš rám. Společně projdeme krátkou konzultaci a dodáte přesné rozměry – my připravíme návrh a výrobu. Cena od 2 500 Kč. O…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2284,7 +2226,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Naše golfové rady jsou přesné, osobní a přímo k věci. Bez zbytečných omáček ti ukážeme, jak zlepšit švih, ušetřit čas a vyhnout se drahým ch…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2316,7 +2257,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Jako zkušený golfista vím, že správný fitting je víc než jen obláček na papíře. Vyčlením ti 2 hodiny, během nichž naprosto přesně nastavíme …",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2348,7 +2288,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Při objednání si zadejte v poznámkách hodnotu, ve které máme poukaz vystavit.  Pošleme Vám jej na e-mail nebo si jej můžete vyzvednout u nás…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2380,7 +2319,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Máte kvalitní zboží a skvělý servis, ale návštěvnost prodejny stagnuje? Problém většinou nebývá v tom, co prodáváte, ale v překážkách, které…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2412,7 +2350,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Máte pocit, že na internet patří jen naleštěná kola a sterilní showroomy? To je omyl, který vás stojí peníze. Lidé jsou přejedení dokonalých…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2444,7 +2381,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Jste mechanik a obchodník, ne spisovatel. Přestaňte se trápit nad klávesnicí. Zatímco ve Vizuálním restartu jsme řešili, jak ukázat vaši pra…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [
@@ -2476,7 +2412,6 @@ export const feedProducts: Product[] = [
     "shortDescription": "Tohle není služba typu „nastavím a zmizím“. Spousta poradců vám dá návod a nechá vás být. Já ne. Zde platíte za to, že funkční prodejní syst…",
     "features": [
       "Originální produkt VAPESPORT",
-      "Česká výroba",
       "Odolný materiál pro každodenní použití"
     ],
     "specs": [

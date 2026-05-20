@@ -10,18 +10,18 @@ const B2BSection = () => {
       <div className="absolute inset-0 bg-foreground/60" />
       <div className="relative container mx-auto px-4 text-center">
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-primary-foreground mb-6">
-          České řemeslo od roku 1994
+          Česká značka od roku 1994
         </h2>
         <p className="text-primary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
-          Více než 30 let zkušeností v textilní výrobě. Každý výrobek je navržen a vyroben
-          v České republice s důrazem na kvalitu, která přežije generace.
+          Více než 30 let zkušeností na trhu. Každý výrobek je navržen s důrazem
+          na kvalitu, která přežije generace.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
           {[
             { value: "30+", label: "let na trhu" },
             { value: "0%", label: "reklamací" },
-            { value: "100%", label: "česká výroba" },
+            { value: "100%", label: "česká značka" },
           ].map((stat) => (
             <div key={stat.label} className="flex flex-col items-center">
               <span className="text-5xl md:text-6xl font-heading font-bold text-primary-foreground mb-2">

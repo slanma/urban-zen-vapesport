@@ -356,7 +356,7 @@ const Checkout = () => {
                   </span>
                 </div>
                 <p className="text-[11px] text-muted-foreground font-body text-center">
-                  Bezpečná platba · Šifrované spojení · Česká výroba
+                  Bezpečná platba · Šifrované spojení · Česká značka
                 </p>
               </div>
             </div>
