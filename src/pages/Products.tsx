@@ -7,11 +7,13 @@ import { ArrowRight } from "lucide-react";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initial = searchParams.get("kategorie") ?? "all";
+  const normalizeCategory = (value: string | null) =>
+    value === "MORSEO EVO" || value === "MORSEO" ? "morseo" : value ?? "all";
+  const initial = normalizeCategory(searchParams.get("kategorie"));
   const [active, setActive] = useState<string>(initial);
 
   useEffect(() => {
-    setActive(searchParams.get("kategorie") ?? "all");
+    setActive(normalizeCategory(searchParams.get("kategorie")));
   }, [searchParams]);
 
   const selectTab = (value: string) => {
