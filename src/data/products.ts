@@ -184,4 +184,6 @@ export const products: Product[] = [
     ],
     image: "/placeholder.svg",
   },
+  ...feedProducts,
 ];
+
