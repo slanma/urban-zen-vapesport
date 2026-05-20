@@ -1,9 +1,10 @@
 import velkyTrojuhelnikImg from "@/assets/velky-trojuhelnik.jpeg";
+import { feedProducts } from "./feedProducts";
 
 export interface Product {
   id: string;
   name: string;
-  category: "morseo-evo" | "vape-legends";
+  category: "morseo-evo" | "vape-legends" | "vapesport";
   categoryLabel: string;
   price: number;
   shortDescription: string;
@@ -183,4 +184,6 @@ export const products: Product[] = [
     ],
     image: "/placeholder.svg",
   },
+  ...feedProducts,
 ];
+
