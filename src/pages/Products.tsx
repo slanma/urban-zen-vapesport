@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { products } from "@/data/products";
+import { isMorseoProduct, products } from "@/data/products";
 import { ArrowRight } from "lucide-react";
 
 const Products = () => {
@@ -23,7 +23,10 @@ const Products = () => {
   // Dynamic tabs built from product categoryLabels (preserves first-seen order)
   const tabs = useMemo(() => {
     const seen = new Set<string>();
-    const list: { value: string; label: string }[] = [{ value: "all", label: "Vše" }];
+    const list: { value: string; label: string }[] = [
+      { value: "all", label: "Vše" },
+      { value: "morseo", label: "MORSEO" },
+    ];
     for (const p of products) {
       if (!seen.has(p.categoryLabel)) {
         seen.add(p.categoryLabel);
@@ -33,8 +36,11 @@ const Products = () => {
     return list;
   }, []);
 
-  const filtered =
-    active === "all" ? products : products.filter((p) => p.categoryLabel === active);
+  const filtered = active === "all"
+    ? products
+    : active === "morseo"
+      ? products.filter(isMorseoProduct)
+      : products.filter((p) => p.categoryLabel === active);
 
 
   return (
