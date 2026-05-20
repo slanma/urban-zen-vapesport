@@ -1,23 +1,29 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { products } from "@/data/products";
 import { ArrowRight } from "lucide-react";
 
-type CategoryFilter = "all" | "morseo-evo" | "vape-legends";
-
-const tabs: { value: CategoryFilter; label: string }[] = [
-  { value: "all", label: "Vše" },
-  { value: "morseo-evo", label: "MORSEO EVO" },
-  { value: "vape-legends", label: "VAPE LEGENDS" },
-];
-
 const Products = () => {
-  const [active, setActive] = useState<CategoryFilter>("all");
+  const [active, setActive] = useState<string>("all");
+
+  // Dynamic tabs built from product categoryLabels (preserves first-seen order)
+  const tabs = useMemo(() => {
+    const seen = new Set<string>();
+    const list: { value: string; label: string }[] = [{ value: "all", label: "Vše" }];
+    for (const p of products) {
+      if (!seen.has(p.categoryLabel)) {
+        seen.add(p.categoryLabel);
+        list.push({ value: p.categoryLabel, label: p.categoryLabel });
+      }
+    }
+    return list;
+  }, []);
 
   const filtered =
-    active === "all" ? products : products.filter((p) => p.category === active);
+    active === "all" ? products : products.filter((p) => p.categoryLabel === active);
+
 
   return (
     <main className="min-h-screen bg-background">
