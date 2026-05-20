@@ -3,7 +3,7 @@ import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
 
 const navItems = [
   { label: "DOMŮ", href: "/" },
-  { label: "KOLEKCE (Morseovape)", href: "#kolekce" },
+  { label: "KOLEKCE (Morseovape)", href: "/produkty?kategorie=MORSEO%20EVO" },
   { label: "OBCHOD", href: "/obchod" },
   { label: "O NÁS", href: "#onas" },
   { label: "BLOG", href: "#blog" },
