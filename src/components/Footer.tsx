@@ -6,7 +6,7 @@ const Footer = () => {
           <div>
             <h3 className="font-heading text-xl font-bold text-primary-foreground mb-4">Vapesport</h3>
             <p className="text-primary-foreground/60 text-sm leading-relaxed">
-              Prémiová pouzdra pro aktivní životní styl. Navrženo a vyrobeno v České republice.
+              Prémiová pouzdra pro aktivní životní styl. Česká značka.
             </p>
           </div>
           <div>
