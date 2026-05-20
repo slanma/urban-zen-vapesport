@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { products } from "@/data/products";
+import { getProductById, products } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -79,7 +79,7 @@ const B2BDashboard = () => {
   const totalItems = useMemo(() => cart.reduce((sum, c) => sum + c.qty, 0), [cart]);
   const totalPrice = useMemo(
     () => cart.reduce((sum, c) => {
-      const product = products.find((p) => p.id === c.productId);
+      const product = getProductById(c.productId);
       return sum + (product ? product.price * b2bDiscount * c.qty : 0);
     }, 0),
     [cart, b2bDiscount]

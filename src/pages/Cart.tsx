@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { products } from "@/data/products";
+import { getProductById } from "@/data/products";
 import { Minus, Plus, Trash2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -23,7 +23,7 @@ const SHIPPING_COST = 129;
 const Cart = () => {
   const [cart, setCart] = useState<CartItem[]>(initialCart);
 
-  const getProduct = (id: string) => products.find((p) => p.id === id);
+  const getProduct = getProductById;
 
   const updateQty = (productId: string, delta: number) => {
     setCart((prev) =>

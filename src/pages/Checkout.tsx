@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { products } from "@/data/products";
+import { getProductById } from "@/data/products";
 import { ShieldCheck, Lock, ChevronLeft, Apple } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -38,7 +38,7 @@ const Checkout = () => {
   const [shipping, setShipping] = useState("zasilkovna");
   const [payment, setPayment] = useState("card");
 
-  const getProduct = (id: string) => products.find((p) => p.id === id);
+  const getProduct = getProductById;
 
   const subtotal = cartItems.reduce((sum, item) => {
     const product = getProduct(item.productId);

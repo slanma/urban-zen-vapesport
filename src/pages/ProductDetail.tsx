@@ -2,7 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { products } from "@/data/products";
+import { getProductById } from "@/data/products";
 import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +14,7 @@ import {
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const product = products.find((p) => p.id === id);
+  const product = getProductById(id);
   const gallery = product?.images && product.images.length > 0
     ? product.images
     : product ? [product.image] : [];

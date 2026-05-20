@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ebikeSilhouette from "@/assets/bike-lineart.png";
-import { products } from "@/data/products";
+import { getProductById } from "@/data/products";
 
 interface Hotspot {
   id: string;
@@ -116,7 +116,7 @@ const hotspots: Hotspot[] = [
 const Shop = () => {
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
 
-  const getProduct = (id: string) => products.find((p) => p.id === id);
+  const getProduct = getProductById;
 
   return (
     <main className="min-h-screen bg-background">
