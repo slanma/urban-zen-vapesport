@@ -22,7 +22,7 @@ const HeroSection = () => {
           3 ROKY. 0 REKLAMACÍ.
         </p>
         <a
-          href="#kolekce"
+          href="/produkty?kategorie=MORSEO%20EVO"
           className="inline-block bg-[hsl(135_14%_33%)] text-[hsl(0_0%_100%)] font-body font-semibold text-[13px] tracking-[0.2em] uppercase px-10 py-4 rounded-lg hover:bg-[hsl(135_14%_40%)] transition-colors duration-200"
         >
           PROZKOUMAT KOLEKCI
