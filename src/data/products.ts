@@ -15,7 +15,16 @@ export interface Product {
   color?: string;
   /** Original feed id this variant was derived from (only set for variants). */
   baseId?: string;
+  /** Base products that ship as a single card with a color picker on PDP. */
+  available_colors?: readonly string[];
 }
+
+/** Base MORSEO products that are NOT expanded into per-color rows. They
+ *  render as a single product card and expose color swatches on the PDP.
+ *  Feed generation still unpacks them into separate XML <ITEM> blocks. */
+export const MORSEO_BASE_ONLY_IDS = new Set([
+  "vs-brasna-na-mobil-5-5-945205",
+]);
 
 /** Canonical MORSEO base products from the feed. Each is exploded into the 8
  *  color variants defined in `MORSEO_COLORS`. */
