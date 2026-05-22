@@ -37,6 +37,7 @@ const Checkout = () => {
   });
   const [shipping, setShipping] = useState("zasilkovna");
   const [payment, setPayment] = useState("card");
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const getProduct = getProductById;
 
@@ -338,10 +339,33 @@ const Checkout = () => {
                 </div>
               </div>
 
+              {/* Mandatory consent */}
+              <label className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  required
+                  className="mt-1 w-5 h-5 accent-[hsl(var(--primary))] shrink-0"
+                />
+                <span className="text-sm font-body text-foreground leading-snug">
+                  Souhlasím s{" "}
+                  <a href="/obchodni-podminky" target="_blank" rel="noopener" className="underline hover:text-primary">
+                    obchodními podmínkami
+                  </a>{" "}
+                  a beru na vědomí{" "}
+                  <a href="/ochrana-udaju" target="_blank" rel="noopener" className="underline hover:text-primary">
+                    zásady ochrany osobních údajů
+                  </a>
+                  .
+                </span>
+              </label>
+
               {/* CTA */}
               <Button
                 size="lg"
-                className="w-full h-16 text-base md:text-lg font-bold rounded-full tracking-wide gap-2 px-4 text-center"
+                disabled={!termsAccepted}
+                className="w-full h-16 text-base md:text-lg font-bold rounded-full tracking-wide gap-2 px-4 text-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Lock className="w-5 h-5 shrink-0" />
                 <span>Objednat s povinností platby — {total.toLocaleString("cs-CZ")}&nbsp;Kč</span>
