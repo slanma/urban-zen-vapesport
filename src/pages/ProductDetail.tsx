@@ -106,16 +106,18 @@ const ProductDetail = () => {
             </p>
 
             <span className="font-heading text-3xl font-bold text-foreground mt-8">
-              {product.price.toLocaleString("cs-CZ")}&nbsp;Kč
+              {effectivePrice.toLocaleString("cs-CZ")}&nbsp;Kč
             </span>
 
             <Button
               size="lg"
+              disabled={!inStock}
               className="mt-6 w-full sm:w-auto gap-2 text-base font-semibold rounded-full px-10"
             >
               <ShoppingCart className="w-5 h-5" />
-              Přidat do košíku
+              {inStock ? "Přidat do košíku" : "Vyprodáno"}
             </Button>
+
 
             {/* Key features */}
             <div className="mt-12">
