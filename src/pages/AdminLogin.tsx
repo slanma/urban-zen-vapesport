@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Lock, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Lock, Loader2, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -86,6 +86,16 @@ const AdminLogin = () => {
             {loading ? "OVĚŘOVÁNÍ..." : "VSTOUPIT DO ADMINISTRACE"}
           </Button>
         </form>
+
+        <div className="mt-6 text-center">
+          <Link
+            to="/ucet"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Zpět na účet
+          </Link>
+        </div>
       </section>
     </main>
   );
