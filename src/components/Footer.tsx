@@ -34,12 +34,26 @@ const Footer = () => {
           <p className="text-primary-foreground/40 text-xs">
             © 2024 Vapesport. Všechna práva vyhrazena.
           </p>
-          <a
-            href="/odstoupeni"
-            className="text-primary-foreground/60 hover:text-primary-foreground text-xs transition-colors underline-offset-4 hover:underline"
-          >
-            Odstoupení od smlouvy
-          </a>
+          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <a
+              href="/obchodni-podminky"
+              className="text-primary-foreground/60 hover:text-primary-foreground text-xs transition-colors underline-offset-4 hover:underline"
+            >
+              Obchodní podmínky
+            </a>
+            <a
+              href="/ochrana-udaju"
+              className="text-primary-foreground/60 hover:text-primary-foreground text-xs transition-colors underline-offset-4 hover:underline"
+            >
+              Ochrana osobních údajů
+            </a>
+            <a
+              href="/odstoupeni"
+              className="text-primary-foreground/60 hover:text-primary-foreground text-xs transition-colors underline-offset-4 hover:underline"
+            >
+              Odstoupení od smlouvy
+            </a>
+          </nav>
         </div>
       </div>
     </footer>

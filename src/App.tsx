@@ -16,6 +16,8 @@ import B2BDashboard from "./pages/B2BDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import Withdrawal from "./pages/Withdrawal";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import CookieBanner from "./components/CookieBanner";
 import NotFound from "./pages/NotFound";
 
@@ -41,6 +43,8 @@ const App = () => (
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/odstoupeni" element={<Withdrawal />} />
+            <Route path="/obchodni-podminky" element={<Terms />} />
+            <Route path="/ochrana-udaju" element={<Privacy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
