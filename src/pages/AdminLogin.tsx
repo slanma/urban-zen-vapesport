@@ -86,6 +86,16 @@ const AdminLogin = () => {
             {loading ? "OVĚŘOVÁNÍ..." : "VSTOUPIT DO ADMINISTRACE"}
           </Button>
         </form>
+
+        <div className="mt-6 text-center">
+          <Link
+            to="/ucet"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Zpět na účet
+          </Link>
+        </div>
       </section>
     </main>
   );
