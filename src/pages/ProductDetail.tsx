@@ -30,7 +30,6 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id);
   const { get } = useProductOverrides();
-  const { isPartner } = useB2BPartner();
   const override = product ? get(product.id) : null;
   const effectivePrice = override?.price_override ?? product?.price ?? 0;
   const b2bPrice = override?.b2b_price ?? null;
