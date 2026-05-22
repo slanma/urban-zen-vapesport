@@ -1,5 +1,6 @@
 import type { Product } from "@/data/products";
-import { MORSEO_COLORS } from "@/data/products";
+import { ALL_COLOR_NAMES } from "@/data/products";
+
 
 
 
