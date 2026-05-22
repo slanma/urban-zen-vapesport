@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { isMorseoProduct, products } from "@/data/products";
+import { products, type Product } from "@/data/products";
 import { ArrowRight, Search, Sparkles } from "lucide-react";
 import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
@@ -27,11 +27,17 @@ const Products = () => {
     setSearchParams(next);
   };
 
+  const productCode = (p: Product): string => {
+    const spec = p.specs.find((s) => s.label === "Kód produktu");
+    return (spec?.value ?? "").trim().toUpperCase();
+  };
+  const isMorseovapeProduct = (p: Product) => productCode(p).startsWith("M");
+
   const tabs = useMemo(() => {
     const seen = new Set<string>();
     const list: { value: string; label: string }[] = [
       { value: "all", label: "Vše" },
-      { value: "morseo", label: "MORSEO" },
+      { value: "morseo", label: "MORSEOVAPE" },
     ];
     for (const p of products) {
       if (!seen.has(p.categoryLabel)) {
@@ -51,7 +57,7 @@ const Products = () => {
 
   const categoryFiltered = useMemo(() => {
     if (active === "all") return searchIndex;
-    if (active === "morseo") return searchIndex.filter(isMorseoProduct);
+    if (active === "morseo") return searchIndex.filter(isMorseovapeProduct);
     return searchIndex.filter((p) => p.categoryLabel === active);
   }, [active, searchIndex]);
 
