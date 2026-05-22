@@ -6,18 +6,26 @@ export interface ProductOverride {
   visible: boolean;
   in_stock: boolean;
   price_override: number | null;
+  b2b_price: number | null;
   vat_percent: number;
   description_html: string | null;
   youtube_url: string | null;
+  meta_title: string | null;
+  meta_description: string | null;
+  ai_keywords: string | null;
 }
 
 export const DEFAULT_OVERRIDE: Omit<ProductOverride, "product_id"> = {
   visible: true,
   in_stock: true,
   price_override: null,
+  b2b_price: null,
   vat_percent: 21,
   description_html: null,
   youtube_url: null,
+  meta_title: null,
+  meta_description: null,
+  ai_keywords: null,
 };
 
 type Listener = (map: Map<string, ProductOverride>) => void;
