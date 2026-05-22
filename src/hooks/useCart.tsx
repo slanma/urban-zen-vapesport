@@ -13,6 +13,9 @@ interface CartCtx {
   updateQty: (productId: string, delta: number, color?: string | null) => void;
   removeItem: (productId: string, color?: string | null) => void;
   clear: () => void;
+  isOpen: boolean;
+  openDrawer: () => void;
+  closeDrawer: () => void;
 }
 
 const Ctx = createContext<CartCtx | undefined>(undefined);
