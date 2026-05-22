@@ -67,6 +67,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
         <CookieBanner />
+        <CartDrawer />
         </CartProvider>
       </AuthProvider>
     </TooltipProvider>
