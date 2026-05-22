@@ -119,10 +119,15 @@ const expandColors = (p: Product, colors: readonly string[]): Product[] =>
   }));
 
 /** Public product catalogue. MORSEO and Vape Legends base entries are replaced
- *  by their color variants so each color appears as a distinct item. */
+ *  by their color variants so each color appears as a distinct item — EXCEPT
+ *  those in MORSEO_BASE_ONLY_IDS, which stay as a single card with a color
+ *  picker on the product detail page. */
 export const products: Product[] = feedProducts
   .filter((p) => p.image.trim().length > 0)
   .flatMap((p) => {
+    if (MORSEO_BASE_ONLY_IDS.has(p.id)) {
+      return [{ ...p, available_colors: MORSEO_COLORS }];
+    }
     if (isMorseoBase(p)) return expandColors(p, MORSEO_COLORS);
     if (isVapeLegendsBase(p)) return expandColors(p, VAPE_LEGENDS_COLORS);
     return [p];
