@@ -11,8 +11,14 @@ export interface Product {
   specs: { label: string; value: string }[];
   image: string;
   images?: string[];
+  /** Color variant name (only set for MORSEO color variants). */
+  color?: string;
+  /** Original feed id this variant was derived from (only set for variants). */
+  baseId?: string;
 }
 
+/** Canonical MORSEO base products from the feed. Each is exploded into the 8
+ *  color variants defined in `MORSEO_COLORS`. */
 export const MORSEO_PRODUCT_IDS = new Set([
   "vs-ramova-brasna-nepromokavy-zip-945203",
   "vs-ramova-brasna-stredni-se-2-zipy-a-sitkou-945204",
@@ -24,6 +30,26 @@ export const MORSEO_PRODUCT_IDS = new Set([
   "vs-smb-morseo-zlata-947383",
   "vs-ramova-brasna-nepromokavy-zip-bila-947404",
 ]);
+
+/** Exact 8 color variants generated for every MORSEO base product. */
+export const MORSEO_COLORS = [
+  "Černá",
+  "Bílá",
+  "Neon zelená",
+  "Modrá",
+  "Růžová",
+  "Červená",
+  "Zlatá",
+  "Neon žlutá",
+] as const;
+export type MorseoColor = (typeof MORSEO_COLORS)[number];
+
+export const colorSlug = (c: string) =>
+  c
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "-");
 
 export const legacyProductAliases: Record<string, string> = {
   "morseo-elektro-ii": "vs-ramova-brasna-nepromokavy-zip-947097",
@@ -37,13 +63,50 @@ export const legacyProductAliases: Record<string, string> = {
   "neopren-baterie": "vs-neoprenovy-obal-938229",
 };
 
-export const products: Product[] = feedProducts.filter((product) => product.image.trim().length > 0);
+const isMorseoBase = (p: Product) => MORSEO_PRODUCT_IDS.has(p.id);
+
+const expandMorseo = (p: Product): Product[] =>
+  MORSEO_COLORS.map((color) => ({
+    ...p,
+    id: `${p.id}-${colorSlug(color)}`,
+    name: `${p.name} - ${color}`,
+    color,
+    baseId: p.id,
+    specs: [
+      ...p.specs.filter((s) => s.label !== "Barva"),
+      { label: "Barva", value: color },
+    ],
+  }));
+
+/** Public product catalogue. MORSEO base entries are replaced by their 8 color
+ *  variants so each color appears as a distinct item in the grid. */
+export const products: Product[] = feedProducts
+  .filter((p) => p.image.trim().length > 0)
+  .flatMap((p) => (isMorseoBase(p) ? expandMorseo(p) : [p]));
+
+/** Variants keyed by their MORSEO base id, for hotspot expansion. */
+export const productsByBaseId: Map<string, Product[]> = (() => {
+  const map = new Map<string, Product[]>();
+  for (const p of products) {
+    const key = p.baseId ?? p.id;
+    const arr = map.get(key) ?? [];
+    arr.push(p);
+    map.set(key, arr);
+  }
+  return map;
+})();
 
 export const resolveProductId = (id?: string) => (id ? legacyProductAliases[id] ?? id : "");
 
 export const getProductById = (id?: string) => {
   const resolvedId = resolveProductId(id);
-  return products.find((product) => product.id === resolvedId);
+  // Direct (variant) match first
+  const direct = products.find((p) => p.id === resolvedId);
+  if (direct) return direct;
+  // Fallback: if a legacy/base id was requested, return the first variant
+  const fromBase = productsByBaseId.get(resolvedId);
+  return fromBase?.[0];
 };
 
-export const isMorseoProduct = (product: Product) => MORSEO_PRODUCT_IDS.has(product.id);
+export const isMorseoProduct = (product: Product) =>
+  Boolean(product.color) || MORSEO_PRODUCT_IDS.has(product.baseId ?? product.id);
