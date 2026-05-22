@@ -274,11 +274,17 @@ const Checkout = () => {
 
                 <OrderSummaryTable
                   items={orderLines}
-                  shippingGross={shippingOpt.price}
-                  paymentGross={paymentOpt.price}
-                  shippingLabel={shippingOpt.label}
-                  paymentLabel={paymentOpt.label}
+                  shippingGross={shippingPrice}
+                  paymentGross={paymentPrice}
+                  shippingLabel={shippingOpt?.label ?? "Doprava (nezvoleno)"}
+                  paymentLabel={paymentOpt?.label ?? "Platba (nezvoleno)"}
                 />
+
+                {(!shipping || !payment) && (
+                  <p className="text-xs text-destructive font-body">
+                    Pro dokončení vyberte způsob dopravy a platby.
+                  </p>
+                )}
 
                 <label className="flex items-start gap-3 cursor-pointer select-none">
                   <input
@@ -302,7 +308,13 @@ const Checkout = () => {
 
                 <Button
                   size="lg"
-                  disabled={!termsAccepted || (shipping === "zasilkovna" && !packetaPoint)}
+                  disabled={
+                    !termsAccepted ||
+                    !shipping ||
+                    !payment ||
+                    orderLines.length === 0 ||
+                    (shipping === "zasilkovna" && !packetaPoint)
+                  }
                   className="w-full h-16 text-base md:text-lg font-bold rounded-full tracking-wide gap-2 px-4 text-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Lock className="w-5 h-5 shrink-0" />
