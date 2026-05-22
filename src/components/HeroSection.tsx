@@ -18,8 +18,8 @@ const HeroSection = () => {
         <h1 className="text-[clamp(2rem,7.5vw,7.5rem)] font-heading font-extrabold tracking-[-0.01em] text-[hsl(0_0%_12%)] leading-[0.92] mb-4">
           KVALITA VRYTÁ DO KÓDU
         </h1>
-        <p className="text-[clamp(0.75rem,1.4vw,1.1rem)] text-[hsl(0_0%_25%)] font-body font-medium tracking-[0.35em] mb-7 uppercase">
-          3 ROKY. 0 REKLAMACÍ.
+        <p className="text-[clamp(0.75rem,1.4vw,1.1rem)] text-[hsl(0_0%_25%)] font-body font-medium tracking-[0.25em] mb-7 uppercase">
+          PRÉMIOVÉ CYKLOBRAŠNY A CHYTRÉ SYSTÉMY PRO VAŠI PRODEJNU
         </p>
         <a
           href="/produkty?kategorie=morseo"
