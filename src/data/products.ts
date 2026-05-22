@@ -145,7 +145,16 @@ export const productsByBaseId: Map<string, Product[]> = (() => {
   return map;
 })();
 
-export const resolveProductId = (id?: string) => (id ? legacyProductAliases[id] ?? id : "");
+export const resolveProductId = (id?: string) => {
+  if (!id) return "";
+  const aliased = legacyProductAliases[id] ?? id;
+  // Collapse legacy color-suffixed URLs (e.g. "...-945205-modra") onto the
+  // single base product card for items in MORSEO_BASE_ONLY_IDS.
+  for (const baseId of MORSEO_BASE_ONLY_IDS) {
+    if (aliased.startsWith(baseId + "-")) return baseId;
+  }
+  return aliased;
+};
 
 export const getProductById = (id?: string) => {
   const resolvedId = resolveProductId(id);
