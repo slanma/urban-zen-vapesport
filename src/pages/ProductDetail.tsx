@@ -3,6 +3,7 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getProductById } from "@/data/products";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +16,10 @@ import {
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id);
+  const { get } = useProductOverrides();
+  const override = product ? get(product.id) : null;
+  const effectivePrice = override?.price_override ?? product?.price ?? 0;
+  const inStock = override?.in_stock ?? true;
   const gallery = product?.images && product.images.length > 0
     ? product.images
     : product ? [product.image] : [];
