@@ -70,9 +70,13 @@ export type Database = {
       }
       product_overrides: {
         Row: {
+          ai_keywords: string | null
+          b2b_price: number | null
           created_at: string
           description_html: string | null
           in_stock: boolean
+          meta_description: string | null
+          meta_title: string | null
           price_override: number | null
           product_id: string
           updated_at: string
@@ -81,9 +85,13 @@ export type Database = {
           youtube_url: string | null
         }
         Insert: {
+          ai_keywords?: string | null
+          b2b_price?: number | null
           created_at?: string
           description_html?: string | null
           in_stock?: boolean
+          meta_description?: string | null
+          meta_title?: string | null
           price_override?: number | null
           product_id: string
           updated_at?: string
@@ -92,9 +100,13 @@ export type Database = {
           youtube_url?: string | null
         }
         Update: {
+          ai_keywords?: string | null
+          b2b_price?: number | null
           created_at?: string
           description_html?: string | null
           in_stock?: boolean
+          meta_description?: string | null
+          meta_title?: string | null
           price_override?: number | null
           product_id?: string
           updated_at?: string
