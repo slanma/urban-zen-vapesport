@@ -9,6 +9,7 @@ import {
   getProductsByHotspot,
   type Hotspot,
 } from "@/data/productHotspots";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
 
 interface HotspotDot {
   id: Hotspot;
