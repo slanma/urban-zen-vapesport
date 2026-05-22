@@ -41,7 +41,7 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
 
         {/* Right icons */}
         <div className="flex items-center gap-5">
-          <a href="#" className="hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
+          <a href="/produkty" className="hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors" aria-label="AI vyhledávání produktů">
             <Search className="w-4 h-4" />
             <span>Hledat</span>
           </a>

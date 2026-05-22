@@ -3,7 +3,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { isMorseoProduct, products } from "@/data/products";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Search, Sparkles } from "lucide-react";
+import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -11,6 +12,7 @@ const Products = () => {
     value === "MORSEO EVO" || value === "MORSEO" ? "morseo" : value ?? "all";
   const initial = normalizeCategory(searchParams.get("kategorie"));
   const [active, setActive] = useState<string>(initial);
+  const [query, setQuery] = useState<string>(searchParams.get("q") ?? "");
 
   useEffect(() => {
     setActive(normalizeCategory(searchParams.get("kategorie")));
@@ -18,11 +20,12 @@ const Products = () => {
 
   const selectTab = (value: string) => {
     setActive(value);
-    if (value === "all") setSearchParams({});
-    else setSearchParams({ kategorie: value });
+    const next = new URLSearchParams(searchParams);
+    if (value === "all") next.delete("kategorie");
+    else next.set("kategorie", value);
+    setSearchParams(next);
   };
 
-  // Dynamic tabs built from product categoryLabels (preserves first-seen order)
   const tabs = useMemo(() => {
     const seen = new Set<string>();
     const list: { value: string; label: string }[] = [
@@ -38,11 +41,26 @@ const Products = () => {
     return list;
   }, []);
 
-  const filtered = active === "all"
-    ? products
-    : active === "morseo"
-      ? products.filter(isMorseoProduct)
-      : products.filter((p) => p.categoryLabel === active);
+  const searchIndex = useMemo(() => buildSearchIndex(products), []);
+
+  const categoryFiltered = useMemo(() => {
+    if (active === "all") return searchIndex;
+    if (active === "morseo") return searchIndex.filter(isMorseoProduct);
+    return searchIndex.filter((p) => p.categoryLabel === active);
+  }, [active, searchIndex]);
+
+  const filtered = useMemo(
+    () => (query.trim() ? smartSearch(categoryFiltered, query) : categoryFiltered),
+    [categoryFiltered, query],
+  );
+
+  const onQueryChange = (value: string) => {
+    setQuery(value);
+    const next = new URLSearchParams(searchParams);
+    if (value.trim()) next.set("q", value);
+    else next.delete("q");
+    setSearchParams(next, { replace: true });
+  };
 
 
   return (
@@ -62,6 +80,35 @@ const Products = () => {
           LEGENDS — najděte ideální brašnu pro váš styl jízdy.
         </p>
       </section>
+
+      {/* AI Search */}
+      <div className="px-6 lg:px-12 max-w-[1400px] mx-auto mb-6">
+        <label htmlFor="ai-search" className="sr-only">
+          Vyhledávání produktů
+        </label>
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <input
+            id="ai-search"
+            type="search"
+            value={query}
+            onChange={(e) => onQueryChange(e.target.value)}
+            placeholder="Napište, co hledáte (např. brašna na řídítka pro e-bike)..."
+            className="w-full pl-12 pr-32 py-4 bg-card border border-border rounded-full text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+            aria-label="AI vyhledávání produktů přirozeným jazykem"
+          />
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1.5 text-[11px] font-body font-semibold tracking-wide uppercase text-primary">
+            <Sparkles className="w-3.5 h-3.5" /> AI Search
+          </span>
+        </div>
+        {query.trim() && (
+          <p className="mt-2 px-2 text-xs font-body text-muted-foreground">
+            {filtered.length === 0
+              ? "Nic jsme nenašli — zkuste jiný popis (např. „nepromokavá brašna na rám“)."
+              : `Nalezeno ${filtered.length} ${filtered.length === 1 ? "produkt" : filtered.length < 5 ? "produkty" : "produktů"}.`}
+          </p>
+        )}
+      </div>
 
       {/* Tabs */}
       <div className="px-6 lg:px-12 max-w-[1400px] mx-auto mb-10">
