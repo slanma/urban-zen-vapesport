@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
+import { useCart } from "@/hooks/useCart";
 
 const navItems = [
   { label: "DOMŮ", href: "/" },
@@ -16,6 +17,8 @@ interface NavbarProps {
 
 const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { count } = useCart();
+
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50 bg-transparent">
@@ -58,9 +61,9 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
           <a href="/b2b-login" className="hidden md:inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-[13px] font-bold px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
             B2B Portál
           </a>
-          <a href="#" className="flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
+          <a href="/kosik" className="flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
             <ShoppingCart className="w-4 h-4" />
-            <span>Košík (0)</span>
+            <span>Košík ({count})</span>
           </a>
           <button
             className="lg:hidden text-foreground ml-2"
