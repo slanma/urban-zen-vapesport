@@ -44,6 +44,36 @@ export const MORSEO_COLORS = [
 ] as const;
 export type MorseoColor = (typeof MORSEO_COLORS)[number];
 
+/** Vape Legends base products from the feed that get the 9-color expansion. */
+export const VAPE_LEGENDS_PRODUCT_IDS = new Set([
+  "vs-lady-s-mobilem-904681",
+  "vs-plochy-trojuhelnik-4kapsy-vape-904677",
+  "vs-maly-trojuhlenik-3kapsy-904673",
+  "vs-m2-podsedlo-925467",
+  "vs-brasna-pod-sedlo-zralok-twist-904706",
+  "vs-smb-vapesport-904678",
+  "vs-uni-maxi-twist-904687",
+]);
+
+/** Exact 9 color variants generated for every Vape Legends base product. */
+export const VAPE_LEGENDS_COLORS = [
+  "Černá",
+  "Šedá",
+  "Neon žlutá",
+  "Neon zelená",
+  "Růžová",
+  "Modrá",
+  "Červená",
+  "Tyrkysová světlá",
+  "Tyrkysová tmavá",
+] as const;
+export type VapeLegendsColor = (typeof VAPE_LEGENDS_COLORS)[number];
+
+/** Union of all color names recognized by the search engine. */
+export const ALL_COLOR_NAMES: readonly string[] = Array.from(
+  new Set<string>([...MORSEO_COLORS, ...VAPE_LEGENDS_COLORS]),
+);
+
 export const colorSlug = (c: string) =>
   c
     .toLowerCase()
@@ -64,9 +94,10 @@ export const legacyProductAliases: Record<string, string> = {
 };
 
 const isMorseoBase = (p: Product) => MORSEO_PRODUCT_IDS.has(p.id);
+const isVapeLegendsBase = (p: Product) => VAPE_LEGENDS_PRODUCT_IDS.has(p.id);
 
-const expandMorseo = (p: Product): Product[] =>
-  MORSEO_COLORS.map((color) => ({
+const expandColors = (p: Product, colors: readonly string[]): Product[] =>
+  colors.map((color) => ({
     ...p,
     id: `${p.id}-${colorSlug(color)}`,
     name: `${p.name} - ${color}`,
@@ -78,11 +109,15 @@ const expandMorseo = (p: Product): Product[] =>
     ],
   }));
 
-/** Public product catalogue. MORSEO base entries are replaced by their 8 color
- *  variants so each color appears as a distinct item in the grid. */
+/** Public product catalogue. MORSEO and Vape Legends base entries are replaced
+ *  by their color variants so each color appears as a distinct item. */
 export const products: Product[] = feedProducts
   .filter((p) => p.image.trim().length > 0)
-  .flatMap((p) => (isMorseoBase(p) ? expandMorseo(p) : [p]));
+  .flatMap((p) => {
+    if (isMorseoBase(p)) return expandColors(p, MORSEO_COLORS);
+    if (isVapeLegendsBase(p)) return expandColors(p, VAPE_LEGENDS_COLORS);
+    return [p];
+  });
 
 /** Variants keyed by their MORSEO base id, for hotspot expansion. */
 export const productsByBaseId: Map<string, Product[]> = (() => {
