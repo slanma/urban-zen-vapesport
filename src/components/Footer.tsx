@@ -30,10 +30,16 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-primary-foreground/10 pt-8 text-center">
+        <div className="border-t border-primary-foreground/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-primary-foreground/40 text-xs">
             © 2024 Vapesport. Všechna práva vyhrazena.
           </p>
+          <a
+            href="/odstoupeni"
+            className="text-primary-foreground/60 hover:text-primary-foreground text-xs transition-colors underline-offset-4 hover:underline"
+          >
+            Odstoupení od smlouvy
+          </a>
         </div>
       </div>
     </footer>
