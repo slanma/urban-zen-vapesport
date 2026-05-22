@@ -5,8 +5,9 @@ import Footer from "@/components/Footer";
 import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
-import { ArrowLeft, ShoppingCart, Check, Lock } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import PriceTag from "@/components/PriceTag";
 import {
   Table,
   TableBody,
