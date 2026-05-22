@@ -266,9 +266,11 @@ const Shop = () => {
                     {product.shortDescription}
                   </p>
                   <div className="flex items-center justify-between mt-auto">
-                    <span className="font-heading text-xl font-bold text-foreground">
-                      {product.price.toLocaleString("cs-CZ")}&nbsp;Kč
-                    </span>
+                    <PriceTag
+                      retailGross={get(product.id).price_override ?? product.price}
+                      b2bGross={get(product.id).b2b_price ?? null}
+                      size="md"
+                    />
                   </div>
                 </div>
               </Link>
