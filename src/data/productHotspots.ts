@@ -206,13 +206,21 @@ export const productHotspotEntries: HotspotEntry[] = [
   },
 ];
 
+import { productsByBaseId } from "./products";
+
 const byId = new Map(products.map((p) => [p.id, p]));
 
 export const getProductsByHotspot = (hotspot: Hotspot): Product[] =>
   productHotspotEntries
     .filter((e) => e.hotspot === hotspot)
-    .map((e) => byId.get(e.productId))
-    .filter((p): p is Product => Boolean(p));
+    .flatMap((e) => {
+      // MORSEO base ids expand into all 8 color variants; everything else
+      // resolves to a single product.
+      const variants = productsByBaseId.get(e.productId);
+      if (variants && variants.length > 0) return variants;
+      const single = byId.get(e.productId);
+      return single ? [single] : [];
+    });
 
 export const getHotspotForProduct = (productId: string): Hotspot => {
   const e = productHotspotEntries.find((x) => x.productId === productId);
