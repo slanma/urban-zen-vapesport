@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { isMorseoProduct, products } from "@/data/products";
 import { ArrowRight, Search, Sparkles } from "lucide-react";
 import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -41,7 +42,12 @@ const Products = () => {
     return list;
   }, []);
 
-  const searchIndex = useMemo(() => buildSearchIndex(products), []);
+  const { get: getOverride } = useProductOverrides();
+  const visibleProducts = useMemo(
+    () => products.filter((p) => getOverride(p.id).visible),
+    [getOverride],
+  );
+  const searchIndex = useMemo(() => buildSearchIndex(visibleProducts), [visibleProducts]);
 
   const categoryFiltered = useMemo(() => {
     if (active === "all") return searchIndex;

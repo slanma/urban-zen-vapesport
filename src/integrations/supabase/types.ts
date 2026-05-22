@@ -68,6 +68,42 @@ export type Database = {
         }
         Relationships: []
       }
+      product_overrides: {
+        Row: {
+          created_at: string
+          description_html: string | null
+          in_stock: boolean
+          price_override: number | null
+          product_id: string
+          updated_at: string
+          vat_percent: number
+          visible: boolean
+          youtube_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description_html?: string | null
+          in_stock?: boolean
+          price_override?: number | null
+          product_id: string
+          updated_at?: string
+          vat_percent?: number
+          visible?: boolean
+          youtube_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description_html?: string | null
+          in_stock?: boolean
+          price_override?: number | null
+          product_id?: string
+          updated_at?: string
+          vat_percent?: number
+          visible?: boolean
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
