@@ -135,25 +135,13 @@ const Cart = () => {
                       {subtotal.toLocaleString("cs-CZ")}&nbsp;Kč
                     </span>
                   </div>
-                  <div className="flex justify-between text-foreground">
-                    <span>Doprava</span>
-                    <span className="font-semibold">
-                      {shipping === 0 ? (
-                        <span className="text-primary">Zdarma</span>
-                      ) : (
-                        `${shipping.toLocaleString("cs-CZ")} Kč`
-                      )}
-                    </span>
-                  </div>
-                  {shipping > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      Doprava zdarma od {SHIPPING_THRESHOLD.toLocaleString("cs-CZ")}&nbsp;Kč
-                    </p>
-                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Dopravu a platbu zvolíte v dalším kroku.
+                  </p>
                   <div className="border-t border-border pt-3 flex justify-between text-foreground">
-                    <span className="font-heading text-lg font-bold">Celkem</span>
+                    <span className="font-heading text-lg font-bold">Mezisoučet</span>
                     <span className="font-heading text-2xl font-bold">
-                      {total.toLocaleString("cs-CZ")}&nbsp;Kč
+                      {subtotal.toLocaleString("cs-CZ")}&nbsp;Kč
                     </span>
                   </div>
                 </div>
