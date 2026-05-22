@@ -147,6 +147,7 @@ export const buildSearchIndex = (products: Product[]): SearchableProduct[] =>
         p.name,
         p.categoryLabel,
         p.shortDescription,
+        p.color ?? "",
         ...(p.features ?? []),
         ...compat,
       ].join(" ")
