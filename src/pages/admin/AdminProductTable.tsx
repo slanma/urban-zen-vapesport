@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Search, X, EyeOff, PackageX, Check } from "lucide-react";
+import { Search, X, EyeOff, PackageX, Check, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -104,6 +104,15 @@ export const AdminProductTable = ({ filter, title }: Props) => {
   const bulkOutOfStock = async () => {
     await Promise.all(Array.from(selected).map((id) => upsert(id, { in_stock: false })));
     toast({ title: `Označeno jako vyprodáno: ${selected.size}` });
+    setSelected(new Set());
+  };
+  const bulkDelete = async () => {
+    const count = selected.size;
+    if (!window.confirm(`Opravdu smazat ${count} ${count === 1 ? "položku" : "položek"}? Položky budou skryty z e-shopu i z XML feedů.`)) return;
+    await Promise.all(
+      Array.from(selected).map((id) => upsert(id, { visible: false, in_stock: false })),
+    );
+    toast({ title: `Smazáno ${count} ${count === 1 ? "položka" : "položek"}` });
     setSelected(new Set());
   };
 
@@ -268,6 +277,14 @@ export const AdminProductTable = ({ filter, title }: Props) => {
             className="text-background hover:bg-background/10 hover:text-background gap-1.5"
           >
             <PackageX className="w-4 h-4" /> Označit jako vyprodané
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={bulkDelete}
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive gap-1.5"
+          >
+            <Trash2 className="w-4 h-4" /> Smazat
           </Button>
           <button
             onClick={() => setSelected(new Set())}
