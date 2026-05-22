@@ -187,7 +187,7 @@ const Checkout = () => {
                       name="shipping"
                       value={opt.id}
                       checked={shipping === opt.id}
-                      onChange={() => setShipping(opt.id)}
+                      onChange={() => { setShipping(opt.id); setPayment(null); }}
                       className="w-5 h-5 accent-[hsl(var(--primary))]"
                     />
                     <span className="flex-1 font-body text-base font-medium text-foreground">
