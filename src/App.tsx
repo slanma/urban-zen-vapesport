@@ -21,6 +21,7 @@ import { AdminProducts, AdminServices } from "./pages/admin/AdminProductTable";
 import AdminProductEdit from "./pages/admin/AdminProductEdit";
 import AdminOrders from "./pages/admin/AdminOrders";
 import Withdrawal from "./pages/Withdrawal";
+import Account from "./pages/Account";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import CookieBanner from "./components/CookieBanner";
@@ -55,6 +56,7 @@ const App = () => (
               <Route path="objednavky" element={<AdminOrders />} />
             </Route>
             <Route path="/odstoupeni" element={<Withdrawal />} />
+            <Route path="/ucet" element={<Account />} />
             <Route path="/obchodni-podminky" element={<Terms />} />
             <Route path="/ochrana-udaju" element={<Privacy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
