@@ -15,7 +15,16 @@ export interface Product {
   color?: string;
   /** Original feed id this variant was derived from (only set for variants). */
   baseId?: string;
+  /** Base products that ship as a single card with a color picker on PDP. */
+  available_colors?: readonly string[];
 }
+
+/** Base MORSEO products that are NOT expanded into per-color rows. They
+ *  render as a single product card and expose color swatches on the PDP.
+ *  Feed generation still unpacks them into separate XML <ITEM> blocks. */
+export const MORSEO_BASE_ONLY_IDS = new Set([
+  "vs-brasna-na-mobil-5-5-945205",
+]);
 
 /** Canonical MORSEO base products from the feed. Each is exploded into the 8
  *  color variants defined in `MORSEO_COLORS`. */
@@ -110,10 +119,15 @@ const expandColors = (p: Product, colors: readonly string[]): Product[] =>
   }));
 
 /** Public product catalogue. MORSEO and Vape Legends base entries are replaced
- *  by their color variants so each color appears as a distinct item. */
+ *  by their color variants so each color appears as a distinct item — EXCEPT
+ *  those in MORSEO_BASE_ONLY_IDS, which stay as a single card with a color
+ *  picker on the product detail page. */
 export const products: Product[] = feedProducts
   .filter((p) => p.image.trim().length > 0)
   .flatMap((p) => {
+    if (MORSEO_BASE_ONLY_IDS.has(p.id)) {
+      return [{ ...p, available_colors: MORSEO_COLORS }];
+    }
     if (isMorseoBase(p)) return expandColors(p, MORSEO_COLORS);
     if (isVapeLegendsBase(p)) return expandColors(p, VAPE_LEGENDS_COLORS);
     return [p];
@@ -131,7 +145,16 @@ export const productsByBaseId: Map<string, Product[]> = (() => {
   return map;
 })();
 
-export const resolveProductId = (id?: string) => (id ? legacyProductAliases[id] ?? id : "");
+export const resolveProductId = (id?: string) => {
+  if (!id) return "";
+  const aliased = legacyProductAliases[id] ?? id;
+  // Collapse legacy color-suffixed URLs (e.g. "...-945205-modra") onto the
+  // single base product card for items in MORSEO_BASE_ONLY_IDS.
+  for (const baseId of MORSEO_BASE_ONLY_IDS) {
+    if (aliased.startsWith(baseId + "-")) return baseId;
+  }
+  return aliased;
+};
 
 export const getProductById = (id?: string) => {
   const resolvedId = resolveProductId(id);

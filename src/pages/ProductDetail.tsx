@@ -38,6 +38,10 @@ const ProductDetail = () => {
     ? product.images
     : product ? [product.image] : [];
   const [activeImg, setActiveImg] = useState(0);
+  const availableColors = product?.available_colors ?? null;
+  const [selectedColor, setSelectedColor] = useState<string | null>(
+    availableColors?.[0] ?? null,
+  );
 
   useEffect(() => {
     if (!product) return;
@@ -151,14 +155,54 @@ const ProductDetail = () => {
               )}
             </div>
 
+            {availableColors && availableColors.length > 0 && (
+              <div className="mt-8">
+                <div className="flex items-baseline justify-between mb-3">
+                  <h2 className="font-heading text-sm font-bold uppercase tracking-wider text-foreground">
+                    Barva
+                  </h2>
+                  <span className="font-body text-sm text-muted-foreground">
+                    {selectedColor ?? "Vyberte"}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {availableColors.map((c) => {
+                    const active = c === selectedColor;
+                    return (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => setSelectedColor(c)}
+                        aria-pressed={active}
+                        className={`px-4 py-2 rounded-full border text-sm font-body transition-colors ${
+                          active
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border bg-background text-foreground hover:border-primary"
+                        }`}
+                      >
+                        {c}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             <Button
               size="lg"
-              disabled={!inStock}
+              disabled={!inStock || (!!availableColors && !selectedColor)}
               className="mt-6 w-full sm:w-auto gap-2 text-base font-semibold rounded-full px-10"
             >
               <ShoppingCart className="w-5 h-5" />
-              {inStock ? "Přidat do košíku" : "Vyprodáno"}
+              {inStock
+                ? availableColors
+                  ? `Přidat do košíku${selectedColor ? ` – ${selectedColor}` : ""}`
+                  : "Přidat do košíku"
+                : "Vyprodáno"}
             </Button>
+
+
+
 
 
 
