@@ -9,6 +9,7 @@ import {
   getProductsByHotspot,
   type Hotspot,
 } from "@/data/productHotspots";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
 
 interface HotspotDot {
   id: Hotspot;
@@ -58,9 +59,16 @@ const dots: HotspotDot[] = [
 
 const Shop = () => {
   const [active, setActive] = useState<Hotspot>("Handlebar");
+  const { get } = useProductOverrides();
 
-  const filtered = useMemo(() => getProductsByHotspot(active), [active]);
-  const independent = useMemo(() => getProductsByHotspot("None"), []);
+  const filtered = useMemo(
+    () => getProductsByHotspot(active).filter((p) => get(p.id).visible),
+    [active, get],
+  );
+  const independent = useMemo(
+    () => getProductsByHotspot("None").filter((p) => get(p.id).visible),
+    [get],
+  );
 
   return (
     <main className="min-h-screen bg-background">

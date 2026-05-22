@@ -57,7 +57,9 @@ const ProductDetail = () => {
   }, [product, override?.meta_title, override?.meta_description, override?.ai_keywords]);
 
 
-  if (!product) {
+  const isDeleted = override ? override.visible === false : false;
+
+  if (!product || isDeleted) {
     return (
       <main className="min-h-screen bg-background flex flex-col">
         <Navbar />
