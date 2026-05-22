@@ -278,6 +278,14 @@ export const AdminProductTable = ({ filter, title }: Props) => {
           >
             <PackageX className="w-4 h-4" /> Označit jako vyprodané
           </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={bulkDelete}
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive gap-1.5"
+          >
+            <Trash2 className="w-4 h-4" /> Smazat
+          </Button>
           <button
             onClick={() => setSelected(new Set())}
             className="text-background/60 hover:text-background ml-1"
