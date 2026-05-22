@@ -16,6 +16,7 @@ import B2BDashboard from "./pages/B2BDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import Withdrawal from "./pages/Withdrawal";
+import CookieBanner from "./components/CookieBanner";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+        <CookieBanner />
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
