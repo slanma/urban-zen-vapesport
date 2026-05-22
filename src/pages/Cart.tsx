@@ -117,7 +117,7 @@ const Cart = () => {
 
                     {/* Remove */}
                     <button
-                      onClick={() => removeItem(item.productId)}
+                      onClick={() => removeItem(item.productId, item.color)}
                       className="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
                       aria-label={`Odstranit ${product.name}`}
                     >
