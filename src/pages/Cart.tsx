@@ -82,7 +82,7 @@ const Cart = () => {
                         {product.name}
                       </Link>
                       <p className="text-sm font-body text-muted-foreground mt-0.5">
-                        {product.categoryLabel}
+                        {item.color ? `${product.categoryLabel} · ${item.color}` : product.categoryLabel}
                       </p>
                       <p className="font-heading text-lg font-bold text-foreground mt-1 md:hidden">
                         {(product.price * item.quantity).toLocaleString("cs-CZ")}&nbsp;Kč
@@ -92,7 +92,7 @@ const Cart = () => {
                     {/* Quantity */}
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => updateQty(item.productId, -1)}
+                        onClick={() => updateQty(item.productId, -1, item.color)}
                         className="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-accent transition-colors text-lg font-bold"
                         aria-label="Snížit množství"
                       >
@@ -102,7 +102,7 @@ const Cart = () => {
                         {item.quantity}
                       </span>
                       <button
-                        onClick={() => updateQty(item.productId, 1)}
+                        onClick={() => updateQty(item.productId, 1, item.color)}
                         className="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-accent transition-colors text-lg font-bold"
                         aria-label="Zvýšit množství"
                       >
