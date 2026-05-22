@@ -56,6 +56,7 @@ const App = () => (
               <Route path="objednavky" element={<AdminOrders />} />
             </Route>
             <Route path="/odstoupeni" element={<Withdrawal />} />
+            <Route path="/ucet" element={<Account />} />
             <Route path="/obchodni-podminky" element={<Terms />} />
             <Route path="/ochrana-udaju" element={<Privacy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
