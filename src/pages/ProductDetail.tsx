@@ -30,8 +30,7 @@ const setMeta = (name: string, content: string, attr: "name" | "property" = "nam
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id);
-  const { addItem } = useCart();
-  const navigate = useNavigate();
+  const { addItem, openDrawer } = useCart();
   const { get } = useProductOverrides();
   const override = product ? get(product.id) : null;
   const effectivePrice = override?.price_override ?? product?.price ?? 0;
