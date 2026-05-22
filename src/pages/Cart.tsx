@@ -6,22 +6,15 @@ import { Minus, Plus, Trash2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 
-const SHIPPING_THRESHOLD = 3000;
-const SHIPPING_COST = 129;
-
 const Cart = () => {
   const { items: cart, updateQty, removeItem } = useCart();
 
   const getProduct = getProductById;
 
-
   const subtotal = cart.reduce((sum, item) => {
     const product = getProduct(item.productId);
     return sum + (product?.price ?? 0) * item.quantity;
   }, 0);
-
-  const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  const total = subtotal + shipping;
 
   return (
     <main className="min-h-screen bg-background">
