@@ -45,8 +45,15 @@ const App = () => (
             <Route path="/b2b-login" element={<B2BLogin />} />
             <Route path="/b2b-register" element={<B2BRegister />} />
             <Route path="/b2b-dashboard" element={<B2BDashboard />} />
-            <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminOverview />} />
+              <Route path="produkty" element={<AdminProducts />} />
+              <Route path="produkty/:id" element={<AdminProductEdit />} />
+              <Route path="sluzby" element={<AdminServices />} />
+              <Route path="objednavky" element={<AdminOrders />} />
+            </Route>
             <Route path="/odstoupeni" element={<Withdrawal />} />
             <Route path="/obchodni-podminky" element={<Terms />} />
             <Route path="/ochrana-udaju" element={<Privacy />} />
