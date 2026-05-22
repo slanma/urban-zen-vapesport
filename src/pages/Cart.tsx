@@ -1,45 +1,19 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getProductById } from "@/data/products";
 import { Minus, Plus, Trash2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-interface CartItem {
-  productId: string;
-  quantity: number;
-}
-
-const initialCart: CartItem[] = [
-  { productId: "morseo-elektro-ii", quantity: 1 },
-  { productId: "velky-trojuhelnik", quantity: 2 },
-  { productId: "neopren-baterie", quantity: 1 },
-];
+import { useCart } from "@/hooks/useCart";
 
 const SHIPPING_THRESHOLD = 3000;
 const SHIPPING_COST = 129;
 
 const Cart = () => {
-  const [cart, setCart] = useState<CartItem[]>(initialCart);
+  const { items: cart, updateQty, removeItem } = useCart();
 
   const getProduct = getProductById;
 
-  const updateQty = (productId: string, delta: number) => {
-    setCart((prev) =>
-      prev
-        .map((item) =>
-          item.productId === productId
-            ? { ...item, quantity: Math.max(0, item.quantity + delta) }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
-  };
-
-  const removeItem = (productId: string) => {
-    setCart((prev) => prev.filter((item) => item.productId !== productId));
-  };
 
   const subtotal = cart.reduce((sum, item) => {
     const product = getProduct(item.productId);
