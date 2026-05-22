@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { isMorseoProduct, products } from "@/data/products";
+import { products, type Product } from "@/data/products";
 import { ArrowRight, Search, Sparkles } from "lucide-react";
 import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
