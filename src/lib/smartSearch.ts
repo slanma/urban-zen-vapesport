@@ -156,15 +156,29 @@ export const buildSearchIndex = (products: Product[]): SearchableProduct[] =>
     return { ...p, __searchHaystack: haystack, __compatTags: compat };
   });
 
-// Color detection: if the query contains one of the 8 MORSEO color names,
-// only MORSEO variants of that color are returned.
-const COLOR_NORMALIZED = MORSEO_COLORS.map((c) => ({
+// Color detection: if the query contains one of the recognized color names
+// (MORSEO + Vape Legends), only variants of that color are returned.
+const COLOR_NORMALIZED = ALL_COLOR_NAMES.map((c) => ({
   color: c,
-  forms: [normalize(c), ...normalize(c).split(" ")].filter((s) => s.length >= 3),
+  normalized: normalize(c),
+  // Match full normalized form first; single-word forms also count if ≥4 chars
+  // to avoid false positives on common short words.
+  forms: Array.from(
+    new Set(
+      [normalize(c), ...normalize(c).split(" ")].filter((s) => s.length >= 4),
+    ),
+  ),
 }));
 
 const detectColor = (normalizedQuery: string): string | null => {
-  for (const { color, forms } of COLOR_NORMALIZED) {
+  // Prefer longer/multi-word color names first (e.g. "Tyrkysová světlá" before "Modrá").
+  const sorted = [...COLOR_NORMALIZED].sort(
+    (a, b) => b.normalized.length - a.normalized.length,
+  );
+  for (const { color, normalized } of sorted) {
+    if (normalizedQuery.includes(normalized)) return color;
+  }
+  for (const { color, forms } of sorted) {
     if (forms.some((f) => normalizedQuery.includes(f))) return color;
   }
   return null;
