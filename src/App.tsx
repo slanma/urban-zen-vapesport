@@ -65,9 +65,9 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <CartDrawer />
         </BrowserRouter>
         <CookieBanner />
-        <CartDrawer />
         </CartProvider>
       </AuthProvider>
     </TooltipProvider>
