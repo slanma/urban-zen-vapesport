@@ -227,40 +227,48 @@ const Checkout = () => {
             {/* Payment */}
             <div>
               <h2 className="font-heading text-lg font-bold text-foreground mb-5">Platba</h2>
-              <div className="space-y-3">
-                {availablePayments.map((opt) => (
-                  <label
-                    key={opt.id}
-                    className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
-                      payment === opt.id
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border bg-card hover:border-primary/30"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="payment"
-                      value={opt.id}
-                      checked={payment === opt.id}
-                      onChange={() => setPayment(opt.id)}
-                      className="w-5 h-5 accent-[hsl(var(--primary))]"
-                    />
-                    <span className="flex-1 font-body text-base font-medium text-foreground">
-                      {opt.label}
-                    </span>
-                    <span className="font-heading text-base font-bold text-foreground">
-                      {opt.price === 0 ? (
-                        <span className="text-primary">Zdarma</span>
-                      ) : (
-                        `+ ${fmtCZK(opt.price)}`
-                      )}
-                    </span>
-                  </label>
-                ))}
-              </div>
-              <p className="text-xs text-muted-foreground font-body mt-3">
-                Dostupné platby závisí na zvoleném způsobu dopravy.
-              </p>
+              {!shipping ? (
+                <div className="p-4 rounded-xl border border-dashed border-border bg-muted/30 text-sm font-body text-muted-foreground">
+                  Nejprve zvolte způsob dopravy.
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-3">
+                    {availablePayments.map((opt) => (
+                      <label
+                        key={opt.id}
+                        className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
+                          payment === opt.id
+                            ? "border-primary bg-primary/5 shadow-sm"
+                            : "border-border bg-card hover:border-primary/30"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="payment"
+                          value={opt.id}
+                          checked={payment === opt.id}
+                          onChange={() => setPayment(opt.id)}
+                          className="w-5 h-5 accent-[hsl(var(--primary))]"
+                        />
+                        <span className="flex-1 font-body text-base font-medium text-foreground">
+                          {opt.label}
+                        </span>
+                        <span className="font-heading text-base font-bold text-foreground">
+                          {opt.price === 0 ? (
+                            <span className="text-primary">Zdarma</span>
+                          ) : (
+                            `+ ${fmtCZK(opt.price)}`
+                          )}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground font-body mt-3">
+                    Dostupné platby závisí na zvoleném způsobu dopravy.
+                  </p>
+                </>
+              )}
             </div>
           </div>
 
