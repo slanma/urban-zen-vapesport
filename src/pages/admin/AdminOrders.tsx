@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import OrderSummaryTable from "@/components/OrderSummaryTable";
+import { fmtCZK } from "@/lib/vat";
 
 type Order = {
   id: string;
@@ -8,11 +10,13 @@ type Order = {
   email: string;
   phone: string;
   address: string;
-  amount: string;
   status: "Nová" | "Zpracovává se" | "Odesláno";
-  items: { name: string; qty: number; price: string }[];
+  /** Unit prices are WITH VAT (gross), in CZK. */
+  items: { name: string; qty: number; unitGross: number }[];
   payment: string;
+  paymentGross: number;
   shipping: string;
+  shippingGross: number;
   note?: string;
 };
 
@@ -24,13 +28,14 @@ const orders: Order[] = [
     email: "objednavky@cyklopro.cz",
     phone: "+420 777 123 456",
     address: "Vinohradská 12, 120 00 Praha 2",
-    amount: "12 450 Kč",
     status: "Nová",
     payment: "Bankovní převod",
-    shipping: "PPL - na adresu",
+    paymentGross: 0,
+    shipping: "PPL – Doručení na adresu",
+    shippingGross: 200,
     items: [
-      { name: "MORSEO Transformer 5,5\" - Neon zelená", qty: 10, price: "5 310 Kč" },
-      { name: "MORSEO Transformer 5,5\" - Černá", qty: 15, price: "7 140 Kč" },
+      { name: "MORSEO Transformer 5,5\" – Neon zelená", qty: 10, price: 531, unitGross: 531 } as any,
+      { name: "MORSEO Transformer 5,5\" – Černá", qty: 15, price: 476, unitGross: 476 } as any,
     ],
     note: "Prosíme o doručení do 5 pracovních dnů.",
   },
@@ -41,11 +46,12 @@ const orders: Order[] = [
     email: "jan.maly@email.cz",
     phone: "+420 605 987 321",
     address: "Náměstí Míru 5, 250 01 Brandýs nad Labem",
-    amount: "2 890 Kč",
     status: "Zpracovává se",
-    payment: "Platební karta",
-    shipping: "Zásilkovna",
-    items: [{ name: "MORSEO Transformer 5,5\" - Stříbrná", qty: 1, price: "531 Kč" }],
+    payment: "Dobírka",
+    paymentGross: 50,
+    shipping: "Zásilkovna – výdejní místa",
+    shippingGross: 150,
+    items: [{ name: "MORSEO Transformer 5,5\" – Stříbrná", qty: 1, unitGross: 531 }],
   },
   {
     id: "OBJ-2026-003",
@@ -54,11 +60,12 @@ const orders: Order[] = [
     email: "nakup@bikeworld.cz",
     phone: "+420 602 555 111",
     address: "Průmyslová 1234, 102 00 Praha 10",
-    amount: "34 200 Kč",
     status: "Odesláno",
-    payment: "Faktura 14 dní",
-    shipping: "Vlastní doprava",
-    items: [{ name: "MORSEO Transformer 5,5\" - mix variant", qty: 80, price: "23 440 Kč" }],
+    payment: "Platba na fakturu",
+    paymentGross: 0,
+    shipping: "PPL – Doručení na adresu",
+    shippingGross: 200,
+    items: [{ name: "MORSEO Transformer 5,5\" – mix variant", qty: 80, unitGross: 293 }],
   },
   {
     id: "OBJ-2026-004",
@@ -67,11 +74,12 @@ const orders: Order[] = [
     email: "eva.kratka@gmail.com",
     phone: "+420 720 444 222",
     address: "Lidická 88, 602 00 Brno",
-    amount: "1 490 Kč",
     status: "Nová",
     payment: "Dobírka",
-    shipping: "Česká pošta",
-    items: [{ name: "MORSEO Transformer 5,5\" - Černá", qty: 1, price: "531 Kč" }],
+    paymentGross: 50,
+    shipping: "Zásilkovna – výdejní místa",
+    shippingGross: 150,
+    items: [{ name: "MORSEO Transformer 5,5\" – Černá", qty: 1, unitGross: 531 }],
   },
   {
     id: "OBJ-2026-005",
@@ -80,13 +88,17 @@ const orders: Order[] = [
     email: "info@gravelshop.cz",
     phone: "+420 733 666 999",
     address: "Sokolská 22, 301 00 Plzeň",
-    amount: "8 760 Kč",
     status: "Zpracovává se",
     payment: "Bankovní převod",
-    shipping: "PPL - na adresu",
-    items: [{ name: "MORSEO Transformer 5,5\" - Neon zelená", qty: 20, price: "5 860 Kč" }],
+    paymentGross: 0,
+    shipping: "PPL – Doručení na adresu",
+    shippingGross: 200,
+    items: [{ name: "MORSEO Transformer 5,5\" – Neon zelená", qty: 20, unitGross: 293 }],
   },
 ];
+
+const grandTotal = (o: Order) =>
+  o.items.reduce((s, it) => s + it.unitGross * it.qty, 0) + o.shippingGross + o.paymentGross;
 
 const statusColor: Record<string, string> = {
   "Nová": "bg-primary/15 text-primary",
@@ -107,7 +119,7 @@ const AdminOrders = () => {
               <th className="px-4 py-3 font-semibold">ID</th>
               <th className="px-4 py-3 font-semibold">Datum</th>
               <th className="px-4 py-3 font-semibold">Zákazník</th>
-              <th className="px-4 py-3 font-semibold text-right">Částka</th>
+              <th className="px-4 py-3 font-semibold text-right">Částka (s DPH)</th>
               <th className="px-4 py-3 font-semibold">Stav</th>
             </tr>
           </thead>
@@ -121,7 +133,7 @@ const AdminOrders = () => {
                 <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{o.id}</td>
                 <td className="px-4 py-3">{o.date}</td>
                 <td className="px-4 py-3 font-medium">{o.customer}</td>
-                <td className="px-4 py-3 text-right font-semibold">{o.amount}</td>
+                <td className="px-4 py-3 text-right font-semibold tabular-nums">{fmtCZK(grandTotal(o))}</td>
                 <td className="px-4 py-3">
                   <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${statusColor[o.status]}`}>
                     {o.status}
@@ -134,7 +146,7 @@ const AdminOrders = () => {
       </div>
 
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           {selected && (
             <>
               <DialogHeader>
@@ -157,37 +169,20 @@ const AdminOrders = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2 text-foreground">Doprava a platba</h3>
-                  <p><span className="text-muted-foreground">Doprava:</span> {selected.shipping}</p>
-                  <p><span className="text-muted-foreground">Platba:</span> {selected.payment}</p>
+                  <p><span className="text-muted-foreground">Doprava:</span> {selected.shipping} ({fmtCZK(selected.shippingGross)})</p>
+                  <p><span className="text-muted-foreground">Platba:</span> {selected.payment}{selected.paymentGross > 0 ? ` (+${fmtCZK(selected.paymentGross)})` : ""}</p>
                 </div>
               </div>
 
               <div className="mt-4">
-                <h3 className="font-semibold mb-2 text-foreground text-sm">Položky</h3>
-                <div className="border border-border rounded-md overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead className="bg-muted/40 text-left">
-                      <tr>
-                        <th className="px-3 py-2 font-semibold">Produkt</th>
-                        <th className="px-3 py-2 font-semibold text-center">Ks</th>
-                        <th className="px-3 py-2 font-semibold text-right">Cena</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {selected.items.map((it, i) => (
-                        <tr key={i} className="border-t border-border">
-                          <td className="px-3 py-2">{it.name}</td>
-                          <td className="px-3 py-2 text-center">{it.qty}</td>
-                          <td className="px-3 py-2 text-right font-medium">{it.price}</td>
-                        </tr>
-                      ))}
-                      <tr className="border-t border-border bg-muted/30">
-                        <td className="px-3 py-2 font-semibold" colSpan={2}>Celkem</td>
-                        <td className="px-3 py-2 text-right font-bold">{selected.amount}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <h3 className="font-semibold mb-2 text-foreground text-sm">Fakturační rozpis</h3>
+                <OrderSummaryTable
+                  items={selected.items}
+                  shippingGross={selected.shippingGross}
+                  paymentGross={selected.paymentGross}
+                  shippingLabel={selected.shipping}
+                  paymentLabel={selected.payment}
+                />
               </div>
 
               {selected.note && (
