@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
+import { useCart } from "@/hooks/useCart";
 
 const navItems = [
   { label: "DOMŮ", href: "/" },
