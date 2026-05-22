@@ -188,10 +188,7 @@ const ProductDetail = () => {
               onClick={() => {
                 if (!product) return;
                 addItem(product.id, 1, selectedColor);
-                toast.success("Přidáno do košíku", {
-                  description: `${product.name}${selectedColor ? ` – ${selectedColor}` : ""}`,
-                  action: { label: "Do košíku", onClick: () => navigate("/kosik") },
-                });
+                openDrawer();
               }}
               className="mt-6 w-full sm:w-auto gap-2 text-base font-semibold rounded-full px-10"
             >
