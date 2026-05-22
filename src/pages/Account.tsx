@@ -93,12 +93,20 @@ const Account = () => {
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? "Odesílám…" : mode === "login" ? "Přihlásit se" : "Vytvořit účet"}
             </Button>
-            <p className="text-xs text-muted-foreground text-center">
-              B2B zákazník?{" "}
-              <a href="/b2b-login" className="underline hover:text-primary">
-                B2B portál
-              </a>
-            </p>
+            <div className="space-y-2 text-center">
+              <p className="text-xs text-muted-foreground">
+                B2B zákazník?{" "}
+                <a href="/b2b-login" className="underline hover:text-primary">
+                  B2B portál
+                </a>
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Administrace?{" "}
+                <a href="/admin-login" className="underline hover:text-primary">
+                  Přihlášení do administrace
+                </a>
+              </p>
+            </div>
           </form>
         )}
       </main>
