@@ -341,10 +341,10 @@ const Checkout = () => {
               {/* CTA */}
               <Button
                 size="lg"
-                className="w-full h-16 text-lg font-bold rounded-full tracking-wide gap-2"
+                className="w-full h-16 text-base md:text-lg font-bold rounded-full tracking-wide gap-2 px-4 text-center"
               >
-                <Lock className="w-5 h-5" />
-                ZAPLATIT {total.toLocaleString("cs-CZ")}&nbsp;Kč
+                <Lock className="w-5 h-5 shrink-0" />
+                <span>Objednat s povinností platby — {total.toLocaleString("cs-CZ")}&nbsp;Kč</span>
               </Button>
 
               {/* Trust signals */}
