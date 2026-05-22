@@ -50,7 +50,7 @@ const AdminLogin = () => {
       return;
     }
 
-    navigate("/admin-dashboard");
+    navigate("/admin");
   };
 
   return (
