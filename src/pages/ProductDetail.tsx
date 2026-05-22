@@ -4,9 +4,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
-import { useB2BPartner } from "@/hooks/useB2BPartner";
-import { ArrowLeft, ShoppingCart, Check, Lock } from "lucide-react";
+
+import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import PriceTag from "@/components/PriceTag";
 import {
   Table,
   TableBody,
@@ -29,7 +30,6 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id);
   const { get } = useProductOverrides();
-  const { isPartner } = useB2BPartner();
   const override = product ? get(product.id) : null;
   const effectivePrice = override?.price_override ?? product?.price ?? 0;
   const b2bPrice = override?.b2b_price ?? null;
@@ -139,22 +139,12 @@ const ProductDetail = () => {
               {product.shortDescription}
             </p>
 
-            <div className="mt-8 flex flex-col gap-2">
-              <span className="font-heading text-3xl font-bold text-foreground">
-                {effectivePrice.toLocaleString("cs-CZ")}&nbsp;Kč
-                <span className="ml-2 text-sm font-body font-normal text-muted-foreground">
-                  s DPH (MOC)
-                </span>
-              </span>
-              {b2bPrice !== null && isPartner && (
-                <span className="inline-flex items-center gap-2 font-heading text-xl font-bold text-primary">
-                  <Lock className="w-4 h-4" />
-                  B2B: {b2bPrice.toLocaleString("cs-CZ")}&nbsp;Kč
-                  <span className="text-xs font-body font-normal text-muted-foreground">
-                    s DPH (VOC – jen pro partnery)
-                  </span>
-                </span>
-              )}
+            <div className="mt-8">
+              <PriceTag
+                retailGross={effectivePrice}
+                b2bGross={b2bPrice}
+                size="lg"
+              />
             </div>
 
             {availableColors && availableColors.length > 0 && (

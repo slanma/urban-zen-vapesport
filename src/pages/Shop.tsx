@@ -10,6 +10,7 @@ import {
   type Hotspot,
 } from "@/data/productHotspots";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
+import PriceTag from "@/components/PriceTag";
 
 interface HotspotDot {
   id: Hotspot;
@@ -209,10 +210,12 @@ const Shop = () => {
                   <p className="text-sm font-body text-muted-foreground leading-relaxed mb-4 flex-1">
                     {product.shortDescription}
                   </p>
-                  <div className="flex items-center justify-between mt-auto">
-                    <span className="font-heading text-xl font-bold text-foreground">
-                      {product.price.toLocaleString("cs-CZ")}&nbsp;Kč
-                    </span>
+                  <div className="flex items-center justify-between mt-auto gap-3">
+                    <PriceTag
+                      retailGross={get(product.id).price_override ?? product.price}
+                      b2bGross={get(product.id).b2b_price ?? null}
+                      size="md"
+                    />
                     <span className="text-primary flex items-center gap-1 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
                       Detail <ArrowRight className="w-4 h-4" />
                     </span>
@@ -263,9 +266,11 @@ const Shop = () => {
                     {product.shortDescription}
                   </p>
                   <div className="flex items-center justify-between mt-auto">
-                    <span className="font-heading text-xl font-bold text-foreground">
-                      {product.price.toLocaleString("cs-CZ")}&nbsp;Kč
-                    </span>
+                    <PriceTag
+                      retailGross={get(product.id).price_override ?? product.price}
+                      b2bGross={get(product.id).b2b_price ?? null}
+                      size="md"
+                    />
                   </div>
                 </div>
               </Link>
