@@ -17,6 +17,8 @@ interface NavbarProps {
 
 const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { count } = useCart();
+
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50 bg-transparent">
