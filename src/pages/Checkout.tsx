@@ -55,22 +55,18 @@ const Checkout = () => {
     city: "",
     zip: "",
   });
-  const [shipping, setShipping] = useState<ShippingId>("zasilkovna");
-  const [payment, setPayment] = useState<PaymentId>("transfer");
+  const [shipping, setShipping] = useState<ShippingId | null>(null);
+  const [payment, setPayment] = useState<PaymentId | null>(null);
   const [packetaPoint, setPacketaPoint] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const availablePayments = PAYMENT_MATRIX[shipping];
+  const { items: cartItems } = useCart();
+  const { get: getOverride } = useProductOverrides();
 
-  // Reset payment when shipping changes to a method that doesn't allow current payment
-  useEffect(() => {
-    if (!availablePayments.some((p) => p.id === payment)) {
-      setPayment(availablePayments[0].id);
-    }
-  }, [shipping, availablePayments, payment]);
+  const availablePayments = shipping ? PAYMENT_MATRIX[shipping] : [];
 
-  const shippingOpt = SHIPPING_OPTIONS.find((s) => s.id === shipping)!;
-  const paymentOpt = availablePayments.find((p) => p.id === payment)!;
+  const shippingOpt = shipping ? SHIPPING_OPTIONS.find((s) => s.id === shipping)! : null;
+  const paymentOpt = payment ? availablePayments.find((p) => p.id === payment) ?? null : null;
 
   const orderLines = useMemo(
     () =>
@@ -78,18 +74,23 @@ const Checkout = () => {
         .map((item) => {
           const product = getProductById(item.productId);
           if (!product) return null;
+          const ov = getOverride(product.id);
+          if (ov?.visible === false) return null;
+          const unit = ov?.price_override ?? product.price;
           return {
-            name: product.name,
+            name: item.color ? `${product.name} – ${item.color}` : product.name,
             qty: item.quantity,
-            unitGross: product.price,
+            unitGross: unit,
           };
         })
         .filter((x): x is { name: string; qty: number; unitGross: number } => !!x),
-    [],
+    [cartItems, getOverride],
   );
 
   const subtotalGross = orderLines.reduce((s, it) => s + it.unitGross * it.qty, 0);
-  const grandGross = subtotalGross + shippingOpt.price + paymentOpt.price;
+  const shippingPrice = shippingOpt?.price ?? 0;
+  const paymentPrice = paymentOpt?.price ?? 0;
+  const grandGross = subtotalGross + shippingPrice + paymentPrice;
 
   const handleInput = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
