@@ -3,12 +3,19 @@
 // in independent category listings, not on the bike illustration.
 import { products, type Product } from "./products";
 
-export type Hotspot = "Handlebar" | "TopTube" | "Frame" | "RearRack" | "None";
+export type Hotspot =
+  | "Handlebar"
+  | "TopTube"
+  | "Frame"
+  | "UnderSaddle"
+  | "RearRack"
+  | "None";
 
 export const HOTSPOT_LABELS: Record<Hotspot, string> = {
   Handlebar: "Řídítka",
   TopTube: "Horní rámová trubka",
   Frame: "Rámový trojúhelník",
+  UnderSaddle: "Pod sedlo",
   RearRack: "Zadní nosič",
   None: "Ostatní kategorie",
 };
