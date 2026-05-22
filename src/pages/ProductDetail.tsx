@@ -1,10 +1,11 @@
 import { useParams, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
-import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
+import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { ArrowLeft, ShoppingCart, Check, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,17 +14,44 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+const setMeta = (name: string, content: string, attr: "name" | "property" = "name") => {
+  if (!content) return;
+  let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${name}"]`);
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute(attr, name);
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", content);
+};
+
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id);
   const { get } = useProductOverrides();
+  const { isPartner } = useB2BPartner();
   const override = product ? get(product.id) : null;
   const effectivePrice = override?.price_override ?? product?.price ?? 0;
+  const b2bPrice = override?.b2b_price ?? null;
   const inStock = override?.in_stock ?? true;
   const gallery = product?.images && product.images.length > 0
     ? product.images
     : product ? [product.image] : [];
   const [activeImg, setActiveImg] = useState(0);
+
+  useEffect(() => {
+    if (!product) return;
+    const title = override?.meta_title || `${product.name} | VAPESPORT`;
+    const desc = override?.meta_description || product.shortDescription;
+    const prevTitle = document.title;
+    document.title = title;
+    setMeta("description", desc);
+    if (override?.ai_keywords) setMeta("keywords", override.ai_keywords);
+    setMeta("og:title", title, "property");
+    setMeta("og:description", desc, "property");
+    return () => { document.title = prevTitle; };
+  }, [product, override?.meta_title, override?.meta_description, override?.ai_keywords]);
+
 
   if (!product) {
     return (
