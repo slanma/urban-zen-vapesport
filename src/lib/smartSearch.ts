@@ -1,4 +1,7 @@
 import type { Product } from "@/data/products";
+import { MORSEO_COLORS } from "@/data/products";
+
+
 
 // Czech synonym / concept map. Key = canonical token; values = aliases user might type.
 const SYNONYMS: Record<string, string[]> = {
