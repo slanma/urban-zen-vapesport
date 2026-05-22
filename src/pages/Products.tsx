@@ -3,7 +3,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { isMorseoProduct, products } from "@/data/products";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Search, Sparkles } from "lucide-react";
+import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -11,6 +12,7 @@ const Products = () => {
     value === "MORSEO EVO" || value === "MORSEO" ? "morseo" : value ?? "all";
   const initial = normalizeCategory(searchParams.get("kategorie"));
   const [active, setActive] = useState<string>(initial);
+  const [query, setQuery] = useState<string>(searchParams.get("q") ?? "");
 
   useEffect(() => {
     setActive(normalizeCategory(searchParams.get("kategorie")));
@@ -18,11 +20,12 @@ const Products = () => {
 
   const selectTab = (value: string) => {
     setActive(value);
-    if (value === "all") setSearchParams({});
-    else setSearchParams({ kategorie: value });
+    const next = new URLSearchParams(searchParams);
+    if (value === "all") next.delete("kategorie");
+    else next.set("kategorie", value);
+    setSearchParams(next);
   };
 
-  // Dynamic tabs built from product categoryLabels (preserves first-seen order)
   const tabs = useMemo(() => {
     const seen = new Set<string>();
     const list: { value: string; label: string }[] = [
@@ -38,11 +41,26 @@ const Products = () => {
     return list;
   }, []);
 
-  const filtered = active === "all"
-    ? products
-    : active === "morseo"
-      ? products.filter(isMorseoProduct)
-      : products.filter((p) => p.categoryLabel === active);
+  const searchIndex = useMemo(() => buildSearchIndex(products), []);
+
+  const categoryFiltered = useMemo(() => {
+    if (active === "all") return searchIndex;
+    if (active === "morseo") return searchIndex.filter(isMorseoProduct);
+    return searchIndex.filter((p) => p.categoryLabel === active);
+  }, [active, searchIndex]);
+
+  const filtered = useMemo(
+    () => (query.trim() ? smartSearch(categoryFiltered, query) : categoryFiltered),
+    [categoryFiltered, query],
+  );
+
+  const onQueryChange = (value: string) => {
+    setQuery(value);
+    const next = new URLSearchParams(searchParams);
+    if (value.trim()) next.set("q", value);
+    else next.delete("q");
+    setSearchParams(next, { replace: true });
+  };
 
 
   return (
