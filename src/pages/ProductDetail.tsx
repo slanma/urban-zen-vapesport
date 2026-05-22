@@ -38,6 +38,10 @@ const ProductDetail = () => {
     ? product.images
     : product ? [product.image] : [];
   const [activeImg, setActiveImg] = useState(0);
+  const availableColors = product?.available_colors ?? null;
+  const [selectedColor, setSelectedColor] = useState<string | null>(
+    availableColors?.[0] ?? null,
+  );
 
   useEffect(() => {
     if (!product) return;
