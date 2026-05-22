@@ -34,8 +34,8 @@ const orders: Order[] = [
     shipping: "PPL – Doručení na adresu",
     shippingGross: 200,
     items: [
-      { name: "MORSEO Transformer 5,5\" – Neon zelená", qty: 10, price: 531, unitGross: 531 } as any,
-      { name: "MORSEO Transformer 5,5\" – Černá", qty: 15, price: 476, unitGross: 476 } as any,
+      { name: "MORSEO Transformer 5,5\" – Neon zelená", qty: 10, unitGross: 531 },
+      { name: "MORSEO Transformer 5,5\" – Černá", qty: 15, unitGross: 476 },
     ],
     note: "Prosíme o doručení do 5 pracovních dnů.",
   },
