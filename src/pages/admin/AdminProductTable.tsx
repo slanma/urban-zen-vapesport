@@ -33,14 +33,15 @@ export const AdminProductTable = ({ filter, title }: Props) => {
   const priceRef = useRef<HTMLInputElement>(null);
 
   const filtered = useMemo(() => {
+    const notDeleted = list.filter((p) => get(p.id).visible);
     const q = query.trim().toLowerCase();
-    if (!q) return list;
-    return list.filter(
+    if (!q) return notDeleted;
+    return notDeleted.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.id.toLowerCase().includes(q),
     );
-  }, [list, query]);
+  }, [list, query, get]);
 
   useEffect(() => {
     if (editingPrice && priceRef.current) {
