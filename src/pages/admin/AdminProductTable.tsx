@@ -106,6 +106,15 @@ export const AdminProductTable = ({ filter, title }: Props) => {
     toast({ title: `Označeno jako vyprodáno: ${selected.size}` });
     setSelected(new Set());
   };
+  const bulkDelete = async () => {
+    const count = selected.size;
+    if (!window.confirm(`Opravdu smazat ${count} ${count === 1 ? "položku" : "položek"}? Položky budou skryty z e-shopu i z XML feedů.`)) return;
+    await Promise.all(
+      Array.from(selected).map((id) => upsert(id, { visible: false, in_stock: false })),
+    );
+    toast({ title: `Smazáno ${count} ${count === 1 ? "položka" : "položek"}` });
+    setSelected(new Set());
+  };
 
   return (
     <section className="p-8 max-w-[1400px]">
