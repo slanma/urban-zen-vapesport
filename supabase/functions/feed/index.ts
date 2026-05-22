@@ -88,18 +88,20 @@ const renderItem = (
   override: Override,
   siteOrigin: string,
 ): string => {
-  const sku = `${base.code.replace(/\s+/g, "")}-${colorSkuToken(color)}`;
-  const variantId = `${base.id}-${colorSlug(color)}`;
-  const url = `${siteOrigin}/produkt/${variantId}`;
-  const price = override.price_override ?? base.price;
+  const cleanCode = base.code.replace(/\s+/g, "");
+  const itemId = `${cleanCode}-${colorSkuToken(color)}`; // e.g. M411104-NeonZelena
+  const groupId = cleanCode;                              // base code groups all colors
+  const variantUrl = `${base.id}-${colorSlug(color)}`;
+  const url = `${siteOrigin}/produkt/${variantUrl}`;
+  const price = override.price_override ?? base.price;    // MOC s DPH only — never B2B VOC
   const deliveryDate = override.in_stock ? "0" : "14";
   const availability = override.in_stock ? "in stock" : "out of stock";
 
   return `  <ITEM>
-    <ITEM_ID>${escapeXml(variantId)}</ITEM_ID>
-    <ITEMGROUP_ID>${escapeXml(base.id)}</ITEMGROUP_ID>
-    <CODE>${escapeXml(sku)}</CODE>
-    <SKU>${escapeXml(sku)}</SKU>
+    <ITEM_ID>${escapeXml(itemId)}</ITEM_ID>
+    <ITEMGROUP_ID>${escapeXml(groupId)}</ITEMGROUP_ID>
+    <CODE>${escapeXml(itemId)}</CODE>
+    <SKU>${escapeXml(itemId)}</SKU>
     <PRODUCTNAME>${cdata(`${base.name} - ${color}`)}</PRODUCTNAME>
     <DESCRIPTION>${cdata(base.shortDescription)}</DESCRIPTION>
     <MANUFACTURER>VAPESPORT</MANUFACTURER>
