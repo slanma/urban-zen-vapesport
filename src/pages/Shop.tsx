@@ -41,6 +41,13 @@ const dots: HotspotDot[] = [
     left: "51%",
   },
   {
+    id: "UnderSaddle",
+    label: "Pod sedlo",
+    ariaDescription: "Zobrazit podsedlové brašny",
+    top: "21%",
+    left: "42%",
+  },
+  {
     id: "RearRack",
     label: "Nosič",
     ariaDescription: "Zobrazit brašny na zadní nosič",
