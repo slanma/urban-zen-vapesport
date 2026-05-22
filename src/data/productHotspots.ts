@@ -110,9 +110,78 @@ export const productHotspotEntries: HotspotEntry[] = [
     categories: ["Brašny pro ELEKTROKOLO"],
   },
 
-  // ── RearRack ──────────────────────────────────────────────────────────────
-  // (Currently no matching "Brašna na nosič" products exist in the feed —
-  //  intentionally left empty rather than fabricating fake products.)
+  // ── Frame (Part 2 — Rámové brašny & ochrana) ──────────────────────────────
+  {
+    productId: "vs-trojuhelnik-sw-914131",
+    hotspot: "Frame",
+    categories: ["Rámové brašny"],
+  },
+  {
+    productId: "vs-trojuhelnik-elektro-i-904682",
+    hotspot: "Frame",
+    categories: ["Brašny pro ELEKTROKOLO", "Rámové brašny"],
+  },
+  {
+    productId: "vs-plochy-trojuhelnik-4kapsy-vape-904677", // Plochý trojúhelník 4-ti kapsý
+    hotspot: "Frame",
+    categories: ["Brašny pro ELEKTROKOLO", "Rámové brašny"],
+  },
+  {
+    productId: "vs-maly-trojuhlenik-3kapsy-904673", // Malý trojúhelník tříkapsý
+    hotspot: "Frame",
+    categories: ["Rámové brašny"],
+  },
+  {
+    productId: "vs-neoprenovy-obal-938229", // Neopren na míru
+    hotspot: "Frame",
+    categories: ["Brašny pro ELEKTROKOLO"],
+  },
+  {
+    productId: "vs-obal-na-tlumic-908656",
+    hotspot: "Frame",
+    categories: ["Brašny pro ELEKTROKOLO"],
+  },
+
+  // ── Handlebar (Part 2) ────────────────────────────────────────────────────
+  {
+    productId: "vs-obal-na-display-prevoz-elektrokola-943568",
+    hotspot: "Handlebar",
+    categories: ["Brašny pro ELEKTROKOLO"],
+  },
+
+  // ── UnderSaddle (Pod sedlo) ───────────────────────────────────────────────
+  {
+    productId: "vs-m2-podsedlo-925467",
+    hotspot: "UnderSaddle",
+    categories: ["Brašny pod sedlo"],
+  },
+  {
+    productId: "vs-podsedlo-mala-spe-904708",
+    hotspot: "UnderSaddle",
+    categories: ["Brašny pod sedlo"],
+  },
+  {
+    productId: "vs-brasna-pod-sedlo-zralok-twist-904706",
+    hotspot: "UnderSaddle",
+    categories: ["Brašny pod sedlo"],
+  },
+  {
+    productId: "vs-wasabi-podsedlo-velka-904700",
+    hotspot: "UnderSaddle",
+    categories: ["Brašny pod sedlo"],
+  },
+
+  // ── RearRack (Zadní nosič) ────────────────────────────────────────────────
+  {
+    productId: "vs-street-bag-922789",
+    hotspot: "RearRack",
+    categories: ["Brašny na nosič"],
+  },
+  {
+    productId: "vs-vrch-3-brasny-912317",
+    hotspot: "RearRack",
+    categories: ["Brašny na nosič"],
+  },
 
   // ── None (independent categories only) ────────────────────────────────────
   {
@@ -124,6 +193,16 @@ export const productHotspotEntries: HotspotEntry[] = [
     productId: "vs-mini-sportovni-ledvinka-944096",
     hotspot: "None",
     categories: ["Brašny na mobilní telefony"],
+  },
+  {
+    productId: "vs-taska-na-kolo-905504",
+    hotspot: "None",
+    categories: ["Doplňky k brašnám"],
+  },
+  {
+    productId: "vs-plastenka-na-trojbrasnu-904712",
+    hotspot: "None",
+    categories: ["Doplňky k brašnám"],
   },
 ];
 
