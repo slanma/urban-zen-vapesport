@@ -1857,33 +1857,26 @@ export const feedProducts: Product[] = [
   },
   {
     "id": "vs-brasna-na-mobil-5-5-945205",
-    "name": "Brašna na mobil 5,5\"",
+    "name": "MORSEO Transformer 5,5\"",
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
-    "price": 485,
-    "shortDescription": "MORSEO Transformer 5,5\" brašna na řídítka",
+    "price": 531,
+    "shortDescription": "Designová nepromokavá brašna na řídítka a představec s dotykovou slídou (16,5 × 9 cm) pro e-bike a koloběžky.",
     "features": [
-      "Dostupné barvy: černá (black), červená (red), modrá (blue), růžová (neon pink), neon zelená (neon green), neon žlutá (neon yellow)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "Plně dotyková slída 16,5 × 9 cm pro ovládání navigace za jízdy",
+      "3× silikonový suchý zip (12 cm) na představec + 2× suchý zip na řídítka",
+      "Nepromokavý vnější zip a materiál PE 600D",
+      "Dostupné barvy: Černá, Bílá, Neon zelená, Modrá, Růžová, Červená, Zlatá, Neon žlutá"
     ],
     "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Brašny na kolo"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "M411104"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      },
-      {
-        "label": "Varianty",
-        "value": "8 barev"
-      }
+      { "label": "Kategorie", "value": "Brašny na kolo" },
+      { "label": "Kód produktu", "value": "M411104" },
+      { "label": "Výrobce", "value": "VAPESPORT" },
+      { "label": "Umístění", "value": "Řídítka / Představec" },
+      { "label": "Rozměry", "value": "18 × 10 × 4 cm" },
+      { "label": "Dotyková fólie", "value": "16,5 × 9 cm" },
+      { "label": "Materiál", "value": "PE 600D (voděodpudivý)" },
+      { "label": "Varianty", "value": "8 barev" }
     ],
     "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/transformer-5-5-morseo-013-2116957.jpeg",
     "images": [
