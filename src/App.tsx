@@ -21,6 +21,7 @@ import { AdminProducts, AdminServices } from "./pages/admin/AdminProductTable";
 import AdminProductEdit from "./pages/admin/AdminProductEdit";
 import AdminOrders from "./pages/admin/AdminOrders";
 import Withdrawal from "./pages/Withdrawal";
+import Account from "./pages/Account";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import CookieBanner from "./components/CookieBanner";
