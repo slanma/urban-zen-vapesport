@@ -1,19 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getProductById } from "@/data/products";
+import { useCart } from "@/hooks/useCart";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { ShieldCheck, Lock, ChevronLeft, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import OrderSummaryTable from "@/components/OrderSummaryTable";
 import { fmtCZK } from "@/lib/vat";
-
-/* Dummy cart for demo */
-const cartItems = [
-  { productId: "morseo-elektro-ii", quantity: 1 },
-  { productId: "velky-trojuhelnik", quantity: 2 },
-  { productId: "neopren-baterie", quantity: 1 },
-];
 
 type ShippingId = "zasilkovna" | "ppl" | "osobni";
 type PaymentId = "cash" | "transfer" | "cod" | "invoice";
