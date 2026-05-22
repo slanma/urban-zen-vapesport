@@ -154,18 +154,41 @@ export const buildSearchIndex = (products: Product[]): SearchableProduct[] =>
     return { ...p, __searchHaystack: haystack, __compatTags: compat };
   });
 
+// Color detection: if the query contains one of the 8 MORSEO color names,
+// only MORSEO variants of that color are returned.
+const COLOR_NORMALIZED = MORSEO_COLORS.map((c) => ({
+  color: c,
+  forms: [normalize(c), ...normalize(c).split(" ")].filter((s) => s.length >= 3),
+}));
+
+const detectColor = (normalizedQuery: string): string | null => {
+  for (const { color, forms } of COLOR_NORMALIZED) {
+    if (forms.some((f) => normalizedQuery.includes(f))) return color;
+  }
+  return null;
+};
+
 export const smartSearch = (
   index: SearchableProduct[],
   query: string,
 ): SearchableProduct[] => {
   const q = query.trim();
   if (!q) return index;
+
+  const normalizedQuery = normalize(q);
+  const colorMatch = detectColor(normalizedQuery);
+
+  // If a color is named, hard-filter to that color first (priority rule).
+  const colorFiltered = colorMatch
+    ? index.filter((p) => p.color === colorMatch)
+    : index;
+
   const rawTokens = tokenize(q);
-  if (!rawTokens.length) return index;
+  if (!rawTokens.length) return colorFiltered;
 
   const expandedGroups = rawTokens.map(expandToken);
 
-  const scored = index
+  const scored = colorFiltered
     .map((p) => {
       const pTokens = p.__searchHaystack.split(" ");
       let score = 0;
@@ -187,8 +210,14 @@ export const smartSearch = (
       }
       return { p, score, matchedGroups };
     })
-    .filter((r) => r.matchedGroups >= Math.ceil(expandedGroups.length * 0.5))
+    .filter((r) =>
+      // When the user typed a color, allow the color filter alone to qualify.
+      colorMatch
+        ? true
+        : r.matchedGroups >= Math.ceil(expandedGroups.length * 0.5),
+    )
     .sort((a, b) => b.score - a.score);
 
   return scored.map((r) => r.p);
 };
+
