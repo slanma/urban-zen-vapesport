@@ -1,19 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getProductById } from "@/data/products";
+import { useCart } from "@/hooks/useCart";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { ShieldCheck, Lock, ChevronLeft, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import OrderSummaryTable from "@/components/OrderSummaryTable";
 import { fmtCZK } from "@/lib/vat";
-
-/* Dummy cart for demo */
-const cartItems = [
-  { productId: "morseo-elektro-ii", quantity: 1 },
-  { productId: "velky-trojuhelnik", quantity: 2 },
-  { productId: "neopren-baterie", quantity: 1 },
-];
 
 type ShippingId = "zasilkovna" | "ppl" | "osobni";
 type PaymentId = "cash" | "transfer" | "cod" | "invoice";
@@ -60,22 +55,18 @@ const Checkout = () => {
     city: "",
     zip: "",
   });
-  const [shipping, setShipping] = useState<ShippingId>("zasilkovna");
-  const [payment, setPayment] = useState<PaymentId>("transfer");
+  const [shipping, setShipping] = useState<ShippingId | null>(null);
+  const [payment, setPayment] = useState<PaymentId | null>(null);
   const [packetaPoint, setPacketaPoint] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const availablePayments = PAYMENT_MATRIX[shipping];
+  const { items: cartItems } = useCart();
+  const { get: getOverride } = useProductOverrides();
 
-  // Reset payment when shipping changes to a method that doesn't allow current payment
-  useEffect(() => {
-    if (!availablePayments.some((p) => p.id === payment)) {
-      setPayment(availablePayments[0].id);
-    }
-  }, [shipping, availablePayments, payment]);
+  const availablePayments = shipping ? PAYMENT_MATRIX[shipping] : [];
 
-  const shippingOpt = SHIPPING_OPTIONS.find((s) => s.id === shipping)!;
-  const paymentOpt = availablePayments.find((p) => p.id === payment)!;
+  const shippingOpt = shipping ? SHIPPING_OPTIONS.find((s) => s.id === shipping)! : null;
+  const paymentOpt = payment ? availablePayments.find((p) => p.id === payment) ?? null : null;
 
   const orderLines = useMemo(
     () =>
@@ -83,18 +74,23 @@ const Checkout = () => {
         .map((item) => {
           const product = getProductById(item.productId);
           if (!product) return null;
+          const ov = getOverride(product.id);
+          if (ov?.visible === false) return null;
+          const unit = ov?.price_override ?? product.price;
           return {
-            name: product.name,
+            name: item.color ? `${product.name} – ${item.color}` : product.name,
             qty: item.quantity,
-            unitGross: product.price,
+            unitGross: unit,
           };
         })
         .filter((x): x is { name: string; qty: number; unitGross: number } => !!x),
-    [],
+    [cartItems, getOverride],
   );
 
   const subtotalGross = orderLines.reduce((s, it) => s + it.unitGross * it.qty, 0);
-  const grandGross = subtotalGross + shippingOpt.price + paymentOpt.price;
+  const shippingPrice = shippingOpt?.price ?? 0;
+  const paymentPrice = paymentOpt?.price ?? 0;
+  const grandGross = subtotalGross + shippingPrice + paymentPrice;
 
   const handleInput = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -191,7 +187,7 @@ const Checkout = () => {
                       name="shipping"
                       value={opt.id}
                       checked={shipping === opt.id}
-                      onChange={() => setShipping(opt.id)}
+                      onChange={() => { setShipping(opt.id); setPayment(null); }}
                       className="w-5 h-5 accent-[hsl(var(--primary))]"
                     />
                     <span className="flex-1 font-body text-base font-medium text-foreground">
@@ -231,40 +227,48 @@ const Checkout = () => {
             {/* Payment */}
             <div>
               <h2 className="font-heading text-lg font-bold text-foreground mb-5">Platba</h2>
-              <div className="space-y-3">
-                {availablePayments.map((opt) => (
-                  <label
-                    key={opt.id}
-                    className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
-                      payment === opt.id
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border bg-card hover:border-primary/30"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="payment"
-                      value={opt.id}
-                      checked={payment === opt.id}
-                      onChange={() => setPayment(opt.id)}
-                      className="w-5 h-5 accent-[hsl(var(--primary))]"
-                    />
-                    <span className="flex-1 font-body text-base font-medium text-foreground">
-                      {opt.label}
-                    </span>
-                    <span className="font-heading text-base font-bold text-foreground">
-                      {opt.price === 0 ? (
-                        <span className="text-primary">Zdarma</span>
-                      ) : (
-                        `+ ${fmtCZK(opt.price)}`
-                      )}
-                    </span>
-                  </label>
-                ))}
-              </div>
-              <p className="text-xs text-muted-foreground font-body mt-3">
-                Dostupné platby závisí na zvoleném způsobu dopravy.
-              </p>
+              {!shipping ? (
+                <div className="p-4 rounded-xl border border-dashed border-border bg-muted/30 text-sm font-body text-muted-foreground">
+                  Nejprve zvolte způsob dopravy.
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-3">
+                    {availablePayments.map((opt) => (
+                      <label
+                        key={opt.id}
+                        className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
+                          payment === opt.id
+                            ? "border-primary bg-primary/5 shadow-sm"
+                            : "border-border bg-card hover:border-primary/30"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="payment"
+                          value={opt.id}
+                          checked={payment === opt.id}
+                          onChange={() => setPayment(opt.id)}
+                          className="w-5 h-5 accent-[hsl(var(--primary))]"
+                        />
+                        <span className="flex-1 font-body text-base font-medium text-foreground">
+                          {opt.label}
+                        </span>
+                        <span className="font-heading text-base font-bold text-foreground">
+                          {opt.price === 0 ? (
+                            <span className="text-primary">Zdarma</span>
+                          ) : (
+                            `+ ${fmtCZK(opt.price)}`
+                          )}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground font-body mt-3">
+                    Dostupné platby závisí na zvoleném způsobu dopravy.
+                  </p>
+                </>
+              )}
             </div>
           </div>
 
@@ -278,11 +282,17 @@ const Checkout = () => {
 
                 <OrderSummaryTable
                   items={orderLines}
-                  shippingGross={shippingOpt.price}
-                  paymentGross={paymentOpt.price}
-                  shippingLabel={shippingOpt.label}
-                  paymentLabel={paymentOpt.label}
+                  shippingGross={shippingPrice}
+                  paymentGross={paymentPrice}
+                  shippingLabel={shippingOpt?.label ?? "Doprava (nezvoleno)"}
+                  paymentLabel={paymentOpt?.label ?? "Platba (nezvoleno)"}
                 />
+
+                {(!shipping || !payment) && (
+                  <p className="text-xs text-destructive font-body">
+                    Pro dokončení vyberte způsob dopravy a platby.
+                  </p>
+                )}
 
                 <label className="flex items-start gap-3 cursor-pointer select-none">
                   <input
@@ -306,7 +316,13 @@ const Checkout = () => {
 
                 <Button
                   size="lg"
-                  disabled={!termsAccepted || (shipping === "zasilkovna" && !packetaPoint)}
+                  disabled={
+                    !termsAccepted ||
+                    !shipping ||
+                    !payment ||
+                    orderLines.length === 0 ||
+                    (shipping === "zasilkovna" && !packetaPoint)
+                  }
                   className="w-full h-16 text-base md:text-lg font-bold rounded-full tracking-wide gap-2 px-4 text-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Lock className="w-5 h-5 shrink-0" />

@@ -6,22 +6,15 @@ import { Minus, Plus, Trash2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 
-const SHIPPING_THRESHOLD = 3000;
-const SHIPPING_COST = 129;
-
 const Cart = () => {
   const { items: cart, updateQty, removeItem } = useCart();
 
   const getProduct = getProductById;
 
-
   const subtotal = cart.reduce((sum, item) => {
     const product = getProduct(item.productId);
     return sum + (product?.price ?? 0) * item.quantity;
   }, 0);
-
-  const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  const total = subtotal + shipping;
 
   return (
     <main className="min-h-screen bg-background">
@@ -142,25 +135,13 @@ const Cart = () => {
                       {subtotal.toLocaleString("cs-CZ")}&nbsp;Kč
                     </span>
                   </div>
-                  <div className="flex justify-between text-foreground">
-                    <span>Doprava</span>
-                    <span className="font-semibold">
-                      {shipping === 0 ? (
-                        <span className="text-primary">Zdarma</span>
-                      ) : (
-                        `${shipping.toLocaleString("cs-CZ")} Kč`
-                      )}
-                    </span>
-                  </div>
-                  {shipping > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      Doprava zdarma od {SHIPPING_THRESHOLD.toLocaleString("cs-CZ")}&nbsp;Kč
-                    </p>
-                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Dopravu a platbu zvolíte v dalším kroku.
+                  </p>
                   <div className="border-t border-border pt-3 flex justify-between text-foreground">
-                    <span className="font-heading text-lg font-bold">Celkem</span>
+                    <span className="font-heading text-lg font-bold">Mezisoučet</span>
                     <span className="font-heading text-2xl font-bold">
-                      {total.toLocaleString("cs-CZ")}&nbsp;Kč
+                      {subtotal.toLocaleString("cs-CZ")}&nbsp;Kč
                     </span>
                   </div>
                 </div>

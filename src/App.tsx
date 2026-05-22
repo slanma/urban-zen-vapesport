@@ -26,6 +26,7 @@ import Account from "./pages/Account";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import CookieBanner from "./components/CookieBanner";
+import CartDrawer from "./components/CartDrawer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -66,6 +67,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
         <CookieBanner />
+        <CartDrawer />
         </CartProvider>
       </AuthProvider>
     </TooltipProvider>

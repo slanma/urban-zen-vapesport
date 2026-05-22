@@ -13,6 +13,9 @@ interface CartCtx {
   updateQty: (productId: string, delta: number, color?: string | null) => void;
   removeItem: (productId: string, color?: string | null) => void;
   clear: () => void;
+  isOpen: boolean;
+  openDrawer: () => void;
+  closeDrawer: () => void;
 }
 
 const Ctx = createContext<CartCtx | undefined>(undefined);
@@ -67,6 +70,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const clear = () => setItems([]);
 
+  const [isOpen, setIsOpen] = useState(false);
+  const openDrawer = () => setIsOpen(true);
+  const closeDrawer = () => setIsOpen(false);
+
   const value = useMemo<CartCtx>(
     () => ({
       items,
@@ -75,8 +82,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       updateQty,
       removeItem,
       clear,
+      isOpen,
+      openDrawer,
+      closeDrawer,
     }),
-    [items],
+    [items, isOpen],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

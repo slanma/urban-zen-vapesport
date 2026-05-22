@@ -8,8 +8,6 @@ import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 import PriceTag from "@/components/PriceTag";
 import {
   Table,
@@ -32,8 +30,7 @@ const setMeta = (name: string, content: string, attr: "name" | "property" = "nam
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id);
-  const { addItem } = useCart();
-  const navigate = useNavigate();
+  const { addItem, openDrawer } = useCart();
   const { get } = useProductOverrides();
   const override = product ? get(product.id) : null;
   const effectivePrice = override?.price_override ?? product?.price ?? 0;
@@ -191,10 +188,7 @@ const ProductDetail = () => {
               onClick={() => {
                 if (!product) return;
                 addItem(product.id, 1, selectedColor);
-                toast.success("Přidáno do košíku", {
-                  description: `${product.name}${selectedColor ? ` – ${selectedColor}` : ""}`,
-                  action: { label: "Do košíku", onClick: () => navigate("/kosik") },
-                });
+                openDrawer();
               }}
               className="mt-6 w-full sm:w-auto gap-2 text-base font-semibold rounded-full px-10"
             >
