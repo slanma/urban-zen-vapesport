@@ -188,6 +188,14 @@ const ProductDetail = () => {
             <Button
               size="lg"
               disabled={!inStock || (!!availableColors && !selectedColor)}
+              onClick={() => {
+                if (!product) return;
+                addItem(product.id, 1, selectedColor);
+                toast.success("Přidáno do košíku", {
+                  description: `${product.name}${selectedColor ? ` – ${selectedColor}` : ""}`,
+                  action: { label: "Do košíku", onClick: () => navigate("/kosik") },
+                });
+              }}
               className="mt-6 w-full sm:w-auto gap-2 text-base font-semibold rounded-full px-10"
             >
               <ShoppingCart className="w-5 h-5" />
