@@ -42,7 +42,12 @@ const Products = () => {
     return list;
   }, []);
 
-  const searchIndex = useMemo(() => buildSearchIndex(products), []);
+  const { get: getOverride } = useProductOverrides();
+  const visibleProducts = useMemo(
+    () => products.filter((p) => getOverride(p.id).visible),
+    [getOverride],
+  );
+  const searchIndex = useMemo(() => buildSearchIndex(visibleProducts), [visibleProducts]);
 
   const categoryFiltered = useMemo(() => {
     if (active === "all") return searchIndex;
