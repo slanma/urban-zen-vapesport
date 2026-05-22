@@ -204,6 +204,13 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
+
+        {override?.description_html && (
+          <article
+            className="mt-20 max-w-3xl mx-auto prose prose-neutral prose-headings:font-heading prose-h2:text-3xl prose-h2:font-bold prose-h3:text-xl prose-h3:font-bold prose-h3:mt-8 prose-p:font-body prose-li:font-body prose-strong:text-foreground"
+            dangerouslySetInnerHTML={{ __html: override.description_html }}
+          />
+        )}
       </section>
 
       <Footer />
@@ -212,3 +219,4 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
