@@ -7,6 +7,9 @@ import { useProductOverrides } from "@/hooks/useProductOverrides";
 
 import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/hooks/useCart";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import PriceTag from "@/components/PriceTag";
 import {
   Table,
