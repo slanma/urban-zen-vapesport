@@ -266,7 +266,7 @@ const ProductDetail = () => {
         ) : (
           <article className="mt-20 max-w-3xl mx-auto">
             <h2 className="font-heading text-3xl font-bold text-foreground">
-              O produktu
+              Perfektní organizace a čistý design přímo v rámu kola
             </h2>
             <p className="font-body text-muted-foreground mt-4 leading-relaxed">
               {product.shortDescription}
@@ -274,7 +274,7 @@ const ProductDetail = () => {
             {product.features.length > 0 && (
               <>
                 <h3 className="font-heading text-xl font-bold text-foreground mt-8">
-                  Proč si vybrat {product.name}
+                  Klíčové vlastnosti pro vaši jízdu:
                 </h3>
                 <ul className="mt-4 space-y-2">
                   {product.features.map((f) => (
