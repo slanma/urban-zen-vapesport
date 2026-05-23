@@ -60,9 +60,20 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
               />
             )}
           </a>
-          <a href="/b2b-login" className="hidden md:inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-[13px] font-bold px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
-            B2B Portál
-          </a>
+          {isPartner ? (
+            <a
+              href="/b2b-dashboard"
+              className="hidden md:inline-flex items-center gap-1.5 bg-primary/10 text-primary text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-md border border-primary/30 hover:bg-primary/15 transition-colors"
+              title="Velkoobchodní režim aktivní"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_6px_2px_hsl(var(--primary)/0.45)] animate-pulse" />
+              B2B · VOC
+            </a>
+          ) : (
+            <a href="/b2b-login" className="hidden md:inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-[13px] font-bold px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
+              B2B Portál
+            </a>
+          )}
           <a href="/kosik" className="flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
             <ShoppingCart className="w-4 h-4" />
             <span>Košík ({count})</span>
