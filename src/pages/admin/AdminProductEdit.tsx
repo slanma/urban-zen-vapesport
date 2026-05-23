@@ -17,8 +17,12 @@ import { getProductById, products, productsByBaseId, type Product } from "@/data
 import { useProductOverrides, type SpecRow } from "@/hooks/useProductOverrides";
 import { toast } from "@/hooks/use-toast";
 
+// Extra categories that aren't necessarily present in the feed yet but can
+// be assigned manually by an admin via the category override.
+const EXTRA_CATEGORIES = ["BRAŠNY DO RÁMU"] as const;
+
 const categoryOptions = Array.from(
-  new Set(products.map((p) => p.categoryLabel)),
+  new Set([...products.map((p) => p.categoryLabel), ...EXTRA_CATEGORIES]),
 ).sort();
 
 const youtubeIdFromUrl = (url: string): string | null => {
