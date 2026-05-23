@@ -109,7 +109,7 @@ const expandColors = (p: Product, colors: readonly string[]): Product[] =>
   colors.map((color) => ({
     ...p,
     id: `${p.id}-${colorSlug(color)}`,
-    name: `${p.name} - ${color}`,
+    name: p.id === "vs-maly-trojuhlenik-3kapsy-904673" ? p.name : `${p.name} - ${color}`,
     color,
     baseId: p.id,
     specs: [
