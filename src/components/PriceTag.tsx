@@ -5,8 +5,11 @@ import { fmtCZK, netFromGross, grossFromNet } from "@/lib/vat";
 interface PriceTagProps {
   /** Retail price WITH VAT (MOC s DPH). */
   retailGross: number;
-  /** Optional B2B wholesale price. By convention stored WITH VAT (VOC s DPH). */
-  b2bGross?: number | null;
+  /**
+   * B2B wholesale price WITHOUT VAT (VOC bez DPH) — matches what admin
+   * enters in the editor. Pass `null` when the product has no B2B price.
+   */
+  b2bNet?: number | null;
   size?: "sm" | "md" | "lg";
   className?: string;
 }
@@ -23,23 +26,23 @@ const sizeMap = {
  *  - Guest / B2C  → primary = retail WITH VAT, secondary = without VAT.
  *  - B2B partner  → primary = VOC WITHOUT VAT, secondary = WITH VAT.
  *
- * Falls back to the retail-only display when no b2bGross is provided,
+ * Falls back to the retail-only display when no `b2bNet` is provided,
  * regardless of role, so partner pricing is never invented.
  */
-const PriceTag = ({ retailGross, b2bGross, size = "md", className = "" }: PriceTagProps) => {
+const PriceTag = ({ retailGross, b2bNet, size = "md", className = "" }: PriceTagProps) => {
   const { isPartner } = useB2BPartner();
   const s = sizeMap[size];
 
-  if (isPartner && b2bGross != null) {
-    const net = netFromGross(b2bGross);
+  if (isPartner && b2bNet != null && b2bNet > 0) {
+    const gross = grossFromNet(b2bNet);
     return (
       <div className={`flex flex-col leading-tight ${className}`}>
         <span className={`font-heading font-bold text-primary inline-flex items-center gap-1.5 ${s.primary}`}>
           <Lock className="w-4 h-4" />
-          Vaše VOC: {fmtCZK(net)}
+          Vaše VOC: {fmtCZK(b2bNet)}
         </span>
         <span className={`font-body text-muted-foreground ${s.secondary}`}>
-          s DPH: {fmtCZK(b2bGross)}
+          s DPH: {fmtCZK(gross)}
         </span>
       </div>
     );
