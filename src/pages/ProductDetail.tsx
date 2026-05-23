@@ -309,12 +309,12 @@ const ProductDetail = () => {
                   ))}
                 </ul>
               </>
+            )}
+          </article>
         )}
 
         {override?.tech_params_html && (
-          <article
-            className="mt-16 max-w-3xl mx-auto"
-          >
+          <article className="mt-16 max-w-3xl mx-auto">
             <h2 className="font-heading text-2xl font-bold text-foreground mb-4">
               Technické parametry
             </h2>
@@ -322,8 +322,6 @@ const ProductDetail = () => {
               className="prose prose-neutral prose-p:font-body prose-li:font-body prose-strong:text-foreground"
               dangerouslySetInnerHTML={{ __html: override.tech_params_html }}
             />
-          </article>
-        )}
           </article>
         )}
 
