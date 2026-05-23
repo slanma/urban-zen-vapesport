@@ -169,7 +169,7 @@ const ProductDetail = () => {
             <div className="mt-8">
               <PriceTag
                 retailGross={effectivePrice}
-                b2bGross={b2bPrice}
+                b2bNet={b2bPrice}
                 size="lg"
               />
             </div>

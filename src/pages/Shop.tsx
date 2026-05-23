@@ -213,7 +213,7 @@ const Shop = () => {
                   <div className="flex items-center justify-between mt-auto gap-3">
                     <PriceTag
                       retailGross={get(product.id).price_override ?? product.price}
-                      b2bGross={get(product.id).b2b_price ?? null}
+                      b2bNet={get(product.id).b2b_price ?? null}
                       size="md"
                     />
                     <span className="text-primary flex items-center gap-1 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
@@ -268,7 +268,7 @@ const Shop = () => {
                   <div className="flex items-center justify-between mt-auto">
                     <PriceTag
                       retailGross={get(product.id).price_override ?? product.price}
-                      b2bGross={get(product.id).b2b_price ?? null}
+                      b2bNet={get(product.id).b2b_price ?? null}
                       size="md"
                     />
                   </div>
