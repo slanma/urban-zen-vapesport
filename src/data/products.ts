@@ -19,16 +19,11 @@ export interface Product {
   available_colors?: readonly string[];
 }
 
-/** Base MORSEO products that are NOT expanded into per-color rows. They
- *  render as a single product card and expose color swatches on the PDP.
- *  Feed generation still unpacks them into separate XML <ITEM> blocks. */
+/** Base MORSEO products that render as a single product card with color
+ *  swatches on the PDP. ALL MORSEO bases are kept here so we never split
+ *  the same bag into per-color rows in the catalogue. Feed generation still
+ *  unpacks them into separate XML <ITEM> blocks. */
 export const MORSEO_BASE_ONLY_IDS = new Set([
-  "vs-brasna-na-mobil-5-5-945205",
-]);
-
-/** Canonical MORSEO base products from the feed. Each is exploded into the 8
- *  color variants defined in `MORSEO_COLORS`. */
-export const MORSEO_PRODUCT_IDS = new Set([
   "vs-ramova-brasna-nepromokavy-zip-945203",
   "vs-ramova-brasna-stredni-se-2-zipy-a-sitkou-945204",
   "vs-brasna-na-mobil-5-5-945205",
@@ -39,6 +34,9 @@ export const MORSEO_PRODUCT_IDS = new Set([
   "vs-smb-morseo-zlata-947383",
   "vs-ramova-brasna-nepromokavy-zip-bila-947404",
 ]);
+
+/** Canonical MORSEO base products from the feed. */
+export const MORSEO_PRODUCT_IDS = new Set(MORSEO_BASE_ONLY_IDS);
 
 /** Exact 8 color variants generated for every MORSEO base product. */
 export const MORSEO_COLORS = [
@@ -53,8 +51,9 @@ export const MORSEO_COLORS = [
 ] as const;
 export type MorseoColor = (typeof MORSEO_COLORS)[number];
 
-/** Vape Legends base products from the feed that get the 9-color expansion. */
-export const VAPE_LEGENDS_PRODUCT_IDS = new Set([
+/** Vape Legends base products that render as a single product card with
+ *  color swatches on the PDP. */
+export const VAPE_LEGENDS_BASE_ONLY_IDS = new Set([
   "vs-lady-s-mobilem-904681",
   "vs-plochy-trojuhelnik-4kapsy-vape-904677",
   "vs-maly-trojuhlenik-3kapsy-904673",
@@ -64,7 +63,10 @@ export const VAPE_LEGENDS_PRODUCT_IDS = new Set([
   "vs-uni-maxi-twist-904687",
 ]);
 
-/** Exact 9 color variants generated for every Vape Legends base product. */
+/** Vape Legends base products from the feed. */
+export const VAPE_LEGENDS_PRODUCT_IDS = new Set(VAPE_LEGENDS_BASE_ONLY_IDS);
+
+/** Exact 9 color variants for Vape Legends base products. */
 export const VAPE_LEGENDS_COLORS = [
   "Černá",
   "Šedá",
@@ -102,38 +104,22 @@ export const legacyProductAliases: Record<string, string> = {
   "neopren-baterie": "vs-neoprenovy-obal-938229",
 };
 
-const isMorseoBase = (p: Product) => MORSEO_PRODUCT_IDS.has(p.id);
-const isVapeLegendsBase = (p: Product) => VAPE_LEGENDS_PRODUCT_IDS.has(p.id);
-
-const expandColors = (p: Product, colors: readonly string[]): Product[] =>
-  colors.map((color) => ({
-    ...p,
-    id: `${p.id}-${colorSlug(color)}`,
-    name: p.id === "vs-maly-trojuhlenik-3kapsy-904673" ? p.name : `${p.name} - ${color}`,
-    color,
-    baseId: p.id,
-    specs: [
-      ...p.specs.filter((s) => s.label !== "Barva"),
-      { label: "Barva", value: color },
-    ],
-  }));
-
-/** Public product catalogue. MORSEO and Vape Legends base entries are replaced
- *  by their color variants so each color appears as a distinct item — EXCEPT
- *  those in MORSEO_BASE_ONLY_IDS, which stay as a single card with a color
- *  picker on the product detail page. */
+/** Public product catalogue. MORSEO and Vape Legends base entries stay as a
+ *  single card with available_colors so the PDP renders a color picker
+ *  instead of one card per color. */
 export const products: Product[] = feedProducts
   .filter((p) => p.image.trim().length > 0)
-  .flatMap((p) => {
+  .map((p) => {
     if (MORSEO_BASE_ONLY_IDS.has(p.id)) {
-      return [{ ...p, available_colors: MORSEO_COLORS }];
+      return { ...p, available_colors: MORSEO_COLORS };
     }
-    if (isMorseoBase(p)) return expandColors(p, MORSEO_COLORS);
-    if (isVapeLegendsBase(p)) return expandColors(p, VAPE_LEGENDS_COLORS);
-    return [p];
+    if (VAPE_LEGENDS_BASE_ONLY_IDS.has(p.id)) {
+      return { ...p, available_colors: VAPE_LEGENDS_COLORS };
+    }
+    return p;
   });
 
-/** Variants keyed by their MORSEO base id, for hotspot expansion. */
+/** Variants keyed by their base id (kept for hotspot/admin compatibility). */
 export const productsByBaseId: Map<string, Product[]> = (() => {
   const map = new Map<string, Product[]>();
   for (const p of products) {
@@ -148,13 +134,13 @@ export const productsByBaseId: Map<string, Product[]> = (() => {
 export const resolveProductId = (id?: string) => {
   if (!id) return "";
   const aliased = legacyProductAliases[id] ?? id;
-  // Collapse legacy color-suffixed URLs (e.g. "...-945205-modra") onto the
-  // single base product card for items in MORSEO_BASE_ONLY_IDS.
-  for (const baseId of MORSEO_BASE_ONLY_IDS) {
+  // Collapse legacy color-suffixed URLs onto the single base product card.
+  for (const baseId of [...MORSEO_BASE_ONLY_IDS, ...VAPE_LEGENDS_BASE_ONLY_IDS]) {
     if (aliased.startsWith(baseId + "-")) return baseId;
   }
   return aliased;
 };
+
 
 export const getProductById = (id?: string) => {
   const resolvedId = resolveProductId(id);

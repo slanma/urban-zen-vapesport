@@ -10,11 +10,11 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import PriceTag from "@/components/PriceTag";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@/components/ui/table";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const setMeta = (name: string, content: string, attr: "name" | "property" = "name") => {
   if (!content) return;
@@ -80,6 +80,11 @@ const ProductDetail = () => {
       </main>
     );
   }
+
+  // Hide the touch-screen spec row for products that don't have one
+  // (e.g. frame triangle bags). The data drives visibility — rows are
+  // only rendered when present in product.specs.
+  const visibleSpecs = product.specs;
 
   return (
     <main className="min-h-screen bg-background">
@@ -190,7 +195,7 @@ const ProductDetail = () => {
                 addItem(product.id, 1, selectedColor);
                 openDrawer();
               }}
-              className="mt-6 w-full sm:w-auto gap-2 text-base font-semibold rounded-full px-10"
+              className="mt-6 w-full gap-2 text-base font-semibold rounded-full px-10"
             >
               <ShoppingCart className="w-5 h-5" />
               {inStock
@@ -200,51 +205,56 @@ const ProductDetail = () => {
                 : "Vyprodáno"}
             </Button>
 
-
-
-
-
-
-            {/* Key features */}
-            <div className="mt-12">
-              <h2 className="font-heading text-lg font-bold text-foreground mb-4">
-                Klíčové vlastnosti
-              </h2>
-              <ul className="space-y-3">
-                {product.features.map((feat) => (
-                  <li
-                    key={feat}
-                    className="flex items-start gap-3 text-sm font-body text-foreground"
-                  >
-                    <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                    <span>{feat}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Specs */}
-            <div className="mt-12">
-              <h2 className="font-heading text-lg font-bold text-foreground mb-4">
-                Specifikace
-              </h2>
-              <div className="rounded-xl border border-border overflow-hidden">
-                <Table>
-                  <TableBody>
-                    {product.specs.map((spec) => (
-                      <TableRow key={spec.label}>
-                        <TableCell className="font-semibold text-foreground w-1/3">
-                          {spec.label}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {spec.value}
-                        </TableCell>
-                      </TableRow>
+            {/* Clean accordion: features + specs */}
+            <Accordion
+              type="multiple"
+              defaultValue={["features"]}
+              className="mt-10 border-t border-border"
+            >
+              <AccordionItem value="features" className="border-b border-border">
+                <AccordionTrigger className="font-heading text-sm font-bold uppercase tracking-wider text-foreground hover:no-underline py-5">
+                  Klíčové vlastnosti
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-3 pt-1">
+                    {product.features.map((feat) => (
+                      <li
+                        key={feat}
+                        className="flex items-start gap-3 text-sm font-body text-foreground"
+                      >
+                        <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                        <span>{feat}</span>
+                      </li>
                     ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="specs" className="border-b border-border">
+                <AccordionTrigger className="font-heading text-sm font-bold uppercase tracking-wider text-foreground hover:no-underline py-5">
+                  Specifikace
+                </AccordionTrigger>
+                <AccordionContent>
+                  <dl className="rounded-lg overflow-hidden border border-border divide-y divide-border">
+                    {visibleSpecs.map((spec, i) => (
+                      <div
+                        key={spec.label}
+                        className={`grid grid-cols-[40%_1fr] gap-4 px-4 py-3 text-sm ${
+                          i % 2 === 0 ? "bg-muted/40" : "bg-background"
+                        }`}
+                      >
+                        <dt className="font-body font-semibold text-foreground">
+                          {spec.label}
+                        </dt>
+                        <dd className="font-body text-muted-foreground">
+                          {spec.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
 
@@ -262,4 +272,3 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
-
