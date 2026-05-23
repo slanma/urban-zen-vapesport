@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Save, Youtube, Loader2 } from "lucide-react";
+import { ArrowLeft, Save, Youtube, Loader2, Plus, Trash2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,14 +14,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getProductById, products, productsByBaseId, type Product } from "@/data/products";
-import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { useProductOverrides, type SpecRow } from "@/hooks/useProductOverrides";
 import { toast } from "@/hooks/use-toast";
 
 const categoryOptions = Array.from(
   new Set(products.map((p) => p.categoryLabel)),
 ).sort();
 
-// Auto-convert a pasted YouTube URL into an <iframe> embed snippet.
 const youtubeIdFromUrl = (url: string): string | null => {
   const m = url.match(
     /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/,
@@ -38,19 +37,21 @@ const AdminProductEdit = () => {
   const { get, upsert, loading } = useProductOverrides();
   const [saving, setSaving] = useState(false);
 
-  const [name, setName] = useState(product?.name ?? "");
-  const [category, setCategory] = useState(product?.categoryLabel ?? "");
-  const [shortDescription, setShortDescription] = useState(
-    product?.shortDescription ?? "",
-  );
+  // Editable fields
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
+  const [features, setFeatures] = useState<string[]>([]);
+  const [specs, setSpecs] = useState<SpecRow[]>([]);
+  const [colors, setColors] = useState<string[]>([]);
   const [descriptionHtml, setDescriptionHtml] = useState<string>("");
+  const [techParamsHtml, setTechParamsHtml] = useState<string>("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
-  const [price, setPrice] = useState<number>(product?.price ?? 0);
+  const [price, setPrice] = useState<number>(0);
   const [vat, setVat] = useState<number>(21);
   const [inStock, setInStock] = useState(true);
   const [visible, setVisible] = useState(true);
 
-  // Hydrate from override once loaded
   useEffect(() => {
     if (!product || loading) return;
     const o = get(product.id);
@@ -59,10 +60,14 @@ const AdminProductEdit = () => {
     setPrice(o.price_override ?? product.price);
     setVat(o.vat_percent);
     setDescriptionHtml(o.description_html ?? "");
+    setTechParamsHtml(o.tech_params_html ?? "");
     setYoutubeUrl(o.youtube_url ?? "");
-    setName(product.name);
-    setCategory(product.categoryLabel);
-    setShortDescription(product.shortDescription);
+    setName(o.name_override ?? product.name);
+    setCategory(o.category_override ?? product.categoryLabel);
+    setShortDescription(o.short_description_override ?? product.shortDescription);
+    setFeatures(o.features_override ?? [...product.features]);
+    setSpecs(o.specs_override ?? product.specs.map((s) => ({ ...s })));
+    setColors(o.colors_override ?? [...(product.available_colors ?? [])]);
   }, [product, loading, get]);
 
   const siblings = useMemo<Product[]>(() => {
@@ -94,6 +99,12 @@ const AdminProductEdit = () => {
     toast({ title: "YouTube video vloženo do popisu" });
   };
 
+  const cleanFeatures = features.map((f) => f.trim()).filter(Boolean);
+  const cleanSpecs = specs
+    .map((s) => ({ label: s.label.trim(), value: s.value.trim() }))
+    .filter((s) => s.label || s.value);
+  const cleanColors = colors.map((c) => c.trim()).filter(Boolean);
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -103,7 +114,15 @@ const AdminProductEdit = () => {
         price_override: price !== product.price ? price : null,
         vat_percent: vat,
         description_html: descriptionHtml || null,
+        tech_params_html: techParamsHtml || null,
         youtube_url: youtubeUrl || null,
+        name_override: name !== product.name ? name : null,
+        category_override: category !== product.categoryLabel ? category : null,
+        short_description_override:
+          shortDescription !== product.shortDescription ? shortDescription : null,
+        features_override: cleanFeatures.length > 0 ? cleanFeatures : null,
+        specs_override: cleanSpecs.length > 0 ? cleanSpecs : null,
+        colors_override: cleanColors.length > 0 ? cleanColors : null,
       });
       toast({ title: "Změny uloženy" });
     } catch {
@@ -111,6 +130,14 @@ const AdminProductEdit = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const resetField = async (
+    field: "features" | "specs" | "colors",
+  ) => {
+    if (field === "features") setFeatures([...product.features]);
+    if (field === "specs") setSpecs(product.specs.map((s) => ({ ...s })));
+    if (field === "colors") setColors([...(product.available_colors ?? [])]);
   };
 
   return (
@@ -156,62 +183,229 @@ const AdminProductEdit = () => {
               </Select>
             </div>
           </div>
-          <div className="mb-4">
-            <Label htmlFor="short">Krátký popis</Label>
-            <Textarea id="short" value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} className="mt-1" rows={2} />
-          </div>
           <div>
-            <Label htmlFor="desc">Hlavní popis (HTML)</Label>
-            <Textarea
-              id="desc"
-              value={descriptionHtml}
-              onChange={(e) => setDescriptionHtml(e.target.value)}
-              onPaste={(e) => {
-                const txt = e.clipboardData.getData("text");
-                const vid = youtubeIdFromUrl(txt);
-                if (vid) {
-                  e.preventDefault();
-                  const target = e.currentTarget;
-                  const start = target.selectionStart ?? descriptionHtml.length;
-                  const end = target.selectionEnd ?? descriptionHtml.length;
-                  setDescriptionHtml(
-                    descriptionHtml.slice(0, start) + embedHtml(vid) + descriptionHtml.slice(end),
-                  );
-                  toast({ title: "YouTube video automaticky vloženo" });
-                }
-              }}
-              rows={8}
-              className="mt-1 font-mono text-xs"
-              placeholder="<p>Popis produktu…</p>  — vložte YouTube URL pro automatický embed."
-            />
-            <div className="flex items-end gap-2 mt-3">
-              <div className="flex-1">
-                <Label htmlFor="yt" className="text-xs">YouTube URL</Label>
-                <Input
-                  id="yt"
-                  value={youtubeUrl}
-                  onChange={(e) => setYoutubeUrl(e.target.value)}
-                  placeholder="https://www.youtube.com/watch?v=…"
-                  className="mt-1"
-                />
-              </div>
-              <Button type="button" variant="outline" onClick={insertYoutube} className="gap-1.5">
-                <Youtube className="w-4 h-4" /> Vložit do popisu
-              </Button>
-            </div>
-            {descriptionHtml && (
-              <div className="mt-4 p-4 bg-muted/40 rounded border border-border">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Náhled</p>
-                <div
-                  className="prose prose-sm max-w-none"
-                  dangerouslySetInnerHTML={{ __html: descriptionHtml }}
-                />
-              </div>
-            )}
+            <Label htmlFor="short">Krátký popis</Label>
+            <Textarea id="short" value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} className="mt-1" rows={3} />
           </div>
         </article>
 
-        {/* Card 2: Cena a dostupnost */}
+        {/* Card 2: Barvy */}
+        <article className="bg-background border border-border rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-heading font-bold text-foreground">
+              Dostupné barvy ({colors.length})
+            </h2>
+            <div className="flex gap-2">
+              <Button type="button" variant="ghost" size="sm" onClick={() => resetField("colors")} className="gap-1.5">
+                <RotateCcw className="w-3.5 h-3.5" /> Obnovit výchozí
+              </Button>
+              <Button type="button" variant="outline" size="sm" onClick={() => setColors((c) => [...c, ""])} className="gap-1.5">
+                <Plus className="w-3.5 h-3.5" /> Přidat barvu
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {colors.length === 0 && (
+              <p className="text-sm text-muted-foreground italic">Žádné barvy. Produkt se zobrazí bez výběru barvy.</p>
+            )}
+            {colors.map((c, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <Input
+                  value={c}
+                  onChange={(e) =>
+                    setColors((arr) => arr.map((v, j) => (i === j ? e.target.value : v)))
+                  }
+                  placeholder="Např. Neon zelená"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setColors((arr) => arr.filter((_, j) => j !== i))}
+                  aria-label="Odebrat barvu"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        {/* Card 3: Klíčové vlastnosti */}
+        <article className="bg-background border border-border rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-heading font-bold text-foreground">
+              Klíčové vlastnosti ({features.length})
+            </h2>
+            <div className="flex gap-2">
+              <Button type="button" variant="ghost" size="sm" onClick={() => resetField("features")} className="gap-1.5">
+                <RotateCcw className="w-3.5 h-3.5" /> Obnovit výchozí
+              </Button>
+              <Button type="button" variant="outline" size="sm" onClick={() => setFeatures((f) => [...f, ""])} className="gap-1.5">
+                <Plus className="w-3.5 h-3.5" /> Přidat řádek
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {features.map((f, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <Textarea
+                  value={f}
+                  onChange={(e) =>
+                    setFeatures((arr) => arr.map((v, j) => (i === j ? e.target.value : v)))
+                  }
+                  rows={2}
+                  placeholder="Krátký bod – přínos pro zákazníka"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setFeatures((arr) => arr.filter((_, j) => j !== i))}
+                  aria-label="Odebrat řádek"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        {/* Card 4: Specifikace */}
+        <article className="bg-background border border-border rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-heading font-bold text-foreground">
+              Specifikace ({specs.length})
+            </h2>
+            <div className="flex gap-2">
+              <Button type="button" variant="ghost" size="sm" onClick={() => resetField("specs")} className="gap-1.5">
+                <RotateCcw className="w-3.5 h-3.5" /> Obnovit výchozí
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setSpecs((s) => [...s, { label: "", value: "" }])}
+                className="gap-1.5"
+              >
+                <Plus className="w-3.5 h-3.5" /> Přidat řádek
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {specs.map((s, i) => (
+              <div key={i} className="grid grid-cols-[1fr_1.5fr_auto] gap-2 items-center">
+                <Input
+                  value={s.label}
+                  onChange={(e) =>
+                    setSpecs((arr) =>
+                      arr.map((v, j) => (i === j ? { ...v, label: e.target.value } : v)),
+                    )
+                  }
+                  placeholder="Parametr"
+                />
+                <Input
+                  value={s.value}
+                  onChange={(e) =>
+                    setSpecs((arr) =>
+                      arr.map((v, j) => (i === j ? { ...v, value: e.target.value } : v)),
+                    )
+                  }
+                  placeholder="Hodnota"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSpecs((arr) => arr.filter((_, j) => j !== i))}
+                  aria-label="Odebrat řádek"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        {/* Card 5: Hlavní popis (pod specifikací) */}
+        <article className="bg-background border border-border rounded-lg p-6">
+          <h2 className="font-heading font-bold text-foreground mb-1">Hlavní popis</h2>
+          <p className="text-xs text-muted-foreground mb-4">
+            Zobrazí se v dolní části stránky pod specifikací. Podporuje HTML.
+          </p>
+          <Textarea
+            id="desc"
+            value={descriptionHtml}
+            onChange={(e) => setDescriptionHtml(e.target.value)}
+            onPaste={(e) => {
+              const txt = e.clipboardData.getData("text");
+              const vid = youtubeIdFromUrl(txt);
+              if (vid) {
+                e.preventDefault();
+                const target = e.currentTarget;
+                const start = target.selectionStart ?? descriptionHtml.length;
+                const end = target.selectionEnd ?? descriptionHtml.length;
+                setDescriptionHtml(
+                  descriptionHtml.slice(0, start) + embedHtml(vid) + descriptionHtml.slice(end),
+                );
+                toast({ title: "YouTube video automaticky vloženo" });
+              }
+            }}
+            rows={8}
+            className="font-mono text-xs"
+            placeholder="<p>Popis produktu…</p>  — vložte YouTube URL pro automatický embed."
+          />
+          <div className="flex items-end gap-2 mt-3">
+            <div className="flex-1">
+              <Label htmlFor="yt" className="text-xs">YouTube URL</Label>
+              <Input
+                id="yt"
+                value={youtubeUrl}
+                onChange={(e) => setYoutubeUrl(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=…"
+                className="mt-1"
+              />
+            </div>
+            <Button type="button" variant="outline" onClick={insertYoutube} className="gap-1.5">
+              <Youtube className="w-4 h-4" /> Vložit do popisu
+            </Button>
+          </div>
+          {descriptionHtml && (
+            <div className="mt-4 p-4 bg-muted/40 rounded border border-border">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Náhled</p>
+              <div
+                className="prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+              />
+            </div>
+          )}
+        </article>
+
+        {/* Card 6: Technické parametry */}
+        <article className="bg-background border border-border rounded-lg p-6">
+          <h2 className="font-heading font-bold text-foreground mb-1">Technické parametry</h2>
+          <p className="text-xs text-muted-foreground mb-4">
+            Volitelný blok zobrazený úplně dole pod hlavním popisem. Podporuje HTML.
+          </p>
+          <Textarea
+            value={techParamsHtml}
+            onChange={(e) => setTechParamsHtml(e.target.value)}
+            rows={6}
+            className="font-mono text-xs"
+            placeholder="<ul><li>Materiál: PE 600D</li><li>Hmotnost: 120 g</li></ul>"
+          />
+          {techParamsHtml && (
+            <div className="mt-4 p-4 bg-muted/40 rounded border border-border">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Náhled</p>
+              <div
+                className="prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: techParamsHtml }}
+              />
+            </div>
+          )}
+        </article>
+
+        {/* Card 7: Cena a dostupnost */}
         <article className="bg-background border border-border rounded-lg p-6">
           <h2 className="font-heading font-bold text-foreground mb-4">Cena a dostupnost</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -253,7 +447,7 @@ const AdminProductEdit = () => {
           </div>
         </article>
 
-        {/* Card 3: Varianty */}
+        {/* Card 8: Varianty */}
         {siblings.length > 0 && (
           <article className="bg-background border border-border rounded-lg p-6">
             <h2 className="font-heading font-bold text-foreground mb-4">
@@ -266,6 +460,13 @@ const AdminProductEdit = () => {
             </div>
           </article>
         )}
+
+        <div className="sticky bottom-4 flex justify-end">
+          <Button onClick={handleSave} disabled={saving} size="lg" className="gap-2 shadow-lg">
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            Uložit změny
+          </Button>
+        </div>
       </div>
     </section>
   );
