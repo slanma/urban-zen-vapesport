@@ -446,7 +446,20 @@ const AdminProductEdit = () => {
           </article>
         )}
 
-        <div className="sticky bottom-4 flex justify-end">
+        <div className="sticky bottom-4 flex justify-end gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            onClick={async () => {
+              await handleSave();
+              window.open(`/produkt/${product.id}`, "_blank", "noopener");
+            }}
+            disabled={saving}
+            className="gap-2 shadow-lg bg-background"
+          >
+            <Eye className="w-4 h-4" /> Náhled
+          </Button>
           <Button onClick={handleSave} disabled={saving} size="lg" className="gap-2 shadow-lg">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             Uložit změny
