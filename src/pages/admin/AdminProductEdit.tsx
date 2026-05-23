@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import { getProductById, products, productsByBaseId, type Product } from "@/data/products";
 import { useProductOverrides, type SpecRow } from "@/hooks/useProductOverrides";
 import { toast } from "@/hooks/use-toast";
