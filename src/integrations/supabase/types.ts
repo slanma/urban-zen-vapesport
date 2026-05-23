@@ -72,13 +72,20 @@ export type Database = {
         Row: {
           ai_keywords: string | null
           b2b_price: number | null
+          category_override: string | null
+          colors_override: Json | null
           created_at: string
           description_html: string | null
+          features_override: Json | null
           in_stock: boolean
           meta_description: string | null
           meta_title: string | null
+          name_override: string | null
           price_override: number | null
           product_id: string
+          short_description_override: string | null
+          specs_override: Json | null
+          tech_params_html: string | null
           updated_at: string
           vat_percent: number
           visible: boolean
@@ -87,13 +94,20 @@ export type Database = {
         Insert: {
           ai_keywords?: string | null
           b2b_price?: number | null
+          category_override?: string | null
+          colors_override?: Json | null
           created_at?: string
           description_html?: string | null
+          features_override?: Json | null
           in_stock?: boolean
           meta_description?: string | null
           meta_title?: string | null
+          name_override?: string | null
           price_override?: number | null
           product_id: string
+          short_description_override?: string | null
+          specs_override?: Json | null
+          tech_params_html?: string | null
           updated_at?: string
           vat_percent?: number
           visible?: boolean
@@ -102,13 +116,20 @@ export type Database = {
         Update: {
           ai_keywords?: string | null
           b2b_price?: number | null
+          category_override?: string | null
+          colors_override?: Json | null
           created_at?: string
           description_html?: string | null
+          features_override?: Json | null
           in_stock?: boolean
           meta_description?: string | null
           meta_title?: string | null
+          name_override?: string | null
           price_override?: number | null
           product_id?: string
+          short_description_override?: string | null
+          specs_override?: Json | null
+          tech_params_html?: string | null
           updated_at?: string
           vat_percent?: number
           visible?: boolean
