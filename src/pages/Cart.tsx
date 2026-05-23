@@ -1,34 +1,51 @@
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import B2BModeBanner from "@/components/B2BModeBanner";
 import { getProductById } from "@/data/products";
-import { Minus, Plus, Trash2, ShieldCheck } from "lucide-react";
+import { Minus, Plus, Trash2, ShieldCheck, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { getEffectiveUnitPricing } from "@/lib/pricing";
+import { fmtCZK } from "@/lib/vat";
 
 const Cart = () => {
   const { items: cart, updateQty, removeItem } = useCart();
+  const { get } = useProductOverrides();
+  const { isPartner } = useB2BPartner();
 
-  const getProduct = getProductById;
+  const lines = cart
+    .map((item) => {
+      const product = getProductById(item.productId);
+      if (!product) return null;
+      const ov = get(product.id);
+      if (ov?.visible === false) return null;
+      const pricing = getEffectiveUnitPricing(product, ov, isPartner);
+      return { item, product, pricing };
+    })
+    .filter((x): x is { item: typeof cart[0]; product: NonNullable<ReturnType<typeof getProductById>>; pricing: ReturnType<typeof getEffectiveUnitPricing> } => !!x);
 
-  const subtotal = cart.reduce((sum, item) => {
-    const product = getProduct(item.productId);
-    return sum + (product?.price ?? 0) * item.quantity;
-  }, 0);
+  const subtotalGross = lines.reduce((s, l) => s + l.pricing.unitGross * l.item.quantity, 0);
+  const subtotalNet = lines.reduce((s, l) => s + l.pricing.unitNet * l.item.quantity, 0);
+  const subtotalVat = subtotalGross - subtotalNet;
 
   return (
     <main className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar isLoggedIn={isPartner} />
 
       <section className="pt-32 pb-24 px-6 lg:px-12 max-w-[1400px] mx-auto">
         <h1 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-2">
           Košík
         </h1>
-        <p className="font-body text-muted-foreground mb-10">
+        <p className="font-body text-muted-foreground mb-6">
           {cart.length === 0
             ? "Váš košík je prázdný."
             : `${cart.length} ${cart.length === 1 ? "položka" : cart.length < 5 ? "položky" : "položek"} v košíku`}
         </p>
+
+        <B2BModeBanner className="mb-8 max-w-3xl" />
 
         {cart.length === 0 ? (
           <div className="text-center py-20">
@@ -45,28 +62,20 @@ const Cart = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {/* Cart items */}
             <div className="lg:col-span-8 space-y-4">
-              {cart.map((item) => {
-                const product = getProduct(item.productId);
-                if (!product) return null;
-
+              {lines.map(({ item, product, pricing }) => {
+                const lineTotal = (pricing.isB2B ? pricing.unitNet : pricing.unitGross) * item.quantity;
                 return (
                   <div
-                    key={item.productId}
+                    key={`${item.productId}-${item.color ?? ""}`}
                     className="flex items-center gap-4 md:gap-6 bg-card border border-border rounded-xl p-4 md:p-5"
                   >
-                    {/* Thumbnail */}
                     <Link
                       to={`/produkt/${product.id}`}
                       className="shrink-0 w-20 h-20 md:w-24 md:h-24 bg-muted rounded-lg overflow-hidden"
                     >
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
                     </Link>
 
-                    {/* Info */}
                     <div className="flex-1 min-w-0">
                       <Link
                         to={`/produkt/${product.id}`}
@@ -78,11 +87,13 @@ const Cart = () => {
                         {item.color ? `${product.categoryLabel} · ${item.color}` : product.categoryLabel}
                       </p>
                       <p className="font-heading text-lg font-bold text-foreground mt-1 md:hidden">
-                        {(product.price * item.quantity).toLocaleString("cs-CZ")}&nbsp;Kč
+                        {fmtCZK(lineTotal)}
+                        <span className="text-[10px] text-muted-foreground ml-1 font-body font-normal">
+                          {pricing.isB2B ? "VOC bez DPH" : "s DPH"}
+                        </span>
                       </p>
                     </div>
 
-                    {/* Quantity */}
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => updateQty(item.productId, -1, item.color)}
@@ -103,12 +114,15 @@ const Cart = () => {
                       </button>
                     </div>
 
-                    {/* Price (desktop) */}
-                    <span className="hidden md:block font-heading text-xl font-bold text-foreground w-28 text-right">
-                      {(product.price * item.quantity).toLocaleString("cs-CZ")}&nbsp;Kč
-                    </span>
+                    <div className="hidden md:flex flex-col items-end w-32">
+                      <span className="font-heading text-xl font-bold text-foreground tabular-nums">
+                        {fmtCZK(lineTotal)}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
+                        {pricing.isB2B ? "VOC bez DPH" : "s DPH"}
+                      </span>
+                    </div>
 
-                    {/* Remove */}
                     <button
                       onClick={() => removeItem(item.productId, item.color)}
                       className="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
@@ -124,27 +138,52 @@ const Cart = () => {
             {/* Summary */}
             <div className="lg:col-span-4">
               <div className="bg-card border border-border rounded-xl p-6 lg:sticky lg:top-28 space-y-5">
-                <h2 className="font-heading text-xl font-bold text-foreground">
+                <h2 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
                   Souhrn objednávky
+                  {isPartner && (
+                    <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold bg-primary/10 text-primary px-2 py-0.5 rounded">
+                      <Lock className="w-3 h-3" /> VOC
+                    </span>
+                  )}
                 </h2>
 
-                <div className="space-y-3 font-body text-base">
-                  <div className="flex justify-between text-foreground">
-                    <span>Mezisoučet</span>
-                    <span className="font-semibold">
-                      {subtotal.toLocaleString("cs-CZ")}&nbsp;Kč
-                    </span>
+                {isPartner ? (
+                  <div className="space-y-3 font-body text-base">
+                    <div className="flex justify-between text-foreground">
+                      <span>Mezisoučet bez DPH</span>
+                      <span className="font-semibold tabular-nums">{fmtCZK(subtotalNet)}</span>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground text-sm">
+                      <span>DPH 21 %</span>
+                      <span className="tabular-nums">{fmtCZK(subtotalVat)}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Dopravu a platbu zvolíte v dalším kroku.
+                    </p>
+                    <div className="border-t border-border pt-3 flex justify-between text-foreground">
+                      <span className="font-heading text-lg font-bold">Celkem s DPH</span>
+                      <span className="font-heading text-2xl font-bold tabular-nums">
+                        {fmtCZK(subtotalGross)}
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Dopravu a platbu zvolíte v dalším kroku.
-                  </p>
-                  <div className="border-t border-border pt-3 flex justify-between text-foreground">
-                    <span className="font-heading text-lg font-bold">Mezisoučet</span>
-                    <span className="font-heading text-2xl font-bold">
-                      {subtotal.toLocaleString("cs-CZ")}&nbsp;Kč
-                    </span>
+                ) : (
+                  <div className="space-y-3 font-body text-base">
+                    <div className="flex justify-between text-foreground">
+                      <span>Mezisoučet</span>
+                      <span className="font-semibold tabular-nums">{fmtCZK(subtotalGross)}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Dopravu a platbu zvolíte v dalším kroku.
+                    </p>
+                    <div className="border-t border-border pt-3 flex justify-between text-foreground">
+                      <span className="font-heading text-lg font-bold">Mezisoučet</span>
+                      <span className="font-heading text-2xl font-bold tabular-nums">
+                        {fmtCZK(subtotalGross)}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <Link to="/pokladna" className="block">
                   <Button
