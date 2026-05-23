@@ -493,7 +493,6 @@ const AdminProductEdit = () => {
             <Switch id="visible" checked={visible} onCheckedChange={setVisible} />
           </div>
         </article>
-        </article>
 
         {/* Card 8: Varianty */}
         {siblings.length > 0 && (
