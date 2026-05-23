@@ -64,6 +64,7 @@ const AdminProductEdit = () => {
     setVisible(o.visible);
     setInStock(o.in_stock);
     setPrice(o.price_override ?? product.price);
+    setB2bPrice(o.b2b_price ?? "");
     setVat(o.vat_percent);
     setDescriptionHtml(o.description_html ?? "");
     setTechParamsHtml(o.tech_params_html ?? "");
