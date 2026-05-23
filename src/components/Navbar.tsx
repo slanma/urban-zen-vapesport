@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import { useB2BPartner } from "@/hooks/useB2BPartner";
 
 const navItems = [
   { label: "DOMŮ", href: "/" },
@@ -18,6 +19,7 @@ interface NavbarProps {
 const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { count } = useCart();
+  const { isPartner } = useB2BPartner();
 
 
   return (
