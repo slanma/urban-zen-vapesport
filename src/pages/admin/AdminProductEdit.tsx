@@ -375,30 +375,6 @@ const AdminProductEdit = () => {
           />
         </article>
 
-        {/* Card 6: Technické parametry */}
-        <article className="bg-background border border-border rounded-lg p-6">
-          <h2 className="font-heading font-bold text-foreground mb-1">Technické parametry</h2>
-          <p className="text-xs text-muted-foreground mb-4">
-            Volitelný blok zobrazený úplně dole pod hlavním popisem. Podporuje HTML.
-          </p>
-          <Textarea
-            value={techParamsHtml}
-            onChange={(e) => setTechParamsHtml(e.target.value)}
-            rows={6}
-            className="font-mono text-xs"
-            placeholder="<ul><li>Materiál: PE 600D</li><li>Hmotnost: 120 g</li></ul>"
-          />
-          {techParamsHtml && (
-            <div className="mt-4 p-4 bg-muted/40 rounded border border-border">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Náhled</p>
-              <div
-                className="prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: techParamsHtml }}
-              />
-            </div>
-          )}
-        </article>
-
         {/* Card 7: Cena a dostupnost */}
         <article className="bg-background border border-border rounded-lg p-6">
           <h2 className="font-heading font-bold text-foreground mb-4">Cena a dostupnost</h2>
