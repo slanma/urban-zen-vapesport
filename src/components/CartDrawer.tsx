@@ -6,7 +6,7 @@ import { useCart } from "@/hooks/useCart";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { getProductById } from "@/data/products";
-import { fmtCZK, netFromGross, vatOfGross } from "@/lib/vat";
+import { fmtCZK, netFromGross } from "@/lib/vat";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 
 const CartDrawer = () => {
