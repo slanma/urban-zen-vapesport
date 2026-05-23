@@ -8,9 +8,9 @@ export const feedProducts: Product[] = [
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 378,
-    "shortDescription": "Kompaktní rámová brašna s inteligentním členěním pro každodenní vyjížďky a bezpečné uložení vaší cyklovýbavy.",
+    "shortDescription": "Hledáte lehkou, spolehlivou a skvěle organizovanou brašnu do rámu kola, kam schováte peněženku, klíče, nářadí i záložní duši? Malý trojúhelník tříkapsý Vapesport nabízí optimální šířku 4,5 cm, která zaručuje, že brašna stoprocentně lícuje s profilem kola a nikdy vám nebude překážet nebo dřít o kolena při šlapání.",
     "features": [
-      "Prodloužené popruhy: Extra dlouhé suché zipy spolehlivě obepnou různé průměry trubek. Přečnívající konce po montáži stačí jednoduše zastřihnout nůžkami přesně na míru vašeho kola.",
+      "Ochrana před počasím: Odolný materiál PE 600D a kvalitně zpracované zipy chrání celou výbavu před deštěm a nečistotami z trati.",
       "Originální produkt VAPESPORT",
       "Odolný materiál pro každodenní použití"
     ],
