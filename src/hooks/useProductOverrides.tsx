@@ -63,7 +63,7 @@ const fetchAll = async (): Promise<Map<string, ProductOverride>> => {
       return new Map();
     }
     const map = new Map<string, ProductOverride>();
-    for (const row of data ?? []) map.set(row.product_id, row as ProductOverride);
+    for (const row of data ?? []) map.set(row.product_id, row as unknown as ProductOverride);
     cache = map;
     listeners.forEach((l) => l(map));
     inflight = null;
@@ -117,7 +117,7 @@ export const useProductOverrides = () => {
       broadcast();
       const { error } = await supabase
         .from("product_overrides")
-        .upsert(next, { onConflict: "product_id" });
+        .upsert(next as never, { onConflict: "product_id" });
       if (error) {
         console.error("Failed to save override", error);
         throw error;
