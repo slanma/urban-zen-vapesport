@@ -1,15 +1,18 @@
 import { Link } from "react-router-dom";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Lock } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { getProductById } from "@/data/products";
-import { fmtCZK, netFromGross } from "@/lib/vat";
+import { fmtCZK, netFromGross, vatOfGross } from "@/lib/vat";
+import { getEffectiveUnitPricing } from "@/lib/pricing";
 
 const CartDrawer = () => {
   const { items, isOpen, closeDrawer, updateQty, removeItem } = useCart();
   const { get } = useProductOverrides();
+  const { isPartner } = useB2BPartner();
 
   const lines = items
     .map((i) => {
@@ -17,12 +20,14 @@ const CartDrawer = () => {
       if (!p) return null;
       const ov = get(p.id);
       if (ov?.visible === false) return null;
-      const unit = ov?.price_override ?? p.price;
-      return { item: i, product: p, unit };
+      const pricing = getEffectiveUnitPricing(p, ov, isPartner);
+      return { item: i, product: p, pricing };
     })
-    .filter((x): x is { item: typeof items[0]; product: NonNullable<ReturnType<typeof getProductById>>; unit: number } => !!x);
+    .filter((x): x is { item: typeof items[0]; product: NonNullable<ReturnType<typeof getProductById>>; pricing: ReturnType<typeof getEffectiveUnitPricing> } => !!x);
 
-  const subtotalGross = lines.reduce((s, l) => s + l.unit * l.item.quantity, 0);
+  const subtotalGross = lines.reduce((s, l) => s + l.pricing.unitGross * l.item.quantity, 0);
+  const subtotalNet = lines.reduce((s, l) => s + l.pricing.unitNet * l.item.quantity, 0);
+  const subtotalVat = subtotalGross - subtotalNet;
 
   return (
     <Sheet open={isOpen} onOpenChange={(o) => (o ? null : closeDrawer())}>
@@ -31,6 +36,11 @@ const CartDrawer = () => {
           <SheetTitle className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
             <ShoppingBag className="w-5 h-5 text-primary" />
             Váš košík
+            {isPartner && (
+              <span className="ml-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold bg-primary/10 text-primary px-2 py-0.5 rounded">
+                <Lock className="w-3 h-3" /> B2B · VOC
+              </span>
+            )}
           </SheetTitle>
         </SheetHeader>
 
@@ -44,7 +54,7 @@ const CartDrawer = () => {
         ) : (
           <>
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-              {lines.map(({ item, product, unit }) => (
+              {lines.map(({ item, product, pricing }) => (
                 <div
                   key={`${item.productId}-${item.color ?? ""}`}
                   className="flex gap-3 pb-4 border-b border-border last:border-b-0"
@@ -89,9 +99,14 @@ const CartDrawer = () => {
                           <Plus className="w-3 h-3" />
                         </button>
                       </div>
-                      <span className="font-heading text-sm font-bold text-foreground">
-                        {fmtCZK(unit * item.quantity)}
-                      </span>
+                      <div className="text-right">
+                        <div className="font-heading text-sm font-bold text-foreground">
+                          {fmtCZK((pricing.isB2B ? pricing.unitNet : pricing.unitGross) * item.quantity)}
+                        </div>
+                        <div className="text-[10px] text-muted-foreground">
+                          {pricing.isB2B ? "VOC bez DPH" : "s DPH"}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <button
@@ -105,17 +120,38 @@ const CartDrawer = () => {
               ))}
             </div>
 
-            <div className="border-t border-border px-6 py-5 space-y-4 bg-card">
-              <div className="flex justify-between font-body text-sm text-muted-foreground">
-                <span>Bez DPH</span>
-                <span className="tabular-nums">{fmtCZK(netFromGross(subtotalGross))}</span>
-              </div>
-              <div className="flex justify-between items-baseline">
-                <span className="font-heading text-base font-bold text-foreground">Mezisoučet</span>
-                <span className="font-heading text-2xl font-bold text-foreground tabular-nums">
-                  {fmtCZK(subtotalGross)}
-                </span>
-              </div>
+            <div className="border-t border-border px-6 py-5 space-y-3 bg-card">
+              {isPartner ? (
+                <>
+                  <div className="flex justify-between font-body text-sm text-foreground">
+                    <span>Mezisoučet bez DPH</span>
+                    <span className="tabular-nums font-semibold">{fmtCZK(subtotalNet)}</span>
+                  </div>
+                  <div className="flex justify-between font-body text-sm text-muted-foreground">
+                    <span>DPH 21 %</span>
+                    <span className="tabular-nums">{fmtCZK(subtotalVat)}</span>
+                  </div>
+                  <div className="flex justify-between items-baseline border-t border-border pt-3">
+                    <span className="font-heading text-base font-bold text-foreground">Celkem s DPH</span>
+                    <span className="font-heading text-2xl font-bold text-foreground tabular-nums">
+                      {fmtCZK(subtotalGross)}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between font-body text-sm text-muted-foreground">
+                    <span>Bez DPH</span>
+                    <span className="tabular-nums">{fmtCZK(netFromGross(subtotalGross))}</span>
+                  </div>
+                  <div className="flex justify-between items-baseline">
+                    <span className="font-heading text-base font-bold text-foreground">Mezisoučet</span>
+                    <span className="font-heading text-2xl font-bold text-foreground tabular-nums">
+                      {fmtCZK(subtotalGross)}
+                    </span>
+                  </div>
+                </>
+              )}
               <p className="text-xs text-muted-foreground font-body">
                 Dopravu a platbu si zvolíte v dalším kroku.
               </p>
