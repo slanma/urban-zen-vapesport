@@ -52,18 +52,32 @@ const listeners = new Set<Listener>();
 let cache: Map<string, ProductOverride> | null = null;
 let inflight: Promise<Map<string, ProductOverride>> | null = null;
 
+const PUBLIC_COLUMNS =
+  "product_id,visible,in_stock,price_override,vat_percent,description_html,youtube_url,meta_title,meta_description,ai_keywords,name_override,category_override,short_description_override,features_override,specs_override,colors_override,tech_params_html,created_at,updated_at";
+
 const fetchAll = async (): Promise<Map<string, ProductOverride>> => {
   if (inflight) return inflight;
   inflight = (async () => {
-    const { data, error } = await supabase
-      .from("product_overrides")
-      .select("*");
-    if (error) {
-      console.error("Failed to load product overrides", error);
+    const [overridesRes, b2bRes] = await Promise.all([
+      supabase.from("product_overrides").select(PUBLIC_COLUMNS),
+      // RPC is gated server-side: returns rows only for admins/approved B2B partners.
+      supabase.rpc("get_product_b2b_prices"),
+    ]);
+    if (overridesRes.error) {
+      console.error("Failed to load product overrides", overridesRes.error);
       return new Map();
     }
+    const b2bMap = new Map<string, number>();
+    if (!b2bRes.error && Array.isArray(b2bRes.data)) {
+      for (const row of b2bRes.data as Array<{ product_id: string; b2b_price: number | null }>) {
+        if (row.b2b_price != null) b2bMap.set(row.product_id, row.b2b_price);
+      }
+    }
     const map = new Map<string, ProductOverride>();
-    for (const row of data ?? []) map.set(row.product_id, row as unknown as ProductOverride);
+    for (const row of overridesRes.data ?? []) {
+      const r = row as unknown as Omit<ProductOverride, "b2b_price">;
+      map.set(r.product_id, { ...r, b2b_price: b2bMap.get(r.product_id) ?? null } as ProductOverride);
+    }
     cache = map;
     listeners.forEach((l) => l(map));
     inflight = null;

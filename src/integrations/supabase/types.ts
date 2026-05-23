@@ -197,6 +197,13 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["b2b_status"]
       }
+      get_product_b2b_prices: {
+        Args: never
+        Returns: {
+          b2b_price: number
+          product_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
