@@ -258,12 +258,40 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {override?.description_html && (
+        {override?.description_html ? (
           <article
             className="mt-20 max-w-3xl mx-auto prose prose-neutral prose-headings:font-heading prose-h2:text-3xl prose-h2:font-bold prose-h3:text-xl prose-h3:font-bold prose-h3:mt-8 prose-p:font-body prose-li:font-body prose-strong:text-foreground"
             dangerouslySetInnerHTML={{ __html: override.description_html }}
           />
+        ) : (
+          <article className="mt-20 max-w-3xl mx-auto">
+            <h2 className="font-heading text-3xl font-bold text-foreground">
+              O produktu
+            </h2>
+            <p className="font-body text-muted-foreground mt-4 leading-relaxed">
+              {product.shortDescription}
+            </p>
+            {product.features.length > 0 && (
+              <>
+                <h3 className="font-heading text-xl font-bold text-foreground mt-8">
+                  Proč si vybrat {product.name}
+                </h3>
+                <ul className="mt-4 space-y-2">
+                  {product.features.map((f) => (
+                    <li
+                      key={f}
+                      className="flex items-start gap-3 font-body text-foreground"
+                    >
+                      <Check className="w-4 h-4 text-primary mt-1 shrink-0" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </article>
         )}
+
       </section>
 
       <Footer />
