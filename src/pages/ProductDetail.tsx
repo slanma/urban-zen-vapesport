@@ -29,10 +29,33 @@ const setMeta = (name: string, content: string, attr: "name" | "property" = "nam
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const product = getProductById(id);
+  const baseProduct = getProductById(id);
   const { addItem, openDrawer } = useCart();
   const { get } = useProductOverrides();
-  const override = product ? get(product.id) : null;
+  const override = baseProduct ? get(baseProduct.id) : null;
+
+  const product = baseProduct
+    ? {
+        ...baseProduct,
+        name: override?.name_override?.trim() || baseProduct.name,
+        categoryLabel: override?.category_override?.trim() || baseProduct.categoryLabel,
+        shortDescription:
+          override?.short_description_override?.trim() || baseProduct.shortDescription,
+        features:
+          override?.features_override && override.features_override.length > 0
+            ? override.features_override
+            : baseProduct.features,
+        specs:
+          override?.specs_override && override.specs_override.length > 0
+            ? override.specs_override
+            : baseProduct.specs,
+        available_colors:
+          override?.colors_override && override.colors_override.length > 0
+            ? override.colors_override
+            : baseProduct.available_colors,
+      }
+    : null;
+
   const effectivePrice = override?.price_override ?? product?.price ?? 0;
   const b2bPrice = override?.b2b_price ?? null;
   const inStock = override?.in_stock ?? true;
@@ -81,9 +104,6 @@ const ProductDetail = () => {
     );
   }
 
-  // Hide the touch-screen spec row for products that don't have one
-  // (e.g. frame triangle bags). The data drives visibility — rows are
-  // only rendered when present in product.specs.
   const visibleSpecs = product.specs;
 
   return (

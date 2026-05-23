@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+export interface SpecRow {
+  label: string;
+  value: string;
+}
+
 export interface ProductOverride {
   product_id: string;
   visible: boolean;
@@ -13,6 +18,13 @@ export interface ProductOverride {
   meta_title: string | null;
   meta_description: string | null;
   ai_keywords: string | null;
+  name_override: string | null;
+  category_override: string | null;
+  short_description_override: string | null;
+  features_override: string[] | null;
+  specs_override: SpecRow[] | null;
+  colors_override: string[] | null;
+  tech_params_html: string | null;
 }
 
 export const DEFAULT_OVERRIDE: Omit<ProductOverride, "product_id"> = {
@@ -26,6 +38,13 @@ export const DEFAULT_OVERRIDE: Omit<ProductOverride, "product_id"> = {
   meta_title: null,
   meta_description: null,
   ai_keywords: null,
+  name_override: null,
+  category_override: null,
+  short_description_override: null,
+  features_override: null,
+  specs_override: null,
+  colors_override: null,
+  tech_params_html: null,
 };
 
 type Listener = (map: Map<string, ProductOverride>) => void;
