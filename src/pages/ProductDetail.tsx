@@ -260,11 +260,12 @@ const ProductDetail = () => {
 
         {override?.description_html ? (
           <article
+            key="desc-html"
             className="mt-20 max-w-3xl mx-auto prose prose-neutral prose-headings:font-heading prose-h2:text-3xl prose-h2:font-bold prose-h3:text-xl prose-h3:font-bold prose-h3:mt-8 prose-p:font-body prose-li:font-body prose-strong:text-foreground"
             dangerouslySetInnerHTML={{ __html: override.description_html }}
           />
         ) : (
-          <article className="mt-20 max-w-3xl mx-auto">
+          <article key="desc-default" className="mt-20 max-w-3xl mx-auto">
             <h2 className="font-heading text-3xl font-bold text-foreground">
               Perfektní organizace a čistý design přímo v rámu kola
             </h2>
@@ -291,6 +292,7 @@ const ProductDetail = () => {
             )}
           </article>
         )}
+
 
       </section>
 
