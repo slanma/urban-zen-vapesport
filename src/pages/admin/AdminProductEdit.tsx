@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Save, Youtube, Loader2, Plus, Trash2, RotateCcw } from "lucide-react";
+import { ArrowLeft, Save, Youtube, Loader2, Plus, Trash2, RotateCcw, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -161,10 +161,25 @@ const AdminProductEdit = () => {
           </h1>
           <p className="text-xs text-muted-foreground font-mono mt-1">{product.id}</p>
         </div>
-        <Button onClick={handleSave} disabled={saving} className="gap-2">
-          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          Uložit změny
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={async () => {
+              await handleSave();
+              window.open(`/produkt/${product.id}`, "_blank", "noopener");
+            }}
+            disabled={saving}
+            className="gap-2"
+            title="Uložit a otevřít náhled v novém okně"
+          >
+            <Eye className="w-4 h-4" /> Náhled
+          </Button>
+          <Button onClick={handleSave} disabled={saving} className="gap-2">
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            Uložit změny
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-6">
@@ -431,7 +446,20 @@ const AdminProductEdit = () => {
           </article>
         )}
 
-        <div className="sticky bottom-4 flex justify-end">
+        <div className="sticky bottom-4 flex justify-end gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            onClick={async () => {
+              await handleSave();
+              window.open(`/produkt/${product.id}`, "_blank", "noopener");
+            }}
+            disabled={saving}
+            className="gap-2 shadow-lg bg-background"
+          >
+            <Eye className="w-4 h-4" /> Náhled
+          </Button>
           <Button onClick={handleSave} disabled={saving} size="lg" className="gap-2 shadow-lg">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             Uložit změny
