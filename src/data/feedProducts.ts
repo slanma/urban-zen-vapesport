@@ -8,9 +8,9 @@ export const feedProducts: Product[] = [
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 378,
-    "shortDescription": "Brašna se 2 kapsami na zip a jednou síťkou.",
+    "shortDescription": "Kompaktní rámová brašna s inteligentním členěním pro každodenní vyjížďky a bezpečné uložení vaší cyklovýbavy.",
     "features": [
-      "Dostupné barvy: neon zelená (neon green), neon žlutá (neon yellow), červená (atom red), růžová (neon pink), neon oranžová (neon orange), žlutá (yellow_apache)",
+      "Prodloužené popruhy: Extra dlouhé suché zipy spolehlivě obepnou různé průměry trubek. Přečnívající konce po montáži stačí jednoduše zastřihnout nůžkami přesně na míru vašeho kola.",
       "Originální produkt VAPESPORT",
       "Odolný materiál pro každodenní použití"
     ],
