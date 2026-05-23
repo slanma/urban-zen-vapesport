@@ -429,9 +429,52 @@ const AdminProductEdit = () => {
               <Switch id="stock" checked={inStock} onCheckedChange={setInStock} />
             </div>
           </div>
-          <div className="mt-4 flex items-center justify-between bg-muted/40 rounded-md px-4 py-2.5 max-w-xs">
-            <Label htmlFor="visible" className="cursor-pointer">Viditelné v e-shopu</Label>
-            <Switch id="visible" checked={visible} onCheckedChange={setVisible} />
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+            <div className="rounded-md border border-dashed border-primary/40 bg-primary/5 p-4">
+              <div className="flex items-center justify-between mb-1">
+                <Label htmlFor="b2b_price" className="font-semibold">VOC cena – B2B (Kč)</Label>
+                <span className="text-[10px] uppercase tracking-wider text-primary font-semibold">Pouze pro partnery</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-2">
+                Zobrazí se pouze přihlášeným B2B partnerům. Zákazníkům zůstává běžná cena.
+              </p>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="b2b_price"
+                  type="number"
+                  min={0}
+                  value={b2bPrice}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setB2bPrice(v === "" ? "" : parseInt(v, 10) || 0);
+                  }}
+                  placeholder="Nezadáno – použije se běžná cena"
+                />
+                {b2bPrice !== "" && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setB2bPrice("")}
+                  >
+                    Vymazat
+                  </Button>
+                )}
+              </div>
+              {typeof b2bPrice === "number" && b2bPrice > 0 && price > 0 && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  Úspora oproti běžné ceně:{" "}
+                  <span className="text-primary font-semibold">
+                    {Math.max(0, Math.round((1 - b2bPrice / price) * 100))} %
+                  </span>{" "}
+                  ({(price - b2bPrice).toLocaleString("cs-CZ")} Kč)
+                </p>
+              )}
+            </div>
+            <div className="flex items-center justify-between bg-muted/40 rounded-md px-4 py-2.5 self-end">
+              <Label htmlFor="visible" className="cursor-pointer">Viditelné v e-shopu</Label>
+              <Switch id="visible" checked={visible} onCheckedChange={setVisible} />
+            </div>
           </div>
         </article>
 
