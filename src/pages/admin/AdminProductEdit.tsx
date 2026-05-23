@@ -53,6 +53,7 @@ const AdminProductEdit = () => {
   const [techParamsHtml, setTechParamsHtml] = useState<string>("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [price, setPrice] = useState<number>(0);
+  const [b2bPrice, setB2bPrice] = useState<number | "">("");
   const [vat, setVat] = useState<number>(21);
   const [inStock, setInStock] = useState(true);
   const [visible, setVisible] = useState(true);
