@@ -119,6 +119,7 @@ const AdminProductEdit = () => {
         visible,
         in_stock: inStock,
         price_override: price !== product.price ? price : null,
+        b2b_price: typeof b2bPrice === "number" && b2bPrice > 0 ? b2bPrice : null,
         vat_percent: vat,
         description_html: descriptionHtml || null,
         tech_params_html: techParamsHtml || null,
