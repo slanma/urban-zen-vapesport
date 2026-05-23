@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import { getProductById, products, productsByBaseId, type Product } from "@/data/products";
 import { useProductOverrides, type SpecRow } from "@/hooks/useProductOverrides";
 import { toast } from "@/hooks/use-toast";
@@ -335,29 +336,13 @@ const AdminProductEdit = () => {
         <article className="bg-background border border-border rounded-lg p-6">
           <h2 className="font-heading font-bold text-foreground mb-1">Hlavní popis</h2>
           <p className="text-xs text-muted-foreground mb-4">
-            Zobrazí se v dolní části stránky pod specifikací. Podporuje HTML.
+            Zobrazí se v dolní části stránky pod specifikací. Vizuální editor — tučné, nadpisy, seznamy, zarovnání, obrázky.
           </p>
-          <Textarea
-            id="desc"
+          <RichTextEditor
             value={descriptionHtml}
-            onChange={(e) => setDescriptionHtml(e.target.value)}
-            onPaste={(e) => {
-              const txt = e.clipboardData.getData("text");
-              const vid = youtubeIdFromUrl(txt);
-              if (vid) {
-                e.preventDefault();
-                const target = e.currentTarget;
-                const start = target.selectionStart ?? descriptionHtml.length;
-                const end = target.selectionEnd ?? descriptionHtml.length;
-                setDescriptionHtml(
-                  descriptionHtml.slice(0, start) + embedHtml(vid) + descriptionHtml.slice(end),
-                );
-                toast({ title: "YouTube video automaticky vloženo" });
-              }
-            }}
-            rows={8}
-            className="font-mono text-xs"
-            placeholder="<p>Popis produktu…</p>  — vložte YouTube URL pro automatický embed."
+            onChange={setDescriptionHtml}
+            placeholder="Popis produktu…"
+            minHeight={260}
           />
           <div className="flex items-end gap-2 mt-3">
             <div className="flex-1">
@@ -374,39 +359,20 @@ const AdminProductEdit = () => {
               <Youtube className="w-4 h-4" /> Vložit do popisu
             </Button>
           </div>
-          {descriptionHtml && (
-            <div className="mt-4 p-4 bg-muted/40 rounded border border-border">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Náhled</p>
-              <div
-                className="prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: descriptionHtml }}
-              />
-            </div>
-          )}
         </article>
 
         {/* Card 6: Technické parametry */}
         <article className="bg-background border border-border rounded-lg p-6">
           <h2 className="font-heading font-bold text-foreground mb-1">Technické parametry</h2>
           <p className="text-xs text-muted-foreground mb-4">
-            Volitelný blok zobrazený úplně dole pod hlavním popisem. Podporuje HTML.
+            Volitelný blok zobrazený úplně dole pod hlavním popisem. Vizuální editor s formátováním.
           </p>
-          <Textarea
+          <RichTextEditor
             value={techParamsHtml}
-            onChange={(e) => setTechParamsHtml(e.target.value)}
-            rows={6}
-            className="font-mono text-xs"
-            placeholder="<ul><li>Materiál: PE 600D</li><li>Hmotnost: 120 g</li></ul>"
+            onChange={setTechParamsHtml}
+            placeholder="Materiál, hmotnost, rozměry…"
+            minHeight={180}
           />
-          {techParamsHtml && (
-            <div className="mt-4 p-4 bg-muted/40 rounded border border-border">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Náhled</p>
-              <div
-                className="prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: techParamsHtml }}
-              />
-            </div>
-          )}
         </article>
 
         {/* Card 7: Cena a dostupnost */}
