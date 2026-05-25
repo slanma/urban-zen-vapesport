@@ -257,7 +257,7 @@ export const smartSearch = (
     .map((p) => {
       const pTokens = p.__searchHaystack.split(" ");
       let score = 0;
-      let matchedGroups = 0;
+      let exactGroups = 0;
       for (const group of expandedGroups) {
         let best = 0;
         for (const qTok of group) {
@@ -268,18 +268,16 @@ export const smartSearch = (
           }
           if (best === 1) break;
         }
-        if (best > 0) {
-          matchedGroups += 1;
-          score += best;
-        }
+        if (best === 1) exactGroups += 1;
+        score += best;
       }
-      return { p, score, matchedGroups };
+      return { p, score, exactGroups };
     })
     .filter((r) =>
-      // When the user typed a color, allow the color filter alone to qualify.
-      colorMatch
-        ? true
-        : r.matchedGroups >= Math.ceil(expandedGroups.length * 0.5),
+      // Require ALL raw query tokens to find an exact substring match,
+      // so "na řídítka" only returns true handlebar bags. Color queries
+      // alone still qualify via the color filter.
+      colorMatch ? true : r.exactGroups >= expandedGroups.length,
     )
     .sort((a, b) => b.score - a.score);
 
