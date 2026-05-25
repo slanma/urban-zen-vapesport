@@ -172,6 +172,7 @@ const levenshtein = (a: string, b: string): number => {
 };
 
 const tokenMatches = (qTok: string, pTok: string) => {
+  if (!qTok || !pTok || qTok.length < 2 || pTok.length < 2) return 0;
   if (pTok.includes(qTok) || qTok.includes(pTok)) return 1;
   const dist = levenshtein(qTok, pTok);
   const len = Math.max(qTok.length, pTok.length);
