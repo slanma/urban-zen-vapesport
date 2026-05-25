@@ -93,22 +93,37 @@ const expandToken = (token: string): string[] => {
 export const getCompatibilityTags = (product: Product): string[] => {
   const tags = new Set<string>();
   (CATEGORY_COMPAT[product.categoryLabel] ?? []).forEach((t) => tags.add(t));
-  // Tag inference from name/features
+  // Tag inference from name/features/specs/short description
+  const specsText = (product.specs ?? []).map((s) => `${s.label} ${s.value}`).join(" ");
   const haystack = normalize(
-    [product.name, product.shortDescription, ...(product.features ?? [])].join(" ")
+    [product.name, product.shortDescription, specsText, ...(product.features ?? [])].join(" "),
   );
   if (/elektr|e bike|ebike/.test(haystack)) tags.add("elektrokolo");
   if (/nepromok|waterproof|vodeodoln/.test(haystack)) tags.add("nepromokavá");
-  if (/ram|trojuheln/.test(haystack)) tags.add("rám");
-  if (/riditk|handlebar/.test(haystack)) tags.add("řídítka");
-  if (/sedl/.test(haystack)) tags.add("sedlo");
-  if (/mobil|telefon|smb/.test(haystack)) tags.add("mobil");
+  if (/ram|trojuheln|framebag/.test(haystack)) { tags.add("rám"); tags.add("do rámu"); }
+  if (/riditk|handlebar|kokpit/.test(haystack)) { tags.add("řídítka"); tags.add("na řídítka"); }
+  if (/predstavec|stem/.test(haystack)) tags.add("představec");
+  if (/sedl/.test(haystack)) { tags.add("sedlo"); tags.add("pod sedlo"); }
+  if (/mobil|telefon|smb|smartphone/.test(haystack)) { tags.add("mobil"); tags.add("na telefon"); }
+  if (/navigac|gps|garmin|mapa/.test(haystack)) tags.add("navigace");
+  if (/foli|touch|dotyk/.test(haystack)) tags.add("dotyková fólie");
+  if (/nabijec|charger/.test(haystack)) tags.add("nabíječka");
+  if (/plasten|raincoat/.test(haystack)) tags.add("pláštěnka");
   if (/nosic/.test(haystack)) tags.add("nosič");
   if (/neopren|bateri/.test(haystack)) tags.add("baterie");
   if (/gravel|bikepack/.test(haystack)) tags.add("gravel");
   if (/mtb|horsk/.test(haystack)) tags.add("mtb");
+  // Heuristic: large/deep frame bags fit e-bike chargers
+  if (
+    (/ram|trojuheln|framebag/.test(haystack)) &&
+    (/elektr|e bike|ebike|stredni|velk|xl|xxl|flexi/.test(haystack))
+  ) {
+    tags.add("nabíječka");
+    tags.add("na nabíječku");
+  }
   return Array.from(tags);
 };
+
 
 // Levenshtein for fuzzy single-token matching (small strings only).
 const levenshtein = (a: string, b: string): number => {
