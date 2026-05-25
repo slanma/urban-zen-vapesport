@@ -75,14 +75,32 @@ const normalize = (s: string) =>
     .replace(/\s+/g, " ")
     .trim();
 
-const tokenize = (s: string) => normalize(s).split(" ").filter((t) => t.length >= 2);
+// Czech stopwords / prepositions that must not drive matching on their own.
+const STOPWORDS = new Set([
+  "na", "do", "pod", "nad", "za", "od", "po", "ve", "se", "ze",
+  "s", "z", "k", "u", "o", "v",
+  "a", "i", "je", "to", "the", "for", "of", "in", "and", "or",
+]);
+
+const tokenize = (s: string) =>
+  normalize(s)
+    .split(" ")
+    .filter((t) => t.length >= 3 && !STOPWORDS.has(t));
 
 // Expand a query token via the synonym map (bi-directional).
 const expandToken = (token: string): string[] => {
   const out = new Set<string>([token]);
   for (const [key, aliases] of Object.entries(SYNONYMS)) {
     const allForms = [key, ...aliases].map(normalize);
-    if (allForms.some((f) => f === token || f.includes(token) || token.includes(f))) {
+    // Require ≥4-char overlap to prevent runaway substring matches.
+    if (
+      allForms.some(
+        (f) =>
+          f === token ||
+          (token.length >= 4 && f.includes(token)) ||
+          (f.length >= 4 && token.includes(f)),
+      )
+    ) {
       allForms.forEach((f) => f && out.add(f));
     }
   }
