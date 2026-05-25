@@ -88,11 +88,17 @@ const tokenize = (s: string) =>
     .filter((t) => t.length >= 3 && !STOPWORDS.has(t));
 
 // Expand a query token via the synonym map (bi-directional).
+// Multi-word aliases are split — we only emit individual tokens ≥3 chars
+// and never stopwords, so "na riditka" never matches the bare token "na".
 const expandToken = (token: string): string[] => {
   const out = new Set<string>([token]);
+  const pushForm = (f: string) => {
+    for (const part of f.split(" ")) {
+      if (part.length >= 3 && !STOPWORDS.has(part)) out.add(part);
+    }
+  };
   for (const [key, aliases] of Object.entries(SYNONYMS)) {
     const allForms = [key, ...aliases].map(normalize);
-    // Require ≥4-char overlap to prevent runaway substring matches.
     if (
       allForms.some(
         (f) =>
@@ -101,7 +107,7 @@ const expandToken = (token: string): string[] => {
           (f.length >= 4 && token.includes(f)),
       )
     ) {
-      allForms.forEach((f) => f && out.add(f));
+      allForms.forEach(pushForm);
     }
   }
   return Array.from(out);
