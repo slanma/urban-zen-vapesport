@@ -7,11 +7,16 @@ import { ALL_COLOR_NAMES } from "@/data/products";
 // Czech synonym / concept map. Key = canonical token; values = aliases user might type.
 const SYNONYMS: Record<string, string[]> = {
   brasna: ["brašna", "brasna", "taška", "taska", "kapsa", "pouzdro", "obal", "vak", "bag"],
-  ram: ["rám", "ram", "trojúhelník", "trojuhelnik", "rámová", "ramova", "framebag"],
-  riditka: ["řídítka", "riditka", "řidítka", "handlebar", "kokpit"],
-  sedlo: ["sedlo", "podsedlovka", "podsedlová", "podsedlova", "saddle"],
-  horni_trubka: ["horní trubka", "horni trubka", "toptube", "top tube", "smb", "na mobil", "telefon", "mobil"],
-  nosic: ["nosič", "nosic", "carrier", "rack"],
+  ram: ["rám", "ram", "do ramu", "do rámu", "trojúhelník", "trojuhelnik", "rámová", "ramova", "framebag"],
+  riditka: ["řídítka", "riditka", "řidítka", "na riditka", "na řídítka", "handlebar", "kokpit"],
+  predstavec: ["představec", "predstavec", "na predstavec", "na představec", "stem"],
+  sedlo: ["sedlo", "pod sedlo", "podsedlovka", "podsedlová", "podsedlova", "saddle"],
+  horni_trubka: ["horní trubka", "horni trubka", "toptube", "top tube", "smb", "na mobil", "telefon", "na telefon", "mobil", "smartphone"],
+  navigace: ["navigace", "na navigaci", "gps", "garmin", "mapa"],
+  folie: ["dotyková fólie", "dotykova folie", "s fólií", "s folii", "folie", "touch"],
+  nabijecka: ["nabíječka", "nabijecka", "na nabíječku", "na nabijecku", "charger", "ebike charger", "e-bike nabíječka"],
+  plastenka: ["pláštěnka", "plastenka", "na pláštěnku", "na plastenku", "raincoat"],
+  nosic: ["nosič", "nosic", "na nosič", "na nosic", "carrier", "rack"],
   baterie: ["baterie", "battery", "akumulátor", "akumulator", "neopren"],
   elektrokolo: [
     "elektrokolo", "elektrokola", "e-bike", "ebike", "e bike",
@@ -27,6 +32,7 @@ const SYNONYMS: Record<string, string[]> = {
   zdravotni: ["zdravotní", "zdravotni", "medical", "rehabilitace"],
   reflexni: ["reflexní", "reflexni", "viditelnost", "bezpečnost", "bezpecnost"],
 };
+
 
 // Build per-category compatibility tags so users can search by bike type / scenario.
 const CATEGORY_COMPAT: Record<string, string[]> = {
@@ -87,22 +93,37 @@ const expandToken = (token: string): string[] => {
 export const getCompatibilityTags = (product: Product): string[] => {
   const tags = new Set<string>();
   (CATEGORY_COMPAT[product.categoryLabel] ?? []).forEach((t) => tags.add(t));
-  // Tag inference from name/features
+  // Tag inference from name/features/specs/short description
+  const specsText = (product.specs ?? []).map((s) => `${s.label} ${s.value}`).join(" ");
   const haystack = normalize(
-    [product.name, product.shortDescription, ...(product.features ?? [])].join(" ")
+    [product.name, product.shortDescription, specsText, ...(product.features ?? [])].join(" "),
   );
   if (/elektr|e bike|ebike/.test(haystack)) tags.add("elektrokolo");
   if (/nepromok|waterproof|vodeodoln/.test(haystack)) tags.add("nepromokavá");
-  if (/ram|trojuheln/.test(haystack)) tags.add("rám");
-  if (/riditk|handlebar/.test(haystack)) tags.add("řídítka");
-  if (/sedl/.test(haystack)) tags.add("sedlo");
-  if (/mobil|telefon|smb/.test(haystack)) tags.add("mobil");
+  if (/ram|trojuheln|framebag/.test(haystack)) { tags.add("rám"); tags.add("do rámu"); }
+  if (/riditk|handlebar|kokpit/.test(haystack)) { tags.add("řídítka"); tags.add("na řídítka"); }
+  if (/predstavec|stem/.test(haystack)) tags.add("představec");
+  if (/sedl/.test(haystack)) { tags.add("sedlo"); tags.add("pod sedlo"); }
+  if (/mobil|telefon|smb|smartphone/.test(haystack)) { tags.add("mobil"); tags.add("na telefon"); }
+  if (/navigac|gps|garmin|mapa/.test(haystack)) tags.add("navigace");
+  if (/foli|touch|dotyk/.test(haystack)) tags.add("dotyková fólie");
+  if (/nabijec|charger/.test(haystack)) tags.add("nabíječka");
+  if (/plasten|raincoat/.test(haystack)) tags.add("pláštěnka");
   if (/nosic/.test(haystack)) tags.add("nosič");
   if (/neopren|bateri/.test(haystack)) tags.add("baterie");
   if (/gravel|bikepack/.test(haystack)) tags.add("gravel");
   if (/mtb|horsk/.test(haystack)) tags.add("mtb");
+  // Heuristic: large/deep frame bags fit e-bike chargers
+  if (
+    (/ram|trojuheln|framebag/.test(haystack)) &&
+    (/elektr|e bike|ebike|stredni|velk|xl|xxl|flexi/.test(haystack))
+  ) {
+    tags.add("nabíječka");
+    tags.add("na nabíječku");
+  }
   return Array.from(tags);
 };
+
 
 // Levenshtein for fuzzy single-token matching (small strings only).
 const levenshtein = (a: string, b: string): number => {
@@ -143,16 +164,20 @@ export interface SearchableProduct extends Product {
 export const buildSearchIndex = (products: Product[]): SearchableProduct[] =>
   products.map((p) => {
     const compat = getCompatibilityTags(p);
+    const code = (p.specs ?? []).find((s) => s.label === "Kód produktu")?.value ?? "";
     const haystack = normalize(
       [
         p.name,
         p.categoryLabel,
         p.shortDescription,
         p.color ?? "",
+        code,
         ...(p.features ?? []),
         ...compat,
-      ].join(" ")
+      ].join(" "),
     );
+
+
     return { ...p, __searchHaystack: haystack, __compatTags: compat };
   });
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { products, type Product } from "@/data/products";
@@ -84,6 +85,19 @@ const Products = () => {
   );
 
 
+  // Exact product-code match → redirect straight to PDP (e.g. "M411104").
+  const navigate = useNavigate();
+  useEffect(() => {
+    const q = query.trim();
+    if (!q || q.length < 3) return;
+    const upper = q.toUpperCase();
+    const exact = products.find((p) => productCode(p) === upper);
+    if (exact) {
+      navigate(`/produkt/${exact.id}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
   const onQueryChange = (value: string) => {
     setQuery(value);
     const next = new URLSearchParams(searchParams);
@@ -91,6 +105,21 @@ const Products = () => {
     else next.delete("q");
     setSearchParams(next, { replace: true });
   };
+
+  const QUICK_TAGS: { label: string; q: string }[] = [
+    { label: "Do rámu", q: "do rámu" },
+    { label: "Na řídítka", q: "na řídítka" },
+    { label: "Na představec", q: "představec" },
+    { label: "Pod sedlo", q: "pod sedlo" },
+    { label: "Na nosič", q: "nosič" },
+    { label: "Na telefon", q: "na telefon" },
+    { label: "Na navigaci", q: "navigace" },
+    { label: "S dotykovou fólií", q: "dotyková fólie" },
+    { label: "Na e-bike nabíječku", q: "na nabíječku" },
+    { label: "Na pláštěnku", q: "pláštěnka" },
+    { label: "Nepromokavá", q: "nepromokavá" },
+  ];
+
 
 
   return (
@@ -188,18 +217,40 @@ const Products = () => {
             type="search"
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
-            placeholder="Napište, co hledáte (např. brašna na řídítka pro e-bike)..."
+            placeholder="Hledejte podle kódu (např. M411104) nebo přirozeným jazykem (např. „brašna do rámu na e-bike nabíječku“)..."
             className="w-full pl-12 pr-32 py-4 bg-card border border-border rounded-full text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-            aria-label="AI vyhledávání produktů přirozeným jazykem"
+            aria-label="Inteligentní vyhledávání — kód, umístění nebo účel použití"
           />
           <span className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1.5 text-[11px] font-body font-semibold tracking-wide uppercase text-primary">
             <Sparkles className="w-3.5 h-3.5" /> AI Search
           </span>
         </div>
+
+        {/* Quick intent tags — placement & utility */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {QUICK_TAGS.map((t) => {
+            const isActive = query.trim().toLowerCase() === t.q.toLowerCase();
+            return (
+              <button
+                key={t.label}
+                type="button"
+                onClick={() => onQueryChange(isActive ? "" : t.q)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-body font-semibold tracking-wide border transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                    : "bg-card text-foreground border-border hover:border-primary hover:text-primary"
+                }`}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+
         {query.trim() && (
-          <p className="mt-2 px-2 text-xs font-body text-muted-foreground">
+          <p className="mt-3 px-2 text-xs font-body text-muted-foreground">
             {filtered.length === 0
-              ? "Nic jsme nenašli — zkuste jiný popis (např. „nepromokavá brašna na rám“)."
+              ? "Nic jsme nenašli — zkuste jiný popis (např. „nepromokavá brašna na rám“) nebo kód produktu."
               : `Nalezeno ${filtered.length} ${filtered.length === 1 ? "produkt" : filtered.length < 5 ? "produkty" : "produktů"}.`}
           </p>
         )}
