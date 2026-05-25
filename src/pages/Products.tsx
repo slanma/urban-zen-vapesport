@@ -85,6 +85,19 @@ const Products = () => {
   );
 
 
+  // Exact product-code match → redirect straight to PDP (e.g. "M411104").
+  const navigate = useNavigate();
+  useEffect(() => {
+    const q = query.trim();
+    if (!q || q.length < 3) return;
+    const upper = q.toUpperCase();
+    const exact = products.find((p) => productCode(p) === upper);
+    if (exact) {
+      navigate(`/produkt/${exact.id}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
   const onQueryChange = (value: string) => {
     setQuery(value);
     const next = new URLSearchParams(searchParams);
@@ -92,6 +105,21 @@ const Products = () => {
     else next.delete("q");
     setSearchParams(next, { replace: true });
   };
+
+  const QUICK_TAGS: { label: string; q: string }[] = [
+    { label: "Do rámu", q: "do rámu" },
+    { label: "Na řídítka", q: "na řídítka" },
+    { label: "Na představec", q: "představec" },
+    { label: "Pod sedlo", q: "pod sedlo" },
+    { label: "Na nosič", q: "nosič" },
+    { label: "Na telefon", q: "na telefon" },
+    { label: "Na navigaci", q: "navigace" },
+    { label: "S dotykovou fólií", q: "dotyková fólie" },
+    { label: "Na e-bike nabíječku", q: "na nabíječku" },
+    { label: "Na pláštěnku", q: "pláštěnka" },
+    { label: "Nepromokavá", q: "nepromokavá" },
+  ];
+
 
 
   return (
