@@ -7,11 +7,16 @@ import { ALL_COLOR_NAMES } from "@/data/products";
 // Czech synonym / concept map. Key = canonical token; values = aliases user might type.
 const SYNONYMS: Record<string, string[]> = {
   brasna: ["brašna", "brasna", "taška", "taska", "kapsa", "pouzdro", "obal", "vak", "bag"],
-  ram: ["rám", "ram", "trojúhelník", "trojuhelnik", "rámová", "ramova", "framebag"],
-  riditka: ["řídítka", "riditka", "řidítka", "handlebar", "kokpit"],
-  sedlo: ["sedlo", "podsedlovka", "podsedlová", "podsedlova", "saddle"],
-  horni_trubka: ["horní trubka", "horni trubka", "toptube", "top tube", "smb", "na mobil", "telefon", "mobil"],
-  nosic: ["nosič", "nosic", "carrier", "rack"],
+  ram: ["rám", "ram", "do ramu", "do rámu", "trojúhelník", "trojuhelnik", "rámová", "ramova", "framebag"],
+  riditka: ["řídítka", "riditka", "řidítka", "na riditka", "na řídítka", "handlebar", "kokpit"],
+  predstavec: ["představec", "predstavec", "na predstavec", "na představec", "stem"],
+  sedlo: ["sedlo", "pod sedlo", "podsedlovka", "podsedlová", "podsedlova", "saddle"],
+  horni_trubka: ["horní trubka", "horni trubka", "toptube", "top tube", "smb", "na mobil", "telefon", "na telefon", "mobil", "smartphone"],
+  navigace: ["navigace", "na navigaci", "gps", "garmin", "mapa"],
+  folie: ["dotyková fólie", "dotykova folie", "s fólií", "s folii", "folie", "touch"],
+  nabijecka: ["nabíječka", "nabijecka", "na nabíječku", "na nabijecku", "charger", "ebike charger", "e-bike nabíječka"],
+  plastenka: ["pláštěnka", "plastenka", "na pláštěnku", "na plastenku", "raincoat"],
+  nosic: ["nosič", "nosic", "na nosič", "na nosic", "carrier", "rack"],
   baterie: ["baterie", "battery", "akumulátor", "akumulator", "neopren"],
   elektrokolo: [
     "elektrokolo", "elektrokola", "e-bike", "ebike", "e bike",
@@ -27,6 +32,7 @@ const SYNONYMS: Record<string, string[]> = {
   zdravotni: ["zdravotní", "zdravotni", "medical", "rehabilitace"],
   reflexni: ["reflexní", "reflexni", "viditelnost", "bezpečnost", "bezpecnost"],
 };
+
 
 // Build per-category compatibility tags so users can search by bike type / scenario.
 const CATEGORY_COMPAT: Record<string, string[]> = {
