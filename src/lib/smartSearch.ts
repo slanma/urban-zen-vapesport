@@ -164,15 +164,19 @@ export interface SearchableProduct extends Product {
 export const buildSearchIndex = (products: Product[]): SearchableProduct[] =>
   products.map((p) => {
     const compat = getCompatibilityTags(p);
+    const code = (p.specs ?? []).find((s) => s.label === "Kód produktu")?.value ?? "";
     const haystack = normalize(
       [
         p.name,
         p.categoryLabel,
         p.shortDescription,
         p.color ?? "",
+        code,
         ...(p.features ?? []),
         ...compat,
-      ].join(" ")
+      ].join(" "),
+    );
+
     );
     return { ...p, __searchHaystack: haystack, __compatTags: compat };
   });
