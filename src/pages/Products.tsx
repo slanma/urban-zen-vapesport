@@ -57,16 +57,32 @@ const Products = () => {
   );
   const searchIndex = useMemo(() => buildSearchIndex(visibleProducts), [visibleProducts]);
 
+  const pillarKey = (searchParams.get("pilir") as PillarKey | null) ?? null;
+  const activePillar = useMemo(() => getPillar(pillarKey), [pillarKey]);
+
+  const selectPillar = (key: PillarKey | null) => {
+    const next = new URLSearchParams(searchParams);
+    if (key) next.set("pilir", key);
+    else next.delete("pilir");
+    setSearchParams(next);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   const categoryFiltered = useMemo(() => {
-    if (active === "all") return searchIndex;
-    if (active === "morseo") return searchIndex.filter(isMorseovapeProduct);
-    return searchIndex.filter((p) => p.categoryLabel === active);
-  }, [active, searchIndex]);
+    let list = searchIndex;
+    if (activePillar) list = list.filter(activePillar.match);
+    if (active === "all") return list;
+    if (active === "morseo") return list.filter(isMorseovapeProduct);
+    return list.filter((p) => p.categoryLabel === active);
+  }, [active, searchIndex, activePillar]);
 
   const filtered = useMemo(
     () => (query.trim() ? smartSearch(categoryFiltered, query) : categoryFiltered),
     [categoryFiltered, query],
   );
+
 
   const onQueryChange = (value: string) => {
     setQuery(value);
