@@ -177,7 +177,7 @@ export const buildSearchIndex = (products: Product[]): SearchableProduct[] =>
       ].join(" "),
     );
 
-    );
+
     return { ...p, __searchHaystack: haystack, __compatTags: compat };
   });
 
