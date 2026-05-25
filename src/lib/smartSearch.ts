@@ -75,15 +75,39 @@ const normalize = (s: string) =>
     .replace(/\s+/g, " ")
     .trim();
 
-const tokenize = (s: string) => normalize(s).split(" ").filter((t) => t.length >= 2);
+// Czech stopwords / prepositions that must not drive matching on their own.
+const STOPWORDS = new Set([
+  "na", "do", "pod", "nad", "za", "od", "po", "ve", "se", "ze",
+  "s", "z", "k", "u", "o", "v",
+  "a", "i", "je", "to", "the", "for", "of", "in", "and", "or",
+]);
+
+const tokenize = (s: string) =>
+  normalize(s)
+    .split(" ")
+    .filter((t) => t.length >= 3 && !STOPWORDS.has(t));
 
 // Expand a query token via the synonym map (bi-directional).
+// Multi-word aliases are split — we only emit individual tokens ≥3 chars
+// and never stopwords, so "na riditka" never matches the bare token "na".
 const expandToken = (token: string): string[] => {
   const out = new Set<string>([token]);
+  const pushForm = (f: string) => {
+    for (const part of f.split(" ")) {
+      if (part.length >= 3 && !STOPWORDS.has(part)) out.add(part);
+    }
+  };
   for (const [key, aliases] of Object.entries(SYNONYMS)) {
     const allForms = [key, ...aliases].map(normalize);
-    if (allForms.some((f) => f === token || f.includes(token) || token.includes(f))) {
-      allForms.forEach((f) => f && out.add(f));
+    if (
+      allForms.some(
+        (f) =>
+          f === token ||
+          (token.length >= 4 && f.includes(token)) ||
+          (f.length >= 4 && token.includes(f)),
+      )
+    ) {
+      allForms.forEach(pushForm);
     }
   }
   return Array.from(out);
@@ -148,7 +172,12 @@ const levenshtein = (a: string, b: string): number => {
 };
 
 const tokenMatches = (qTok: string, pTok: string) => {
-  if (pTok.includes(qTok) || qTok.includes(pTok)) return 1;
+  if (!qTok || !pTok || qTok.length < 3 || pTok.length < 3) return 0;
+  if (qTok === pTok) return 1;
+  // Only allow substring matches where the contained token is ≥4 chars,
+  // so short generic words like "pro" / "na" don't latch onto long queries.
+  if (pTok.includes(qTok) && qTok.length >= 4) return 1;
+  if (qTok.includes(pTok) && pTok.length >= 4) return 1;
   const dist = levenshtein(qTok, pTok);
   const len = Math.max(qTok.length, pTok.length);
   // Allow ~25% typo tolerance
@@ -233,7 +262,7 @@ export const smartSearch = (
     .map((p) => {
       const pTokens = p.__searchHaystack.split(" ");
       let score = 0;
-      let matchedGroups = 0;
+      let exactGroups = 0;
       for (const group of expandedGroups) {
         let best = 0;
         for (const qTok of group) {
@@ -244,18 +273,16 @@ export const smartSearch = (
           }
           if (best === 1) break;
         }
-        if (best > 0) {
-          matchedGroups += 1;
-          score += best;
-        }
+        if (best === 1) exactGroups += 1;
+        score += best;
       }
-      return { p, score, matchedGroups };
+      return { p, score, exactGroups };
     })
     .filter((r) =>
-      // When the user typed a color, allow the color filter alone to qualify.
-      colorMatch
-        ? true
-        : r.matchedGroups >= Math.ceil(expandedGroups.length * 0.5),
+      // Require ALL raw query tokens to find an exact substring match,
+      // so "na řídítka" only returns true handlebar bags. Color queries
+      // alone still qualify via the color filter.
+      colorMatch ? true : r.exactGroups >= expandedGroups.length,
     )
     .sort((a, b) => b.score - a.score);
 
