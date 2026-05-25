@@ -140,6 +140,65 @@ const Products = () => {
         </p>
       </section>
 
+      {/* AI Search */}
+      <div className="px-6 lg:px-12 max-w-[1400px] mx-auto mb-10">
+        <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-heading text-xl md:text-2xl font-bold tracking-tight text-foreground">
+              Najděte svou brašnu
+            </h2>
+            <span className="hidden sm:flex items-center gap-1.5 text-xs font-body font-semibold tracking-wide uppercase text-primary">
+              <Sparkles className="w-3.5 h-3.5" /> AI Search
+            </span>
+          </div>
+
+          <label htmlFor="ai-search" className="sr-only">
+            Vyhledávání produktů
+          </label>
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <input
+              id="ai-search"
+              type="search"
+              value={query}
+              onChange={(e) => onQueryChange(e.target.value)}
+              placeholder="Hledejte podle kódu (např. M411104) nebo přirozeným jazykem…"
+              className="w-full pl-12 pr-4 py-4 bg-background border border-border rounded-full text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+              aria-label="Inteligentní vyhledávání — kód, umístění nebo účel použití"
+            />
+          </div>
+
+          {/* Quick intent tags — placement & utility */}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {QUICK_TAGS.map((t) => {
+              const isActive = query.trim().toLowerCase() === t.q.toLowerCase();
+              return (
+                <button
+                  key={t.label}
+                  type="button"
+                  onClick={() => onQueryChange(isActive ? "" : t.q)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-body font-semibold tracking-wide border transition-all ${
+                    isActive
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      : "bg-background text-foreground border-border hover:border-primary hover:text-primary"
+                  }`}
+                >
+                  {t.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {query.trim() && (
+            <p className="mt-3 text-xs font-body text-muted-foreground">
+              {filtered.length === 0
+                ? "Nic jsme nenašli — zkuste jiný popis (např. „nepromokavá brašna na rám“) nebo kód produktu."
+                : `Nalezeno ${filtered.length} ${filtered.length === 1 ? "produkt" : filtered.length < 5 ? "produkty" : "produktů"}.`}
+            </p>
+          )}
+        </div>
+      </div>
+
       {/* Visual Category Architecture — 4 pillars */}
       <section className="px-6 lg:px-12 max-w-[1400px] mx-auto pb-14">
         <div className="flex items-end justify-between mb-8 gap-4 flex-wrap">
