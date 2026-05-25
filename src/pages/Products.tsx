@@ -3,10 +3,11 @@ import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { products, type Product } from "@/data/products";
-import { ArrowRight, Search, Sparkles } from "lucide-react";
+import { ArrowRight, Search, Sparkles, X } from "lucide-react";
 import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import PriceTag from "@/components/PriceTag";
+import { PILLARS, getPillar, pickPillarImage, type PillarKey } from "@/lib/productPillars";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,16 +57,32 @@ const Products = () => {
   );
   const searchIndex = useMemo(() => buildSearchIndex(visibleProducts), [visibleProducts]);
 
+  const pillarKey = (searchParams.get("pilir") as PillarKey | null) ?? null;
+  const activePillar = useMemo(() => getPillar(pillarKey), [pillarKey]);
+
+  const selectPillar = (key: PillarKey | null) => {
+    const next = new URLSearchParams(searchParams);
+    if (key) next.set("pilir", key);
+    else next.delete("pilir");
+    setSearchParams(next);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   const categoryFiltered = useMemo(() => {
-    if (active === "all") return searchIndex;
-    if (active === "morseo") return searchIndex.filter(isMorseovapeProduct);
-    return searchIndex.filter((p) => p.categoryLabel === active);
-  }, [active, searchIndex]);
+    let list = searchIndex;
+    if (activePillar) list = list.filter(activePillar.match);
+    if (active === "all") return list;
+    if (active === "morseo") return list.filter(isMorseovapeProduct);
+    return list.filter((p) => p.categoryLabel === active);
+  }, [active, searchIndex, activePillar]);
 
   const filtered = useMemo(
     () => (query.trim() ? smartSearch(categoryFiltered, query) : categoryFiltered),
     [categoryFiltered, query],
   );
+
 
   const onQueryChange = (value: string) => {
     setQuery(value);
@@ -93,6 +110,71 @@ const Products = () => {
           LEGENDS — najděte ideální brašnu pro váš styl jízdy.
         </p>
       </section>
+
+      {/* Visual Category Architecture — 4 pillars */}
+      <section className="px-6 lg:px-12 max-w-[1400px] mx-auto pb-14">
+        <div className="flex items-end justify-between mb-8 gap-4 flex-wrap">
+          <div>
+            <span className="text-xs font-body font-semibold tracking-[0.25em] uppercase text-muted-foreground">
+              Rozcestník
+            </span>
+            <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-tight mt-2 text-foreground">
+              Vyberte si podle stylu jízdy
+            </h2>
+          </div>
+          {activePillar && (
+            <button
+              onClick={() => selectPillar(null)}
+              className="inline-flex items-center gap-2 text-xs font-body font-semibold tracking-wide uppercase text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="w-3.5 h-3.5" /> Zrušit filtr „{activePillar.title}"
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {PILLARS.map((pillar) => {
+            const img = pickPillarImage(pillar, visibleProducts);
+            const isActive = activePillar?.key === pillar.key;
+            return (
+              <button
+                key={pillar.key}
+                onClick={() => selectPillar(isActive ? null : pillar.key)}
+                aria-pressed={isActive}
+                className={`group relative flex flex-col text-left overflow-hidden rounded-2xl border bg-secondary/40 transition-all duration-300 hover:shadow-xl ${
+                  isActive
+                    ? "border-primary ring-2 ring-primary/30"
+                    : "border-border hover:border-foreground/30"
+                }`}
+              >
+                <div className="aspect-[4/3] bg-muted overflow-hidden">
+                  {img && (
+                    <img
+                      src={img}
+                      alt={pillar.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
+                  )}
+                </div>
+                <div className="p-6 flex flex-col gap-3 flex-1">
+                  <h3 className="font-heading text-lg font-bold leading-snug text-foreground">
+                    {pillar.title}
+                  </h3>
+                  <p className="text-sm font-body text-muted-foreground leading-relaxed flex-1">
+                    {pillar.subtitle}
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-body font-semibold tracking-wide uppercase text-primary mt-2">
+                    {isActive ? "Vybráno" : "Zobrazit"}{" "}
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
 
       {/* AI Search */}
       <div className="px-6 lg:px-12 max-w-[1400px] mx-auto mb-6">
