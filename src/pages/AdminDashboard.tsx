@@ -361,6 +361,8 @@ const AdminDashboard = () => {
             </div>
           </section>
         )}
+
+        {view === "settings" && <AdminSettings />}
       </main>
     </div>
   );
