@@ -115,6 +115,8 @@ const Checkout = () => {
     return base;
   }, [shipping, isPartner]);
 
+  const freeShipping = isPartner && profile?.free_shipping === true;
+
   const shippingOpt = shipping ? SHIPPING_OPTIONS.find((s) => s.id === shipping)! : null;
   const paymentOpt = payment ? availablePayments.find((p) => p.id === payment) ?? null : null;
 
@@ -139,7 +141,7 @@ const Checkout = () => {
   );
 
   const subtotalGross = orderLines.reduce((s, it) => s + it.unitGross * it.qty, 0);
-  const shippingPrice = shippingOpt?.price ?? 0;
+  const shippingPrice = freeShipping ? 0 : (shippingOpt?.price ?? 0);
   const paymentPrice = paymentOpt?.price ?? 0;
   const grandGross = subtotalGross + shippingPrice + paymentPrice;
 
