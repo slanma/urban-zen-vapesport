@@ -14,7 +14,7 @@ import { fmtCZK } from "@/lib/vat";
 const Cart = () => {
   const { items: cart, updateQty, removeItem } = useCart();
   const { get } = useProductOverrides();
-  const { isPartner } = useB2BPartner();
+  const { isPartner, profile } = useB2BPartner();
 
   const lines = cart
     .map((item) => {
@@ -22,7 +22,7 @@ const Cart = () => {
       if (!product) return null;
       const ov = get(product.id);
       if (ov?.visible === false) return null;
-      const pricing = getEffectiveUnitPricing(product, ov, isPartner);
+      const pricing = getEffectiveUnitPricing(product, ov, isPartner, profile?.discount_percent);
       return { item, product, pricing };
     })
     .filter((x): x is { item: typeof cart[0]; product: NonNullable<ReturnType<typeof getProductById>>; pricing: ReturnType<typeof getEffectiveUnitPricing> } => !!x);
