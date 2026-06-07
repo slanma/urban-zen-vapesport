@@ -237,7 +237,9 @@ const Checkout = () => {
         payment_gross: paymentPrice,
         total_gross: grandGross,
         packeta_point: packetaPoint,
-      });
+        promo_code: appliedPromo?.code ?? null,
+        discount_gross: discountGross,
+      } as never);
       if (error) throw error;
       toast.success("Objednávka odeslána", { description: `Číslo: ${orderNumber}` });
       clearCart();
