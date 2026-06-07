@@ -12,7 +12,7 @@ import { getEffectiveUnitPricing } from "@/lib/pricing";
 const CartDrawer = () => {
   const { items, isOpen, closeDrawer, updateQty, removeItem } = useCart();
   const { get } = useProductOverrides();
-  const { isPartner } = useB2BPartner();
+  const { isPartner, profile } = useB2BPartner();
 
   const lines = items
     .map((i) => {
@@ -20,7 +20,7 @@ const CartDrawer = () => {
       if (!p) return null;
       const ov = get(p.id);
       if (ov?.visible === false) return null;
-      const pricing = getEffectiveUnitPricing(p, ov, isPartner);
+      const pricing = getEffectiveUnitPricing(p, ov, isPartner, profile?.discount_percent);
       return { item: i, product: p, pricing };
     })
     .filter((x): x is { item: typeof items[0]; product: NonNullable<ReturnType<typeof getProductById>>; pricing: ReturnType<typeof getEffectiveUnitPricing> } => !!x);
