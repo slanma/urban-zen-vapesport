@@ -120,7 +120,7 @@ const AdminDashboard = () => {
     setLoadingAction(null);
   };
 
-  const handleLogout = async () => { await signOut(); navigate("/admin"); };
+  const handleLogout = async () => { clearStoredAdminSession(); await signOut(); navigate("/admin-login"); };
 
   if (authLoading || checkingAccess) {
     return <div className="min-h-screen bg-secondary flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
