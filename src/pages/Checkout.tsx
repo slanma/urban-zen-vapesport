@@ -449,13 +449,26 @@ const Checkout = () => {
                       <MapPin className="w-5 h-5 text-primary mt-0.5" />
                       <div className="text-sm font-body">
                         <p className="font-semibold text-foreground">Výdejní místo Zásilkovna</p>
-                        <p className="text-muted-foreground">
-                          {packetaPoint ?? "Zatím nevybráno"}
-                        </p>
+                        {packetaPoint ? (
+                          <p className="text-foreground">
+                            <span className="font-semibold text-primary">{packetaPoint.name}</span>
+                            <span className="ml-2 text-xs text-muted-foreground font-mono">
+                              #{packetaPoint.id}
+                            </span>
+                          </p>
+                        ) : (
+                          <p className="text-muted-foreground">Zatím nevybráno</p>
+                        )}
                       </div>
                     </div>
-                    <Button type="button" variant="outline" size="sm" onClick={openPacketaWidget}>
-                      {packetaPoint ? "Změnit" : "Vybrat místo"}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={openPacketaWidget}
+                      disabled={!packetaReady}
+                    >
+                      {packetaPoint ? "Změnit" : "Vybrat výdejní místo"}
                     </Button>
                   </div>
                 </div>
