@@ -118,7 +118,6 @@ const Shop = () => {
                   type="button"
                   aria-label={`${d.label}: ${d.ariaDescription}`}
                   aria-pressed={isActive}
-                  aria-describedby="hotspot-status"
                   onClick={() => setActive(d.id)}
                   onKeyDown={(e) => {
                     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
