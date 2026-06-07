@@ -77,6 +77,7 @@ export type Database = {
           company_name: string | null
           created_at: string
           dic: string | null
+          discount_gross: number
           email: string
           first_name: string | null
           ico: string | null
@@ -90,6 +91,7 @@ export type Database = {
           payment_gross: number
           payment_label: string | null
           phone: string | null
+          promo_code: string | null
           shipping_gross: number
           shipping_label: string | null
           status: Database["public"]["Enums"]["order_status"]
@@ -105,6 +107,7 @@ export type Database = {
           company_name?: string | null
           created_at?: string
           dic?: string | null
+          discount_gross?: number
           email: string
           first_name?: string | null
           ico?: string | null
@@ -118,6 +121,7 @@ export type Database = {
           payment_gross?: number
           payment_label?: string | null
           phone?: string | null
+          promo_code?: string | null
           shipping_gross?: number
           shipping_label?: string | null
           status?: Database["public"]["Enums"]["order_status"]
@@ -133,6 +137,7 @@ export type Database = {
           company_name?: string | null
           created_at?: string
           dic?: string | null
+          discount_gross?: number
           email?: string
           first_name?: string | null
           ico?: string | null
@@ -146,6 +151,7 @@ export type Database = {
           payment_gross?: number
           payment_label?: string | null
           phone?: string | null
+          promo_code?: string | null
           shipping_gross?: number
           shipping_label?: string | null
           status?: Database["public"]["Enums"]["order_status"]
@@ -224,6 +230,36 @@ export type Database = {
           vat_percent?: number
           visible?: boolean
           youtube_url?: string | null
+        }
+        Relationships: []
+      }
+      promo_codes: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          type: Database["public"]["Enums"]["promo_code_type"]
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          id?: string
+          type: Database["public"]["Enums"]["promo_code_type"]
+          updated_at?: string
+          value: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          id?: string
+          type?: Database["public"]["Enums"]["promo_code_type"]
+          updated_at?: string
+          value?: number
         }
         Relationships: []
       }
@@ -332,6 +368,7 @@ export type Database = {
         | "odeslano"
         | "dorucena"
         | "zrusena"
+      promo_code_type: "percentage" | "fixed_amount"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -468,6 +505,7 @@ export const Constants = {
         "dorucena",
         "zrusena",
       ],
+      promo_code_type: ["percentage", "fixed_amount"],
     },
   },
 } as const
