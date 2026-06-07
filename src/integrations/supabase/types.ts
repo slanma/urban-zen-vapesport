@@ -23,6 +23,7 @@ export type Database = {
           created_at: string
           dic: string | null
           discount_percent: number
+          free_shipping: boolean
           ico: string
           id: string
           notes: string | null
@@ -40,6 +41,7 @@ export type Database = {
           created_at?: string
           dic?: string | null
           discount_percent?: number
+          free_shipping?: boolean
           ico: string
           id?: string
           notes?: string | null
@@ -57,6 +59,7 @@ export type Database = {
           created_at?: string
           dic?: string | null
           discount_percent?: number
+          free_shipping?: boolean
           ico?: string
           id?: string
           notes?: string | null
