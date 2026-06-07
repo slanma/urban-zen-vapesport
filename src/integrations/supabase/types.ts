@@ -71,6 +71,33 @@ export type Database = {
         }
         Relationships: []
       }
+      bank_accounts: {
+        Row: {
+          bank_name: string
+          created_at: string
+          iban: string
+          id: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          bank_name: string
+          created_at?: string
+          iban: string
+          id?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          bank_name?: string
+          created_at?: string
+          iban?: string
+          id?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           city: string | null
