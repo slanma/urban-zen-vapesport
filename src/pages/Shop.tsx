@@ -94,7 +94,11 @@ const Shop = () => {
         className="px-6 lg:px-12 max-w-[1100px] mx-auto pb-10"
         aria-label="Interaktivní výběr brašen podle umístění na elektrokole"
       >
-        <div className="relative w-full aspect-[16/9] mx-auto select-none">
+        <div
+          className="relative w-full aspect-[16/9] mx-auto select-none"
+          role="group"
+          aria-label="Body na elektrokole představující umístění brašen"
+        >
           <img
             src={ebikeSilhouette}
             alt="Boční profil elektrokola s vyznačenými místy pro brašny"
@@ -102,7 +106,7 @@ const Shop = () => {
             draggable={false}
           />
 
-          {dots.map((d) => {
+          {dots.map((d, idx) => {
             const isActive = active === d.id;
             return (
               <div
@@ -115,25 +119,43 @@ const Shop = () => {
                   aria-label={d.ariaDescription}
                   aria-pressed={isActive}
                   onClick={() => setActive(d.id)}
-                  className="relative w-8 h-8 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer group"
+                  onKeyDown={(e) => {
+                    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                      e.preventDefault();
+                      setActive(dots[(idx + 1) % dots.length].id);
+                    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                      e.preventDefault();
+                      setActive(dots[(idx - 1 + dots.length) % dots.length].id);
+                    } else if (e.key === "Home") {
+                      e.preventDefault();
+                      setActive(dots[0].id);
+                    } else if (e.key === "End") {
+                      e.preventDefault();
+                      setActive(dots[dots.length - 1].id);
+                    }
+                  }}
+                  className="relative w-11 h-11 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer group rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   {!isActive && (
-                    <span className="absolute inset-0 rounded-full border-2 border-primary animate-ping opacity-40" />
+                    <span aria-hidden="true" className="absolute inset-2 rounded-full border-2 border-primary animate-ping opacity-40" />
                   )}
                   <span
-                    className={`absolute inset-1 rounded-full border-2 transition-colors ${
+                    aria-hidden="true"
+                    className={`absolute inset-3 rounded-full border-2 transition-colors ${
                       isActive
                         ? "border-primary bg-primary"
                         : "border-primary bg-background/80 group-hover:bg-primary/20"
                     }`}
                   />
                   <span
+                    aria-hidden="true"
                     className={`relative w-2.5 h-2.5 rounded-full transition-colors ${
                       isActive ? "bg-primary-foreground" : "bg-primary"
                     }`}
                   />
                 </button>
                 <span
+                  aria-hidden="true"
                   className={`hidden sm:block absolute left-1/2 top-1/2 -translate-x-1/2 mt-5 whitespace-nowrap text-[11px] font-body font-semibold px-2 py-0.5 rounded shadow-sm pointer-events-none ${
                     isActive
                       ? "bg-primary text-primary-foreground"
@@ -148,20 +170,31 @@ const Shop = () => {
         </div>
 
         {/* Quick selector */}
-        <div className="flex flex-wrap justify-center gap-2 mt-8">
-          {dots.map((d) => (
-            <button
-              key={d.id}
-              onClick={() => setActive(d.id)}
-              className={`px-4 py-2 rounded-full text-sm font-body font-semibold transition-all ${
-                active === d.id
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "bg-secondary text-foreground hover:bg-accent"
-              }`}
-            >
-              {d.label}
-            </button>
-          ))}
+        <div
+          className="flex flex-wrap justify-center gap-2 mt-8"
+          role="tablist"
+          aria-label="Vyberte umístění brašny na kole"
+        >
+          {dots.map((d) => {
+            const isActive = active === d.id;
+            return (
+              <button
+                key={d.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-label={d.ariaDescription}
+                onClick={() => setActive(d.id)}
+                className={`min-h-11 px-4 py-2 rounded-full text-sm font-body font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-secondary text-foreground hover:bg-accent"
+                }`}
+              >
+                {d.label}
+              </button>
+            );
+          })}
         </div>
       </section>
 
