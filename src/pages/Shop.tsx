@@ -197,6 +197,10 @@ const Shop = () => {
             );
           })}
         </div>
+        <p id="hotspot-status" className="sr-only" aria-live="polite" aria-atomic="true">
+          Vybraná kategorie: {HOTSPOT_LABELS[active]}. {filtered.length}{" "}
+          {filtered.length === 1 ? "produkt" : filtered.length < 5 ? "produkty" : "produktů"}.
+        </p>
       </section>
 
       {/* Filtered products for active hotspot */}
