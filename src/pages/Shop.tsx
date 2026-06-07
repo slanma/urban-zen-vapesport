@@ -134,7 +134,7 @@ const Shop = () => {
                   />
                 </button>
                 <span
-                  className={`absolute left-1/2 top-1/2 -translate-x-1/2 mt-5 whitespace-nowrap text-[11px] font-body font-semibold px-2 py-0.5 rounded shadow-sm pointer-events-none ${
+                  className={`hidden sm:block absolute left-1/2 top-1/2 -translate-x-1/2 mt-5 whitespace-nowrap text-[11px] font-body font-semibold px-2 py-0.5 rounded shadow-sm pointer-events-none ${
                     isActive
                       ? "bg-primary text-primary-foreground"
                       : "bg-background/90 text-foreground"
