@@ -16,6 +16,10 @@ interface OrderSummaryTableProps {
   paymentGross: number;
   shippingLabel?: string;
   paymentLabel?: string;
+  /** Optional promo-code discount applied on the gross total. */
+  discountGross?: number;
+  /** Label for the discount row, e.g. "Sleva (Kód: VAPE10)". */
+  discountLabel?: string;
 }
 
 const OrderSummaryTable = ({
@@ -24,6 +28,8 @@ const OrderSummaryTable = ({
   paymentGross,
   shippingLabel = "Doprava",
   paymentLabel = "Platba",
+  discountGross = 0,
+  discountLabel = "Sleva",
 }: OrderSummaryTableProps) => {
   const subtotalGross = items.reduce((s, it) => s + it.unitGross * it.qty, 0);
   const subtotalNet = netFromGross(subtotalGross);
@@ -31,8 +37,11 @@ const OrderSummaryTable = ({
   const feesGross = shippingGross + paymentGross;
   const feesNet = netFromGross(feesGross);
 
-  const grandGross = subtotalGross + feesGross;
-  const vatTotal = vatOfGross(subtotalGross) + vatOfGross(feesGross);
+  const safeDiscountGross = Math.max(0, Math.min(discountGross, subtotalGross + feesGross));
+  const discountNet = netFromGross(safeDiscountGross);
+
+  const grandGross = Math.max(0, subtotalGross + feesGross - safeDiscountGross);
+  const vatTotal = vatOfGross(subtotalGross) + vatOfGross(feesGross) - vatOfGross(safeDiscountGross);
 
   return (
     <div className="border border-border rounded-xl overflow-hidden bg-card">
@@ -90,6 +99,16 @@ const OrderSummaryTable = ({
             </td>
             <td className="px-3 py-2 text-right tabular-nums">{fmtCZK(feesNet)}</td>
           </tr>
+          {safeDiscountGross > 0 && (
+            <tr className="text-primary">
+              <td className="px-3 py-2 font-medium" colSpan={4}>
+                {discountLabel} (bez DPH)
+              </td>
+              <td className="px-3 py-2 text-right tabular-nums font-medium">
+                −{fmtCZK(discountNet)}
+              </td>
+            </tr>
+          )}
           <tr>
             <td className="px-3 py-2 text-muted-foreground" colSpan={4}>
               Hodnota DPH {Math.round(VAT_RATE * 100)} %
