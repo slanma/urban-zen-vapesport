@@ -28,6 +28,12 @@ import Privacy from "./pages/Privacy";
 import CookieBanner from "./components/CookieBanner";
 import CartDrawer from "./components/CartDrawer";
 import NotFound from "./pages/NotFound";
+import { useAnalytics } from "@/hooks/useAnalytics";
+
+const AnalyticsTracker = () => {
+  useAnalytics();
+  return null;
+};
 
 const queryClient = new QueryClient();
 
@@ -39,6 +45,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <AnalyticsTracker />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/produkty" element={<Products />} />

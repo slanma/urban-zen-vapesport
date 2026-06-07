@@ -5,13 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Loader2, LayoutDashboard, ShoppingCart, Users, Package, LogOut, Check, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2, LayoutDashboard, ShoppingCart, Users, Package, LogOut, Check, X, ChevronLeft, ChevronRight, Settings as SettingsIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { Tables } from "@/integrations/supabase/types";
 
-type View = "overview" | "orders" | "b2b" | "products";
+type View = "overview" | "orders" | "b2b" | "products" | "settings";
 
 const orders = [
   { id: "OBJ-2026-001", date: "2026-03-10", customer: "CykloPro s.r.o.", amount: "12 450 Kč", status: "Nová" as const },
@@ -112,6 +112,7 @@ const AdminDashboard = () => {
     { key: "orders" as View, label: "Objednávky", icon: ShoppingCart, count: orders.filter((o) => o.status === "Nová").length },
     { key: "b2b" as View, label: "B2B Partneři", icon: Users, count: registrations.length },
     { key: "products" as View, label: "Produkty", icon: Package },
+    { key: "settings" as View, label: "Nastavení", icon: SettingsIcon },
   ];
 
   return (
@@ -360,9 +361,96 @@ const AdminDashboard = () => {
             </div>
           </section>
         )}
+
+        {view === "settings" && <AdminSettings />}
       </main>
     </div>
   );
 };
 
+const GA_ID_RE = /^G-[A-Z0-9]{4,}$/i;
+
+const AdminSettings = () => {
+  const [gaId, setGaId] = useState("");
+  const [initialGaId, setInitialGaId] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "ga4_measurement_id")
+        .maybeSingle();
+      const v = data?.value ?? "";
+      setGaId(v);
+      setInitialGaId(v);
+      setLoading(false);
+    })();
+  }, []);
+
+  const handleSave = async () => {
+    const trimmed = gaId.trim();
+    if (trimmed && !GA_ID_RE.test(trimmed)) {
+      toast.error("Neplatné Measurement ID. Formát: G-XXXXXXXXXX");
+      return;
+    }
+    setSaving(true);
+    const { error } = await supabase
+      .from("site_settings")
+      .upsert({ key: "ga4_measurement_id", value: trimmed || null }, { onConflict: "key" });
+    setSaving(false);
+    if (error) {
+      toast.error("Uložení selhalo");
+      return;
+    }
+    setInitialGaId(trimmed);
+    toast.success("Nastavení uloženo. Obnovte stránku pro aktivaci.");
+  };
+
+  const dirty = gaId.trim() !== initialGaId.trim();
+
+  return (
+    <section aria-labelledby="settings-heading" className="max-w-2xl">
+      <h1 id="settings-heading" className="text-2xl font-heading font-bold text-foreground mb-6">Nastavení</h1>
+
+      <div className="bg-background border border-border rounded-lg p-6">
+        <h2 className="text-lg font-heading font-semibold text-foreground mb-1">Google Analytics 4</h2>
+        <p className="text-sm text-muted-foreground mb-4">
+          Vložte své GA4 Measurement ID. Po uložení bude skript automaticky načten na celém webu.
+        </p>
+
+        <label htmlFor="ga4-id" className="block text-sm font-medium text-foreground mb-2">
+          Measurement ID
+        </label>
+        <Input
+          id="ga4-id"
+          placeholder="G-XXXXXXXXXX"
+          value={gaId}
+          onChange={(e) => setGaId(e.target.value)}
+          disabled={loading || saving}
+          className="font-mono"
+        />
+        <p className="text-xs text-muted-foreground mt-2">
+          Najdete v Google Analytics → Správce → Datové streamy.
+        </p>
+
+        <div className="flex items-center gap-3 mt-5">
+          <Button onClick={handleSave} disabled={!dirty || loading || saving}>
+            {saving && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+            Uložit
+          </Button>
+          {initialGaId && (
+            <span className="text-xs text-muted-foreground">
+              Aktivní: <span className="font-mono text-foreground">{initialGaId}</span>
+            </span>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default AdminDashboard;
+
