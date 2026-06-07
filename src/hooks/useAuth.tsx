@@ -27,31 +27,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     });
 
-    const sessionTimeout = new Promise<null>((resolve) => {
-      window.setTimeout(() => resolve(null), 3000);
-    });
-
-    Promise.race([
-      supabase.auth.getSession().then(({ data: { session } }) => session),
-      sessionTimeout,
-    ])
-      .then((session) => {
-        if (!isMounted) return;
-        setSession(session);
-        setUser(session?.user ?? null);
-      })
-      .catch(() => {
-        if (!isMounted) return;
-        setSession(null);
-        setUser(null);
-      })
-      .finally(() => {
-        if (!isMounted) return;
-        setLoading(false);
-      });
+    const loadingFallback = window.setTimeout(() => {
+      if (!isMounted) return;
+      setLoading(false);
+    }, 3000);
 
     return () => {
       isMounted = false;
+      window.clearTimeout(loadingFallback);
       subscription.unsubscribe();
     };
   }, []);
