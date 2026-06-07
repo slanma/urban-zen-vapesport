@@ -16,14 +16,14 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const withTimeout = async <T,>(promise: Promise<T>, message: string, timeoutMs = 8000): Promise<T> => {
+  const withTimeout = async <T,>(promise: PromiseLike<T>, message: string, timeoutMs = 8000): Promise<T> => {
     let timeoutId: number | undefined;
     const timeout = new Promise<never>((_, reject) => {
       timeoutId = window.setTimeout(() => reject(new Error(message)), timeoutMs);
     });
 
     try {
-      return await Promise.race([promise, timeout]);
+      return await Promise.race([Promise.resolve(promise), timeout]);
     } finally {
       if (timeoutId) window.clearTimeout(timeoutId);
     }
