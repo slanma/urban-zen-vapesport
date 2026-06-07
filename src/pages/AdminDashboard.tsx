@@ -33,8 +33,10 @@ const AdminDashboard = () => {
   const [view, setView] = useState<View>("overview");
   const [collapsed, setCollapsed] = useState(false);
   const [registrations, setRegistrations] = useState<Tables<"b2b_profiles">[]>([]);
+  const [approved, setApproved] = useState<Tables<"b2b_profiles">[]>([]);
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
+  const [savingId, setSavingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (authLoading) return;
@@ -43,7 +45,7 @@ const AdminDashboard = () => {
     const checkAdmin = async () => {
       const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
       if (!isAdmin) { await signOut(); navigate("/admin"); return; }
-      await loadRegistrations();
+      await Promise.all([loadRegistrations(), loadApproved()]);
       setCheckingAccess(false);
     };
     checkAdmin();
@@ -58,11 +60,38 @@ const AdminDashboard = () => {
     if (data) setRegistrations(data);
   };
 
+  const loadApproved = async () => {
+    const { data } = await supabase
+      .from("b2b_profiles")
+      .select("*")
+      .eq("status", "approved")
+      .order("company_name", { ascending: true });
+    if (data) setApproved(data);
+  };
+
   const handleApprove = async (id: string) => {
     setLoadingAction(id);
-    await supabase.from("b2b_profiles").update({ status: "approved", discount_percent: 30 }).eq("id", id);
+    const { data } = await supabase
+      .from("b2b_profiles")
+      .update({ status: "approved", discount_percent: 30 })
+      .eq("id", id)
+      .select()
+      .single();
     setRegistrations((r) => r.filter((x) => x.id !== id));
+    if (data) setApproved((a) => [...a, data].sort((x, y) => x.company_name.localeCompare(y.company_name)));
     setLoadingAction(null);
+    toast.success("Partner schválen");
+  };
+
+  const updatePartner = async (id: string, patch: Partial<Tables<"b2b_profiles">>) => {
+    setApproved((a) => a.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+    setSavingId(id);
+    const { error } = await supabase.from("b2b_profiles").update(patch).eq("id", id);
+    setSavingId(null);
+    if (error) {
+      toast.error("Uložení selhalo");
+      await loadApproved();
+    }
   };
 
   const handleReject = async (id: string) => {
