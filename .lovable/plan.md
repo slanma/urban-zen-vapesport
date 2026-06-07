@@ -1,68 +1,39 @@
-## Stav dnes
-
-Eshop dnes částečně rozlišuje koncové zákazníky a B2B partnery:
-
-- `useB2BPartner` vrací `isPartner=true` pouze pro přihlášené uživatele se schváleným `b2b_profile` (status `approved`).
-- `PriceTag` automaticky zobrazí **VOC cenu** místo retailové, pokud je `isPartner` a produkt má `b2b_price`.
-- VOC cena se propisuje na: `ProductDetail`, `Shop`, `Products` (katalog).
-- Košík (`Cart`, `CartDrawer`, `useCart`) a checkout (`Checkout`) **B2B vůbec neřeší** — počítají retailovou cenu pro všechny, a objednávka neobsahuje fakturační údaje firmy (IČO/DIČ).
-
-Ano, oddělení je možné a do velké míry už existuje. Plán níže ho dokončí tak, aby celá nákupní cesta (od ceny po fakturu) byla jednoznačně buď B2C, nebo B2B.
-
 ## Cíl
+Na stránce `/obchod` přidat pod interaktivní hero kolo nový vizuální "Rozcestník" — 2×2 mřížku 4 prémiových karet kategorií brašen ve stylu "Urban Zen".
 
-- Jeden eshop, dvě nákupní zkušenosti, automatické přepínání podle role:
-  - **Host / přihlášený B2C** → retailové ceny vč. DPH, klasický checkout.
-  - **Přihlášený schválený B2B partner** → VOC ceny bez DPH (s dopočtem DPH), B2B checkout s předvyplněnými firemními údaji a slevou.
-- Nikdy nesmíchat ceny v jedné objednávce — košík se musí "zamknout" do režimu podle přihlášení.
+## Čeká se na podklady
+Uživatel teprve připraví 4 fotografie brašen na betonové zdi (jednu pro každou kategorii). Implementace se spustí, jakmile budou obrázky nahrané do chatu.
 
-## Co se změní (uživatelsky)
+## Plánovaná struktura 4 karet
 
-### 1. Vizuální signalizace režimu
-- Globální badge v hlavičce vedle ikony uživatele:
-  - B2C přihlášený → moss-green tečka (dnes).
-  - **B2B partner → malý štítek "B2B / VOC"** moss green, vedle jména.
-- Na ProductDetail, Shop, Products, Cart se nad obsah přidá decentní pruh: *"Vidíte velkoobchodní ceny pro partnera {firma}."*
+1. **Brašny na řídítka & představec** — rychlý přístup, navigace, telefon. → filtr `?pillar=ridi`
+2. **Brašny do rámu** — maximální prostor v těžišti, e-bike nabíječky. → `?pillar=ram`
+3. **Brašny pod sedlo** — minimalistický prostor pro nejnutnější výbavu. → `?pillar=sedlo`
+4. **Gravel & Bikepacking (Waterproof)** — 100% nepromokavá prémiová řada. → `?pillar=gravel`
 
-### 2. Ceny v celém toku
-- `PriceTag` už B2B přepíná. Doplníme stejnou logiku do:
-  - `CartDrawer` (mini košík),
-  - `Cart` (souhrn),
-  - `Checkout` (souhrn + faktura),
-  - `OrderSummaryTable`.
-- `useCart` rozšířit o helper `getLinePrice(item, isPartner)` který vrátí buď `b2b_price` (bez DPH) nebo `price` (vč. DPH).
-- Souhrny budou pro B2B zobrazovat **3 řádky**: mezisoučet bez DPH, DPH 21 %, celkem; pro B2C jen "celkem vč. DPH".
+(Mapování už existuje v `src/lib/productPillars.ts`, použijeme stejné klíče → konzistentní s `Products.tsx`.)
 
-### 3. Zámek košíku do režimu
-- Do `useCart` přidat `mode: "b2c" | "b2b"`, uložené v localStorage spolu s položkami.
-- Při změně přihlášení (B2C → B2B nebo naopak) ukázat dialog: *"Změnou účtu se mění ceník. Vyprázdnit košík a pokračovat v B2B režimu?"* — bez smíchání cen.
+## Vizuální specifikace
 
-### 4. B2B checkout
-- Pokud `isPartner`, na `/checkout`:
-  - Předvyplněné firma, IČO, DIČ, adresa z `b2b_profiles`.
-  - Skrýt platební metody nevhodné pro B2B (např. dobírka — dle preference), nabídnout **fakturu se splatností 14 dní**.
-  - Aplikovat `discount_percent` z `b2b_profiles` jako dodatečnou slevu (pokud existuje a `b2b_price` ji nezahrnuje — pro tuto fázi předpokládáme, že `b2b_price` je už finální VOC a `discount_percent` se použije pouze pokud `b2b_price` chybí).
-  - Doklad označit "Faktura — daňový doklad" s IČO/DIČ; B2C dostává "Účtenku".
-
-### 5. Ochrana proti zneužití
-- VOC ceny se **nikdy nesmí dostat do DOM pro nepřihlášené** uživatele → kontrola na úrovni `PriceTag` (už ok) a stejný guard v souhrnných komponentách.
-- RLS na `product_overrides` zůstává `SELECT true` (potřebujeme číst veřejné přepisy), ale `b2b_price` sám o sobě není citlivý — citlivá je až vazba na konkrétní objednávku.
-- V edge funkci pro odeslání objednávky validovat ceny serverově proti rolím (zabrání podvržení ceny z klienta v budoucí fázi, kdy přidáme objednávky do DB).
+- **Layout:** 2×2 grid, `gap-6`, max šířka stránky, hodně whitespace nad i pod sekcí.
+- **Karta:** `aspect-[4/5]` na desktopu, `rounded-2xl`, plnoplošný background image, tmavý gradient overlay zdola (`from-black/70 to-transparent`).
+- **Typografie:** název velký bold sans-serif (`font-heading text-2xl md:text-3xl`), krátký popisek tenký (`font-body text-sm opacity-80`), oboje vlevo dole, bílá.
+- **Hover:** `group-hover:scale-105` na obrázku (transition 500ms), ztmavení overlay, odhalí se odkaz **„Zobrazit produkty →"** v Moss Green (`text-primary` = `hsl(135 14% 33%)`).
+- **Sekce nadpis:** `eyebrow` "Kategorie" + H2 "Vyberte si podle stylu jízdy" + krátký lead.
 
 ## Technické detaily
 
-**Soubory k úpravě**
-- `src/hooks/useCart.tsx` — přidat `mode`, helper na cenu, dialog pro reset při změně role.
-- `src/components/PriceTag.tsx` — drobné: prop pro variantu zobrazení v košíku (bez/s DPH řádek).
-- `src/components/CartDrawer.tsx`, `src/pages/Cart.tsx`, `src/pages/Checkout.tsx`, `src/components/OrderSummaryTable.tsx` — integrace `isPartner` + nové cenové součty.
-- `src/components/Navbar.tsx` — B2B štítek.
-- Nový `src/components/B2BModeBanner.tsx` — globální pruh "Velkoobchodní režim".
-- `src/lib/vat.ts` — pomocné funkce `netToGross`, `grossToNet`, `splitVat`.
+**Nové soubory**
+- `src/components/ShopPillarsGrid.tsx` — samostatná komponenta s 4 kartami, čte pole pillarů (`PILLARS` z `productPillars.ts`) + mapu pillar→imageUrl předanou v props.
+- `src/assets/pillars/ridi.jpg`, `ram.jpg`, `sedlo.jpg`, `gravel.jpg` — 4 fotky od uživatele.
 
-**Žádné migrace** nejsou potřeba — `b2b_price`, `b2b_profiles.discount_percent`, `get_b2b_status` už existují.
+**Úpravy**
+- `src/pages/Shop.tsx` — vložit `<ShopPillarsGrid />` mezi hero bike sekci a sekci s filtrovanými produkty (nebo úplně dolů pod "Další kategorie" — k potvrzení).
+- Karty linkují na `/produkty?pillar={key}` (Products.tsx už `pillar` query param čte).
 
-## Mimo rozsah (návrh na později)
+**Žádné změny dat ani backendu** — čistě prezentační vrstva.
 
-- Tabulkové objednávky v B2B (CSV import, hromadné množstevní slevy).
-- B2B-only produkty (skryté pro B2C) — vyžadovalo by `b2b_only` flag v `product_overrides`.
-- Ukládání objednávek do DB + admin přehled (dnes objednávky nikam neukládáme).
+## Otevřené otázky (vyřešíme s obrázky)
+
+- Umístění: hned pod hero kolem, nebo až pod produktové listingy? Doporučuji **hned pod hero** — slouží jako sekundární „rozcestník", kdo si nechce klikat puntíky na kole.
+- Mobil: 2×2 zachovat (`grid-cols-2`), nebo přepnout na 1 sloupec? Doporučuji **2 sloupce** i na mobilu pro kompaktnost, s menší typografií.
