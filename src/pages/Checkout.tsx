@@ -201,10 +201,44 @@ const Checkout = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  /** Simulated Packeta pick-up point picker. */
+  // Load Packeta widget script once on mount.
+  useEffect(() => {
+    const SRC = "https://widget.packeta.com/v6/www/js/library.js";
+    if (typeof window === "undefined") return;
+    if ((window as any).Packeta?.Widget) {
+      setPacketaReady(true);
+      return;
+    }
+    const existing = document.querySelector<HTMLScriptElement>(`script[src="${SRC}"]`);
+    if (existing) {
+      existing.addEventListener("load", () => setPacketaReady(true), { once: true });
+      return;
+    }
+    const s = document.createElement("script");
+    s.src = SRC;
+    s.async = true;
+    s.onload = () => setPacketaReady(true);
+    s.onerror = () => toast.error("Nelze načíst widget Zásilkovny.");
+    document.head.appendChild(s);
+  }, []);
+
+  /** Opens the official Packeta widget for pickup-point selection. */
   const openPacketaWidget = () => {
-    const demo = "Praha 2 – Vinohradská 12 (Z-BOX)";
-    setPacketaPoint(demo);
+    const Packeta = (window as any).Packeta;
+    if (!Packeta?.Widget?.pick) {
+      toast.error("Widget Zásilkovny se ještě nenačetl, zkuste to za chvíli.");
+      return;
+    }
+    // TODO: replace dummy API key with the merchant key from admin settings.
+    const apiKey = "123456789";
+    Packeta.Widget.pick(
+      apiKey,
+      (point: { id: string | number; name: string } | null) => {
+        if (!point) return;
+        setPacketaPoint({ id: String(point.id), name: point.name });
+      },
+      { language: "cs", country: "cz" },
+    );
   };
 
   const handleSubmit = async () => {
