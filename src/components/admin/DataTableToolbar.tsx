@@ -16,15 +16,8 @@ interface Props<T extends string> {
   right?: React.ReactNode;
 }
 
-export function DataTableToolbar<T extends string>({
-  query,
-  onQueryChange,
-  placeholder = "Hledat…",
-  filters,
-  active,
-  onFilterChange,
-  right,
-}: Props<T>) {
+export function DataTableToolbar<T extends string>(props: Props<T>) {
+  const { query, onQueryChange, placeholder = "Hledat…", filters, active, onFilterChange, right } = props;
   return (
     <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center md:justify-between">
       <div className="relative flex-1 max-w-md">
