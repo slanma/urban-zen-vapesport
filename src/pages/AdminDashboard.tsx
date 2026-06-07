@@ -470,7 +470,109 @@ const AdminSettings = () => {
           )}
         </div>
       </div>
+
+      <AdminBankAccounts />
     </section>
+  );
+};
+
+type BankAccountRow = { id: string; bank_name: string; iban: string; sort_order: number };
+
+const AdminBankAccounts = () => {
+  const [rows, setRows] = useState<BankAccountRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [form, setForm] = useState<{ bank_name: string; iban: string }>({ bank_name: "", iban: "" });
+
+  const load = async () => {
+    setLoading(true);
+    const { data, error } = await (supabase as any)
+      .from("bank_accounts")
+      .select("*")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) toast.error("Chyba načítání bankovních účtů");
+    setRows((data as BankAccountRow[]) ?? []);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const handleCreate = async () => {
+    const bank_name = form.bank_name.trim();
+    const iban = form.iban.replace(/\s+/g, "").toUpperCase();
+    if (!bank_name || !iban) {
+      toast.error("Vyplňte název banky a IBAN");
+      return;
+    }
+    setCreating(true);
+    const { error } = await (supabase as any)
+      .from("bank_accounts")
+      .insert({ bank_name, iban, sort_order: rows.length });
+    setCreating(false);
+    if (error) { toast.error("Uložení selhalo"); return; }
+    toast.success("Bankovní účet přidán");
+    setForm({ bank_name: "", iban: "" });
+    load();
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Smazat tento bankovní účet?")) return;
+    const { error } = await (supabase as any).from("bank_accounts").delete().eq("id", id);
+    if (error) { toast.error("Smazání selhalo"); return; }
+    toast.success("Smazáno");
+    load();
+  };
+
+  return (
+    <div className="bg-background border border-border rounded-lg p-6 mt-6">
+      <h2 className="text-lg font-heading font-semibold text-foreground mb-1">Bankovní účty</h2>
+      <p className="text-sm text-muted-foreground mb-4">
+        Účty pro generování QR plateb v detailu objednávky. Nejsou veřejně viditelné.
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_auto] gap-2 mb-4">
+        <Input
+          placeholder="Název banky (např. Fio)"
+          value={form.bank_name}
+          onChange={(e) => setForm((f) => ({ ...f, bank_name: e.target.value }))}
+          disabled={creating}
+        />
+        <Input
+          placeholder="IBAN (např. CZ6508000000192000145399)"
+          value={form.iban}
+          onChange={(e) => setForm((f) => ({ ...f, iban: e.target.value }))}
+          disabled={creating}
+          className="font-mono"
+        />
+        <Button onClick={handleCreate} disabled={creating}>
+          {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4 mr-1" />}
+          Přidat
+        </Button>
+      </div>
+
+      {loading ? (
+        <div className="text-sm text-muted-foreground flex items-center gap-2">
+          <Loader2 className="w-4 h-4 animate-spin" /> Načítám…
+        </div>
+      ) : rows.length === 0 ? (
+        <p className="text-sm text-muted-foreground">Zatím žádné účty.</p>
+      ) : (
+        <ul className="divide-y divide-border border border-border rounded-md">
+          {rows.map((r) => (
+            <li key={r.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+              <div className="min-w-0">
+                <div className="font-medium text-foreground truncate">{r.bank_name}</div>
+                <div className="text-xs text-muted-foreground font-mono truncate">{r.iban}</div>
+              </div>
+              <Button size="sm" variant="ghost" onClick={() => handleDelete(r.id)}>
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 

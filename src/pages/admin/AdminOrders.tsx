@@ -8,6 +8,7 @@ import { DataTableToolbar, type ChipFilter } from "@/components/admin/DataTableT
 import { DataTablePagination } from "@/components/admin/DataTablePagination";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import PaymentQrPanel from "@/components/admin/PaymentQrPanel";
 
 type Order = Tables<"orders">;
 type StatusFilter = "all" | "nova" | "zpracovava_se" | "odeslano" | "dorucena" | "zrusena";
@@ -249,6 +250,13 @@ const AdminOrders = () => {
                   <p className="text-muted-foreground">{selected.note}</p>
                 </div>
               )}
+
+              <PaymentQrPanel
+                orderId={selected.id}
+                orderNumber={selected.order_number}
+                totalGross={selected.total_gross}
+                customerEmail={selected.email}
+              />
 
               <div className="mt-6 border-t border-border pt-4">
                 <h3 className="font-semibold mb-2 text-foreground text-sm">Změnit stav</h3>
