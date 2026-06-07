@@ -87,6 +87,14 @@ const Shop = () => {
           Klikněte na konkrétní místo na kole a zobrazte brašny určené přesně pro
           danou pozici.
         </p>
+        <p className="font-body text-xs text-muted-foreground/80 max-w-xl mx-auto mt-3">
+          <span className="sr-only">Klávesové ovládání: </span>
+          Tip pro klávesnici: <kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">Tab</kbd> přesune fokus na tečky,
+          <kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">←</kbd>
+          <kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">→</kbd> přepínají mezi místy,
+          <kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">Enter</kbd> potvrdí výběr,
+          <kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">Home</kbd>/<kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">End</kbd> skočí na první/poslední.
+        </p>
       </section>
 
       {/* Bike with hotspots */}
