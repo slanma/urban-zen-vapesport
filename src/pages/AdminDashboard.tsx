@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Loader2, LayoutDashboard, ShoppingCart, Users, Package, LogOut, Check, X, ChevronLeft, ChevronRight, Settings as SettingsIcon, Ticket, Trash2, Plus } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { checkAdminRole, clearStoredAdminSession, getStoredAdminSession } from "@/lib/adminAuth";
 import { toast } from "sonner";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -40,15 +41,33 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate("/admin"); return; }
+    const storedSession = getStoredAdminSession();
+    const currentUser = user ?? storedSession?.user ?? null;
+    if (!currentUser) {
+      navigate("/admin-login");
+      return;
+    }
 
-    const checkAdmin = async () => {
-      const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
-      if (!isAdmin) { await signOut(); navigate("/admin"); return; }
+    let cancelled = false;
+    (async () => {
+      const roleResult = storedSession
+        ? await checkAdminRole(currentUser.id, storedSession.access_token)
+        : await supabase
+            .rpc("has_role", { _user_id: currentUser.id, _role: "admin" })
+            .then(({ data, error }) => ({ isAdmin: Boolean(data), error }));
+      if (cancelled) return;
+      if (roleResult.error || !roleResult.isAdmin) {
+        clearStoredAdminSession();
+        await signOut();
+        navigate("/admin-login");
+        return;
+      }
       await Promise.all([loadRegistrations(), loadApproved()]);
-      setCheckingAccess(false);
+      if (!cancelled) setCheckingAccess(false);
+    })();
+    return () => {
+      cancelled = true;
     };
-    checkAdmin();
   }, [user, authLoading, navigate, signOut]);
 
   const loadRegistrations = async () => {
@@ -101,7 +120,7 @@ const AdminDashboard = () => {
     setLoadingAction(null);
   };
 
-  const handleLogout = async () => { await signOut(); navigate("/admin"); };
+  const handleLogout = async () => { clearStoredAdminSession(); await signOut(); navigate("/admin-login"); };
 
   if (authLoading || checkingAccess) {
     return <div className="min-h-screen bg-secondary flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
