@@ -5,13 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Loader2, LayoutDashboard, ShoppingCart, Users, Package, LogOut, Check, X, ChevronLeft, ChevronRight, Settings as SettingsIcon } from "lucide-react";
+import { Loader2, LayoutDashboard, ShoppingCart, Users, Package, LogOut, Check, X, ChevronLeft, ChevronRight, Settings as SettingsIcon, Ticket, Trash2, Plus } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { Tables } from "@/integrations/supabase/types";
 
-type View = "overview" | "orders" | "b2b" | "products" | "settings";
+type View = "overview" | "orders" | "b2b" | "products" | "settings" | "promo";
 
 const orders = [
   { id: "OBJ-2026-001", date: "2026-03-10", customer: "CykloPro s.r.o.", amount: "12 450 Kč", status: "Nová" as const },
