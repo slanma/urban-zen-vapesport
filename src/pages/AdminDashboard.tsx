@@ -363,6 +363,8 @@ const AdminDashboard = () => {
           </section>
         )}
 
+        {view === "promo" && <AdminPromoCodes />}
+
         {view === "settings" && <AdminSettings />}
       </main>
     </div>
