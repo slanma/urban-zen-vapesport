@@ -55,9 +55,12 @@ const PAYMENT_MATRIX: Record<ShippingId, PaymentOption[]> = {
 };
 
 const Checkout = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const { isPartner, profile } = useB2BPartner();
-  const { items: cartItems } = useCart();
+  const { items: cartItems, clear: clearCart } = useCart();
   const { get: getOverride } = useProductOverrides();
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
