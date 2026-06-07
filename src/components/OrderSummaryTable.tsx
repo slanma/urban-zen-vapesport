@@ -99,6 +99,16 @@ const OrderSummaryTable = ({
             </td>
             <td className="px-3 py-2 text-right tabular-nums">{fmtCZK(feesNet)}</td>
           </tr>
+          {safeDiscountGross > 0 && (
+            <tr className="text-primary">
+              <td className="px-3 py-2 font-medium" colSpan={4}>
+                {discountLabel} (bez DPH)
+              </td>
+              <td className="px-3 py-2 text-right tabular-nums font-medium">
+                −{fmtCZK(discountNet)}
+              </td>
+            </tr>
+          )}
           <tr>
             <td className="px-3 py-2 text-muted-foreground" colSpan={4}>
               Hodnota DPH {Math.round(VAT_RATE * 100)} %
