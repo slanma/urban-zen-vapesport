@@ -26,7 +26,8 @@ const statusLabel: Record<string, string> = {
   dorucena: "Doručena",
   zrusena: "Zrušena",
 };
-const STATUS_FLOW: StatusFilter[] = ["nova", "zpracovava_se", "odeslano", "dorucena", "zrusena"];
+type OrderStatus = Exclude<StatusFilter, "all">;
+const STATUS_FLOW: OrderStatus[] = ["nova", "zpracovava_se", "odeslano", "dorucena", "zrusena"];
 
 interface OrderItem { name: string; qty: number; unitGross: number }
 
