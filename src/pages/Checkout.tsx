@@ -128,7 +128,7 @@ const Checkout = () => {
           if (!product) return null;
           const ov = getOverride(product.id);
           if (ov?.visible === false) return null;
-          const pricing = getEffectiveUnitPricing(product, ov, isPartner);
+          const pricing = getEffectiveUnitPricing(product, ov, isPartner, profile?.discount_percent);
           return {
             name: item.color ? `${product.name} – ${item.color}` : product.name,
             qty: item.quantity,
