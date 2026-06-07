@@ -3,6 +3,7 @@ import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Loader2, LayoutDashboard, Package, Sparkles, ShoppingCart, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { checkAdminRole, clearStoredAdminSession, getStoredAdminSession } from "@/lib/adminAuth";
 
 const nav = [
   { to: "/admin", label: "Přehled", icon: LayoutDashboard, end: true },
@@ -19,21 +20,23 @@ const AdminLayout = () => {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) {
+    const storedSession = getStoredAdminSession();
+    const currentUser = user ?? storedSession?.user ?? null;
+    if (!currentUser) {
       setChecking(false);
       return;
     }
     let isActive = true;
     setChecking(true);
     (async () => {
-      const { data: isAdmin, error } = await supabase.rpc("has_role", {
-        _user_id: user.id,
-        _role: "admin",
-      });
+      const roleResult = storedSession
+        ? await checkAdminRole(currentUser.id, storedSession.access_token)
+        : await supabase.rpc("has_role", { _user_id: currentUser.id, _role: "admin" }).then(({ data, error }) => ({ isAdmin: Boolean(data), error }));
       if (!isActive) return;
-      if (error || !isAdmin) {
+      if (roleResult.error || !roleResult.isAdmin) {
         setAccessDenied(true);
         setChecking(false);
+        clearStoredAdminSession();
         await signOut();
         return;
       }
@@ -46,6 +49,7 @@ const AdminLayout = () => {
   }, [user, authLoading, signOut]);
 
   const handleLogout = async () => {
+    clearStoredAdminSession();
     await signOut();
     navigate("/admin-login");
   };
@@ -58,7 +62,7 @@ const AdminLayout = () => {
     );
   }
 
-  if (!user || accessDenied) {
+  if ((!user && !getStoredAdminSession()) || accessDenied) {
     return <Navigate to="/admin-login" replace />;
   }
 

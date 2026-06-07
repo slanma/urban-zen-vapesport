@@ -4,17 +4,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Lock, Loader2, ArrowLeft } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { adminSignInWithPassword, checkAdminRole, clearStoredAdminSession } from "@/lib/adminAuth";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const withTimeout = async <T,>(promise: PromiseLike<T>, message: string, timeoutMs = 8000): Promise<T> => {
+    let timeoutId: number | undefined;
+    const timeout = new Promise<never>((_, reject) => {
+      timeoutId = window.setTimeout(() => reject(new Error(message)), timeoutMs);
+    });
+
+    try {
+      return await Promise.race([Promise.resolve(promise), timeout]);
+    } finally {
+      if (timeoutId) window.clearTimeout(timeoutId);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,31 +37,47 @@ const AdminLogin = () => {
     setLoading(true);
     setError("");
 
-    const { error: authError } = await signIn(email, password);
-    if (authError) {
+    try {
+      const { session, error: authError } = await withTimeout(
+        adminSignInWithPassword(email, password),
+        "Přihlášení trvá příliš dlouho. Zkuste to prosím znovu."
+      );
+      if (authError) {
+        setLoading(false);
+        setError("Nesprávný e-mail nebo heslo.");
+        return;
+      }
+
+      if (!session?.user) {
+        setLoading(false);
+        setError("Přihlášení se nezdařilo.");
+        return;
+      }
+
+      const { isAdmin, error: roleError } = await withTimeout(
+        checkAdminRole(session.user.id, session.access_token),
+        "Ověření oprávnění trvá příliš dlouho. Zkuste to prosím znovu."
+      );
+
       setLoading(false);
-      setError("Nesprávný e-mail nebo heslo.");
-      return;
-    }
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+      if (roleError) {
+        setError("Nepodařilo se ověřit administrátorský přístup. Zkuste to prosím znovu.");
+        clearStoredAdminSession();
+        return;
+      }
+
+      if (!isAdmin) {
+        setError("Nemáte oprávnění pro přístup do administrace.");
+        clearStoredAdminSession();
+        return;
+      }
+
+      navigate("/admin");
+    } catch (err) {
       setLoading(false);
-      setError("Přihlášení se nezdařilo.");
-      return;
+      setError(err instanceof Error ? err.message : "Přihlášení se nezdařilo. Zkuste to prosím znovu.");
     }
-
-    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
-
-    setLoading(false);
-
-    if (!isAdmin) {
-      setError("Nemáte oprávnění pro přístup do administrace.");
-      await supabase.auth.signOut();
-      return;
-    }
-
-    navigate("/admin");
   };
 
   return (
