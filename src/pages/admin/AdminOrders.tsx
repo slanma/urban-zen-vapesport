@@ -251,6 +251,13 @@ const AdminOrders = () => {
                 </div>
               )}
 
+              <PaymentQrPanel
+                orderId={selected.id}
+                orderNumber={selected.order_number}
+                totalGross={selected.total_gross}
+                customerEmail={selected.email}
+              />
+
               <div className="mt-6 border-t border-border pt-4">
                 <h3 className="font-semibold mb-2 text-foreground text-sm">Změnit stav</h3>
                 <div className="flex flex-wrap gap-2">
