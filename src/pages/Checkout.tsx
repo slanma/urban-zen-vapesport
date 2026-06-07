@@ -115,6 +115,8 @@ const Checkout = () => {
     return base;
   }, [shipping, isPartner]);
 
+  const freeShipping = isPartner && profile?.free_shipping === true;
+
   const shippingOpt = shipping ? SHIPPING_OPTIONS.find((s) => s.id === shipping)! : null;
   const paymentOpt = payment ? availablePayments.find((p) => p.id === payment) ?? null : null;
 
@@ -139,7 +141,7 @@ const Checkout = () => {
   );
 
   const subtotalGross = orderLines.reduce((s, it) => s + it.unitGross * it.qty, 0);
-  const shippingPrice = shippingOpt?.price ?? 0;
+  const shippingPrice = freeShipping ? 0 : (shippingOpt?.price ?? 0);
   const paymentPrice = paymentOpt?.price ?? 0;
   const grandGross = subtotalGross + shippingPrice + paymentPrice;
 
@@ -174,7 +176,11 @@ const Checkout = () => {
         dic: form.dic || null,
         items: orderLines,
         subtotal_gross: subtotalGross,
-        shipping_label: shippingOpt?.label ?? null,
+        shipping_label: shippingOpt
+          ? freeShipping && shippingOpt.price > 0
+            ? `${shippingOpt.label} (zdarma – B2B)`
+            : shippingOpt.label
+          : null,
         shipping_gross: shippingPrice,
         payment_label: paymentOpt?.label ?? null,
         payment_gross: paymentPrice,
@@ -294,36 +300,58 @@ const Checkout = () => {
             {/* Shipping */}
             <div>
               <h2 className="font-heading text-lg font-bold text-foreground mb-5">Doprava</h2>
+              {freeShipping && (
+                <div className="mb-4 p-3 rounded-lg bg-primary/10 border border-primary/30 text-sm font-body text-primary font-semibold flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4" />
+                  Doprava zdarma (B2B Partner) — všechny způsoby dopravy máte za 0 Kč.
+                </div>
+              )}
               <div className="space-y-3">
-                {SHIPPING_OPTIONS.map((opt) => (
-                  <label
-                    key={opt.id}
-                    className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
-                      shipping === opt.id
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border bg-card hover:border-primary/30"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="shipping"
-                      value={opt.id}
-                      checked={shipping === opt.id}
-                      onChange={() => { setShipping(opt.id); setPayment(null); }}
-                      className="w-5 h-5 accent-[hsl(var(--primary))]"
-                    />
-                    <span className="flex-1 font-body text-base font-medium text-foreground">
-                      {opt.label}
-                    </span>
-                    <span className="font-heading text-base font-bold text-foreground">
-                      {opt.price === 0 ? (
-                        <span className="text-primary">Zdarma</span>
-                      ) : (
-                        fmtCZK(opt.price)
-                      )}
-                    </span>
-                  </label>
-                ))}
+                {SHIPPING_OPTIONS.map((opt) => {
+                  const effectivePrice = freeShipping ? 0 : opt.price;
+                  const wasFree = freeShipping && opt.price > 0;
+                  return (
+                    <label
+                      key={opt.id}
+                      className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
+                        shipping === opt.id
+                          ? "border-primary bg-primary/5 shadow-sm"
+                          : "border-border bg-card hover:border-primary/30"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="shipping"
+                        value={opt.id}
+                        checked={shipping === opt.id}
+                        onChange={() => { setShipping(opt.id); setPayment(null); }}
+                        className="w-5 h-5 accent-[hsl(var(--primary))]"
+                      />
+                      <span className="flex-1 font-body text-base font-medium text-foreground">
+                        {opt.label}
+                        {wasFree && (
+                          <span className="ml-2 inline-block text-[10px] uppercase tracking-wider font-bold bg-primary/15 text-primary px-1.5 py-0.5 rounded">
+                            Zdarma · B2B
+                          </span>
+                        )}
+                      </span>
+                      <span className="font-heading text-base font-bold text-foreground">
+                        {effectivePrice === 0 ? (
+                          <span className="text-primary">
+                            Zdarma
+                            {wasFree && (
+                              <span className="ml-1.5 text-xs text-muted-foreground line-through font-normal">
+                                {fmtCZK(opt.price)}
+                              </span>
+                            )}
+                          </span>
+                        ) : (
+                          fmtCZK(effectivePrice)
+                        )}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
 
               {shipping === "zasilkovna" && (

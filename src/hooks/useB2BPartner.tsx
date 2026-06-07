@@ -12,6 +12,7 @@ export interface B2BProfile {
   city: string;
   zip: string;
   discount_percent: number;
+  free_shipping: boolean;
 }
 
 /**
@@ -44,7 +45,7 @@ export const useB2BPartner = () => {
       if (approved) {
         const { data } = await supabase
           .from("b2b_profiles")
-          .select("user_id,company_name,ico,dic,contact_person,phone,address,city,zip,discount_percent")
+          .select("user_id,company_name,ico,dic,contact_person,phone,address,city,zip,discount_percent,free_shipping")
           .eq("user_id", user.id)
           .maybeSingle();
         if (data) prof = data as B2BProfile;
