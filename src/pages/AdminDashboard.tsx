@@ -112,6 +112,7 @@ const AdminDashboard = () => {
     { key: "orders" as View, label: "Objednávky", icon: ShoppingCart, count: orders.filter((o) => o.status === "Nová").length },
     { key: "b2b" as View, label: "B2B Partneři", icon: Users, count: registrations.length },
     { key: "products" as View, label: "Produkty", icon: Package },
+    { key: "promo" as View, label: "Slevové kódy", icon: Ticket },
     { key: "settings" as View, label: "Nastavení", icon: SettingsIcon },
   ];
 
