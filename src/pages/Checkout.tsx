@@ -152,7 +152,49 @@ const Checkout = () => {
   const subtotalGross = orderLines.reduce((s, it) => s + it.unitGross * it.qty, 0);
   const shippingPrice = freeShipping ? 0 : (shippingOpt?.price ?? 0);
   const paymentPrice = paymentOpt?.price ?? 0;
-  const grandGross = subtotalGross + shippingPrice + paymentPrice;
+  const preDiscountGross = subtotalGross + shippingPrice + paymentPrice;
+
+  const rawDiscountGross = appliedPromo
+    ? appliedPromo.type === "percentage"
+      ? Math.round(preDiscountGross * (Number(appliedPromo.value) / 100))
+      : Math.round(Number(appliedPromo.value))
+    : 0;
+  const discountGross = Math.max(0, Math.min(rawDiscountGross, preDiscountGross));
+  const grandGross = Math.max(0, preDiscountGross - discountGross);
+
+  const applyPromo = async () => {
+    const code = promoInput.trim().toUpperCase();
+    if (!code) return;
+    setPromoApplying(true);
+    try {
+      const { data, error } = await supabase
+        .from("promo_codes")
+        .select("code, type, value, active")
+        .eq("code", code)
+        .eq("active", true)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) {
+        toast.error("Neplatný nebo neaktivní kód.");
+        return;
+      }
+      setAppliedPromo({
+        code: data.code,
+        type: data.type as "percentage" | "fixed_amount",
+        value: Number(data.value),
+      });
+      toast.success(`Slevový kód „${data.code}" byl uplatněn.`);
+    } catch {
+      toast.error("Kód se nepodařilo ověřit.");
+    } finally {
+      setPromoApplying(false);
+    }
+  };
+
+  const removePromo = () => {
+    setAppliedPromo(null);
+    setPromoInput("");
+  };
 
   const handleInput = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
