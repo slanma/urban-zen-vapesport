@@ -16,6 +16,19 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const withTimeout = async <T,>(promise: Promise<T>, message: string, timeoutMs = 8000): Promise<T> => {
+    let timeoutId: number | undefined;
+    const timeout = new Promise<never>((_, reject) => {
+      timeoutId = window.setTimeout(() => reject(new Error(message)), timeoutMs);
+    });
+
+    try {
+      return await Promise.race([promise, timeout]);
+    } finally {
+      if (timeoutId) window.clearTimeout(timeoutId);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
@@ -26,23 +39,34 @@ const AdminLogin = () => {
     setLoading(true);
     setError("");
 
-    const { error: authError } = await signIn(email, password);
+    const { user, error: authError } = await withTimeout(
+      signIn(email, password),
+      "Přihlášení trvá příliš dlouho. Zkuste to prosím znovu."
+    );
     if (authError) {
       setLoading(false);
       setError("Nesprávný e-mail nebo heslo.");
       return;
     }
 
-    const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       setLoading(false);
       setError("Přihlášení se nezdařilo.");
       return;
     }
 
-    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+    const { data: isAdmin, error: roleError } = await withTimeout(
+      supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }),
+      "Ověření oprávnění trvá příliš dlouho. Zkuste to prosím znovu."
+    );
 
     setLoading(false);
+
+    if (roleError) {
+      setError("Nepodařilo se ověřit administrátorský přístup. Zkuste to prosím znovu.");
+      await supabase.auth.signOut();
+      return;
+    }
 
     if (!isAdmin) {
       setError("Nemáte oprávnění pro přístup do administrace.");
