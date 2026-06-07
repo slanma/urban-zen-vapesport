@@ -271,7 +271,7 @@ const Checkout = () => {
         payment_label: paymentOpt?.label ?? null,
         payment_gross: paymentPrice,
         total_gross: grandGross,
-        packeta_point: packetaPoint,
+        packeta_point: packetaPoint ? `${packetaPoint.name} (#${packetaPoint.id})` : null,
         promo_code: appliedPromo?.code ?? null,
         discount_gross: discountGross,
       } as never);
