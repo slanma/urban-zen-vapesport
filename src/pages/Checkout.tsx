@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import B2BModeBanner from "@/components/B2BModeBanner";
@@ -7,11 +7,14 @@ import { getProductById } from "@/data/products";
 import { useCart } from "@/hooks/useCart";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { useAuth } from "@/hooks/useAuth";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
-import { ShieldCheck, Lock, ChevronLeft, MapPin, Building2 } from "lucide-react";
+import { ShieldCheck, Lock, ChevronLeft, MapPin, Building2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import OrderSummaryTable from "@/components/OrderSummaryTable";
 import { fmtCZK } from "@/lib/vat";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type ShippingId = "zasilkovna" | "ppl" | "osobni";
 type PaymentId = "cash" | "transfer" | "cod" | "invoice";
@@ -52,9 +55,12 @@ const PAYMENT_MATRIX: Record<ShippingId, PaymentOption[]> = {
 };
 
 const Checkout = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const { isPartner, profile } = useB2BPartner();
-  const { items: cartItems } = useCart();
+  const { items: cartItems, clear: clearCart } = useCart();
   const { get: getOverride } = useProductOverrides();
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
@@ -145,6 +151,46 @@ const Checkout = () => {
   const openPacketaWidget = () => {
     const demo = "Praha 2 – Vinohradská 12 (Z-BOX)";
     setPacketaPoint(demo);
+  };
+
+  const handleSubmit = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const orderNumber = `OBJ-${new Date().getFullYear()}-${Math.floor(Math.random() * 900000 + 100000)}`;
+      const { error } = await supabase.from("orders").insert({
+        order_number: orderNumber,
+        user_id: user?.id ?? null,
+        is_b2b: isPartner,
+        email: form.email,
+        phone: form.phone || null,
+        first_name: form.firstName || null,
+        last_name: form.lastName || null,
+        street: form.street || null,
+        city: form.city || null,
+        zip: form.zip || null,
+        company_name: form.company || null,
+        ico: form.ico || null,
+        dic: form.dic || null,
+        items: orderLines,
+        subtotal_gross: subtotalGross,
+        shipping_label: shippingOpt?.label ?? null,
+        shipping_gross: shippingPrice,
+        payment_label: paymentOpt?.label ?? null,
+        payment_gross: paymentPrice,
+        total_gross: grandGross,
+        packeta_point: packetaPoint,
+      });
+      if (error) throw error;
+      toast.success("Objednávka odeslána", { description: `Číslo: ${orderNumber}` });
+      clearCart();
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      toast.error("Objednávku se nepodařilo odeslat", { description: "Zkuste to prosím znovu." });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const inputClass =
@@ -404,7 +450,9 @@ const Checkout = () => {
 
                 <Button
                   size="lg"
+                  onClick={handleSubmit}
                   disabled={
+                    submitting ||
                     !termsAccepted ||
                     !shipping ||
                     !payment ||
@@ -414,11 +462,17 @@ const Checkout = () => {
                   }
                   className="w-full h-16 text-base md:text-lg font-bold rounded-full tracking-wide gap-2 px-4 text-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Lock className="w-5 h-5 shrink-0" />
+                  {submitting ? (
+                    <Loader2 className="w-5 h-5 animate-spin shrink-0" />
+                  ) : (
+                    <Lock className="w-5 h-5 shrink-0" />
+                  )}
                   <span>
-                    {isPartner
-                      ? `Objednat (B2B faktura) — ${fmtCZK(grandGross)}`
-                      : `Objednat s povinností platby — ${fmtCZK(grandGross)}`}
+                    {submitting
+                      ? "Odesílám…"
+                      : isPartner
+                        ? `Objednat (B2B faktura) — ${fmtCZK(grandGross)}`
+                        : `Objednat s povinností platby — ${fmtCZK(grandGross)}`}
                   </span>
                 </Button>
 

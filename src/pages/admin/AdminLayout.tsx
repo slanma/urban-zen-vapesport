@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
 import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Loader2, LayoutDashboard, Package, Sparkles, ShoppingCart, LogOut } from "lucide-react";
+import { Loader2, LayoutDashboard, Package, Sparkles, ShoppingCart, LogOut, Moon, Sun, Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { checkAdminRole, clearStoredAdminSession, getStoredAdminSession } from "@/lib/adminAuth";
-
-const nav = [
-  { to: "/admin", label: "Přehled", icon: LayoutDashboard, end: true },
-  { to: "/admin/produkty", label: "Produkty", icon: Package },
-  { to: "/admin/sluzby", label: "Služby", icon: Sparkles },
-  { to: "/admin/objednavky", label: "Objednávky", icon: ShoppingCart },
-];
+import { useAdminTheme } from "@/hooks/useAdminTheme";
+import { useAdminNotifications } from "@/hooks/useAdminNotifications";
+import { Badge } from "@/components/ui/badge";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading, signOut } = useAuth();
   const [checking, setChecking] = useState(true);
   const [accessDenied, setAccessDenied] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { theme, toggle } = useAdminTheme();
+  const counts = useAdminNotifications(isAdmin);
 
   useEffect(() => {
     if (authLoading) return;
@@ -41,6 +40,7 @@ const AdminLayout = () => {
         return;
       }
       setAccessDenied(false);
+      setIsAdmin(true);
       setChecking(false);
     })();
     return () => {
@@ -66,9 +66,17 @@ const AdminLayout = () => {
     return <Navigate to="/admin-login" replace />;
   }
 
+  const nav = [
+    { to: "/admin", label: "Přehled", icon: LayoutDashboard, end: true, badge: 0 },
+    { to: "/admin/objednavky", label: "Objednávky", icon: ShoppingCart, badge: counts.newOrders },
+    { to: "/admin/produkty", label: "Produkty", icon: Package, badge: 0 },
+    { to: "/admin/sluzby", label: "Služby", icon: Sparkles, badge: 0 },
+    { to: "/admin-dashboard", label: "B2B partneři", icon: Users, badge: counts.pendingB2B },
+  ];
+
   return (
-    <div className="min-h-screen bg-[hsl(0_0%_98%)] flex">
-      <aside className="w-60 bg-background border-r border-border flex flex-col shrink-0 sticky top-0 h-screen">
+    <div className="min-h-screen bg-background text-foreground flex">
+      <aside className="w-60 bg-card border-r border-border flex flex-col shrink-0 sticky top-0 h-screen">
         <div className="h-16 flex items-center px-5 border-b border-border">
           <span className="font-heading font-bold text-foreground tracking-tight">
             Vapesport Admin
@@ -89,11 +97,24 @@ const AdminLayout = () => {
               }
             >
               <item.icon className="w-4 h-4 shrink-0" />
-              <span>{item.label}</span>
+              <span className="flex-1">{item.label}</span>
+              {item.badge > 0 && (
+                <Badge variant="destructive" className="text-[10px] px-1.5 py-0 min-w-[18px] justify-center">
+                  {item.badge}
+                </Badge>
+              )}
             </NavLink>
           ))}
         </nav>
-        <div className="p-3 border-t border-border">
+        <div className="p-3 border-t border-border space-y-1">
+          <button
+            onClick={toggle}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            aria-label="Přepnout režim"
+          >
+            {theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            <span>{theme === "light" ? "Tmavý režim" : "Světlý režim"}</span>
+          </button>
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
@@ -103,7 +124,7 @@ const AdminLayout = () => {
           </button>
         </div>
       </aside>
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto bg-background">
         <Outlet />
       </main>
     </div>
