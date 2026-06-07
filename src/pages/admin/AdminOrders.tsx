@@ -115,7 +115,7 @@ const AdminOrders = () => {
         {filtered.length} z {orders.length} objednávek
       </p>
 
-      <DataTableToolbar
+      <DataTableToolbar<StatusFilter>
         query={query}
         onQueryChange={setQuery}
         placeholder="Hledat podle čísla, e-mailu, firmy…"
