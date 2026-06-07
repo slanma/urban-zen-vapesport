@@ -68,6 +68,93 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          city: string | null
+          company_name: string | null
+          created_at: string
+          dic: string | null
+          email: string
+          first_name: string | null
+          ico: string | null
+          id: string
+          is_b2b: boolean
+          items: Json
+          last_name: string | null
+          note: string | null
+          order_number: string
+          packeta_point: string | null
+          payment_gross: number
+          payment_label: string | null
+          phone: string | null
+          shipping_gross: number
+          shipping_label: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          street: string | null
+          subtotal_gross: number
+          total_gross: number
+          updated_at: string
+          user_id: string | null
+          zip: string | null
+        }
+        Insert: {
+          city?: string | null
+          company_name?: string | null
+          created_at?: string
+          dic?: string | null
+          email: string
+          first_name?: string | null
+          ico?: string | null
+          id?: string
+          is_b2b?: boolean
+          items?: Json
+          last_name?: string | null
+          note?: string | null
+          order_number: string
+          packeta_point?: string | null
+          payment_gross?: number
+          payment_label?: string | null
+          phone?: string | null
+          shipping_gross?: number
+          shipping_label?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          street?: string | null
+          subtotal_gross?: number
+          total_gross?: number
+          updated_at?: string
+          user_id?: string | null
+          zip?: string | null
+        }
+        Update: {
+          city?: string | null
+          company_name?: string | null
+          created_at?: string
+          dic?: string | null
+          email?: string
+          first_name?: string | null
+          ico?: string | null
+          id?: string
+          is_b2b?: boolean
+          items?: Json
+          last_name?: string | null
+          note?: string | null
+          order_number?: string
+          packeta_point?: string | null
+          payment_gross?: number
+          payment_label?: string | null
+          phone?: string | null
+          shipping_gross?: number
+          shipping_label?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          street?: string | null
+          subtotal_gross?: number
+          total_gross?: number
+          updated_at?: string
+          user_id?: string | null
+          zip?: string | null
+        }
+        Relationships: []
+      }
       product_overrides: {
         Row: {
           ai_keywords: string | null
@@ -215,6 +302,12 @@ export type Database = {
     Enums: {
       app_role: "admin" | "moderator" | "user"
       b2b_status: "pending" | "approved" | "rejected"
+      order_status:
+        | "nova"
+        | "zpracovava_se"
+        | "odeslano"
+        | "dorucena"
+        | "zrusena"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -344,6 +437,13 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "moderator", "user"],
       b2b_status: ["pending", "approved", "rejected"],
+      order_status: [
+        "nova",
+        "zpracovava_se",
+        "odeslano",
+        "dorucena",
+        "zrusena",
+      ],
     },
   },
 } as const
