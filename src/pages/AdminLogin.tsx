@@ -39,42 +39,47 @@ const AdminLogin = () => {
     setLoading(true);
     setError("");
 
-    const { user, error: authError } = await withTimeout(
-      signIn(email, password),
-      "Přihlášení trvá příliš dlouho. Zkuste to prosím znovu."
-    );
-    if (authError) {
+    try {
+      const { user, error: authError } = await withTimeout(
+        signIn(email, password),
+        "Přihlášení trvá příliš dlouho. Zkuste to prosím znovu."
+      );
+      if (authError) {
+        setLoading(false);
+        setError("Nesprávný e-mail nebo heslo.");
+        return;
+      }
+
+      if (!user) {
+        setLoading(false);
+        setError("Přihlášení se nezdařilo.");
+        return;
+      }
+
+      const { data: isAdmin, error: roleError } = await withTimeout(
+        supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }),
+        "Ověření oprávnění trvá příliš dlouho. Zkuste to prosím znovu."
+      );
+
       setLoading(false);
-      setError("Nesprávný e-mail nebo heslo.");
-      return;
-    }
 
-    if (!user) {
+      if (roleError) {
+        setError("Nepodařilo se ověřit administrátorský přístup. Zkuste to prosím znovu.");
+        await supabase.auth.signOut();
+        return;
+      }
+
+      if (!isAdmin) {
+        setError("Nemáte oprávnění pro přístup do administrace.");
+        await supabase.auth.signOut();
+        return;
+      }
+
+      navigate("/admin");
+    } catch (err) {
       setLoading(false);
-      setError("Přihlášení se nezdařilo.");
-      return;
+      setError(err instanceof Error ? err.message : "Přihlášení se nezdařilo. Zkuste to prosím znovu.");
     }
-
-    const { data: isAdmin, error: roleError } = await withTimeout(
-      supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }),
-      "Ověření oprávnění trvá příliš dlouho. Zkuste to prosím znovu."
-    );
-
-    setLoading(false);
-
-    if (roleError) {
-      setError("Nepodařilo se ověřit administrátorský přístup. Zkuste to prosím znovu.");
-      await supabase.auth.signOut();
-      return;
-    }
-
-    if (!isAdmin) {
-      setError("Nemáte oprávnění pro přístup do administrace.");
-      await supabase.auth.signOut();
-      return;
-    }
-
-    navigate("/admin");
   };
 
   return (
