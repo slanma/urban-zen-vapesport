@@ -77,7 +77,8 @@ const Checkout = () => {
   });
   const [shipping, setShipping] = useState<ShippingId | null>(null);
   const [payment, setPayment] = useState<PaymentId | null>(null);
-  const [packetaPoint, setPacketaPoint] = useState<string | null>(null);
+  const [packetaPoint, setPacketaPoint] = useState<{ id: string; name: string } | null>(null);
+  const [packetaReady, setPacketaReady] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   // Promo code
