@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import B2BModeBanner from "@/components/B2BModeBanner";
@@ -7,11 +7,14 @@ import { getProductById } from "@/data/products";
 import { useCart } from "@/hooks/useCart";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { useAuth } from "@/hooks/useAuth";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
-import { ShieldCheck, Lock, ChevronLeft, MapPin, Building2 } from "lucide-react";
+import { ShieldCheck, Lock, ChevronLeft, MapPin, Building2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import OrderSummaryTable from "@/components/OrderSummaryTable";
 import { fmtCZK } from "@/lib/vat";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type ShippingId = "zasilkovna" | "ppl" | "osobni";
 type PaymentId = "cash" | "transfer" | "cod" | "invoice";
