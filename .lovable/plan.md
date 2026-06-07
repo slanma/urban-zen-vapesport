@@ -1,39 +1,63 @@
-## Cíl
-Na stránce `/obchod` přidat pod interaktivní hero kolo nový vizuální "Rozcestník" — 2×2 mřížku 4 prémiových karet kategorií brašen ve stylu "Urban Zen".
 
-## Čeká se na podklady
-Uživatel teprve připraví 4 fotografie brašen na betonové zdi (jednu pro každou kategorii). Implementace se spustí, jakmile budou obrázky nahrané do chatu.
+# Vylepšení admin rozhraní Vapesport
 
-## Plánovaná struktura 4 karet
+Rozsáhlejší úprava admin portálu rozdělená do logických fází. Každá fáze je samostatně testovatelná.
 
-1. **Brašny na řídítka & představec** — rychlý přístup, navigace, telefon. → filtr `?pillar=ridi`
-2. **Brašny do rámu** — maximální prostor v těžišti, e-bike nabíječky. → `?pillar=ram`
-3. **Brašny pod sedlo** — minimalistický prostor pro nejnutnější výbavu. → `?pillar=sedlo`
-4. **Gravel & Bikepacking (Waterproof)** — 100% nepromokavá prémiová řada. → `?pillar=gravel`
+## Fáze 1 — Reálná data: objednávky
 
-(Mapování už existuje v `src/lib/productPillars.ts`, použijeme stejné klíče → konzistentní s `Products.tsx`.)
+Vytvořit datový model objednávek v databázi a napojit ho na admin přehled.
 
-## Vizuální specifikace
+- Nová tabulka `orders` (číslo objednávky, zákazník, e-mail, telefon, adresa, položky JSONB, mezisoučet, DPH, doprava, celkem, stav, typ B2C/B2B, created_at)
+- Stavy: `nova`, `zpracovava_se`, `odeslano`, `dorucena`, `zrusena`
+- RLS: admin čte/edituje vše; uživatel vidí jen vlastní podle e-mailu / user_id; veřejnost může vkládat (z checkoutu)
+- GRANT pro `authenticated`, `service_role`, omezený `anon` INSERT
+- Napojit checkout flow tak, aby ukládal do `orders` (zachovat stávající chování)
+- Admin přehled + stránka „Objednávky" načítá živá data
 
-- **Layout:** 2×2 grid, `gap-6`, max šířka stránky, hodně whitespace nad i pod sekcí.
-- **Karta:** `aspect-[4/5]` na desktopu, `rounded-2xl`, plnoplošný background image, tmavý gradient overlay zdola (`from-black/70 to-transparent`).
-- **Typografie:** název velký bold sans-serif (`font-heading text-2xl md:text-3xl`), krátký popisek tenký (`font-body text-sm opacity-80`), oboje vlevo dole, bílá.
-- **Hover:** `group-hover:scale-105` na obrázku (transition 500ms), ztmavení overlay, odhalí se odkaz **„Zobrazit produkty →"** v Moss Green (`text-primary` = `hsl(135 14% 33%)`).
-- **Sekce nadpis:** `eyebrow` "Kategorie" + H2 "Vyberte si podle stylu jízdy" + krátký lead.
+## Fáze 2 — Plná CRUD správa produktů
 
-## Technické detaily
+Rozšířit stávající stránku `/admin/produkty` o:
 
-**Nové soubory**
-- `src/components/ShopPillarsGrid.tsx` — samostatná komponenta s 4 kartami, čte pole pillarů (`PILLARS` z `productPillars.ts`) + mapu pillar→imageUrl předanou v props.
-- `src/assets/pillars/ridi.jpg`, `ram.jpg`, `sedlo.jpg`, `gravel.jpg` — 4 fotky od uživatele.
+- Inline editaci ceny, B2B ceny, stavu skladu a viditelnosti přímo v tabulce
+- Tlačítka rychlých akcí: skrýt/zobrazit, vyprodáno/skladem
+- Detail produktu (`/admin/produkty/:id`) — již existuje, doplnit chybějící pole
+- Bulk akce: hromadné skrytí/označení vyprodáno (checkboxy v tabulce)
 
-**Úpravy**
-- `src/pages/Shop.tsx` — vložit `<ShopPillarsGrid />` mezi hero bike sekci a sekci s filtrovanými produkty (nebo úplně dolů pod "Další kategorie" — k potvrzení).
-- Karty linkují na `/produkty?pillar={key}` (Products.tsx už `pillar` query param čte).
+## Fáze 3 — Vyhledávání, filtry, stránkování
 
-**Žádné změny dat ani backendu** — čistě prezentační vrstva.
+Sdílené komponenty pro tabulky:
 
-## Otevřené otázky (vyřešíme s obrázky)
+- `DataTableToolbar` — search input + filtry stavů
+- `DataTablePagination` — stránkování (10/25/50 na stránku)
+- Aplikovat na: Objednávky, B2B partneři, Produkty
+- Filtry stavů jako přepínací chips, sticky toolbar
 
-- Umístění: hned pod hero kolem, nebo až pod produktové listingy? Doporučuji **hned pod hero** — slouží jako sekundární „rozcestník", kdo si nechce klikat puntíky na kole.
-- Mobil: 2×2 zachovat (`grid-cols-2`), nebo přepnout na 1 sloupec? Doporučuji **2 sloupce** i na mobilu pro kompaktnost, s menší typografií.
+## Fáze 4 — Vizuální polish + dark mode
+
+- Nové KPI karty s mini-trendem (sparkline z `recharts`)
+- Graf objednávek za posledních 14 dní
+- Jemné mikroanimace (fade-in, hover lift)
+- Přepínač světlý/tmavý režim v hlavičce adminu, persistován v `localStorage`
+- Dark tokeny pro admin layout (nově `--admin-bg`, `--admin-surface`)
+- Sticky horní lišta s breadcrumbs a user menu
+
+## Fáze 5 — Notifikace adminovi (UI + e-mail)
+
+- Realtime publikace pro `orders`, `b2b_profiles`, `withdrawal_requests`
+- Hook `useAdminNotifications` — sleduje nové řádky, zvyšuje badge počty v sidebaru, zobrazuje toast
+- Zvukový signál (volitelně utlumitelný)
+- Centrum oznámení v hlavičce (rolovací seznam posledních 20)
+- Edge funkce `notify-admin-event` — odešle e-mail na admin adresu (Lovable Emails)
+- Triggery (DB) po INSERT do `orders` zavolají edge funkci přes `pg_net` nebo, jednodušeji, edge funkce je volána z klientského checkout flow / existujících míst, kde se data zakládají
+
+## Technické poznámky
+
+- Nové soubory: `src/pages/admin/AdminOrdersDetail.tsx`, `src/components/admin/DataTableToolbar.tsx`, `src/components/admin/DataTablePagination.tsx`, `src/components/admin/StatCard.tsx`, `src/components/admin/NotificationCenter.tsx`, `src/components/admin/ThemeToggle.tsx`, `src/hooks/useAdminNotifications.tsx`, `src/hooks/useAdminTheme.tsx`
+- Upravené: `src/pages/admin/AdminLayout.tsx`, `AdminOverview.tsx`, `AdminOrders.tsx`, `AdminProductTable.tsx`, `src/index.css` (dark tokeny pro admin)
+- Migrace: `orders` tabulka + RLS + GRANT + realtime publikace; realtime také pro `b2b_profiles` a `withdrawal_requests`
+- Edge funkce: `notify-admin-event` (Lovable Emails — pokud není ještě nastavena infrastruktura, doplnit ji v rámci fáze 5)
+- Existující stránka `AdminDashboard.tsx` (legacy mock) bude ponechána, ale postupně odpojena od navigace; primární je `AdminLayout` + dílčí stránky
+
+## Otázka před implementací
+
+Rozsah je velký (cca 10 nových souborů + migrace + edge funkce + e-mailová infrastruktura). Plně implementovat všech 5 fází najednou nebo začít fází 1+2+3 (data + CRUD + filtry) a notifikace/dark mode přidat samostatně ve druhé iteraci?
