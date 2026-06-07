@@ -8,6 +8,7 @@ import { DataTableToolbar, type ChipFilter } from "@/components/admin/DataTableT
 import { DataTablePagination } from "@/components/admin/DataTablePagination";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import PaymentQrPanel from "@/components/admin/PaymentQrPanel";
 
 type Order = Tables<"orders">;
 type StatusFilter = "all" | "nova" | "zpracovava_se" | "odeslano" | "dorucena" | "zrusena";
