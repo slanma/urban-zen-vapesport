@@ -12,6 +12,7 @@ export interface B2BProfile {
   city: string;
   zip: string;
   discount_percent: number;
+  free_shipping: boolean;
 }
 
 /**
