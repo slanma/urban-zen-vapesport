@@ -80,6 +80,15 @@ const Checkout = () => {
   const [packetaPoint, setPacketaPoint] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  // Promo code
+  const [promoInput, setPromoInput] = useState("");
+  const [promoApplying, setPromoApplying] = useState(false);
+  const [appliedPromo, setAppliedPromo] = useState<{
+    code: string;
+    type: "percentage" | "fixed_amount";
+    value: number;
+  } | null>(null);
+
   // Pre-fill from B2B profile once it loads.
   useEffect(() => {
     if (!profile) return;
