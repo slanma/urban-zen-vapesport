@@ -153,6 +153,46 @@ const Checkout = () => {
     setPacketaPoint(demo);
   };
 
+  const handleSubmit = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const orderNumber = `OBJ-${new Date().getFullYear()}-${Math.floor(Math.random() * 900000 + 100000)}`;
+      const { error } = await supabase.from("orders").insert({
+        order_number: orderNumber,
+        user_id: user?.id ?? null,
+        is_b2b: isPartner,
+        email: form.email,
+        phone: form.phone || null,
+        first_name: form.firstName || null,
+        last_name: form.lastName || null,
+        street: form.street || null,
+        city: form.city || null,
+        zip: form.zip || null,
+        company_name: form.company || null,
+        ico: form.ico || null,
+        dic: form.dic || null,
+        items: orderLines,
+        subtotal_gross: subtotalGross,
+        shipping_label: shippingOpt?.label ?? null,
+        shipping_gross: shippingPrice,
+        payment_label: paymentOpt?.label ?? null,
+        payment_gross: paymentPrice,
+        total_gross: grandGross,
+        packeta_point: packetaPoint,
+      });
+      if (error) throw error;
+      toast.success("Objednávka odeslána", { description: `Číslo: ${orderNumber}` });
+      clearCart();
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      toast.error("Objednávku se nepodařilo odeslat", { description: "Zkuste to prosím znovu." });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const inputClass =
     "w-full h-14 px-4 text-base font-body bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-colors";
   const labelClass =
