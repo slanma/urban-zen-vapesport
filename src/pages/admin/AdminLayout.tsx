@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Loader2, LayoutDashboard, Package, Sparkles, ShoppingCart, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,26 +15,35 @@ const AdminLayout = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading, signOut } = useAuth();
   const [checking, setChecking] = useState(true);
+  const [accessDenied, setAccessDenied] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
-      navigate("/admin-login");
+      setChecking(false);
       return;
     }
+    let isActive = true;
+    setChecking(true);
     (async () => {
-      const { data: isAdmin } = await supabase.rpc("has_role", {
+      const { data: isAdmin, error } = await supabase.rpc("has_role", {
         _user_id: user.id,
         _role: "admin",
       });
-      if (!isAdmin) {
+      if (!isActive) return;
+      if (error || !isAdmin) {
+        setAccessDenied(true);
+        setChecking(false);
         await signOut();
-        navigate("/admin-login");
         return;
       }
+      setAccessDenied(false);
       setChecking(false);
     })();
-  }, [user, authLoading, navigate, signOut]);
+    return () => {
+      isActive = false;
+    };
+  }, [user, authLoading, signOut]);
 
   const handleLogout = async () => {
     await signOut();
@@ -47,6 +56,10 @@ const AdminLayout = () => {
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
+  }
+
+  if (!user || accessDenied) {
+    return <Navigate to="/admin-login" replace />;
   }
 
   return (
