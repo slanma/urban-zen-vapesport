@@ -410,7 +410,9 @@ const Checkout = () => {
 
                 <Button
                   size="lg"
+                  onClick={handleSubmit}
                   disabled={
+                    submitting ||
                     !termsAccepted ||
                     !shipping ||
                     !payment ||
@@ -420,11 +422,17 @@ const Checkout = () => {
                   }
                   className="w-full h-16 text-base md:text-lg font-bold rounded-full tracking-wide gap-2 px-4 text-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Lock className="w-5 h-5 shrink-0" />
+                  {submitting ? (
+                    <Loader2 className="w-5 h-5 animate-spin shrink-0" />
+                  ) : (
+                    <Lock className="w-5 h-5 shrink-0" />
+                  )}
                   <span>
-                    {isPartner
-                      ? `Objednat (B2B faktura) — ${fmtCZK(grandGross)}`
-                      : `Objednat s povinností platby — ${fmtCZK(grandGross)}`}
+                    {submitting
+                      ? "Odesílám…"
+                      : isPartner
+                        ? `Objednat (B2B faktura) — ${fmtCZK(grandGross)}`
+                        : `Objednat s povinností platby — ${fmtCZK(grandGross)}`}
                   </span>
                 </Button>
 
