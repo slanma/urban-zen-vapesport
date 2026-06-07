@@ -4,12 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Lock, Loader2, ArrowLeft } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { adminSignInWithPassword, checkAdminRole, clearStoredAdminSession } from "@/lib/adminAuth";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -40,8 +38,8 @@ const AdminLogin = () => {
     setError("");
 
     try {
-      const { user, error: authError } = await withTimeout(
-        signIn(email, password),
+      const { session, error: authError } = await withTimeout(
+        adminSignInWithPassword(email, password),
         "Přihlášení trvá příliš dlouho. Zkuste to prosím znovu."
       );
       if (authError) {
@@ -50,14 +48,14 @@ const AdminLogin = () => {
         return;
       }
 
-      if (!user) {
+      if (!session?.user) {
         setLoading(false);
         setError("Přihlášení se nezdařilo.");
         return;
       }
 
-      const { data: isAdmin, error: roleError } = await withTimeout(
-        supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }),
+      const { isAdmin, error: roleError } = await withTimeout(
+        checkAdminRole(session.user.id, session.access_token),
         "Ověření oprávnění trvá příliš dlouho. Zkuste to prosím znovu."
       );
 
@@ -65,13 +63,13 @@ const AdminLogin = () => {
 
       if (roleError) {
         setError("Nepodařilo se ověřit administrátorský přístup. Zkuste to prosím znovu.");
-        await supabase.auth.signOut();
+        clearStoredAdminSession();
         return;
       }
 
       if (!isAdmin) {
         setError("Nemáte oprávnění pro přístup do administrace.");
-        await supabase.auth.signOut();
+        clearStoredAdminSession();
         return;
       }
 
