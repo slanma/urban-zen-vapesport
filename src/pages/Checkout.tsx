@@ -176,7 +176,11 @@ const Checkout = () => {
         dic: form.dic || null,
         items: orderLines,
         subtotal_gross: subtotalGross,
-        shipping_label: shippingOpt?.label ?? null,
+        shipping_label: shippingOpt
+          ? freeShipping && shippingOpt.price > 0
+            ? `${shippingOpt.label} (zdarma – B2B)`
+            : shippingOpt.label
+          : null,
         shipping_gross: shippingPrice,
         payment_label: paymentOpt?.label ?? null,
         payment_gross: paymentPrice,
