@@ -94,6 +94,8 @@ const broadcast = () => {
   if (cache) listeners.forEach((l) => l(new Map(cache!)));
 };
 
+const SAVE_TIMEOUT_MS = 12000;
+
 export const useProductOverrides = () => {
   const [map, setMap] = useState<Map<string, ProductOverride>>(
     () => cache ?? new Map(),
@@ -137,12 +139,28 @@ export const useProductOverrides = () => {
       if (!cache) cache = new Map();
       cache.set(productId, next);
       broadcast();
-      const { error } = await supabase
-        .from("product_overrides")
-        .upsert(next as never, { onConflict: "product_id" });
-      if (error) {
-        console.error("Failed to save override", error);
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), SAVE_TIMEOUT_MS);
+      try {
+        const { error } = await supabase
+          .from("product_overrides")
+          .upsert(next as never, { onConflict: "product_id" })
+          .abortSignal(controller.signal);
+        if (error) {
+          console.error("Failed to save override", error);
+          throw error;
+        }
+      } catch (error) {
+        if (cache) {
+          cache.set(productId, current);
+          broadcast();
+        }
+        if (error instanceof DOMException && error.name === "AbortError") {
+          throw new Error("Ukládání trvalo příliš dlouho. Zkuste to prosím znovu.");
+        }
         throw error;
+      } finally {
+        window.clearTimeout(timeoutId);
       }
       return next;
     },
