@@ -494,22 +494,72 @@ const AdminProductEdit = () => {
 
         <div>
           <Label htmlFor="short">Krátký popis</Label>
+          <div
+            className="mt-1 flex items-center gap-1 rounded-t-md border border-b-0 border-border bg-muted/40 px-2 py-1"
+            role="toolbar"
+            aria-label="Formátování popisu"
+          >
+            <Button type="button" size="sm" variant="ghost" className="h-7 px-2 gap-1"
+              onClick={() => wrapShortDesc("**", "**")} title="Tučně (**text**)">
+              <Bold className="w-3.5 h-3.5" />
+            </Button>
+            <Button type="button" size="sm" variant="ghost" className="h-7 px-2 gap-1"
+              onClick={() => wrapShortDesc("*", "*")} title="Kurzíva (*text*)">
+              <Italic className="w-3.5 h-3.5" />
+            </Button>
+            <span className="mx-1 h-4 w-px bg-border" aria-hidden />
+            <Button type="button" size="sm" variant="ghost" className="h-7 px-2 gap-1"
+              onClick={() => wrapShortDesc("[lg]", "[/lg]")} title="Větší písmo">
+              <Type className="w-4 h-4" /> <span className="text-xs">A+</span>
+            </Button>
+            <Button type="button" size="sm" variant="ghost" className="h-7 px-2 gap-1"
+              onClick={() => wrapShortDesc("[sm]", "[/sm]")} title="Menší písmo">
+              <Minus className="w-3.5 h-3.5" /> <span className="text-xs">A−</span>
+            </Button>
+          </div>
           <Textarea
             id="short"
+            ref={shortDescRef}
             value={shortDescription}
             onChange={(e) => setShortDescription(e.target.value)}
             rows={3}
-            maxLength={400}
-            placeholder="Pro koho je produkt určen a proč ho potřebuje (2–3 věty)."
-            className="mt-1"
+            maxLength={600}
+            placeholder="Pro koho je produkt určen a proč ho potřebuje (2–3 věty). Označte text a klikněte na B / I / A+ / A−."
+            className="rounded-t-none"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            {shortDescription.length}/400 znaků · max 2–3 věty
+            {shortDescription.length}/600 znaků · podporuje <code>**tučně**</code>,{" "}
+            <code>*kurzíva*</code>, <code>[lg]větší[/lg]</code>, <code>[sm]menší[/sm]</code>
           </p>
         </div>
 
         <div>
           <Label htmlFor="features">Klíčové vlastnosti (odrážky)</Label>
+
+          {/* Clickable palette — same UX as color variants */}
+          <ul className="flex flex-wrap gap-2 mt-2 mb-3" aria-label="Předdefinované vlastnosti">
+            {FEATURE_PALETTE.map((f) => {
+              const active = activeFeatures.has(f.toLowerCase());
+              return (
+                <li key={f}>
+                  <button
+                    type="button"
+                    onClick={() => toggleFeature(f)}
+                    aria-pressed={active}
+                    title={active ? `${f} — kliknutím odebrat` : `${f} — kliknutím přidat`}
+                    className={`rounded-md border px-3 py-1.5 text-sm transition ${
+                      active
+                        ? "border-primary bg-primary/10 text-foreground shadow-sm"
+                        : "border-border bg-muted/40 text-muted-foreground opacity-60 hover:opacity-100"
+                    }`}
+                  >
+                    {f}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
           <Textarea
             id="features"
             value={featuresText}
@@ -519,10 +569,11 @@ const AdminProductEdit = () => {
             className="mt-1 font-mono text-sm"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Každý řádek = jedna odrážka. Max 3–4 technické fakty (rozměry, materiál, kompatibilita).
+            Klikněte na chip pro rychlé přidání, nebo dopište vlastní odrážku ručně. Každý řádek = jedna odrážka.
           </p>
         </div>
       </article>
+
 
       {/* Barevné varianty */}
       <article className="bg-background border border-border rounded-lg p-6 mt-6">
