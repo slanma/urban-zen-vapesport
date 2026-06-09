@@ -14,14 +14,25 @@ interface Props {
   title: string;
 }
 
+const UNCATEGORIZED = "Nezařazené";
+
 export const AdminProductTable = ({ filter, title }: Props) => {
   const list = useMemo(
     () =>
-      allProducts.filter((p) =>
-        filter === "services"
-          ? isServiceCategory(p.categoryLabel)
-          : !isServiceCategory(p.categoryLabel),
-      ),
+      allProducts
+        .filter((p) =>
+          filter === "services"
+            ? isServiceCategory(p.categoryLabel)
+            : !isServiceCategory(p.categoryLabel),
+        )
+        // Fallback: any product missing a categoryLabel goes to "Nezařazené"
+        .map((p) => ({
+          ...p,
+          categoryLabel:
+            p.categoryLabel && p.categoryLabel.trim().length > 0
+              ? p.categoryLabel
+              : UNCATEGORIZED,
+        })),
     [filter],
   );
 
@@ -30,10 +41,15 @@ export const AdminProductTable = ({ filter, title }: Props) => {
     for (const p of list) counts.set(p.categoryLabel, (counts.get(p.categoryLabel) ?? 0) + 1);
     return Array.from(counts.entries())
       .map(([label, count]) => ({ label, count }))
-      .sort((a, b) => a.label.localeCompare(b.label, "cs"));
+      .sort((a, b) => {
+        // Keep "Nezařazené" at the end
+        if (a.label === UNCATEGORIZED) return 1;
+        if (b.label === UNCATEGORIZED) return -1;
+        return a.label.localeCompare(b.label, "cs");
+      });
   }, [list]);
 
-  const { get, upsert, loading } = useProductOverrides();
+  const { get, upsert, loading, overrides } = useProductOverrides();
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("__all__");
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -42,6 +58,8 @@ export const AdminProductTable = ({ filter, title }: Props) => {
   const priceRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    console.log("Retrieved products from catalog:", list);
+    console.log("Retrieved overrides from Supabase:", overrides);
     if (list.length === 0) {
       console.warn("[AdminProductTable] Katalog je prázdný pro filter:", filter);
     } else {
@@ -49,22 +67,24 @@ export const AdminProductTable = ({ filter, title }: Props) => {
         `[AdminProductTable] Načteno ${list.length} položek v ${categories.length} kategoriích.`,
       );
     }
-  }, [list, filter, categories.length]);
+  }, [list, filter, categories.length, overrides]);
 
   const filtered = useMemo(() => {
     const inCategory =
       activeCategory === "__all__"
         ? list
         : list.filter((p) => p.categoryLabel === activeCategory);
-    const notDeleted = inCategory.filter((p) => get(p.id).visible);
+    // Admin view: show ALL products regardless of visibility / stock.
+    // (Visibility / stock only filter the public storefront.)
     const q = query.trim().toLowerCase();
-    if (!q) return notDeleted;
-    return notDeleted.filter(
+    if (!q) return inCategory;
+    return inCategory.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.id.toLowerCase().includes(q),
     );
-  }, [list, activeCategory, query, get]);
+  }, [list, activeCategory, query]);
+
 
   useEffect(() => {
     if (editingPrice && priceRef.current) {
