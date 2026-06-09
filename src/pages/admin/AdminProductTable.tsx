@@ -25,15 +25,38 @@ export const AdminProductTable = ({ filter, title }: Props) => {
     [filter],
   );
 
+  const categories = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const p of list) counts.set(p.categoryLabel, (counts.get(p.categoryLabel) ?? 0) + 1);
+    return Array.from(counts.entries())
+      .map(([label, count]) => ({ label, count }))
+      .sort((a, b) => a.label.localeCompare(b.label, "cs"));
+  }, [list]);
+
   const { get, upsert, loading } = useProductOverrides();
   const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string>("__all__");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [editingPrice, setEditingPrice] = useState<string | null>(null);
   const [priceDraft, setPriceDraft] = useState("");
   const priceRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    if (list.length === 0) {
+      console.warn("[AdminProductTable] Katalog je prázdný pro filter:", filter);
+    } else {
+      console.info(
+        `[AdminProductTable] Načteno ${list.length} položek v ${categories.length} kategoriích.`,
+      );
+    }
+  }, [list, filter, categories.length]);
+
   const filtered = useMemo(() => {
-    const notDeleted = list.filter((p) => get(p.id).visible);
+    const inCategory =
+      activeCategory === "__all__"
+        ? list
+        : list.filter((p) => p.categoryLabel === activeCategory);
+    const notDeleted = inCategory.filter((p) => get(p.id).visible);
     const q = query.trim().toLowerCase();
     if (!q) return notDeleted;
     return notDeleted.filter(
@@ -41,7 +64,7 @@ export const AdminProductTable = ({ filter, title }: Props) => {
         p.name.toLowerCase().includes(q) ||
         p.id.toLowerCase().includes(q),
     );
-  }, [list, query, get]);
+  }, [list, activeCategory, query, get]);
 
   useEffect(() => {
     if (editingPrice && priceRef.current) {
@@ -148,6 +171,40 @@ export const AdminProductTable = ({ filter, title }: Props) => {
         </div>
       </div>
 
+      {/* Category tabs */}
+      {categories.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4" role="tablist" aria-label="Kategorie produktů">
+          <button
+            role="tab"
+            aria-selected={activeCategory === "__all__"}
+            onClick={() => setActiveCategory("__all__")}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+              activeCategory === "__all__"
+                ? "bg-foreground text-background border-foreground"
+                : "bg-background text-foreground border-border hover:border-foreground/40"
+            }`}
+          >
+            Vše <span className="opacity-60">({list.length})</span>
+          </button>
+          {categories.map((c) => (
+            <button
+              key={c.label}
+              role="tab"
+              aria-selected={activeCategory === c.label}
+              onClick={() => setActiveCategory(c.label)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                activeCategory === c.label
+                  ? "bg-foreground text-background border-foreground"
+                  : "bg-background text-foreground border-border hover:border-foreground/40"
+              }`}
+            >
+              {c.label} <span className="opacity-60">({c.count})</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+
       <div className="bg-background border border-border rounded-lg overflow-hidden">
         <table className="w-full text-sm">
           <thead>
@@ -251,7 +308,9 @@ export const AdminProductTable = ({ filter, title }: Props) => {
         </table>
         {filtered.length === 0 && (
           <div className="p-8 text-center text-sm text-muted-foreground">
-            Žádné položky neodpovídají hledání.
+            {query.trim()
+              ? "Žádné položky neodpovídají hledání."
+              : "Zatím zde nejsou žádné produkty. Přidejte první produkt v kategorii."}
           </div>
         )}
       </div>
