@@ -306,13 +306,20 @@ export const AdminProductTable = ({ filter, title }: Props) => {
             })}
           </tbody>
         </table>
-        {filtered.length === 0 && (
+        {loading && filtered.length === 0 && (
+          <div className="p-8 text-center text-sm text-muted-foreground flex items-center justify-center gap-2">
+            <span className="inline-block w-4 h-4 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
+            Načítám produkty z databáze…
+          </div>
+        )}
+        {!loading && filtered.length === 0 && (
           <div className="p-8 text-center text-sm text-muted-foreground">
             {query.trim()
               ? "Žádné položky neodpovídají hledání."
               : "Zatím zde nejsou žádné produkty. Přidejte první produkt v kategorii."}
           </div>
         )}
+
       </div>
 
       {/* Floating bulk action bar */}
