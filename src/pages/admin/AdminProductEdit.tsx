@@ -64,28 +64,9 @@ const COLOR_PALETTE: ReadonlyArray<{ slug: string; label: string; hex: string }>
   { slug: "dark-turquoise",  label: "Tmavě tyrkysová",   hex: "#0E8C82" },
 ] as const;
 
-/**
- * Master palette of common product features. Clicking a chip toggles the
- * feature line inside the textarea below — same UX as color variants.
- * Admin can still type custom lines in the textarea (they survive toggling).
- */
-const FEATURE_PALETTE: ReadonlyArray<string> = [
-  "Voděodolný materiál",
-  "Vodě odolné zipy",
-  "Reflexní prvky",
-  "Pláštěnka v balení",
-  "Suchý zip — uchycení",
-  "KLICKFIX adaptér",
-  "Vhodné pro elektrokolo",
-  "Vhodné pro koloběžku",
-  "Vhodné pro dětské kolo",
-  "Dotyková fólie na mobil",
-  "Materiál PE 600D",
-  "Vyrobeno v ČR",
-  "Ruční výroba",
-  "Vnitřní organizér",
-  "Nosič na zadní blatník",
-];
+// Feature palette is shared with the shop so the icons + tooltips shown
+// to customers stay in sync with what admin toggles here.
+import { PRODUCT_FEATURES } from "@/lib/productFeatures";
 
 
 
