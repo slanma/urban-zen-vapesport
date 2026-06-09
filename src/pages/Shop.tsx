@@ -10,6 +10,7 @@ import {
   type Hotspot,
 } from "@/data/productHotspots";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { getPrimaryImage } from "@/lib/productImages";
 import PriceTag from "@/components/PriceTag";
 
 interface HotspotDot {
