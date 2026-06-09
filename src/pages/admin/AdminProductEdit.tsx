@@ -66,6 +66,7 @@ const AdminProductEdit = () => {
     setStockQty(o.stock_qty ?? (o.in_stock ? "" : 0));
     setShortDescription(o.short_description_override ?? product.shortDescription);
     setFeaturesText((o.features_override ?? product.features).join("\n"));
+    setImages(getEffectiveGallery(product, o));
   }, [product, loading, get]);
 
   if (!product) {
