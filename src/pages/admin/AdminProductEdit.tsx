@@ -86,6 +86,7 @@ const AdminProductEdit = () => {
   const [featuresText, setFeaturesText] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [activeColors, setActiveColors] = useState<string[]>([]);
+  const [sku, setSku] = useState("");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const shortDescRef = useRef<HTMLTextAreaElement>(null);
@@ -176,6 +177,7 @@ const AdminProductEdit = () => {
       setFeaturesText((product.features ?? []).join("\n"));
       setImages(getEffectiveGallery(product));
       setActiveColors([]);
+      setSku(product.id);
     }
 
     // Phase 2 — overlay overrides once they have loaded.
@@ -199,6 +201,7 @@ const AdminProductEdit = () => {
       const gallery = getEffectiveGallery(product, o);
       if (gallery.length > 0) setImages(gallery);
       if (Array.isArray(o.colors_override)) setActiveColors(o.colors_override);
+      if (o.sku_override) setSku(o.sku_override);
     }
   }, [product, loading, get]);
 
@@ -225,6 +228,7 @@ const AdminProductEdit = () => {
         .slice(0, 4);
       const qty = typeof stockQty === "number" ? stockQty : null;
       await upsert(product.id, {
+        sku_override: sku.trim() && sku.trim() !== product.id ? sku.trim() : null,
         name_override: name !== product.name ? name : null,
         category_override: category !== product.categoryLabel ? category : null,
         price_override: price !== product.price ? price : null,
@@ -394,7 +398,16 @@ const AdminProductEdit = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="code">Kód produktu</Label>
-            <Input id="code" value={product.id} disabled className="mt-1 font-mono text-xs" />
+            <Input
+              id="code"
+              value={sku}
+              onChange={(e) => setSku(e.target.value)}
+              className="mt-1 font-mono text-xs"
+              placeholder={product.id}
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Interní ID: <span className="font-mono">{product.id}</span>
+            </p>
           </div>
           <div>
             <Label htmlFor="cat">Kategorie</Label>
