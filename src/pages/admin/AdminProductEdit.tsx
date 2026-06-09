@@ -120,6 +120,7 @@ const AdminProductEdit = () => {
       // Gallery: prefer admin override if non-empty, otherwise keep shop images.
       const gallery = getEffectiveGallery(product, o);
       if (gallery.length > 0) setImages(gallery);
+      if (Array.isArray(o.colors_override)) setActiveColors(o.colors_override);
     }
   }, [product, loading, get]);
 
