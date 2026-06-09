@@ -201,6 +201,7 @@ const AdminProductEdit = () => {
       const gallery = getEffectiveGallery(product, o);
       if (gallery.length > 0) setImages(gallery);
       if (Array.isArray(o.colors_override)) setActiveColors(o.colors_override);
+      if (o.sku_override) setSku(o.sku_override);
     }
   }, [product, loading, get]);
 
