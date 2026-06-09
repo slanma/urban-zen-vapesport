@@ -291,9 +291,11 @@ const ProductDetail = () => {
             <h2 className="font-heading text-3xl font-bold text-foreground">
               Perfektní organizace a čistý design přímo v rámu kola
             </h2>
-            <p className="font-body text-muted-foreground mt-4 leading-relaxed">
-              {product.shortDescription}
-            </p>
+            <RichText
+              as="p"
+              className="font-body text-muted-foreground mt-4 leading-relaxed"
+              text={product.shortDescription}
+            />
             {product.features.length > 0 && (
               <>
                 <h3 className="font-heading text-xl font-bold text-foreground mt-8">
