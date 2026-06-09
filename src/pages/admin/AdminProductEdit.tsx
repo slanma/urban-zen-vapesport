@@ -170,8 +170,13 @@ const AdminProductEdit = () => {
         // images_override is persisted live by upload/remove/primary actions
       });
       toast({ title: "Změny uloženy" });
-    } catch {
-      toast({ title: "Uložení selhalo", variant: "destructive" });
+    } catch (error) {
+      console.error("Product save failed", error);
+      toast({
+        title: "Uložení selhalo",
+        description: error instanceof Error ? error.message : "Zkuste to prosím znovu.",
+        variant: "destructive",
+      });
     } finally {
       setSaving(false);
     }
