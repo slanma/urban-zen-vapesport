@@ -9,6 +9,7 @@ import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { getPrimaryImage } from "@/lib/productImages";
 import PriceTag from "@/components/PriceTag";
+import { RichText } from "@/lib/richText";
 import { PILLARS, getPillar, pickPillarImage, type PillarKey } from "@/lib/productPillars";
 
 const Products = () => {
@@ -315,9 +316,11 @@ const Products = () => {
                 <h3 className="font-heading text-lg font-bold text-foreground leading-snug mb-1">
                   {product.name}
                 </h3>
-                <p className="text-sm font-body text-muted-foreground leading-relaxed mb-4 flex-1">
-                  {product.shortDescription}
-                </p>
+                <RichText
+                  as="p"
+                  className="text-sm font-body text-muted-foreground leading-relaxed mb-4 flex-1"
+                  text={product.shortDescription}
+                />
                 <div className="flex items-center justify-between mt-auto gap-3">
                   <PriceTag
                     retailGross={getOverride(product.id).price_override ?? product.price}

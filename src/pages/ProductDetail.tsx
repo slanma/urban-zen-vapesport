@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { getEffectiveGallery } from "@/lib/productImages";
+import { RichText, stripRichMarkers } from "@/lib/richText";
 
 import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -70,7 +71,7 @@ const ProductDetail = () => {
   useEffect(() => {
     if (!product) return;
     const title = override?.meta_title || `${product.name} | VAPESPORT`;
-    const desc = override?.meta_description || product.shortDescription;
+    const desc = override?.meta_description || stripRichMarkers(product.shortDescription);
     const prevTitle = document.title;
     document.title = title;
     setMeta("description", desc);
@@ -161,9 +162,11 @@ const ProductDetail = () => {
               {product.name}
             </h1>
 
-            <p className="font-body text-muted-foreground mt-4 text-base leading-relaxed">
-              {product.shortDescription}
-            </p>
+            <RichText
+              as="p"
+              className="font-body text-muted-foreground mt-4 text-base leading-relaxed"
+              text={product.shortDescription}
+            />
 
             <div className="mt-8">
               <PriceTag
@@ -288,9 +291,11 @@ const ProductDetail = () => {
             <h2 className="font-heading text-3xl font-bold text-foreground">
               Perfektní organizace a čistý design přímo v rámu kola
             </h2>
-            <p className="font-body text-muted-foreground mt-4 leading-relaxed">
-              {product.shortDescription}
-            </p>
+            <RichText
+              as="p"
+              className="font-body text-muted-foreground mt-4 leading-relaxed"
+              text={product.shortDescription}
+            />
             {product.features.length > 0 && (
               <>
                 <h3 className="font-heading text-xl font-bold text-foreground mt-8">

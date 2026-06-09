@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Save, Loader2, Eye, Upload, X, Star, StarOff, Loader } from "lucide-react";
+import {
+  ArrowLeft, Save, Loader2, Eye, Upload, X, Star, StarOff, Loader,
+  Bold, Italic, Type, Minus,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -61,6 +64,30 @@ const COLOR_PALETTE: ReadonlyArray<{ slug: string; label: string; hex: string }>
   { slug: "dark-turquoise",  label: "Tmavě tyrkysová",   hex: "#0E8C82" },
 ] as const;
 
+/**
+ * Master palette of common product features. Clicking a chip toggles the
+ * feature line inside the textarea below — same UX as color variants.
+ * Admin can still type custom lines in the textarea (they survive toggling).
+ */
+const FEATURE_PALETTE: ReadonlyArray<string> = [
+  "Voděodolný materiál",
+  "Vodě odolné zipy",
+  "Reflexní prvky",
+  "Pláštěnka v balení",
+  "Suchý zip — uchycení",
+  "KLICKFIX adaptér",
+  "Vhodné pro elektrokolo",
+  "Vhodné pro koloběžku",
+  "Vhodné pro dětské kolo",
+  "Dotyková fólie na mobil",
+  "Materiál PE 600D",
+  "Vyrobeno v ČR",
+  "Ruční výroba",
+  "Vnitřní organizér",
+  "Nosič na zadní blatník",
+];
+
+
 
 const AdminProductEdit = () => {
   const { id } = useParams<{ id: string }>();
@@ -80,7 +107,66 @@ const AdminProductEdit = () => {
   const [activeColors, setActiveColors] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const shortDescRef = useRef<HTMLTextAreaElement>(null);
   const [dragging, setDragging] = useState(false);
+
+  /**
+   * Wrap (or unwrap) the current selection in the short-description textarea
+   * with the given marker pair. If nothing is selected, the markers are
+   * inserted at the cursor and the caret is placed between them.
+   */
+  const wrapShortDesc = (open: string, close: string) => {
+    const el = shortDescRef.current;
+    if (!el) return;
+    const start = el.selectionStart ?? shortDescription.length;
+    const end = el.selectionEnd ?? shortDescription.length;
+    const before = shortDescription.slice(0, start);
+    const sel = shortDescription.slice(start, end);
+    const after = shortDescription.slice(end);
+    // Toggle off when the selection is already wrapped.
+    if (sel.startsWith(open) && sel.endsWith(close) && sel.length >= open.length + close.length) {
+      const inner = sel.slice(open.length, sel.length - close.length);
+      const next = before + inner + after;
+      setShortDescription(next);
+      requestAnimationFrame(() => {
+        el.focus();
+        el.setSelectionRange(start, start + inner.length);
+      });
+      return;
+    }
+    const next = before + open + sel + close + after;
+    setShortDescription(next);
+    requestAnimationFrame(() => {
+      el.focus();
+      const caret = start + open.length + sel.length;
+      el.setSelectionRange(start + open.length, caret);
+    });
+  };
+
+  /**
+   * Toggle a predefined feature line in the features textarea — same
+   * interaction model as the color palette. Custom lines added by the
+   * admin in the textarea are preserved.
+   */
+  const toggleFeature = (label: string) => {
+    const lines = featuresText.split("\n").map((l) => l.trim());
+    const idx = lines.findIndex((l) => l.toLowerCase() === label.toLowerCase());
+    let next: string[];
+    if (idx >= 0) {
+      next = lines.filter((_, i) => i !== idx);
+    } else {
+      next = [...lines.filter(Boolean), label];
+    }
+    setFeaturesText(next.join("\n"));
+  };
+
+  const activeFeatures = new Set(
+    featuresText
+      .split("\n")
+      .map((l) => l.trim().toLowerCase())
+      .filter(Boolean),
+  );
+
 
   // Two-phase init: (1) populate immediately from the shop product so the
   // form is never blank while overrides load, (2) once overrides arrive,
@@ -408,22 +494,72 @@ const AdminProductEdit = () => {
 
         <div>
           <Label htmlFor="short">Krátký popis</Label>
+          <div
+            className="mt-1 flex items-center gap-1 rounded-t-md border border-b-0 border-border bg-muted/40 px-2 py-1"
+            role="toolbar"
+            aria-label="Formátování popisu"
+          >
+            <Button type="button" size="sm" variant="ghost" className="h-7 px-2 gap-1"
+              onClick={() => wrapShortDesc("**", "**")} title="Tučně (**text**)">
+              <Bold className="w-3.5 h-3.5" />
+            </Button>
+            <Button type="button" size="sm" variant="ghost" className="h-7 px-2 gap-1"
+              onClick={() => wrapShortDesc("*", "*")} title="Kurzíva (*text*)">
+              <Italic className="w-3.5 h-3.5" />
+            </Button>
+            <span className="mx-1 h-4 w-px bg-border" aria-hidden />
+            <Button type="button" size="sm" variant="ghost" className="h-7 px-2 gap-1"
+              onClick={() => wrapShortDesc("[lg]", "[/lg]")} title="Větší písmo">
+              <Type className="w-4 h-4" /> <span className="text-xs">A+</span>
+            </Button>
+            <Button type="button" size="sm" variant="ghost" className="h-7 px-2 gap-1"
+              onClick={() => wrapShortDesc("[sm]", "[/sm]")} title="Menší písmo">
+              <Minus className="w-3.5 h-3.5" /> <span className="text-xs">A−</span>
+            </Button>
+          </div>
           <Textarea
             id="short"
+            ref={shortDescRef}
             value={shortDescription}
             onChange={(e) => setShortDescription(e.target.value)}
             rows={3}
-            maxLength={400}
-            placeholder="Pro koho je produkt určen a proč ho potřebuje (2–3 věty)."
-            className="mt-1"
+            maxLength={600}
+            placeholder="Pro koho je produkt určen a proč ho potřebuje (2–3 věty). Označte text a klikněte na B / I / A+ / A−."
+            className="rounded-t-none"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            {shortDescription.length}/400 znaků · max 2–3 věty
+            {shortDescription.length}/600 znaků · podporuje <code>**tučně**</code>,{" "}
+            <code>*kurzíva*</code>, <code>[lg]větší[/lg]</code>, <code>[sm]menší[/sm]</code>
           </p>
         </div>
 
         <div>
           <Label htmlFor="features">Klíčové vlastnosti (odrážky)</Label>
+
+          {/* Clickable palette — same UX as color variants */}
+          <ul className="flex flex-wrap gap-2 mt-2 mb-3" aria-label="Předdefinované vlastnosti">
+            {FEATURE_PALETTE.map((f) => {
+              const active = activeFeatures.has(f.toLowerCase());
+              return (
+                <li key={f}>
+                  <button
+                    type="button"
+                    onClick={() => toggleFeature(f)}
+                    aria-pressed={active}
+                    title={active ? `${f} — kliknutím odebrat` : `${f} — kliknutím přidat`}
+                    className={`rounded-md border px-3 py-1.5 text-sm transition ${
+                      active
+                        ? "border-primary bg-primary/10 text-foreground shadow-sm"
+                        : "border-border bg-muted/40 text-muted-foreground opacity-60 hover:opacity-100"
+                    }`}
+                  >
+                    {f}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
           <Textarea
             id="features"
             value={featuresText}
@@ -433,10 +569,11 @@ const AdminProductEdit = () => {
             className="mt-1 font-mono text-sm"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Každý řádek = jedna odrážka. Max 3–4 technické fakty (rozměry, materiál, kompatibilita).
+            Klikněte na chip pro rychlé přidání, nebo dopište vlastní odrážku ručně. Každý řádek = jedna odrážka.
           </p>
         </div>
       </article>
+
 
       {/* Barevné varianty */}
       <article className="bg-background border border-border rounded-lg p-6 mt-6">
