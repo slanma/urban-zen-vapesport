@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { fmtCZK, netFromGross, grossFromNet, vatOfGross } from "@/lib/vat";
 import { toast } from "@/hooks/use-toast";
 
 /** Simplified, workshop-friendly category list. */
