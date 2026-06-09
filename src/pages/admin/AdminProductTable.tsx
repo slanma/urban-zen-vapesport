@@ -308,7 +308,9 @@ export const AdminProductTable = ({ filter, title }: Props) => {
         </table>
         {filtered.length === 0 && (
           <div className="p-8 text-center text-sm text-muted-foreground">
-            Žádné položky neodpovídají hledání.
+            {query.trim()
+              ? "Žádné položky neodpovídají hledání."
+              : "Zatím zde nejsou žádné produkty. Přidejte první produkt v kategorii."}
           </div>
         )}
       </div>
