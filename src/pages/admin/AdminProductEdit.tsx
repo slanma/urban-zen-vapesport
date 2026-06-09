@@ -64,28 +64,9 @@ const COLOR_PALETTE: ReadonlyArray<{ slug: string; label: string; hex: string }>
   { slug: "dark-turquoise",  label: "Tmavě tyrkysová",   hex: "#0E8C82" },
 ] as const;
 
-/**
- * Master palette of common product features. Clicking a chip toggles the
- * feature line inside the textarea below — same UX as color variants.
- * Admin can still type custom lines in the textarea (they survive toggling).
- */
-const FEATURE_PALETTE: ReadonlyArray<string> = [
-  "Voděodolný materiál",
-  "Vodě odolné zipy",
-  "Reflexní prvky",
-  "Pláštěnka v balení",
-  "Suchý zip — uchycení",
-  "KLICKFIX adaptér",
-  "Vhodné pro elektrokolo",
-  "Vhodné pro koloběžku",
-  "Vhodné pro dětské kolo",
-  "Dotyková fólie na mobil",
-  "Materiál PE 600D",
-  "Vyrobeno v ČR",
-  "Ruční výroba",
-  "Vnitřní organizér",
-  "Nosič na zadní blatník",
-];
+// Feature palette is shared with the shop so the icons + tooltips shown
+// to customers stay in sync with what admin toggles here.
+import { PRODUCT_FEATURES } from "@/lib/productFeatures";
 
 
 
@@ -538,22 +519,23 @@ const AdminProductEdit = () => {
 
           {/* Clickable palette — same UX as color variants */}
           <ul className="flex flex-wrap gap-2 mt-2 mb-3" aria-label="Předdefinované vlastnosti">
-            {FEATURE_PALETTE.map((f) => {
-              const active = activeFeatures.has(f.toLowerCase());
+            {PRODUCT_FEATURES.map(({ label, icon: Icon, tooltip }) => {
+              const active = activeFeatures.has(label.toLowerCase());
               return (
-                <li key={f}>
+                <li key={label}>
                   <button
                     type="button"
-                    onClick={() => toggleFeature(f)}
+                    onClick={() => toggleFeature(label)}
                     aria-pressed={active}
-                    title={active ? `${f} — kliknutím odebrat` : `${f} — kliknutím přidat`}
-                    className={`rounded-md border px-3 py-1.5 text-sm transition ${
+                    title={tooltip}
+                    className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition ${
                       active
                         ? "border-primary bg-primary/10 text-foreground shadow-sm"
                         : "border-border bg-muted/40 text-muted-foreground opacity-60 hover:opacity-100"
                     }`}
                   >
-                    {f}
+                    <Icon className="w-4 h-4" aria-hidden />
+                    <span>{label}</span>
                   </button>
                 </li>
               );

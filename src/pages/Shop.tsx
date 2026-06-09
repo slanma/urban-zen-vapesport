@@ -12,6 +12,7 @@ import {
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { getPrimaryImage } from "@/lib/productImages";
 import { RichText } from "@/lib/richText";
+import FeatureBadges from "@/components/FeatureBadges";
 import PriceTag from "@/components/PriceTag";
 
 interface HotspotDot {
@@ -256,8 +257,13 @@ const Shop = () => {
                   </h3>
                   <RichText
                     as="p"
-                    className="text-sm font-body text-muted-foreground leading-relaxed mb-4 flex-1"
+                    className="text-sm font-body text-muted-foreground leading-relaxed mb-3 flex-1"
                     text={product.shortDescription}
+                  />
+                  <FeatureBadges
+                    features={get(product.id).features_override ?? product.features}
+                    className="mb-4"
+                    size="sm"
                   />
                   <div className="flex items-center justify-between mt-auto gap-3">
                     <PriceTag
@@ -313,8 +319,13 @@ const Shop = () => {
                   </h3>
                   <RichText
                     as="p"
-                    className="text-sm font-body text-muted-foreground leading-relaxed mb-4 flex-1"
+                    className="text-sm font-body text-muted-foreground leading-relaxed mb-3 flex-1"
                     text={product.shortDescription}
+                  />
+                  <FeatureBadges
+                    features={get(product.id).features_override ?? product.features}
+                    className="mb-4"
+                    size="sm"
                   />
                   <div className="flex items-center justify-between mt-auto">
                     <PriceTag
