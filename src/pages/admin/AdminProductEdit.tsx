@@ -32,6 +32,25 @@ const CATEGORY_OPTIONS = [
   "Služby",
 ] as const;
 
+/**
+ * Master color palette for product variants.
+ * Each color toggled ON becomes a standalone variant linked to the parent
+ * product. For the upcoming Google/Heureka XML feed, each active color is
+ * emitted as its own <item> with:
+ *   - id           = `${product.id}-${slug}`            (unique per variant)
+ *   - item_group_id = product.id                        (groups variants)
+ *   - color        = label                              (e.g. "Neonová žlutá")
+ * Storage: `colors_override` (string[]) holds the active color slugs. A
+ * missing/empty array means the product has no color variants exposed.
+ */
+const COLOR_PALETTE: ReadonlyArray<{ slug: string; label: string; hex: string }> = [
+  { slug: "black",        label: "Černá",         hex: "#111111" },
+  { slug: "neon-yellow",  label: "Neonová žlutá", hex: "#D7FF1A" },
+  { slug: "neon-orange",  label: "Neonová oranžová", hex: "#FF6A1A" },
+  { slug: "grey",         label: "Šedá",          hex: "#8A8A8A" },
+  { slug: "blue",         label: "Modrá",         hex: "#1E66FF" },
+] as const;
+
 const AdminProductEdit = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id);
