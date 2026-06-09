@@ -11,6 +11,7 @@ import {
 } from "@/data/productHotspots";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { getPrimaryImage } from "@/lib/productImages";
+import { RichText } from "@/lib/richText";
 import PriceTag from "@/components/PriceTag";
 
 interface HotspotDot {
