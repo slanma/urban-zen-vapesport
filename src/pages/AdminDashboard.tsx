@@ -62,8 +62,8 @@ const AdminDashboard = () => {
         navigate("/admin-login");
         return;
       }
-      await Promise.all([loadRegistrations(), loadApproved()]);
-      if (!cancelled) setCheckingAccess(false);
+      setCheckingAccess(false);
+      Promise.allSettled([loadRegistrations(), loadApproved()]);
     })();
     return () => {
       cancelled = true;
