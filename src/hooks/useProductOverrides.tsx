@@ -103,15 +103,19 @@ export const useProductOverrides = () => {
   useEffect(() => {
     const listener: Listener = (m) => setMap(new Map(m));
     listeners.add(listener);
-    if (!cache) {
-      fetchAll().then(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
+    // Always refetch on mount to keep data in sync with Supabase
+    // (cache is used for instant paint, but we revalidate immediately).
+    cache = null;
+    inflight = null;
+    setLoading(true);
+    fetchAll()
+      .then((m) => setMap(new Map(m)))
+      .finally(() => setLoading(false));
     return () => {
       listeners.delete(listener);
     };
   }, []);
+
 
   const get = useCallback(
     (productId: string): ProductOverride => {
