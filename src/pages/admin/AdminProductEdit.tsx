@@ -107,7 +107,66 @@ const AdminProductEdit = () => {
   const [activeColors, setActiveColors] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const shortDescRef = useRef<HTMLTextAreaElement>(null);
   const [dragging, setDragging] = useState(false);
+
+  /**
+   * Wrap (or unwrap) the current selection in the short-description textarea
+   * with the given marker pair. If nothing is selected, the markers are
+   * inserted at the cursor and the caret is placed between them.
+   */
+  const wrapShortDesc = (open: string, close: string) => {
+    const el = shortDescRef.current;
+    if (!el) return;
+    const start = el.selectionStart ?? shortDescription.length;
+    const end = el.selectionEnd ?? shortDescription.length;
+    const before = shortDescription.slice(0, start);
+    const sel = shortDescription.slice(start, end);
+    const after = shortDescription.slice(end);
+    // Toggle off when the selection is already wrapped.
+    if (sel.startsWith(open) && sel.endsWith(close) && sel.length >= open.length + close.length) {
+      const inner = sel.slice(open.length, sel.length - close.length);
+      const next = before + inner + after;
+      setShortDescription(next);
+      requestAnimationFrame(() => {
+        el.focus();
+        el.setSelectionRange(start, start + inner.length);
+      });
+      return;
+    }
+    const next = before + open + sel + close + after;
+    setShortDescription(next);
+    requestAnimationFrame(() => {
+      el.focus();
+      const caret = start + open.length + sel.length;
+      el.setSelectionRange(start + open.length, caret);
+    });
+  };
+
+  /**
+   * Toggle a predefined feature line in the features textarea — same
+   * interaction model as the color palette. Custom lines added by the
+   * admin in the textarea are preserved.
+   */
+  const toggleFeature = (label: string) => {
+    const lines = featuresText.split("\n").map((l) => l.trim());
+    const idx = lines.findIndex((l) => l.toLowerCase() === label.toLowerCase());
+    let next: string[];
+    if (idx >= 0) {
+      next = lines.filter((_, i) => i !== idx);
+    } else {
+      next = [...lines.filter(Boolean), label];
+    }
+    setFeaturesText(next.join("\n"));
+  };
+
+  const activeFeatures = new Set(
+    featuresText
+      .split("\n")
+      .map((l) => l.trim().toLowerCase())
+      .filter(Boolean),
+  );
+
 
   // Two-phase init: (1) populate immediately from the shop product so the
   // form is never blank while overrides load, (2) once overrides arrive,
