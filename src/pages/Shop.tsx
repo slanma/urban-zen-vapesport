@@ -241,7 +241,7 @@ const Shop = () => {
               >
                 <div className="aspect-[4/3] bg-muted overflow-hidden">
                   <img
-                    src={product.image}
+                    src={getPrimaryImage(product, get(product.id))}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
@@ -296,7 +296,7 @@ const Shop = () => {
               >
                 <div className="aspect-[4/3] bg-muted overflow-hidden">
                   <img
-                    src={product.image}
+                    src={getPrimaryImage(product, get(product.id))}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
