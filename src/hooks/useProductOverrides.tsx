@@ -8,6 +8,7 @@ export interface SpecRow {
 
 export interface ProductOverride {
   product_id: string;
+  sku_override: string | null;
   visible: boolean;
   in_stock: boolean;
   stock_qty: number | null;
