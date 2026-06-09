@@ -57,7 +57,7 @@ let cache: Map<string, ProductOverride> | null = null;
 let inflight: Promise<Map<string, ProductOverride>> | null = null;
 
 const PUBLIC_COLUMNS =
-  "product_id,visible,in_stock,stock_qty,price_override,vat_percent,description_html,youtube_url,meta_title,meta_description,ai_keywords,name_override,category_override,short_description_override,features_override,specs_override,colors_override,tech_params_html,created_at,updated_at";
+  "product_id,visible,in_stock,stock_qty,price_override,vat_percent,description_html,youtube_url,meta_title,meta_description,ai_keywords,name_override,category_override,short_description_override,features_override,specs_override,colors_override,images_override,tech_params_html,created_at,updated_at";
 
 const fetchAll = async (): Promise<Map<string, ProductOverride>> => {
   if (inflight) return inflight;
