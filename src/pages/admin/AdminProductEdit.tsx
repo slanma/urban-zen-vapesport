@@ -99,6 +99,7 @@ const AdminProductEdit = () => {
         short_description_override:
           shortDescription !== product.shortDescription ? shortDescription : null,
         features_override: cleanFeatures.length > 0 ? cleanFeatures : null,
+        images_override: serializeImagesForSave(images, product),
       });
       toast({ title: "Změny uloženy" });
     } catch {
@@ -107,6 +108,75 @@ const AdminProductEdit = () => {
       setSaving(false);
     }
   };
+
+  /** Persist images_override only when the admin actually customized them. */
+  const serializeImagesForSave = (
+    next: string[],
+    p: NonNullable<typeof product>,
+  ): string[] | null => {
+    const defaults = p.images && p.images.length > 0 ? p.images : [p.image];
+    const same =
+      next.length === defaults.length &&
+      next.every((url, i) => url === defaults[i]);
+    return same || next.length === 0 ? null : next;
+  };
+
+  const uploadFiles = async (files: FileList | File[]) => {
+    const arr = Array.from(files);
+    if (arr.length === 0) return;
+    setUploading(true);
+    const uploaded: string[] = [];
+    try {
+      for (const file of arr) {
+        if (!file.type.startsWith("image/")) {
+          toast({ title: `Soubor není obrázek: ${file.name}`, variant: "destructive" });
+          continue;
+        }
+        if (file.size > MAX_IMAGE_MB * 1024 * 1024) {
+          toast({
+            title: `Obrázek je větší než ${MAX_IMAGE_MB} MB: ${file.name}`,
+            variant: "destructive",
+          });
+          continue;
+        }
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+        const path = `gallery/${product!.id}/${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2, 8)}.${ext}`;
+        const { error } = await supabase.storage
+          .from(IMAGE_BUCKET)
+          .upload(path, file, { cacheControl: "3600", upsert: false });
+        if (error) {
+          console.error("Upload failed", error);
+          toast({ title: `Nahrání selhalo: ${file.name}`, variant: "destructive" });
+          continue;
+        }
+        const { data } = supabase.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+        uploaded.push(data.publicUrl);
+      }
+      if (uploaded.length > 0) {
+        setImages((prev) => [...prev, ...uploaded]);
+        toast({
+          title: `Nahráno ${uploaded.length} ${uploaded.length === 1 ? "obrázek" : "obrázků"}. Nezapomeňte uložit změny.`,
+        });
+      }
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = (idx: number) =>
+    setImages((prev) => prev.filter((_, i) => i !== idx));
+
+  const makePrimary = (idx: number) =>
+    setImages((prev) => {
+      if (idx <= 0 || idx >= prev.length) return prev;
+      const next = [...prev];
+      const [pick] = next.splice(idx, 1);
+      next.unshift(pick);
+      return next;
+    });
+
 
   return (
     <section className="p-8 max-w-[900px]">
