@@ -25,15 +25,38 @@ export const AdminProductTable = ({ filter, title }: Props) => {
     [filter],
   );
 
+  const categories = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const p of list) counts.set(p.categoryLabel, (counts.get(p.categoryLabel) ?? 0) + 1);
+    return Array.from(counts.entries())
+      .map(([label, count]) => ({ label, count }))
+      .sort((a, b) => a.label.localeCompare(b.label, "cs"));
+  }, [list]);
+
   const { get, upsert, loading } = useProductOverrides();
   const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string>("__all__");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [editingPrice, setEditingPrice] = useState<string | null>(null);
   const [priceDraft, setPriceDraft] = useState("");
   const priceRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    if (list.length === 0) {
+      console.warn("[AdminProductTable] Katalog je prázdný pro filter:", filter);
+    } else {
+      console.info(
+        `[AdminProductTable] Načteno ${list.length} položek v ${categories.length} kategoriích.`,
+      );
+    }
+  }, [list, filter, categories.length]);
+
   const filtered = useMemo(() => {
-    const notDeleted = list.filter((p) => get(p.id).visible);
+    const inCategory =
+      activeCategory === "__all__"
+        ? list
+        : list.filter((p) => p.categoryLabel === activeCategory);
+    const notDeleted = inCategory.filter((p) => get(p.id).visible);
     const q = query.trim().toLowerCase();
     if (!q) return notDeleted;
     return notDeleted.filter(
@@ -41,7 +64,7 @@ export const AdminProductTable = ({ filter, title }: Props) => {
         p.name.toLowerCase().includes(q) ||
         p.id.toLowerCase().includes(q),
     );
-  }, [list, query, get]);
+  }, [list, activeCategory, query, get]);
 
   useEffect(() => {
     if (editingPrice && priceRef.current) {
