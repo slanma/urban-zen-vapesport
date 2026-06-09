@@ -25,6 +25,7 @@ export interface ProductOverride {
   features_override: string[] | null;
   specs_override: SpecRow[] | null;
   colors_override: string[] | null;
+  images_override: string[] | null;
   tech_params_html: string | null;
 }
 
