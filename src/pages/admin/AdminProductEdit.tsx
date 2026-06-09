@@ -51,8 +51,15 @@ const AdminProductEdit = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
 
+  // Initialize the form ONCE per product, after overrides finish loading.
+  // We deliberately do NOT re-run on `get` changes so live local edits
+  // (e.g. an in-progress gallery deletion) are not clobbered when the
+  // override cache broadcasts.
+  const initializedFor = useRef<string | null>(null);
   useEffect(() => {
     if (!product || loading) return;
+    if (initializedFor.current === product.id) return;
+    initializedFor.current = product.id;
     const o = get(product.id);
     setName(o.name_override ?? product.name);
     const curCat = o.category_override ?? product.categoryLabel;
@@ -68,6 +75,7 @@ const AdminProductEdit = () => {
     setFeaturesText((o.features_override ?? product.features).join("\n"));
     setImages(getEffectiveGallery(product, o));
   }, [product, loading, get]);
+
 
   if (!product) {
     return (
