@@ -46,6 +46,10 @@ const AdminProductEdit = () => {
   const [stockQty, setStockQty] = useState<number | "">("");
   const [shortDescription, setShortDescription] = useState("");
   const [featuresText, setFeaturesText] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
     if (!product || loading) return;
