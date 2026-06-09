@@ -102,8 +102,16 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
 
 const getSaveAccessToken = async () => {
-  const { data } = await supabase.auth.getSession();
-  return data.session?.access_token ?? getStoredAdminSession()?.access_token ?? SUPABASE_PUBLISHABLE_KEY;
+  const storedSession = getStoredAdminSession();
+  if (storedSession?.access_token) return storedSession.access_token;
+
+  const { data } = await Promise.race([
+    supabase.auth.getSession(),
+    new Promise<{ data: { session: null } }>((resolve) => {
+      window.setTimeout(() => resolve({ data: { session: null } }), 3000);
+    }),
+  ]);
+  return data.session?.access_token ?? SUPABASE_PUBLISHABLE_KEY;
 };
 
 const parseSaveError = async (response: Response) => {
