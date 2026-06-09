@@ -32,6 +32,25 @@ const CATEGORY_OPTIONS = [
   "Služby",
 ] as const;
 
+/**
+ * Master color palette for product variants.
+ * Each color toggled ON becomes a standalone variant linked to the parent
+ * product. For the upcoming Google/Heureka XML feed, each active color is
+ * emitted as its own <item> with:
+ *   - id           = `${product.id}-${slug}`            (unique per variant)
+ *   - item_group_id = product.id                        (groups variants)
+ *   - color        = label                              (e.g. "Neonová žlutá")
+ * Storage: `colors_override` (string[]) holds the active color slugs. A
+ * missing/empty array means the product has no color variants exposed.
+ */
+const COLOR_PALETTE: ReadonlyArray<{ slug: string; label: string; hex: string }> = [
+  { slug: "black",        label: "Černá",         hex: "#111111" },
+  { slug: "neon-yellow",  label: "Neonová žlutá", hex: "#D7FF1A" },
+  { slug: "neon-orange",  label: "Neonová oranžová", hex: "#FF6A1A" },
+  { slug: "grey",         label: "Šedá",          hex: "#8A8A8A" },
+  { slug: "blue",         label: "Modrá",         hex: "#1E66FF" },
+] as const;
+
 const AdminProductEdit = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id);
@@ -47,6 +66,7 @@ const AdminProductEdit = () => {
   const [shortDescription, setShortDescription] = useState("");
   const [featuresText, setFeaturesText] = useState("");
   const [images, setImages] = useState<string[]>([]);
+  const [activeColors, setActiveColors] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -77,6 +97,7 @@ const AdminProductEdit = () => {
       setShortDescription(product.shortDescription);
       setFeaturesText((product.features ?? []).join("\n"));
       setImages(getEffectiveGallery(product));
+      setActiveColors([]);
     }
 
     // Phase 2 — overlay overrides once they have loaded.
@@ -99,6 +120,7 @@ const AdminProductEdit = () => {
       // Gallery: prefer admin override if non-empty, otherwise keep shop images.
       const gallery = getEffectiveGallery(product, o);
       if (gallery.length > 0) setImages(gallery);
+      if (Array.isArray(o.colors_override)) setActiveColors(o.colors_override);
     }
   }, [product, loading, get]);
 
@@ -218,6 +240,24 @@ const AdminProductEdit = () => {
     next.unshift(pick);
     setImages(next);
     await persistImages(next);
+  };
+
+  /**
+   * Toggle a color variant on/off. We persist immediately (like the gallery)
+   * so the admin gets instant feedback and the value survives reloads even
+   * if they don't press "Uložit změny". Each color slug in this array is
+   * interpreted as an independent variant by the future XML feed builder.
+   */
+  const toggleColor = async (slug: string) => {
+    const next = activeColors.includes(slug)
+      ? activeColors.filter((c) => c !== slug)
+      : [...activeColors, slug];
+    setActiveColors(next);
+    try {
+      await upsert(product.id, { colors_override: next.length > 0 ? next : null });
+    } catch {
+      toast({ title: "Uložení barev selhalo", variant: "destructive" });
+    }
   };
 
 
@@ -371,6 +411,53 @@ const AdminProductEdit = () => {
             Každý řádek = jedna odrážka. Max 3–4 technické fakty (rozměry, materiál, kompatibilita).
           </p>
         </div>
+      </article>
+
+      {/* Barevné varianty */}
+      <article className="bg-background border border-border rounded-lg p-6 mt-6">
+        <div className="mb-4">
+          <h2 className="font-heading font-bold text-foreground">Barevné varianty</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Klikněte na buňku pro přepnutí varianty (Skladem ↔ Není skladem).
+            Každá aktivní barva se ve feedu vygeneruje jako samostatná položka
+            navázaná na nadřazený produkt ({product.id}).
+          </p>
+        </div>
+        <ul className="flex flex-wrap gap-2" aria-label="Barevné varianty">
+          {COLOR_PALETTE.map((c) => {
+            const active = activeColors.includes(c.slug);
+            return (
+              <li key={c.slug}>
+                <button
+                  type="button"
+                  onClick={() => toggleColor(c.slug)}
+                  aria-pressed={active}
+                  title={active ? `${c.label} — Skladem (kliknutím vypnout)` : `${c.label} — Není skladem (kliknutím zapnout)`}
+                  className={`group flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition ${
+                    active
+                      ? "border-primary bg-primary/10 text-foreground shadow-sm"
+                      : "border-border bg-muted/40 text-muted-foreground opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <span
+                    aria-hidden
+                    className={`inline-block w-5 h-5 rounded-full border border-border ${active ? "" : "grayscale"}`}
+                    style={{ backgroundColor: c.hex }}
+                  />
+                  <span className="font-medium">{c.label}</span>
+                  <span className={`text-[10px] uppercase tracking-wide ${active ? "text-primary" : "text-muted-foreground"}`}>
+                    {active ? "Skladem" : "Není skladem"}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        {activeColors.length > 0 && (
+          <p className="text-xs text-muted-foreground mt-3">
+            Aktivní varianty: <span className="font-mono">{activeColors.join(", ")}</span>
+          </p>
+        )}
       </article>
 
       {/* Obrázky produktu */}
