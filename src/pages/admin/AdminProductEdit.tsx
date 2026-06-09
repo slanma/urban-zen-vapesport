@@ -51,30 +51,57 @@ const AdminProductEdit = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
 
-  // Initialize the form ONCE per product, after overrides finish loading.
-  // We deliberately do NOT re-run on `get` changes so live local edits
-  // (e.g. an in-progress gallery deletion) are not clobbered when the
-  // override cache broadcasts.
-  const initializedFor = useRef<string | null>(null);
+  // Two-phase init: (1) populate immediately from the shop product so the
+  // form is never blank while overrides load, (2) once overrides arrive,
+  // overlay any saved admin values on top. Each phase runs at most once
+  // per product so in-progress local edits are never clobbered.
+  const baseInitedFor = useRef<string | null>(null);
+  const overrideAppliedFor = useRef<string | null>(null);
   useEffect(() => {
-    if (!product || loading) return;
-    if (initializedFor.current === product.id) return;
-    initializedFor.current = product.id;
-    const o = get(product.id);
-    setName(o.name_override ?? product.name);
-    const curCat = o.category_override ?? product.categoryLabel;
-    setCategory(
-      (CATEGORY_OPTIONS as readonly string[]).includes(curCat)
-        ? curCat
-        : CATEGORY_OPTIONS[0],
-    );
-    setPrice(o.price_override ?? product.price);
-    setB2bPrice(o.b2b_price ?? "");
-    setStockQty(o.stock_qty ?? (o.in_stock ? "" : 0));
-    setShortDescription(o.short_description_override ?? product.shortDescription);
-    setFeaturesText((o.features_override ?? product.features).join("\n"));
-    setImages(getEffectiveGallery(product, o));
+    if (!product) return;
+
+    // Phase 1 — shop values (runs immediately, doesn't wait for overrides).
+    if (baseInitedFor.current !== product.id) {
+      baseInitedFor.current = product.id;
+      overrideAppliedFor.current = null;
+      setName(product.name);
+      const cat = product.categoryLabel;
+      setCategory(
+        (CATEGORY_OPTIONS as readonly string[]).includes(cat)
+          ? cat
+          : CATEGORY_OPTIONS[0],
+      );
+      setPrice(product.price);
+      setB2bPrice("");
+      setStockQty("");
+      setShortDescription(product.shortDescription);
+      setFeaturesText((product.features ?? []).join("\n"));
+      setImages(getEffectiveGallery(product));
+    }
+
+    // Phase 2 — overlay overrides once they have loaded.
+    if (!loading && overrideAppliedFor.current !== product.id) {
+      overrideAppliedFor.current = product.id;
+      const o = get(product.id);
+      if (o.name_override) setName(o.name_override);
+      const curCat = o.category_override ?? product.categoryLabel;
+      if ((CATEGORY_OPTIONS as readonly string[]).includes(curCat)) {
+        setCategory(curCat);
+      }
+      if (o.price_override != null) setPrice(o.price_override);
+      if (o.b2b_price != null) setB2bPrice(o.b2b_price);
+      if (o.stock_qty != null) setStockQty(o.stock_qty);
+      else if (!o.in_stock) setStockQty(0);
+      if (o.short_description_override) setShortDescription(o.short_description_override);
+      if (o.features_override && o.features_override.length > 0) {
+        setFeaturesText(o.features_override.join("\n"));
+      }
+      // Gallery: prefer admin override if non-empty, otherwise keep shop images.
+      const gallery = getEffectiveGallery(product, o);
+      if (gallery.length > 0) setImages(gallery);
+    }
   }, [product, loading, get]);
+
 
 
   if (!product) {
