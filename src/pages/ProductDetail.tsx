@@ -71,7 +71,7 @@ const ProductDetail = () => {
   useEffect(() => {
     if (!product) return;
     const title = override?.meta_title || `${product.name} | VAPESPORT`;
-    const desc = override?.meta_description || product.shortDescription;
+    const desc = override?.meta_description || stripRichMarkers(product.shortDescription);
     const prevTitle = document.title;
     document.title = title;
     setMeta("description", desc);
