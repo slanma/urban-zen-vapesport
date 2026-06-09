@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { getStoredAdminSession } from "@/lib/adminAuth";
 
 export interface SpecRow {
   label: string;
@@ -97,6 +98,59 @@ const broadcast = () => {
 };
 
 const SAVE_TIMEOUT_MS = 12000;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+
+const getSaveAccessToken = async () => {
+  const storedSession = getStoredAdminSession();
+  if (storedSession?.access_token) return storedSession.access_token;
+
+  const { data } = await Promise.race([
+    supabase.auth.getSession(),
+    new Promise<{ data: { session: null } }>((resolve) => {
+      window.setTimeout(() => resolve({ data: { session: null } }), 3000);
+    }),
+  ]);
+  return data.session?.access_token ?? SUPABASE_PUBLISHABLE_KEY;
+};
+
+const parseSaveError = async (response: Response) => {
+  const text = await response.text();
+  try {
+    const json = JSON.parse(text) as { message?: string; msg?: string; hint?: string; details?: string };
+    return json.message || json.msg || json.hint || json.details || text;
+  } catch {
+    return text || `HTTP ${response.status}`;
+  }
+};
+
+const saveOverride = async (payload: Record<string, unknown>) => {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), SAVE_TIMEOUT_MS);
+  try {
+    const accessToken = await getSaveAccessToken();
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/product_overrides?on_conflict=product_id`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        Prefer: "resolution=merge-duplicates,return=minimal",
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) throw new Error(await parseSaveError(response));
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error("Uložení trvá příliš dlouho. Zkontrolujte připojení a zkuste to znovu.");
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+};
 
 export const useProductOverrides = () => {
   const [map, setMap] = useState<Map<string, ProductOverride>>(
@@ -146,14 +200,9 @@ export const useProductOverrides = () => {
       // hang on some browsers and never resolve.
       const payload: Record<string, unknown> = { product_id: productId, ...patch };
       try {
-        const { error } = await supabase
-          .from("product_overrides")
-          .upsert(payload as never, { onConflict: "product_id" });
-        if (error) {
-          console.error("Failed to save override", error);
-          throw error;
-        }
+        await saveOverride(payload);
       } catch (error) {
+        console.error("Failed to save override", error);
         if (cache) {
           cache.set(productId, current);
           broadcast();
