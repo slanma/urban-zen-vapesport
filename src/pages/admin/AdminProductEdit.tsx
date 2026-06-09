@@ -398,7 +398,16 @@ const AdminProductEdit = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="code">Kód produktu</Label>
-            <Input id="code" value={product.id} disabled className="mt-1 font-mono text-xs" />
+            <Input
+              id="code"
+              value={sku}
+              onChange={(e) => setSku(e.target.value)}
+              className="mt-1 font-mono text-xs"
+              placeholder={product.id}
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Interní ID: <span className="font-mono">{product.id}</span>
+            </p>
           </div>
           <div>
             <Label htmlFor="cat">Kategorie</Label>
