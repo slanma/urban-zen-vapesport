@@ -162,9 +162,11 @@ const ProductDetail = () => {
               {product.name}
             </h1>
 
-            <p className="font-body text-muted-foreground mt-4 text-base leading-relaxed">
-              {product.shortDescription}
-            </p>
+            <RichText
+              as="p"
+              className="font-body text-muted-foreground mt-4 text-base leading-relaxed"
+              text={product.shortDescription}
+            />
 
             <div className="mt-8">
               <PriceTag
