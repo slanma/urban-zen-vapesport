@@ -7,6 +7,7 @@ import { products, type Product } from "@/data/products";
 import { ArrowRight, Search, Sparkles, X } from "lucide-react";
 import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { getPrimaryImage } from "@/lib/productImages";
 import PriceTag from "@/components/PriceTag";
 import { PILLARS, getPillar, pickPillarImage, type PillarKey } from "@/lib/productPillars";
 
