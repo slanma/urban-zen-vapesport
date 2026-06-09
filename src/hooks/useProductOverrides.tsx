@@ -141,13 +141,14 @@ export const useProductOverrides = () => {
       if (!cache) cache = new Map();
       cache.set(productId, next);
       broadcast();
-      const controller = new AbortController();
-      const timeoutId = window.setTimeout(() => controller.abort(), SAVE_TIMEOUT_MS);
+      // Send only the changed columns + PK. Re-sending the full merged row
+      // (including timestamps and b2b_price) was making PostgREST upsert
+      // hang on some browsers and never resolve.
+      const payload: Record<string, unknown> = { product_id: productId, ...patch };
       try {
         const { error } = await supabase
           .from("product_overrides")
-          .upsert(next as never, { onConflict: "product_id" })
-          .abortSignal(controller.signal);
+          .upsert(payload as never, { onConflict: "product_id" });
         if (error) {
           console.error("Failed to save override", error);
           throw error;
@@ -157,12 +158,7 @@ export const useProductOverrides = () => {
           cache.set(productId, current);
           broadcast();
         }
-        if (error instanceof DOMException && error.name === "AbortError") {
-          throw new Error("Ukládání trvalo příliš dlouho. Zkuste to prosím znovu.");
-        }
         throw error;
-      } finally {
-        window.clearTimeout(timeoutId);
       }
       return next;
     },
