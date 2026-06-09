@@ -146,7 +146,18 @@ const AdminDashboard = () => {
         </div>
         <nav className="flex-1 py-4 space-y-1 px-2">
           {navItems.map((item) => (
-            <button key={item.key} onClick={() => setView(item.key)} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${view === item.key ? "bg-foreground text-background" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`} title={collapsed ? item.label : undefined}>
+            <button
+              key={item.key}
+              onClick={() => {
+                if (item.key === "products") {
+                  navigate("/admin/produkty");
+                  return;
+                }
+                setView(item.key);
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${view === item.key ? "bg-foreground text-background" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+              title={collapsed ? item.label : undefined}
+            >
               <item.icon className="w-5 h-5 shrink-0" />
               {!collapsed && (
                 <>
@@ -156,6 +167,7 @@ const AdminDashboard = () => {
               )}
             </button>
           ))}
+
         </nav>
         <div className="p-2 border-t border-border">
           <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors" title={collapsed ? "Odhlásit se" : undefined}>
@@ -372,15 +384,8 @@ const AdminDashboard = () => {
           </section>
         )}
 
-        {view === "products" && (
-          <section aria-labelledby="products-heading">
-            <h1 id="products-heading" className="text-2xl font-heading font-bold text-foreground mb-6">Produkty</h1>
-            <div className="bg-background border border-border rounded-lg p-8 text-center">
-              <Package className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-              <p className="text-muted-foreground text-lg">Správa produktů bude dostupná v další verzi.</p>
-            </div>
-          </section>
-        )}
+        {/* Produkty: spravují se na samostatné trase /admin/produkty */}
+
 
         {view === "promo" && <AdminPromoCodes />}
 
