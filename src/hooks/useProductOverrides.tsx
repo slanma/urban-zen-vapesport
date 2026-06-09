@@ -31,6 +31,7 @@ export interface ProductOverride {
 }
 
 export const DEFAULT_OVERRIDE: Omit<ProductOverride, "product_id"> = {
+  sku_override: null,
   visible: true,
   in_stock: true,
   stock_qty: null,
