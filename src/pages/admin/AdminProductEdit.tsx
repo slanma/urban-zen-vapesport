@@ -294,8 +294,17 @@ const AdminProductEdit = () => {
             type="button"
             variant="outline"
             onClick={async () => {
-              await handleSave();
-              window.open(`/produkt/${product.id}`, "_blank", "noopener");
+              // Open the tab synchronously within the click gesture, otherwise
+              // popup blockers cancel window.open() after the await.
+              const win = window.open("about:blank", "_blank", "noopener");
+              try {
+                await handleSave();
+                const url = `/produkt/${product.id}`;
+                if (win && !win.closed) win.location.href = url;
+                else window.location.assign(url);
+              } catch {
+                if (win && !win.closed) win.close();
+              }
             }}
             disabled={saving}
             className="gap-2"
@@ -588,8 +597,15 @@ const AdminProductEdit = () => {
           variant="outline"
           size="lg"
           onClick={async () => {
-            await handleSave();
-            window.open(`/produkt/${product.id}`, "_blank", "noopener");
+            const win = window.open("about:blank", "_blank", "noopener");
+            try {
+              await handleSave();
+              const url = `/produkt/${product.id}`;
+              if (win && !win.closed) win.location.href = url;
+              else window.location.assign(url);
+            } catch {
+              if (win && !win.closed) win.close();
+            }
           }}
           disabled={saving}
           className="gap-2 shadow-lg bg-background"
