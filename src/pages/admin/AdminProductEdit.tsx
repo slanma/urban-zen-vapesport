@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Save, Loader2, Eye } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Eye, Upload, X, Star, StarOff, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,12 @@ import {
 import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { fmtCZK, netFromGross, grossFromNet, vatOfGross } from "@/lib/vat";
+import { getEffectiveGallery } from "@/lib/productImages";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+
+const IMAGE_BUCKET = "product-content";
+const MAX_IMAGE_MB = 5;
 
 /** Simplified, workshop-friendly category list. */
 const CATEGORY_OPTIONS = [
@@ -41,6 +46,10 @@ const AdminProductEdit = () => {
   const [stockQty, setStockQty] = useState<number | "">("");
   const [shortDescription, setShortDescription] = useState("");
   const [featuresText, setFeaturesText] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
     if (!product || loading) return;
@@ -57,6 +66,7 @@ const AdminProductEdit = () => {
     setStockQty(o.stock_qty ?? (o.in_stock ? "" : 0));
     setShortDescription(o.short_description_override ?? product.shortDescription);
     setFeaturesText((o.features_override ?? product.features).join("\n"));
+    setImages(getEffectiveGallery(product, o));
   }, [product, loading, get]);
 
   if (!product) {
@@ -89,6 +99,7 @@ const AdminProductEdit = () => {
         short_description_override:
           shortDescription !== product.shortDescription ? shortDescription : null,
         features_override: cleanFeatures.length > 0 ? cleanFeatures : null,
+        images_override: serializeImagesForSave(images, product),
       });
       toast({ title: "Změny uloženy" });
     } catch {
@@ -97,6 +108,75 @@ const AdminProductEdit = () => {
       setSaving(false);
     }
   };
+
+  /** Persist images_override only when the admin actually customized them. */
+  const serializeImagesForSave = (
+    next: string[],
+    p: NonNullable<typeof product>,
+  ): string[] | null => {
+    const defaults = p.images && p.images.length > 0 ? p.images : [p.image];
+    const same =
+      next.length === defaults.length &&
+      next.every((url, i) => url === defaults[i]);
+    return same || next.length === 0 ? null : next;
+  };
+
+  const uploadFiles = async (files: FileList | File[]) => {
+    const arr = Array.from(files);
+    if (arr.length === 0) return;
+    setUploading(true);
+    const uploaded: string[] = [];
+    try {
+      for (const file of arr) {
+        if (!file.type.startsWith("image/")) {
+          toast({ title: `Soubor není obrázek: ${file.name}`, variant: "destructive" });
+          continue;
+        }
+        if (file.size > MAX_IMAGE_MB * 1024 * 1024) {
+          toast({
+            title: `Obrázek je větší než ${MAX_IMAGE_MB} MB: ${file.name}`,
+            variant: "destructive",
+          });
+          continue;
+        }
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+        const path = `gallery/${product!.id}/${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2, 8)}.${ext}`;
+        const { error } = await supabase.storage
+          .from(IMAGE_BUCKET)
+          .upload(path, file, { cacheControl: "3600", upsert: false });
+        if (error) {
+          console.error("Upload failed", error);
+          toast({ title: `Nahrání selhalo: ${file.name}`, variant: "destructive" });
+          continue;
+        }
+        const { data } = supabase.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+        uploaded.push(data.publicUrl);
+      }
+      if (uploaded.length > 0) {
+        setImages((prev) => [...prev, ...uploaded]);
+        toast({
+          title: `Nahráno ${uploaded.length} ${uploaded.length === 1 ? "obrázek" : "obrázků"}. Nezapomeňte uložit změny.`,
+        });
+      }
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = (idx: number) =>
+    setImages((prev) => prev.filter((_, i) => i !== idx));
+
+  const makePrimary = (idx: number) =>
+    setImages((prev) => {
+      if (idx <= 0 || idx >= prev.length) return prev;
+      const next = [...prev];
+      const [pick] = next.splice(idx, 1);
+      next.unshift(pick);
+      return next;
+    });
+
 
   return (
     <section className="p-8 max-w-[900px]">
@@ -246,6 +326,117 @@ const AdminProductEdit = () => {
           <p className="text-xs text-muted-foreground mt-1">
             Každý řádek = jedna odrážka. Max 3–4 technické fakty (rozměry, materiál, kompatibilita).
           </p>
+        </div>
+      </article>
+
+      {/* Obrázky produktu */}
+      <article className="bg-background border border-border rounded-lg p-6 mt-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="font-heading font-bold text-foreground">Obrázky produktu</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              První fotka je hlavní (zobrazí se v katalogu). Max {MAX_IMAGE_MB} MB / obrázek.
+            </p>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="gap-1.5"
+          >
+            {uploading ? (
+              <Loader className="w-4 h-4 animate-spin" />
+            ) : (
+              <Upload className="w-4 h-4" />
+            )}
+            Nahrát fotku
+          </Button>
+        </div>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files) uploadFiles(e.target.files);
+            e.target.value = "";
+          }}
+        />
+
+        <div
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragging(false);
+            if (e.dataTransfer.files?.length) uploadFiles(e.dataTransfer.files);
+          }}
+          className={`rounded-md border-2 border-dashed transition-colors p-4 ${
+            dragging ? "border-primary bg-primary/5" : "border-border"
+          }`}
+        >
+          {images.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-8">
+              Žádné fotky. Přetáhněte obrázky sem nebo klikněte na „Nahrát fotku".
+            </p>
+          ) : (
+            <ul
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
+              aria-label="Galerie fotek produktu"
+            >
+              {images.map((url, i) => (
+                <li
+                  key={`${url}-${i}`}
+                  className="relative group aspect-square rounded-md overflow-hidden border border-border bg-muted"
+                >
+                  <img
+                    src={url}
+                    alt={`Fotka produktu ${i + 1}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  {i === 0 && (
+                    <span className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 bg-foreground/85 text-background text-[10px] font-semibold px-1.5 py-0.5 rounded">
+                      <Star className="w-3 h-3" /> Hlavní
+                    </span>
+                  )}
+                  <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/40 transition-colors flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100">
+                    {i !== 0 && (
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="secondary"
+                        className="h-7 w-7"
+                        onClick={() => makePrimary(i)}
+                        aria-label="Nastavit jako hlavní"
+                        title="Nastavit jako hlavní"
+                      >
+                        <StarOff className="w-3.5 h-3.5" />
+                      </Button>
+                    )}
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="destructive"
+                      className="h-7 w-7"
+                      onClick={() => removeImage(i)}
+                      aria-label={`Odebrat fotku ${i + 1}`}
+                      title="Odebrat fotku"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </article>
 

@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { getEffectiveGallery } from "@/lib/productImages";
 
 import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -59,9 +60,7 @@ const ProductDetail = () => {
   const effectivePrice = override?.price_override ?? product?.price ?? 0;
   const b2bPrice = override?.b2b_price ?? null;
   const inStock = override?.in_stock ?? true;
-  const gallery = product?.images && product.images.length > 0
-    ? product.images
-    : product ? [product.image] : [];
+  const gallery = product ? getEffectiveGallery(product, override) : [];
   const [activeImg, setActiveImg] = useState(0);
   const availableColors = product?.available_colors ?? null;
   const [selectedColor, setSelectedColor] = useState<string | null>(
