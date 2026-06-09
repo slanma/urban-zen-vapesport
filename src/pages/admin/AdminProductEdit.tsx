@@ -107,7 +107,7 @@ const AdminProductEdit = () => {
         short_description_override:
           shortDescription !== product.shortDescription ? shortDescription : null,
         features_override: cleanFeatures.length > 0 ? cleanFeatures : null,
-        images_override: serializeImagesForSave(images, product),
+        // images_override is persisted live by upload/remove/primary actions
       });
       toast({ title: "Změny uloženy" });
     } catch {
