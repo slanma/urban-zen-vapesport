@@ -86,6 +86,7 @@ const AdminProductEdit = () => {
   const [featuresText, setFeaturesText] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [activeColors, setActiveColors] = useState<string[]>([]);
+  const [sku, setSku] = useState("");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const shortDescRef = useRef<HTMLTextAreaElement>(null);
