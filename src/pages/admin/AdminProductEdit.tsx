@@ -413,6 +413,53 @@ const AdminProductEdit = () => {
         </div>
       </article>
 
+      {/* Barevné varianty */}
+      <article className="bg-background border border-border rounded-lg p-6 mt-6">
+        <div className="mb-4">
+          <h2 className="font-heading font-bold text-foreground">Barevné varianty</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Klikněte na buňku pro přepnutí varianty (Skladem ↔ Není skladem).
+            Každá aktivní barva se ve feedu vygeneruje jako samostatná položka
+            navázaná na nadřazený produkt ({product.id}).
+          </p>
+        </div>
+        <ul className="flex flex-wrap gap-2" aria-label="Barevné varianty">
+          {COLOR_PALETTE.map((c) => {
+            const active = activeColors.includes(c.slug);
+            return (
+              <li key={c.slug}>
+                <button
+                  type="button"
+                  onClick={() => toggleColor(c.slug)}
+                  aria-pressed={active}
+                  title={active ? `${c.label} — Skladem (kliknutím vypnout)` : `${c.label} — Není skladem (kliknutím zapnout)`}
+                  className={`group flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition ${
+                    active
+                      ? "border-primary bg-primary/10 text-foreground shadow-sm"
+                      : "border-border bg-muted/40 text-muted-foreground opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <span
+                    aria-hidden
+                    className={`inline-block w-5 h-5 rounded-full border border-border ${active ? "" : "grayscale"}`}
+                    style={{ backgroundColor: c.hex }}
+                  />
+                  <span className="font-medium">{c.label}</span>
+                  <span className={`text-[10px] uppercase tracking-wide ${active ? "text-primary" : "text-muted-foreground"}`}>
+                    {active ? "Skladem" : "Není skladem"}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        {activeColors.length > 0 && (
+          <p className="text-xs text-muted-foreground mt-3">
+            Aktivní varianty: <span className="font-mono">{activeColors.join(", ")}</span>
+          </p>
+        )}
+      </article>
+
       {/* Obrázky produktu */}
       <article className="bg-background border border-border rounded-lg p-6 mt-6">
         <div className="flex items-center justify-between mb-4">
