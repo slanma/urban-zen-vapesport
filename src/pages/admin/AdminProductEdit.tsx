@@ -117,21 +117,24 @@ const AdminProductEdit = () => {
     }
   };
 
-  /** Persist images_override only when the admin actually customized them. */
-  const serializeImagesForSave = (
-    next: string[],
-    p: NonNullable<typeof product>,
-  ): string[] | null => {
-    const defaults = p.images && p.images.length > 0 ? p.images : [p.image];
-    const same =
-      next.length === defaults.length &&
-      next.every((url, i) => url === defaults[i]);
-    return same || next.length === 0 ? null : next;
+  /**
+   * Persist the gallery to the DB immediately. We always send the full
+   * resolved list (including imported feed URLs), so that removing an
+   * imported image actually clears it from the product going forward.
+   * Empty array = admin explicitly removed everything.
+   */
+  const persistImages = async (next: string[]) => {
+    if (!product) return;
+    try {
+      await upsert(product.id, { images_override: next });
+    } catch {
+      toast({ title: "Uložení galerie selhalo", variant: "destructive" });
+    }
   };
 
   const uploadFiles = async (files: FileList | File[]) => {
     const arr = Array.from(files);
-    if (arr.length === 0) return;
+    if (arr.length === 0 || !product) return;
     setUploading(true);
     const uploaded: string[] = [];
     try {
@@ -148,7 +151,7 @@ const AdminProductEdit = () => {
           continue;
         }
         const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-        const path = `gallery/${product!.id}/${Date.now()}-${Math.random()
+        const path = `gallery/${product.id}/${Date.now()}-${Math.random()
           .toString(36)
           .slice(2, 8)}.${ext}`;
         const { error } = await supabase.storage
@@ -163,9 +166,11 @@ const AdminProductEdit = () => {
         uploaded.push(data.publicUrl);
       }
       if (uploaded.length > 0) {
-        setImages((prev) => [...prev, ...uploaded]);
+        const next = [...images, ...uploaded];
+        setImages(next);
+        await persistImages(next);
         toast({
-          title: `Nahráno ${uploaded.length} ${uploaded.length === 1 ? "obrázek" : "obrázků"}. Nezapomeňte uložit změny.`,
+          title: `Nahráno ${uploaded.length} ${uploaded.length === 1 ? "obrázek" : "obrázků"}`,
         });
       }
     } finally {
@@ -173,17 +178,21 @@ const AdminProductEdit = () => {
     }
   };
 
-  const removeImage = (idx: number) =>
-    setImages((prev) => prev.filter((_, i) => i !== idx));
+  const removeImage = async (idx: number) => {
+    const next = images.filter((_, i) => i !== idx);
+    setImages(next);
+    await persistImages(next);
+  };
 
-  const makePrimary = (idx: number) =>
-    setImages((prev) => {
-      if (idx <= 0 || idx >= prev.length) return prev;
-      const next = [...prev];
-      const [pick] = next.splice(idx, 1);
-      next.unshift(pick);
-      return next;
-    });
+  const makePrimary = async (idx: number) => {
+    if (idx <= 0 || idx >= images.length) return;
+    const next = [...images];
+    const [pick] = next.splice(idx, 1);
+    next.unshift(pick);
+    setImages(next);
+    await persistImages(next);
+  };
+
 
 
   return (
