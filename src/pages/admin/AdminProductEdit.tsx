@@ -519,22 +519,23 @@ const AdminProductEdit = () => {
 
           {/* Clickable palette — same UX as color variants */}
           <ul className="flex flex-wrap gap-2 mt-2 mb-3" aria-label="Předdefinované vlastnosti">
-            {FEATURE_PALETTE.map((f) => {
-              const active = activeFeatures.has(f.toLowerCase());
+            {PRODUCT_FEATURES.map(({ label, icon: Icon, tooltip }) => {
+              const active = activeFeatures.has(label.toLowerCase());
               return (
-                <li key={f}>
+                <li key={label}>
                   <button
                     type="button"
-                    onClick={() => toggleFeature(f)}
+                    onClick={() => toggleFeature(label)}
                     aria-pressed={active}
-                    title={active ? `${f} — kliknutím odebrat` : `${f} — kliknutím přidat`}
-                    className={`rounded-md border px-3 py-1.5 text-sm transition ${
+                    title={tooltip}
+                    className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition ${
                       active
                         ? "border-primary bg-primary/10 text-foreground shadow-sm"
                         : "border-border bg-muted/40 text-muted-foreground opacity-60 hover:opacity-100"
                     }`}
                   >
-                    {f}
+                    <Icon className="w-4 h-4" aria-hidden />
+                    <span>{label}</span>
                   </button>
                 </li>
               );
