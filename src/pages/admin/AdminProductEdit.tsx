@@ -97,6 +97,7 @@ const AdminProductEdit = () => {
       setShortDescription(product.shortDescription);
       setFeaturesText((product.features ?? []).join("\n"));
       setImages(getEffectiveGallery(product));
+      setActiveColors([]);
     }
 
     // Phase 2 — overlay overrides once they have loaded.
