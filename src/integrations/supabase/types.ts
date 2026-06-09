@@ -200,6 +200,7 @@ export type Database = {
           created_at: string
           description_html: string | null
           features_override: Json | null
+          images_override: Json | null
           in_stock: boolean
           meta_description: string | null
           meta_title: string | null
@@ -223,6 +224,7 @@ export type Database = {
           created_at?: string
           description_html?: string | null
           features_override?: Json | null
+          images_override?: Json | null
           in_stock?: boolean
           meta_description?: string | null
           meta_title?: string | null
@@ -246,6 +248,7 @@ export type Database = {
           created_at?: string
           description_html?: string | null
           features_override?: Json | null
+          images_override?: Json | null
           in_stock?: boolean
           meta_description?: string | null
           meta_title?: string | null
