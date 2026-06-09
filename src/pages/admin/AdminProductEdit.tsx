@@ -242,6 +242,24 @@ const AdminProductEdit = () => {
     await persistImages(next);
   };
 
+  /**
+   * Toggle a color variant on/off. We persist immediately (like the gallery)
+   * so the admin gets instant feedback and the value survives reloads even
+   * if they don't press "Uložit změny". Each color slug in this array is
+   * interpreted as an independent variant by the future XML feed builder.
+   */
+  const toggleColor = async (slug: string) => {
+    const next = activeColors.includes(slug)
+      ? activeColors.filter((c) => c !== slug)
+      : [...activeColors, slug];
+    setActiveColors(next);
+    try {
+      await upsert(product.id, { colors_override: next.length > 0 ? next : null });
+    } catch {
+      toast({ title: "Uložení barev selhalo", variant: "destructive" });
+    }
+  };
+
 
 
   return (
