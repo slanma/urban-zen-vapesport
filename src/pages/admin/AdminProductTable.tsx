@@ -171,6 +171,40 @@ export const AdminProductTable = ({ filter, title }: Props) => {
         </div>
       </div>
 
+      {/* Category tabs */}
+      {categories.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4" role="tablist" aria-label="Kategorie produktů">
+          <button
+            role="tab"
+            aria-selected={activeCategory === "__all__"}
+            onClick={() => setActiveCategory("__all__")}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+              activeCategory === "__all__"
+                ? "bg-foreground text-background border-foreground"
+                : "bg-background text-foreground border-border hover:border-foreground/40"
+            }`}
+          >
+            Vše <span className="opacity-60">({list.length})</span>
+          </button>
+          {categories.map((c) => (
+            <button
+              key={c.label}
+              role="tab"
+              aria-selected={activeCategory === c.label}
+              onClick={() => setActiveCategory(c.label)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                activeCategory === c.label
+                  ? "bg-foreground text-background border-foreground"
+                  : "bg-background text-foreground border-border hover:border-foreground/40"
+              }`}
+            >
+              {c.label} <span className="opacity-60">({c.count})</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+
       <div className="bg-background border border-border rounded-lg overflow-hidden">
         <table className="w-full text-sm">
           <thead>
