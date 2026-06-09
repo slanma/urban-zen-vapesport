@@ -159,7 +159,7 @@ const AdminProductEdit = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="price">Cena B2C (Kč)</Label>
+            <Label htmlFor="price">MOC s DPH (Kč)</Label>
             <Input
               id="price"
               type="number"
@@ -168,9 +168,15 @@ const AdminProductEdit = () => {
               onChange={(e) => setPrice(parseInt(e.target.value, 10) || 0)}
               className="mt-1"
             />
+            {price > 0 && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Bez DPH: {fmtCZK(netFromGross(price))}{" "}
+                <span className="opacity-70">(DPH: {fmtCZK(vatOfGross(price))})</span>
+              </p>
+            )}
           </div>
           <div>
-            <Label htmlFor="b2b">Cena B2B (Kč)</Label>
+            <Label htmlFor="b2b">VOC bez DPH (Kč)</Label>
             <Input
               id="b2b"
               type="number"
@@ -183,6 +189,14 @@ const AdminProductEdit = () => {
               placeholder="Volitelné"
               className="mt-1"
             />
+            {typeof b2bPrice === "number" && b2bPrice > 0 && (
+              <p className="text-xs text-muted-foreground mt-1">
+                S DPH: {fmtCZK(grossFromNet(b2bPrice))}{" "}
+                <span className="opacity-70">
+                  (DPH: {fmtCZK(grossFromNet(b2bPrice) - b2bPrice)})
+                </span>
+              </p>
+            )}
           </div>
           <div>
             <Label htmlFor="stock">Skladem (ks)</Label>
@@ -200,6 +214,7 @@ const AdminProductEdit = () => {
             />
           </div>
         </div>
+
 
         <div>
           <Label htmlFor="short">Krátký popis</Label>
