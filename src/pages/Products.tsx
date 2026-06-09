@@ -9,6 +9,7 @@ import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { getPrimaryImage } from "@/lib/productImages";
 import PriceTag from "@/components/PriceTag";
+import { RichText } from "@/lib/richText";
 import { PILLARS, getPillar, pickPillarImage, type PillarKey } from "@/lib/productPillars";
 
 const Products = () => {
