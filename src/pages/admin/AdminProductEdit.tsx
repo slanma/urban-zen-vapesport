@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Save, Loader2, Eye } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Eye, Upload, X, Star, StarOff, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,12 @@ import {
 import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { fmtCZK, netFromGross, grossFromNet, vatOfGross } from "@/lib/vat";
+import { getEffectiveGallery } from "@/lib/productImages";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+
+const IMAGE_BUCKET = "product-content";
+const MAX_IMAGE_MB = 5;
 
 /** Simplified, workshop-friendly category list. */
 const CATEGORY_OPTIONS = [
