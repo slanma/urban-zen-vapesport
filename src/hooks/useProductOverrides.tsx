@@ -47,6 +47,7 @@ export const DEFAULT_OVERRIDE: Omit<ProductOverride, "product_id"> = {
   features_override: null,
   specs_override: null,
   colors_override: null,
+  images_override: null,
   tech_params_html: null,
 };
 
