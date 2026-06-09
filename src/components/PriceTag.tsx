@@ -90,7 +90,7 @@ const PriceTag = ({ retailGross, b2bNet, size = "md", className = "" }: PriceTag
   return (
     <div className={`flex flex-col leading-tight ${className}`}>
       <span className={`font-heading font-bold text-foreground ${s.primary}`}>
-        Cena: {fmtCZK(retailGross)}
+        {fmtCZK(retailGross)} <span className="font-body font-normal text-muted-foreground text-[0.7em]">s DPH</span>
       </span>
       <span className={`font-body text-muted-foreground ${s.secondary}`}>
         bez DPH: {fmtCZK(net)}
