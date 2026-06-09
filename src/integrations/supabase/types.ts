@@ -208,6 +208,7 @@ export type Database = {
           product_id: string
           short_description_override: string | null
           specs_override: Json | null
+          stock_qty: number | null
           tech_params_html: string | null
           updated_at: string
           vat_percent: number
@@ -230,6 +231,7 @@ export type Database = {
           product_id: string
           short_description_override?: string | null
           specs_override?: Json | null
+          stock_qty?: number | null
           tech_params_html?: string | null
           updated_at?: string
           vat_percent?: number
@@ -252,6 +254,7 @@ export type Database = {
           product_id?: string
           short_description_override?: string | null
           specs_override?: Json | null
+          stock_qty?: number | null
           tech_params_html?: string | null
           updated_at?: string
           vat_percent?: number
