@@ -228,6 +228,7 @@ const AdminProductEdit = () => {
         .slice(0, 4);
       const qty = typeof stockQty === "number" ? stockQty : null;
       await upsert(product.id, {
+        sku_override: sku.trim() && sku.trim() !== product.id ? sku.trim() : null,
         name_override: name !== product.name ? name : null,
         category_override: category !== product.categoryLabel ? category : null,
         price_override: price !== product.price ? price : null,
