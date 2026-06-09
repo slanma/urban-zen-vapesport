@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { getEffectiveGallery } from "@/lib/productImages";
 
 import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
