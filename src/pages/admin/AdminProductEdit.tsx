@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Save, Loader2, Eye, Upload, X, Star, StarOff, Loader } from "lucide-react";
+import {
+  ArrowLeft, Save, Loader2, Eye, Upload, X, Star, StarOff, Loader,
+  Bold, Italic, Type, Minus,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
