@@ -21,6 +21,11 @@ import { fmtCZK, netFromGross, grossFromNet, vatOfGross } from "@/lib/vat";
 import { getEffectiveGallery } from "@/lib/productImages";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import {
+  getEffectiveProductCode,
+  getProductCode,
+  getSpecsOverrideForSave,
+} from "@/lib/effectiveProduct";
 
 const IMAGE_BUCKET = "product-content";
 const MAX_IMAGE_MB = 5;
@@ -177,14 +182,14 @@ const AdminProductEdit = () => {
       setFeaturesText((product.features ?? []).join("\n"));
       setImages(getEffectiveGallery(product));
       setActiveColors([]);
-      setSku(product.id);
+      setSku(getProductCode(product));
     }
 
     // Phase 2 — overlay overrides once they have loaded.
     if (!loading && overrideAppliedFor.current !== product.id) {
       overrideAppliedFor.current = product.id;
       const o = get(product.id);
-      if (o.name_override) setName(o.name_override);
+      if (o.name_override !== null) setName(o.name_override);
       const curCat = o.category_override ?? product.categoryLabel;
       if ((CATEGORY_OPTIONS as readonly string[]).includes(curCat)) {
         setCategory(curCat);
@@ -193,15 +198,15 @@ const AdminProductEdit = () => {
       if (o.b2b_price != null) setB2bPrice(o.b2b_price);
       if (o.stock_qty != null) setStockQty(o.stock_qty);
       else if (!o.in_stock) setStockQty(0);
-      if (o.short_description_override) setShortDescription(o.short_description_override);
-      if (o.features_override && o.features_override.length > 0) {
+      if (o.short_description_override !== null) setShortDescription(o.short_description_override);
+      if (Array.isArray(o.features_override)) {
         setFeaturesText(o.features_override.join("\n"));
       }
       // Gallery: prefer admin override if non-empty, otherwise keep shop images.
       const gallery = getEffectiveGallery(product, o);
       if (gallery.length > 0) setImages(gallery);
       if (Array.isArray(o.colors_override)) setActiveColors(o.colors_override);
-      if (o.sku_override) setSku(o.sku_override);
+      setSku(getEffectiveProductCode(product, o));
     }
   }, [product, loading, get]);
 
@@ -224,11 +229,11 @@ const AdminProductEdit = () => {
       const cleanFeatures = featuresText
         .split("\n")
         .map((l) => l.trim())
-        .filter(Boolean)
-        .slice(0, 4);
+        .filter(Boolean);
       const qty = typeof stockQty === "number" ? stockQty : null;
+      const cleanSku = sku.trim() || getProductCode(product);
       await upsert(product.id, {
-        sku_override: sku.trim() && sku.trim() !== product.id ? sku.trim() : null,
+        sku_override: cleanSku !== getProductCode(product) ? cleanSku : null,
         name_override: name !== product.name ? name : null,
         category_override: category !== product.categoryLabel ? category : null,
         price_override: price !== product.price ? price : null,
@@ -237,7 +242,8 @@ const AdminProductEdit = () => {
         in_stock: qty == null ? true : qty > 0,
         short_description_override:
           shortDescription !== product.shortDescription ? shortDescription : null,
-        features_override: cleanFeatures.length > 0 ? cleanFeatures : null,
+        features_override: cleanFeatures,
+        specs_override: getSpecsOverrideForSave(product, get(product.id), cleanSku),
         // images_override is persisted live by upload/remove/primary actions
       });
       toast({ title: "Změny uloženy" });
