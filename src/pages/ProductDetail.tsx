@@ -6,6 +6,7 @@ import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { getEffectiveGallery } from "@/lib/productImages";
 import { RichText, stripRichMarkers } from "@/lib/richText";
+import { applyProductOverride } from "@/lib/effectiveProduct";
 
 import { ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,27 +37,7 @@ const ProductDetail = () => {
   const { get } = useProductOverrides();
   const override = baseProduct ? get(baseProduct.id) : null;
 
-  const product = baseProduct
-    ? {
-        ...baseProduct,
-        name: override?.name_override?.trim() || baseProduct.name,
-        categoryLabel: override?.category_override?.trim() || baseProduct.categoryLabel,
-        shortDescription:
-          override?.short_description_override?.trim() || baseProduct.shortDescription,
-        features:
-          override?.features_override && override.features_override.length > 0
-            ? override.features_override
-            : baseProduct.features,
-        specs:
-          override?.specs_override && override.specs_override.length > 0
-            ? override.specs_override
-            : baseProduct.specs,
-        available_colors:
-          override?.colors_override && override.colors_override.length > 0
-            ? override.colors_override
-            : baseProduct.available_colors,
-      }
-    : null;
+  const product = baseProduct ? applyProductOverride(baseProduct, override) : null;
 
   const effectivePrice = override?.price_override ?? product?.price ?? 0;
   const b2bPrice = override?.b2b_price ?? null;

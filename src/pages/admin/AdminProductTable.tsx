@@ -8,6 +8,7 @@ import { products as allProducts, type Product } from "@/data/products";
 import { isServiceCategory } from "@/lib/serviceCategories";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { toast } from "@/hooks/use-toast";
+import { applyProductOverride, getEffectiveProductCode } from "@/lib/effectiveProduct";
 
 interface Props {
   filter: "products" | "services";
@@ -74,16 +75,20 @@ export const AdminProductTable = ({ filter, title }: Props) => {
       activeCategory === "__all__"
         ? list
         : list.filter((p) => p.categoryLabel === activeCategory);
+    const effective = inCategory.map((p) => applyProductOverride(p, get(p.id)));
     // Admin view: show ALL products regardless of visibility / stock.
     // (Visibility / stock only filter the public storefront.)
     const q = query.trim().toLowerCase();
-    if (!q) return inCategory;
-    return inCategory.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.id.toLowerCase().includes(q),
-    );
-  }, [list, activeCategory, query]);
+    if (!q) return effective;
+    return effective.filter((p) => {
+        const o = get(p.id);
+        return (
+          p.name.toLowerCase().includes(q) ||
+          p.id.toLowerCase().includes(q) ||
+          getEffectiveProductCode(p, o).toLowerCase().includes(q)
+        );
+      });
+  }, [list, activeCategory, query, get]);
 
 
   useEffect(() => {
@@ -275,7 +280,9 @@ export const AdminProductTable = ({ filter, title }: Props) => {
                     >
                       {p.name}
                     </Link>
-                    <div className="text-xs text-muted-foreground font-mono">{p.id}</div>
+                    <div className="text-xs text-muted-foreground font-mono">
+                      {getEffectiveProductCode(p, o)} · {p.id}
+                    </div>
                   </td>
                   <td className="px-3 py-2">
                     {isEditing ? (

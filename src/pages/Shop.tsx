@@ -14,6 +14,7 @@ import { getPrimaryImage } from "@/lib/productImages";
 import { RichText } from "@/lib/richText";
 import FeatureBadges from "@/components/FeatureBadges";
 import PriceTag from "@/components/PriceTag";
+import { applyProductOverride } from "@/lib/effectiveProduct";
 
 interface HotspotDot {
   id: Hotspot;
@@ -66,11 +67,17 @@ const Shop = () => {
   const { get } = useProductOverrides();
 
   const filtered = useMemo(
-    () => getProductsByHotspot(active).filter((p) => get(p.id).visible),
+    () =>
+      getProductsByHotspot(active)
+        .filter((p) => get(p.id).visible)
+        .map((p) => applyProductOverride(p, get(p.id))),
     [active, get],
   );
   const independent = useMemo(
-    () => getProductsByHotspot("None").filter((p) => get(p.id).visible),
+    () =>
+      getProductsByHotspot("None")
+        .filter((p) => get(p.id).visible)
+        .map((p) => applyProductOverride(p, get(p.id))),
     [get],
   );
 
