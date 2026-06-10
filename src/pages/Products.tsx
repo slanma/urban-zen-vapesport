@@ -11,6 +11,7 @@ import { getPrimaryImage } from "@/lib/productImages";
 import PriceTag from "@/components/PriceTag";
 import { RichText } from "@/lib/richText";
 import { PILLARS, getPillar, pickPillarImage, type PillarKey } from "@/lib/productPillars";
+import { applyProductOverride, getProductCode } from "@/lib/effectiveProduct";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,10 +33,9 @@ const Products = () => {
     setSearchParams(next);
   };
 
-  const productCode = (p: Product): string => {
-    const spec = p.specs.find((s) => s.label === "Kód produktu");
-    return (spec?.value ?? "").trim().toUpperCase();
-  };
+  const { get: getOverride } = useProductOverrides();
+
+  const productCode = (p: Product): string => getProductCode(p).trim().toUpperCase();
   const isMorseovapeProduct = (p: Product) => productCode(p).startsWith("M");
 
   const tabs = useMemo(() => {
@@ -53,9 +53,11 @@ const Products = () => {
     return list;
   }, []);
 
-  const { get: getOverride } = useProductOverrides();
   const visibleProducts = useMemo(
-    () => products.filter((p) => getOverride(p.id).visible),
+    () =>
+      products
+        .filter((p) => getOverride(p.id).visible)
+        .map((p) => applyProductOverride(p, getOverride(p.id))),
     [getOverride],
   );
   const searchIndex = useMemo(() => buildSearchIndex(visibleProducts), [visibleProducts]);
@@ -93,7 +95,7 @@ const Products = () => {
     const q = query.trim();
     if (!q || q.length < 3) return;
     const upper = q.toUpperCase();
-    const exact = products.find((p) => productCode(p) === upper);
+    const exact = visibleProducts.find((p) => productCode(p) === upper);
     if (exact) {
       navigate(`/produkt/${exact.id}`);
     }
