@@ -75,13 +75,12 @@ export const AdminProductTable = ({ filter, title }: Props) => {
       activeCategory === "__all__"
         ? list
         : list.filter((p) => p.categoryLabel === activeCategory);
+    const effective = inCategory.map((p) => applyProductOverride(p, get(p.id)));
     // Admin view: show ALL products regardless of visibility / stock.
     // (Visibility / stock only filter the public storefront.)
     const q = query.trim().toLowerCase();
-    if (!q) return inCategory;
-    return inCategory
-      .map((p) => applyProductOverride(p, get(p.id)))
-      .filter((p) => {
+    if (!q) return effective;
+    return effective.filter((p) => {
         const o = get(p.id);
         return (
           p.name.toLowerCase().includes(q) ||
