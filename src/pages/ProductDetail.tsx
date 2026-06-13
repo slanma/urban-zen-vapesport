@@ -290,7 +290,7 @@ const ProductDetail = () => {
                   </span>
                 </div>
                 <ColorCells
-                  colors={availableColors}
+                  colors={[...availableColors]}
                   stock={override.color_stock}
                   selected={selectedColor}
                   onSelect={setSelectedColor}
