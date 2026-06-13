@@ -204,6 +204,23 @@ const AdminProductEdit = () => {
       setImages(getEffectiveGallery(product));
       setActiveColors([]);
       setSku(getProductCode(product));
+      // Reset detail extensions
+      setSubtitle("");
+      setProblemBullet("");
+      setFunctionBullet("");
+      setUsageBullet("");
+      setEbikeIntegrated("");
+      setEbikeFull("");
+      setMotorType("");
+      setBatteryLocation("");
+      setDimL(""); setDimH(""); setDimW("");
+      setTouchFilm(""); setMaterial("");
+      setLowStep("");
+      setManufacturer("");
+      setColorStock({});
+      setCompatibleBikes("");
+      setRagContent("");
+      setMaxFrameCirc("");
     }
 
     // Phase 2 — overlay overrides once they have loaded.
@@ -223,11 +240,30 @@ const AdminProductEdit = () => {
       if (Array.isArray(o.features_override)) {
         setFeaturesText(o.features_override.join("\n"));
       }
-      // Gallery: prefer admin override if non-empty, otherwise keep shop images.
       const gallery = getEffectiveGallery(product, o);
       if (gallery.length > 0) setImages(gallery);
       if (Array.isArray(o.colors_override)) setActiveColors(o.colors_override);
       setSku(getEffectiveProductCode(product, o));
+
+      if (o.subtitle_override) setSubtitle(o.subtitle_override);
+      if (o.problem_bullet) setProblemBullet(o.problem_bullet);
+      if (o.function_bullet) setFunctionBullet(o.function_bullet);
+      if (o.usage_bullet) setUsageBullet(o.usage_bullet);
+      if (o.ebike_integrated_battery !== null) setEbikeIntegrated(o.ebike_integrated_battery ? "yes" : "no");
+      if (o.ebike_full_suspension !== null) setEbikeFull(o.ebike_full_suspension ? "yes" : "no");
+      if (o.motor_type) setMotorType(o.motor_type);
+      if (o.battery_location) setBatteryLocation(o.battery_location);
+      if (o.dimensions_l_cm != null) setDimL(o.dimensions_l_cm);
+      if (o.dimensions_h_cm != null) setDimH(o.dimensions_h_cm);
+      if (o.dimensions_w_cm != null) setDimW(o.dimensions_w_cm);
+      if (o.touch_film) setTouchFilm(o.touch_film);
+      if (o.material) setMaterial(o.material);
+      if (o.low_step_compatible !== null) setLowStep(o.low_step_compatible ? "yes" : "no");
+      if (o.manufacturer) setManufacturer(o.manufacturer);
+      if (o.color_stock && typeof o.color_stock === "object") setColorStock(o.color_stock);
+      if (Array.isArray(o.compatible_bikes)) setCompatibleBikes(o.compatible_bikes.join(", "));
+      if (o.rag_content) setRagContent(o.rag_content);
+      if (o.max_frame_circumference_cm != null) setMaxFrameCirc(o.max_frame_circumference_cm);
     }
   }, [product, loading, get]);
 
