@@ -222,6 +222,8 @@ const AdminOverview = () => {
           </Link>
         </div>
       )}
+
+      <SiteSettingsPanel />
     </section>
   );
 };
