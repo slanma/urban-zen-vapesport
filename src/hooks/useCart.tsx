@@ -48,16 +48,23 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     } catch {}
   }, [items]);
 
-  const addItem = (productId: string, quantity = 1, color: string | null = null) => {
+  const addItem = (
+    productId: string,
+    quantity = 1,
+    color: string | null = null,
+    meta: CartItem["meta"] = null,
+  ) => {
     setItems((prev) => {
       const k = keyOf(productId, color);
       const exists = prev.find((i) => keyOf(i.productId, i.color) === k);
       if (exists) {
         return prev.map((i) =>
-          keyOf(i.productId, i.color) === k ? { ...i, quantity: i.quantity + quantity } : i,
+          keyOf(i.productId, i.color) === k
+            ? { ...i, quantity: i.quantity + quantity, meta: meta ?? i.meta }
+            : i,
         );
       }
-      return [...prev, { productId, quantity, color }];
+      return [...prev, { productId, quantity, color, meta }];
     });
   };
 
