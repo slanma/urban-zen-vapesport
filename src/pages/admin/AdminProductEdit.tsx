@@ -97,6 +97,27 @@ const AdminProductEdit = () => {
   const shortDescRef = useRef<HTMLTextAreaElement>(null);
   const [dragging, setDragging] = useState(false);
 
+  // Detail-page extensions
+  const [subtitle, setSubtitle] = useState("");
+  const [problemBullet, setProblemBullet] = useState("");
+  const [functionBullet, setFunctionBullet] = useState("");
+  const [usageBullet, setUsageBullet] = useState("");
+  const [ebikeIntegrated, setEbikeIntegrated] = useState<"" | "yes" | "no">("");
+  const [ebikeFull, setEbikeFull] = useState<"" | "yes" | "no">("");
+  const [motorType, setMotorType] = useState("");
+  const [batteryLocation, setBatteryLocation] = useState("");
+  const [dimL, setDimL] = useState<number | "">("");
+  const [dimH, setDimH] = useState<number | "">("");
+  const [dimW, setDimW] = useState<number | "">("");
+  const [touchFilm, setTouchFilm] = useState("");
+  const [material, setMaterial] = useState("");
+  const [lowStep, setLowStep] = useState<"" | "yes" | "no">("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [colorStock, setColorStock] = useState<Record<string, number>>({});
+  const [compatibleBikes, setCompatibleBikes] = useState("");
+  const [ragContent, setRagContent] = useState("");
+  const [maxFrameCirc, setMaxFrameCirc] = useState<number | "">("");
+
   /**
    * Wrap (or unwrap) the current selection in the short-description textarea
    * with the given marker pair. If nothing is selected, the markers are
