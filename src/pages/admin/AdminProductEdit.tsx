@@ -289,6 +289,12 @@ const AdminProductEdit = () => {
         .filter(Boolean);
       const qty = typeof stockQty === "number" ? stockQty : null;
       const cleanSku = sku.trim() || getProductCode(product);
+      const bikes = compatibleBikes
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const triBool = (v: "" | "yes" | "no"): boolean | null =>
+        v === "" ? null : v === "yes";
       await upsert(product.id, {
         sku_override: cleanSku !== getProductCode(product) ? cleanSku : null,
         name_override: name !== product.name ? name : null,
@@ -301,7 +307,26 @@ const AdminProductEdit = () => {
           shortDescription !== product.shortDescription ? shortDescription : null,
         features_override: cleanFeatures,
         specs_override: getSpecsOverrideForSave(product, get(product.id), cleanSku),
-        // images_override is persisted live by upload/remove/primary actions
+        subtitle_override: subtitle.trim() || null,
+        problem_bullet: problemBullet.trim() || null,
+        function_bullet: functionBullet.trim() || null,
+        usage_bullet: usageBullet.trim() || null,
+        ebike_integrated_battery: triBool(ebikeIntegrated),
+        ebike_full_suspension: triBool(ebikeFull),
+        motor_type: motorType.trim() || null,
+        battery_location: batteryLocation.trim() || null,
+        dimensions_l_cm: typeof dimL === "number" ? dimL : null,
+        dimensions_h_cm: typeof dimH === "number" ? dimH : null,
+        dimensions_w_cm: typeof dimW === "number" ? dimW : null,
+        touch_film: touchFilm.trim() || null,
+        material: material.trim() || null,
+        low_step_compatible: triBool(lowStep),
+        manufacturer: manufacturer.trim() || null,
+        color_stock: Object.keys(colorStock).length > 0 ? colorStock : null,
+        compatible_bikes: bikes.length > 0 ? bikes : null,
+        rag_content: ragContent.trim() || null,
+        max_frame_circumference_cm:
+          typeof maxFrameCirc === "number" ? maxFrameCirc : null,
       });
       toast({ title: "Změny uloženy" });
     } catch (error) {
