@@ -705,6 +705,185 @@ const AdminProductEdit = () => {
         )}
       </article>
 
+      {/* Detail produktu — prestige fields */}
+      <article className="bg-background border border-border rounded-lg p-6 mt-6 space-y-5">
+        <div>
+          <h2 className="font-heading font-bold text-foreground">Detail produktu (B2C/B2B prestige)</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Pole se zobrazí na stránce produktu (`/produkt/:id`). Nevyplněná pole se neukazují.
+          </p>
+        </div>
+
+        <div>
+          <Label htmlFor="subtitle">Podtitul (B2C hook — 1 věta)</Label>
+          <Input
+            id="subtitle" value={subtitle} onChange={(e) => setSubtitle(e.target.value)}
+            maxLength={200} className="mt-1"
+            placeholder="Krátká věta, která řeší konkrétní problém cyklisty."
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <Label htmlFor="pb">🎯 Problém</Label>
+            <Textarea id="pb" rows={3} value={problemBullet}
+              onChange={(e) => setProblemBullet(e.target.value)}
+              placeholder="Co bolestivého produkt řeší." className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="fb">🛠️ Funkce</Label>
+            <Textarea id="fb" rows={3} value={functionBullet}
+              onChange={(e) => setFunctionBullet(e.target.value)}
+              placeholder="Hlavní technická funkce." className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="ub">🚴 Použití</Label>
+            <Textarea id="ub" rows={3} value={usageBullet}
+              onChange={(e) => setUsageBullet(e.target.value)}
+              placeholder="Praktická univerzálnost a tipy." className="mt-1" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <Label>E-bike s integrovanou baterií</Label>
+            <Select value={ebikeIntegrated} onValueChange={(v: "" | "yes" | "no") => setEbikeIntegrated(v)}>
+              <SelectTrigger className="mt-1"><SelectValue placeholder="Neuvedeno" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Ano</SelectItem>
+                <SelectItem value="no">Ne</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Vhodné pro celoodpružená (Full)</Label>
+            <Select value={ebikeFull} onValueChange={(v: "" | "yes" | "no") => setEbikeFull(v)}>
+              <SelectTrigger className="mt-1"><SelectValue placeholder="Neuvedeno" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Ano</SelectItem>
+                <SelectItem value="no">Ne</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Low-step rám</Label>
+            <Select value={lowStep} onValueChange={(v: "" | "yes" | "no") => setLowStep(v)}>
+              <SelectTrigger className="mt-1"><SelectValue placeholder="Neuvedeno" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Ano</SelectItem>
+                <SelectItem value="no">Ne</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="motor">Typ pohonu e-biku</Label>
+            <Input id="motor" value={motorType} onChange={(e) => setMotorType(e.target.value)}
+              placeholder="Středový / Zadní / Bez motoru" className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="batt">Umístění baterie</Label>
+            <Input id="batt" value={batteryLocation} onChange={(e) => setBatteryLocation(e.target.value)}
+              placeholder="Integrovaná / Na rámu" className="mt-1" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div>
+            <Label htmlFor="dl">Délka (cm)</Label>
+            <Input id="dl" type="number" step="0.1" value={dimL}
+              onChange={(e) => setDimL(e.target.value === "" ? "" : parseFloat(e.target.value))}
+              className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="dh">Výška (cm)</Label>
+            <Input id="dh" type="number" step="0.1" value={dimH}
+              onChange={(e) => setDimH(e.target.value === "" ? "" : parseFloat(e.target.value))}
+              className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="dw">Šířka (cm)</Label>
+            <Input id="dw" type="number" step="0.1" value={dimW}
+              onChange={(e) => setDimW(e.target.value === "" ? "" : parseFloat(e.target.value))}
+              className="mt-1" />
+          </div>
+          <div className="col-span-2">
+            <Label htmlFor="tf">Dotyková fólie</Label>
+            <Input id="tf" value={touchFilm} onChange={(e) => setTouchFilm(e.target.value)}
+              placeholder="Ano – TPU 0.3 mm / Ne" className="mt-1" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="mat">Materiál</Label>
+            <Input id="mat" value={material} onChange={(e) => setMaterial(e.target.value)}
+              placeholder="Cordura 1000D / Apex" className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="mfr">Výrobce</Label>
+            <Input id="mfr" value={manufacturer} onChange={(e) => setManufacturer(e.target.value)}
+              placeholder="Vapesport Handmade CR" className="mt-1" />
+          </div>
+        </div>
+
+        {activeColors.length > 0 && (
+          <div>
+            <Label>Sklad podle barev (ks)</Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              Ponechte prázdné = neevidováno (zobrazí se jako skladem). Hodnota 0 = barva bude přeškrtnuta a nevybratelná.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {activeColors.map((slug) => (
+                <div key={slug} className="flex items-center gap-2">
+                  <span className="text-sm font-mono w-28 truncate">{slug}</span>
+                  <Input
+                    type="number" min={0}
+                    value={colorStock[slug] ?? ""}
+                    placeholder="—"
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setColorStock((prev) => {
+                        const next = { ...prev };
+                        if (v === "") delete next[slug];
+                        else next[slug] = Math.max(0, parseInt(v, 10) || 0);
+                        return next;
+                      });
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="maxcirc">Max obvod rámové trubky (cm)</Label>
+            <Input id="maxcirc" type="number" step="0.1" value={maxFrameCirc}
+              onChange={(e) => setMaxFrameCirc(e.target.value === "" ? "" : parseFloat(e.target.value))}
+              placeholder="Přepíše globální nastavení" className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="bikes">Kompatibilní kola (odděleno čárkou)</Label>
+            <Input id="bikes" value={compatibleBikes} onChange={(e) => setCompatibleBikes(e.target.value)}
+              placeholder="Haibike, Crussis, Cube, Specialized Turbo Levo" className="mt-1" />
+          </div>
+        </div>
+
+        <div>
+          <Label htmlFor="rag">RAG / AI hloubkový obsah (skrytý SEO blok)</Label>
+          <Textarea id="rag" rows={6} value={ragContent} onChange={(e) => setRagContent(e.target.value)}
+            placeholder="Hustá technická data, kompatibilita, výjimky geometrie, klíčová slova pro AI asistenty."
+            className="mt-1" />
+          <p className="text-xs text-muted-foreground mt-1">
+            Tento text není pro uživatele viditelný, ale je čitelný pro Googlebot a AI agenty.
+          </p>
+        </div>
+      </article>
+
       {/* Obrázky produktu */}
       <article className="bg-background border border-border rounded-lg p-6 mt-6">
         <div className="flex items-center justify-between mb-4">
