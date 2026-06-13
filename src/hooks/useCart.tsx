@@ -4,12 +4,21 @@ export interface CartItem {
   productId: string;
   quantity: number;
   color?: string | null;
+  /** Optional metadata used for auto-injected accessories (e.g. longer straps).
+   *  `auto: true` items are still real cart lines (count in totals, invoices)
+   *  but the UI marks them as automatically added based on user input. */
+  meta?: { auto?: boolean; autoFor?: string } | null;
 }
 
 interface CartCtx {
   items: CartItem[];
   count: number;
-  addItem: (productId: string, quantity?: number, color?: string | null) => void;
+  addItem: (
+    productId: string,
+    quantity?: number,
+    color?: string | null,
+    meta?: CartItem["meta"],
+  ) => void;
   updateQty: (productId: string, delta: number, color?: string | null) => void;
   removeItem: (productId: string, color?: string | null) => void;
   clear: () => void;
