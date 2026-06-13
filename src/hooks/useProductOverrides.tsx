@@ -29,6 +29,26 @@ export interface ProductOverride {
   colors_override: string[] | null;
   images_override: string[] | null;
   tech_params_html: string | null;
+  // Detail page extensions
+  subtitle_override: string | null;
+  ebike_integrated_battery: boolean | null;
+  ebike_full_suspension: boolean | null;
+  motor_type: string | null;
+  battery_location: string | null;
+  dimensions_l_cm: number | null;
+  dimensions_h_cm: number | null;
+  dimensions_w_cm: number | null;
+  touch_film: string | null;
+  material: string | null;
+  low_step_compatible: boolean | null;
+  manufacturer: string | null;
+  problem_bullet: string | null;
+  function_bullet: string | null;
+  usage_bullet: string | null;
+  color_stock: Record<string, number> | null;
+  compatible_bikes: string[] | null;
+  rag_content: string | null;
+  max_frame_circumference_cm: number | null;
 }
 
 export const DEFAULT_OVERRIDE: Omit<ProductOverride, "product_id"> = {
@@ -52,6 +72,25 @@ export const DEFAULT_OVERRIDE: Omit<ProductOverride, "product_id"> = {
   colors_override: null,
   images_override: null,
   tech_params_html: null,
+  subtitle_override: null,
+  ebike_integrated_battery: null,
+  ebike_full_suspension: null,
+  motor_type: null,
+  battery_location: null,
+  dimensions_l_cm: null,
+  dimensions_h_cm: null,
+  dimensions_w_cm: null,
+  touch_film: null,
+  material: null,
+  low_step_compatible: null,
+  manufacturer: null,
+  problem_bullet: null,
+  function_bullet: null,
+  usage_bullet: null,
+  color_stock: null,
+  compatible_bikes: null,
+  rag_content: null,
+  max_frame_circumference_cm: null,
 };
 
 type Listener = (map: Map<string, ProductOverride>) => void;
@@ -60,7 +99,8 @@ let cache: Map<string, ProductOverride> | null = null;
 let inflight: Promise<Map<string, ProductOverride>> | null = null;
 
 const PUBLIC_COLUMNS =
-  "product_id,sku_override,visible,in_stock,stock_qty,price_override,vat_percent,description_html,youtube_url,meta_title,meta_description,ai_keywords,name_override,category_override,short_description_override,features_override,specs_override,colors_override,images_override,tech_params_html,created_at,updated_at";
+  "product_id,sku_override,visible,in_stock,stock_qty,price_override,vat_percent,description_html,youtube_url,meta_title,meta_description,ai_keywords,name_override,category_override,short_description_override,features_override,specs_override,colors_override,images_override,tech_params_html,subtitle_override,ebike_integrated_battery,ebike_full_suspension,motor_type,battery_location,dimensions_l_cm,dimensions_h_cm,dimensions_w_cm,touch_film,material,low_step_compatible,manufacturer,problem_bullet,function_bullet,usage_bullet,color_stock,compatible_bikes,rag_content,max_frame_circumference_cm,created_at,updated_at";
+
 
 const fetchAll = async (): Promise<Map<string, ProductOverride>> => {
   if (inflight) return inflight;
