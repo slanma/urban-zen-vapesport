@@ -106,7 +106,7 @@ const fetchAll = async (): Promise<Map<string, ProductOverride>> => {
   if (inflight) return inflight;
   inflight = (async () => {
     const [overridesRes, b2bRes] = await Promise.all([
-      supabase.from("product_overrides").select(PUBLIC_COLUMNS),
+      (supabase.from("product_overrides") as any).select(PUBLIC_COLUMNS),
       // RPC is gated server-side: returns rows only for admins/approved B2B partners.
       supabase.rpc("get_product_b2b_prices"),
     ]);
