@@ -4,12 +4,21 @@ export interface CartItem {
   productId: string;
   quantity: number;
   color?: string | null;
+  /** Optional metadata used for auto-injected accessories (e.g. longer straps).
+   *  `auto: true` items are still real cart lines (count in totals, invoices)
+   *  but the UI marks them as automatically added based on user input. */
+  meta?: { auto?: boolean; autoFor?: string } | null;
 }
 
 interface CartCtx {
   items: CartItem[];
   count: number;
-  addItem: (productId: string, quantity?: number, color?: string | null) => void;
+  addItem: (
+    productId: string,
+    quantity?: number,
+    color?: string | null,
+    meta?: CartItem["meta"],
+  ) => void;
   updateQty: (productId: string, delta: number, color?: string | null) => void;
   removeItem: (productId: string, color?: string | null) => void;
   clear: () => void;
@@ -39,16 +48,23 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     } catch {}
   }, [items]);
 
-  const addItem = (productId: string, quantity = 1, color: string | null = null) => {
+  const addItem = (
+    productId: string,
+    quantity = 1,
+    color: string | null = null,
+    meta: CartItem["meta"] = null,
+  ) => {
     setItems((prev) => {
       const k = keyOf(productId, color);
       const exists = prev.find((i) => keyOf(i.productId, i.color) === k);
       if (exists) {
         return prev.map((i) =>
-          keyOf(i.productId, i.color) === k ? { ...i, quantity: i.quantity + quantity } : i,
+          keyOf(i.productId, i.color) === k
+            ? { ...i, quantity: i.quantity + quantity, meta: meta ?? i.meta }
+            : i,
         );
       }
-      return [...prev, { productId, quantity, color }];
+      return [...prev, { productId, quantity, color, meta }];
     });
   };
 

@@ -7,6 +7,7 @@ import { products } from "@/data/products";
 import { isServiceCategory } from "@/lib/serviceCategories";
 import { fmtCZK } from "@/lib/vat";
 import { StatCard } from "@/components/admin/StatCard";
+import SiteSettingsPanel from "@/components/admin/SiteSettingsPanel";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -222,6 +223,8 @@ const AdminOverview = () => {
           </Link>
         </div>
       )}
+
+      <SiteSettingsPanel />
     </section>
   );
 };

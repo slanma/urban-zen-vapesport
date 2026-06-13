@@ -79,6 +79,11 @@ const CartDrawer = () => {
                         Barva: {item.color}
                       </p>
                     )}
+                    {item.meta?.auto && (
+                      <p className="text-[10px] font-body mt-0.5 inline-block px-1.5 py-0.5 rounded bg-primary/10 text-primary uppercase tracking-wider font-bold">
+                        Automaticky přidáno
+                      </p>
+                    )}
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center gap-1">
                         <button

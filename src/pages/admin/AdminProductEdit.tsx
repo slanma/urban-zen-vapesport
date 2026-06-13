@@ -97,6 +97,27 @@ const AdminProductEdit = () => {
   const shortDescRef = useRef<HTMLTextAreaElement>(null);
   const [dragging, setDragging] = useState(false);
 
+  // Detail-page extensions
+  const [subtitle, setSubtitle] = useState("");
+  const [problemBullet, setProblemBullet] = useState("");
+  const [functionBullet, setFunctionBullet] = useState("");
+  const [usageBullet, setUsageBullet] = useState("");
+  const [ebikeIntegrated, setEbikeIntegrated] = useState<"" | "yes" | "no">("");
+  const [ebikeFull, setEbikeFull] = useState<"" | "yes" | "no">("");
+  const [motorType, setMotorType] = useState("");
+  const [batteryLocation, setBatteryLocation] = useState("");
+  const [dimL, setDimL] = useState<number | "">("");
+  const [dimH, setDimH] = useState<number | "">("");
+  const [dimW, setDimW] = useState<number | "">("");
+  const [touchFilm, setTouchFilm] = useState("");
+  const [material, setMaterial] = useState("");
+  const [lowStep, setLowStep] = useState<"" | "yes" | "no">("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [colorStock, setColorStock] = useState<Record<string, number>>({});
+  const [compatibleBikes, setCompatibleBikes] = useState("");
+  const [ragContent, setRagContent] = useState("");
+  const [maxFrameCirc, setMaxFrameCirc] = useState<number | "">("");
+
   /**
    * Wrap (or unwrap) the current selection in the short-description textarea
    * with the given marker pair. If nothing is selected, the markers are
@@ -183,6 +204,23 @@ const AdminProductEdit = () => {
       setImages(getEffectiveGallery(product));
       setActiveColors([]);
       setSku(getProductCode(product));
+      // Reset detail extensions
+      setSubtitle("");
+      setProblemBullet("");
+      setFunctionBullet("");
+      setUsageBullet("");
+      setEbikeIntegrated("");
+      setEbikeFull("");
+      setMotorType("");
+      setBatteryLocation("");
+      setDimL(""); setDimH(""); setDimW("");
+      setTouchFilm(""); setMaterial("");
+      setLowStep("");
+      setManufacturer("");
+      setColorStock({});
+      setCompatibleBikes("");
+      setRagContent("");
+      setMaxFrameCirc("");
     }
 
     // Phase 2 — overlay overrides once they have loaded.
@@ -202,11 +240,30 @@ const AdminProductEdit = () => {
       if (Array.isArray(o.features_override)) {
         setFeaturesText(o.features_override.join("\n"));
       }
-      // Gallery: prefer admin override if non-empty, otherwise keep shop images.
       const gallery = getEffectiveGallery(product, o);
       if (gallery.length > 0) setImages(gallery);
       if (Array.isArray(o.colors_override)) setActiveColors(o.colors_override);
       setSku(getEffectiveProductCode(product, o));
+
+      if (o.subtitle_override) setSubtitle(o.subtitle_override);
+      if (o.problem_bullet) setProblemBullet(o.problem_bullet);
+      if (o.function_bullet) setFunctionBullet(o.function_bullet);
+      if (o.usage_bullet) setUsageBullet(o.usage_bullet);
+      if (o.ebike_integrated_battery !== null) setEbikeIntegrated(o.ebike_integrated_battery ? "yes" : "no");
+      if (o.ebike_full_suspension !== null) setEbikeFull(o.ebike_full_suspension ? "yes" : "no");
+      if (o.motor_type) setMotorType(o.motor_type);
+      if (o.battery_location) setBatteryLocation(o.battery_location);
+      if (o.dimensions_l_cm != null) setDimL(o.dimensions_l_cm);
+      if (o.dimensions_h_cm != null) setDimH(o.dimensions_h_cm);
+      if (o.dimensions_w_cm != null) setDimW(o.dimensions_w_cm);
+      if (o.touch_film) setTouchFilm(o.touch_film);
+      if (o.material) setMaterial(o.material);
+      if (o.low_step_compatible !== null) setLowStep(o.low_step_compatible ? "yes" : "no");
+      if (o.manufacturer) setManufacturer(o.manufacturer);
+      if (o.color_stock && typeof o.color_stock === "object") setColorStock(o.color_stock);
+      if (Array.isArray(o.compatible_bikes)) setCompatibleBikes(o.compatible_bikes.join(", "));
+      if (o.rag_content) setRagContent(o.rag_content);
+      if (o.max_frame_circumference_cm != null) setMaxFrameCirc(o.max_frame_circumference_cm);
     }
   }, [product, loading, get]);
 
@@ -232,6 +289,12 @@ const AdminProductEdit = () => {
         .filter(Boolean);
       const qty = typeof stockQty === "number" ? stockQty : null;
       const cleanSku = sku.trim() || getProductCode(product);
+      const bikes = compatibleBikes
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const triBool = (v: "" | "yes" | "no"): boolean | null =>
+        v === "" ? null : v === "yes";
       await upsert(product.id, {
         sku_override: cleanSku !== getProductCode(product) ? cleanSku : null,
         name_override: name !== product.name ? name : null,
@@ -244,7 +307,26 @@ const AdminProductEdit = () => {
           shortDescription !== product.shortDescription ? shortDescription : null,
         features_override: cleanFeatures,
         specs_override: getSpecsOverrideForSave(product, get(product.id), cleanSku),
-        // images_override is persisted live by upload/remove/primary actions
+        subtitle_override: subtitle.trim() || null,
+        problem_bullet: problemBullet.trim() || null,
+        function_bullet: functionBullet.trim() || null,
+        usage_bullet: usageBullet.trim() || null,
+        ebike_integrated_battery: triBool(ebikeIntegrated),
+        ebike_full_suspension: triBool(ebikeFull),
+        motor_type: motorType.trim() || null,
+        battery_location: batteryLocation.trim() || null,
+        dimensions_l_cm: typeof dimL === "number" ? dimL : null,
+        dimensions_h_cm: typeof dimH === "number" ? dimH : null,
+        dimensions_w_cm: typeof dimW === "number" ? dimW : null,
+        touch_film: touchFilm.trim() || null,
+        material: material.trim() || null,
+        low_step_compatible: triBool(lowStep),
+        manufacturer: manufacturer.trim() || null,
+        color_stock: Object.keys(colorStock).length > 0 ? colorStock : null,
+        compatible_bikes: bikes.length > 0 ? bikes : null,
+        rag_content: ragContent.trim() || null,
+        max_frame_circumference_cm:
+          typeof maxFrameCirc === "number" ? maxFrameCirc : null,
       });
       toast({ title: "Změny uloženy" });
     } catch (error) {
@@ -621,6 +703,185 @@ const AdminProductEdit = () => {
             Aktivní varianty: <span className="font-mono">{activeColors.join(", ")}</span>
           </p>
         )}
+      </article>
+
+      {/* Detail produktu — prestige fields */}
+      <article className="bg-background border border-border rounded-lg p-6 mt-6 space-y-5">
+        <div>
+          <h2 className="font-heading font-bold text-foreground">Detail produktu (B2C/B2B prestige)</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Pole se zobrazí na stránce produktu (`/produkt/:id`). Nevyplněná pole se neukazují.
+          </p>
+        </div>
+
+        <div>
+          <Label htmlFor="subtitle">Podtitul (B2C hook — 1 věta)</Label>
+          <Input
+            id="subtitle" value={subtitle} onChange={(e) => setSubtitle(e.target.value)}
+            maxLength={200} className="mt-1"
+            placeholder="Krátká věta, která řeší konkrétní problém cyklisty."
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <Label htmlFor="pb">🎯 Problém</Label>
+            <Textarea id="pb" rows={3} value={problemBullet}
+              onChange={(e) => setProblemBullet(e.target.value)}
+              placeholder="Co bolestivého produkt řeší." className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="fb">🛠️ Funkce</Label>
+            <Textarea id="fb" rows={3} value={functionBullet}
+              onChange={(e) => setFunctionBullet(e.target.value)}
+              placeholder="Hlavní technická funkce." className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="ub">🚴 Použití</Label>
+            <Textarea id="ub" rows={3} value={usageBullet}
+              onChange={(e) => setUsageBullet(e.target.value)}
+              placeholder="Praktická univerzálnost a tipy." className="mt-1" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <Label>E-bike s integrovanou baterií</Label>
+            <Select value={ebikeIntegrated} onValueChange={(v: "" | "yes" | "no") => setEbikeIntegrated(v)}>
+              <SelectTrigger className="mt-1"><SelectValue placeholder="Neuvedeno" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Ano</SelectItem>
+                <SelectItem value="no">Ne</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Vhodné pro celoodpružená (Full)</Label>
+            <Select value={ebikeFull} onValueChange={(v: "" | "yes" | "no") => setEbikeFull(v)}>
+              <SelectTrigger className="mt-1"><SelectValue placeholder="Neuvedeno" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Ano</SelectItem>
+                <SelectItem value="no">Ne</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Low-step rám</Label>
+            <Select value={lowStep} onValueChange={(v: "" | "yes" | "no") => setLowStep(v)}>
+              <SelectTrigger className="mt-1"><SelectValue placeholder="Neuvedeno" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Ano</SelectItem>
+                <SelectItem value="no">Ne</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="motor">Typ pohonu e-biku</Label>
+            <Input id="motor" value={motorType} onChange={(e) => setMotorType(e.target.value)}
+              placeholder="Středový / Zadní / Bez motoru" className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="batt">Umístění baterie</Label>
+            <Input id="batt" value={batteryLocation} onChange={(e) => setBatteryLocation(e.target.value)}
+              placeholder="Integrovaná / Na rámu" className="mt-1" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div>
+            <Label htmlFor="dl">Délka (cm)</Label>
+            <Input id="dl" type="number" step="0.1" value={dimL}
+              onChange={(e) => setDimL(e.target.value === "" ? "" : parseFloat(e.target.value))}
+              className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="dh">Výška (cm)</Label>
+            <Input id="dh" type="number" step="0.1" value={dimH}
+              onChange={(e) => setDimH(e.target.value === "" ? "" : parseFloat(e.target.value))}
+              className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="dw">Šířka (cm)</Label>
+            <Input id="dw" type="number" step="0.1" value={dimW}
+              onChange={(e) => setDimW(e.target.value === "" ? "" : parseFloat(e.target.value))}
+              className="mt-1" />
+          </div>
+          <div className="col-span-2">
+            <Label htmlFor="tf">Dotyková fólie</Label>
+            <Input id="tf" value={touchFilm} onChange={(e) => setTouchFilm(e.target.value)}
+              placeholder="Ano – TPU 0.3 mm / Ne" className="mt-1" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="mat">Materiál</Label>
+            <Input id="mat" value={material} onChange={(e) => setMaterial(e.target.value)}
+              placeholder="Cordura 1000D / Apex" className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="mfr">Výrobce</Label>
+            <Input id="mfr" value={manufacturer} onChange={(e) => setManufacturer(e.target.value)}
+              placeholder="Vapesport Handmade CR" className="mt-1" />
+          </div>
+        </div>
+
+        {activeColors.length > 0 && (
+          <div>
+            <Label>Sklad podle barev (ks)</Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              Ponechte prázdné = neevidováno (zobrazí se jako skladem). Hodnota 0 = barva bude přeškrtnuta a nevybratelná.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {activeColors.map((slug) => (
+                <div key={slug} className="flex items-center gap-2">
+                  <span className="text-sm font-mono w-28 truncate">{slug}</span>
+                  <Input
+                    type="number" min={0}
+                    value={colorStock[slug] ?? ""}
+                    placeholder="—"
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setColorStock((prev) => {
+                        const next = { ...prev };
+                        if (v === "") delete next[slug];
+                        else next[slug] = Math.max(0, parseInt(v, 10) || 0);
+                        return next;
+                      });
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="maxcirc">Max obvod rámové trubky (cm)</Label>
+            <Input id="maxcirc" type="number" step="0.1" value={maxFrameCirc}
+              onChange={(e) => setMaxFrameCirc(e.target.value === "" ? "" : parseFloat(e.target.value))}
+              placeholder="Přepíše globální nastavení" className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="bikes">Kompatibilní kola (odděleno čárkou)</Label>
+            <Input id="bikes" value={compatibleBikes} onChange={(e) => setCompatibleBikes(e.target.value)}
+              placeholder="Haibike, Crussis, Cube, Specialized Turbo Levo" className="mt-1" />
+          </div>
+        </div>
+
+        <div>
+          <Label htmlFor="rag">RAG / AI hloubkový obsah (skrytý SEO blok)</Label>
+          <Textarea id="rag" rows={6} value={ragContent} onChange={(e) => setRagContent(e.target.value)}
+            placeholder="Hustá technická data, kompatibilita, výjimky geometrie, klíčová slova pro AI asistenty."
+            className="mt-1" />
+          <p className="text-xs text-muted-foreground mt-1">
+            Tento text není pro uživatele viditelný, ale je čitelný pro Googlebot a AI agenty.
+          </p>
+        </div>
       </article>
 
       {/* Obrázky produktu */}

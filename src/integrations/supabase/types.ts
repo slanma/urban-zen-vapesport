@@ -195,24 +195,43 @@ export type Database = {
         Row: {
           ai_keywords: string | null
           b2b_price: number | null
+          battery_location: string | null
           category_override: string | null
+          color_stock: Json | null
           colors_override: Json | null
+          compatible_bikes: string[] | null
           created_at: string
           description_html: string | null
+          dimensions_h_cm: number | null
+          dimensions_l_cm: number | null
+          dimensions_w_cm: number | null
+          ebike_full_suspension: boolean | null
+          ebike_integrated_battery: boolean | null
           features_override: Json | null
+          function_bullet: string | null
           images_override: Json | null
           in_stock: boolean
+          low_step_compatible: boolean | null
+          manufacturer: string | null
+          material: string | null
+          max_frame_circumference_cm: number | null
           meta_description: string | null
           meta_title: string | null
+          motor_type: string | null
           name_override: string | null
           price_override: number | null
+          problem_bullet: string | null
           product_id: string
+          rag_content: string | null
           short_description_override: string | null
           sku_override: string | null
           specs_override: Json | null
           stock_qty: number | null
+          subtitle_override: string | null
           tech_params_html: string | null
+          touch_film: string | null
           updated_at: string
+          usage_bullet: string | null
           vat_percent: number
           visible: boolean
           youtube_url: string | null
@@ -220,24 +239,43 @@ export type Database = {
         Insert: {
           ai_keywords?: string | null
           b2b_price?: number | null
+          battery_location?: string | null
           category_override?: string | null
+          color_stock?: Json | null
           colors_override?: Json | null
+          compatible_bikes?: string[] | null
           created_at?: string
           description_html?: string | null
+          dimensions_h_cm?: number | null
+          dimensions_l_cm?: number | null
+          dimensions_w_cm?: number | null
+          ebike_full_suspension?: boolean | null
+          ebike_integrated_battery?: boolean | null
           features_override?: Json | null
+          function_bullet?: string | null
           images_override?: Json | null
           in_stock?: boolean
+          low_step_compatible?: boolean | null
+          manufacturer?: string | null
+          material?: string | null
+          max_frame_circumference_cm?: number | null
           meta_description?: string | null
           meta_title?: string | null
+          motor_type?: string | null
           name_override?: string | null
           price_override?: number | null
+          problem_bullet?: string | null
           product_id: string
+          rag_content?: string | null
           short_description_override?: string | null
           sku_override?: string | null
           specs_override?: Json | null
           stock_qty?: number | null
+          subtitle_override?: string | null
           tech_params_html?: string | null
+          touch_film?: string | null
           updated_at?: string
+          usage_bullet?: string | null
           vat_percent?: number
           visible?: boolean
           youtube_url?: string | null
@@ -245,24 +283,43 @@ export type Database = {
         Update: {
           ai_keywords?: string | null
           b2b_price?: number | null
+          battery_location?: string | null
           category_override?: string | null
+          color_stock?: Json | null
           colors_override?: Json | null
+          compatible_bikes?: string[] | null
           created_at?: string
           description_html?: string | null
+          dimensions_h_cm?: number | null
+          dimensions_l_cm?: number | null
+          dimensions_w_cm?: number | null
+          ebike_full_suspension?: boolean | null
+          ebike_integrated_battery?: boolean | null
           features_override?: Json | null
+          function_bullet?: string | null
           images_override?: Json | null
           in_stock?: boolean
+          low_step_compatible?: boolean | null
+          manufacturer?: string | null
+          material?: string | null
+          max_frame_circumference_cm?: number | null
           meta_description?: string | null
           meta_title?: string | null
+          motor_type?: string | null
           name_override?: string | null
           price_override?: number | null
+          problem_bullet?: string | null
           product_id?: string
+          rag_content?: string | null
           short_description_override?: string | null
           sku_override?: string | null
           specs_override?: Json | null
           stock_qty?: number | null
+          subtitle_override?: string | null
           tech_params_html?: string | null
+          touch_film?: string | null
           updated_at?: string
+          usage_bullet?: string | null
           vat_percent?: number
           visible?: boolean
           youtube_url?: string | null
