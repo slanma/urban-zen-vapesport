@@ -94,11 +94,18 @@ const B2BWholesale = () => {
     return colors.reduce((s, c) => s + getQty(row.baseId, c), 0);
   };
 
-  const unitNet = (row: BaseRow) => {
+  const baseUnitNet = (row: BaseRow) => {
     const pricing = getEffectiveUnitPricing(row.base, row.override, isPartner, profile?.discount_percent ?? 0);
     return Math.round(pricing.unitNet);
   };
-  const baseUnitNet = (row: BaseRow) => unitNet(row);
+  /** ≥10 ks z jednoho modelu → automatická sleva 2 % */
+  const VOLUME_THRESHOLD = 10;
+  const VOLUME_DISCOUNT = 0.02;
+  const qualifiesForVolume = (row: BaseRow) => modelTotalQty(row) >= VOLUME_THRESHOLD;
+  const unitNet = (row: BaseRow) => {
+    const base = baseUnitNet(row);
+    return qualifiesForVolume(row) ? Math.round(base * (1 - VOLUME_DISCOUNT)) : base;
+  };
 
   const modelTotalNet = (row: BaseRow) => unitNet(row) * modelTotalQty(row);
   const modelTotalGross = (row: BaseRow) => Math.round(grossFromNet(modelTotalNet(row)));
@@ -259,12 +266,12 @@ const B2BWholesale = () => {
         <main>
           <div id="b2b-matrix-top" />
           <div className="bg-background border border-border rounded-xl overflow-hidden">
-            <div className="grid grid-cols-[60px_1fr_120px_90px_140px_50px] gap-3 px-4 py-3 bg-muted/40 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <div className="grid grid-cols-[60px_1fr_140px_90px_160px_50px] gap-3 px-4 py-3 bg-muted/40 text-xs font-bold uppercase tracking-wider text-muted-foreground">
               <div>Foto</div>
               <div>Kód / Název</div>
               <div className="text-right">B2B / ks bez DPH</div>
               <div className="text-center">Množství</div>
-              <div className="text-right">Celkem bez DPH</div>
+              <div className="text-right">Konečná cena s DPH</div>
               <div />
             </div>
             <div className="divide-y divide-border">
@@ -282,7 +289,7 @@ const B2BWholesale = () => {
                 return (
                   <div key={row.baseId} ref={(el) => (rowRefs.current[row.baseId] = el)}>
                     {/* Parent row */}
-                    <div className="grid grid-cols-[60px_1fr_120px_90px_140px_50px] gap-3 px-4 py-3 items-center hover:bg-muted/20">
+                    <div className="grid grid-cols-[60px_1fr_140px_90px_160px_50px] gap-3 px-4 py-3 items-center hover:bg-muted/20">
                       <a href={detailHref} target="_blank" rel="noopener noreferrer" className="block">
                         <img src={row.base.image} alt={row.base.name} className="w-12 h-12 rounded object-cover shadow-sm" />
                       </a>
@@ -301,12 +308,20 @@ const B2BWholesale = () => {
                         </div>
                       </div>
                       <div className="text-right text-sm">
-                        <div className="font-bold">{fmtCZK(base)}</div>
+                        {qualifiesForVolume(row) ? (
+                          <div className="flex flex-col items-end leading-tight">
+                            <span className="text-xs text-muted-foreground line-through">{fmtCZK(base)}</span>
+                            <span className="font-bold text-emerald-600">{fmtCZK(unit)}</span>
+                            <span className="text-[10px] uppercase tracking-wider text-emerald-600 font-semibold">−2 % ≥10 ks</span>
+                          </div>
+                        ) : (
+                          <div className="font-bold">{fmtCZK(base)}</div>
+                        )}
                       </div>
                       <div className="text-center font-mono">{totalQty}</div>
                       <div className="text-right">
-                        <div className="font-bold text-sm">{fmtCZK(modelTotalNet(row))}</div>
-                        <div className="text-xs text-muted-foreground">{fmtCZK(modelTotalGross(row))} s DPH</div>
+                        <div className="font-bold text-base">{fmtCZK(modelTotalGross(row))}</div>
+                        <div className="text-xs text-muted-foreground">{fmtCZK(modelTotalNet(row))} bez DPH</div>
                       </div>
                       <button onClick={() => toggleExpand(row.baseId)} className="justify-self-end p-2 hover:bg-muted rounded" aria-label="Rozbalit varianty">
                         {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
