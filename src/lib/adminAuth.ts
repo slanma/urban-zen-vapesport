@@ -41,8 +41,24 @@ const persistAdminSession = (session: Session) => {
   window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
 };
 
+const fetchWithTimeout = async (url: string, options: RequestInit, timeoutMs = 8000) => {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error("Ověření přístupu trvá příliš dlouho. Přihlaste se prosím znovu.");
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+};
+
 export const adminSignInWithPassword = async (email: string, password: string): Promise<AdminSignInResult> => {
-  const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+  const response = await fetchWithTimeout(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
     method: "POST",
     headers: {
       apikey: SUPABASE_PUBLISHABLE_KEY,
@@ -63,7 +79,7 @@ export const adminSignInWithPassword = async (email: string, password: string): 
 };
 
 export const checkAdminRole = async (userId: string, accessToken: string) => {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/has_role`, {
+  const response = await fetchWithTimeout(`${SUPABASE_URL}/rest/v1/rpc/has_role`, {
     method: "POST",
     headers: {
       apikey: SUPABASE_PUBLISHABLE_KEY,
