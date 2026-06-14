@@ -89,7 +89,7 @@ const AdminDashboard = () => {
     setLoadingAction(id);
     const { data } = await supabase
       .from("b2b_profiles")
-      .update({ status: "approved", discount_percent: 30 })
+      .update({ status: "approved", discount_percent: 0 })
       .eq("id", id)
       .select()
       .single();
