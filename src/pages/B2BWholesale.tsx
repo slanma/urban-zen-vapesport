@@ -301,15 +301,7 @@ const B2BWholesale = () => {
                         </div>
                       </div>
                       <div className="text-right text-sm">
-                        {qualifiesForVolume(row) ? (
-                          <div className="flex flex-col items-end leading-tight">
-                            <span className="text-xs text-muted-foreground line-through">{fmtCZK(base)}</span>
-                            <span className="font-bold text-emerald-600">{fmtCZK(unit)}</span>
-                            <span className="text-[10px] uppercase tracking-wider text-emerald-600 font-semibold">−2 % ≥10 ks</span>
-                          </div>
-                        ) : (
-                          <div className="font-bold">{fmtCZK(base)}</div>
-                        )}
+                        <div className="font-bold">{fmtCZK(base)}</div>
                       </div>
                       <div className="text-center font-mono">{totalQty}</div>
                       <div className="text-right">
