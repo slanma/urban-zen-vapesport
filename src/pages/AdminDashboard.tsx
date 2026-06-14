@@ -30,7 +30,7 @@ const statusColor: Record<string, string> = {
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [view, setView] = useState<View>("overview");
   const [collapsed, setCollapsed] = useState(false);
   const [registrations, setRegistrations] = useState<Tables<"b2b_profiles">[]>([]);
@@ -52,13 +52,10 @@ const AdminDashboard = () => {
     (async () => {
       const roleResult = storedSession
         ? await checkAdminRole(currentUser.id, storedSession.access_token)
-        : await supabase
-            .rpc("has_role", { _user_id: currentUser.id, _role: "admin" })
-            .then(({ data, error }) => ({ isAdmin: Boolean(data), error }));
+        : { isAdmin: false, error: new Error("Admin relace vypršela.") };
       if (cancelled) return;
       if (roleResult.error || !roleResult.isAdmin) {
         clearStoredAdminSession();
-        await signOut();
         navigate("/admin-login");
         return;
       }
@@ -68,7 +65,7 @@ const AdminDashboard = () => {
     return () => {
       cancelled = true;
     };
-  }, [user, authLoading, navigate, signOut]);
+  }, [user, authLoading, navigate]);
 
   const loadRegistrations = async () => {
     const { data } = await supabase
@@ -120,7 +117,7 @@ const AdminDashboard = () => {
     setLoadingAction(null);
   };
 
-  const handleLogout = async () => { clearStoredAdminSession(); await signOut(); navigate("/admin-login"); };
+  const handleLogout = () => { clearStoredAdminSession(); navigate("/admin-login"); };
 
   if (authLoading || checkingAccess) {
     return <div className="min-h-screen bg-secondary flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
