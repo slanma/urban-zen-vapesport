@@ -94,16 +94,11 @@ const B2BWholesale = () => {
     return colors.reduce((s, c) => s + getQty(row.baseId, c), 0);
   };
 
-  const unitNet = (row: BaseRow, withVolumeDiscount = true) => {
-    const pricing = getEffectiveUnitPricing(row.base, row.override, isPartner, profile?.discount_percent ?? 0);
-    const total = modelTotalQty(row);
-    const factor = withVolumeDiscount && total >= 10 ? 0.98 : 1;
-    return Math.round(pricing.unitNet * factor);
-  };
-  const baseUnitNet = (row: BaseRow) => {
+  const unitNet = (row: BaseRow) => {
     const pricing = getEffectiveUnitPricing(row.base, row.override, isPartner, profile?.discount_percent ?? 0);
     return Math.round(pricing.unitNet);
   };
+  const baseUnitNet = (row: BaseRow) => unitNet(row);
 
   const modelTotalNet = (row: BaseRow) => unitNet(row) * modelTotalQty(row);
   const modelTotalGross = (row: BaseRow) => Math.round(grossFromNet(modelTotalNet(row)));
@@ -306,14 +301,7 @@ const B2BWholesale = () => {
                         </div>
                       </div>
                       <div className="text-right text-sm">
-                        {totalQty >= 10 ? (
-                          <div>
-                            <div className="line-through text-muted-foreground text-xs">{fmtCZK(base)}</div>
-                            <div className="font-bold text-emerald-600">{fmtCZK(unit)}</div>
-                          </div>
-                        ) : (
-                          <div className="font-bold">{fmtCZK(base)}</div>
-                        )}
+                        <div className="font-bold">{fmtCZK(base)}</div>
                       </div>
                       <div className="text-center font-mono">{totalQty}</div>
                       <div className="text-right">
