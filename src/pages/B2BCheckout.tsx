@@ -47,7 +47,7 @@ const PAYMENT_MATRIX: Record<ShippingId, PaymentId[]> = {
 const PAYMENT_LABELS: Record<PaymentId, string> = {
   hotove: "Hotově při osobním odběru",
   prevodem: "Převodem na účet",
-  faktura: "Faktura – splatnost 14 dní (B2B)",
+  faktura: "Faktura – splatnost 6 dní (B2B)",
 };
 
 const STEPS = [
