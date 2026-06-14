@@ -1,28 +1,68 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 
 const LOGIN_TIMEOUT_MS = 15000;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
 
-const withTimeout = async <T,>(promise: PromiseLike<T>, message: string): Promise<T> => {
-  let timeoutId: number | undefined;
-  const timeout = new Promise<never>((_, reject) => {
-    timeoutId = window.setTimeout(() => reject(new Error(message)), LOGIN_TIMEOUT_MS);
-  });
+interface PasswordLoginResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  expires_at?: number;
+  token_type: string;
+  user: { id: string; email?: string };
+  error?: string;
+  error_description?: string;
+  msg?: string;
+}
+
+const getAuthStorageKey = () => {
+  const host = new URL(SUPABASE_URL).host;
+  const projectRef = host.split(".")[0];
+  return `sb-${projectRef}-auth-token`;
+};
+
+const fetchJsonWithTimeout = async <T,>(url: string, init: RequestInit, message: string): Promise<T> => {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), LOGIN_TIMEOUT_MS);
 
   try {
-    return await Promise.race([promise, timeout]);
+    const response = await fetch(url, { ...init, signal: controller.signal });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+      const errorPayload = payload as Partial<PasswordLoginResponse> | null;
+      throw new Error(errorPayload?.error_description || errorPayload?.msg || errorPayload?.error || `HTTP ${response.status}`);
+    }
+    return payload as T;
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") throw new Error(message);
+    throw error;
   } finally {
-    if (timeoutId) window.clearTimeout(timeoutId);
+    window.clearTimeout(timeoutId);
   }
 };
 
+const persistAuthSession = (authData: PasswordLoginResponse) => {
+  const expiresAt = authData.expires_at ?? Math.floor(Date.now() / 1000) + authData.expires_in;
+  window.localStorage.setItem(
+    getAuthStorageKey(),
+    JSON.stringify({
+      access_token: authData.access_token,
+      refresh_token: authData.refresh_token,
+      expires_in: authData.expires_in,
+      expires_at: expiresAt,
+      token_type: authData.token_type || "bearer",
+      user: authData.user,
+    })
+  );
+};
+
 const B2BLogin = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -40,23 +80,19 @@ const B2BLogin = () => {
     setError("");
 
     try {
-      const { data: authData, error: authError } = await withTimeout(
-        supabase.auth.signInWithPassword({ email: email.trim(), password }),
+      const authData = await fetchJsonWithTimeout<PasswordLoginResponse>(
+        `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+          },
+          body: JSON.stringify({ email: email.trim(), password }),
+        },
         "Přihlášení trvá příliš dlouho. Zkuste to prosím znovu."
       );
-
-      if (authError) {
-        console.error("[B2BLogin] signIn error:", authError);
-        const msg = authError.message || "";
-        if (msg.includes("Invalid login")) {
-          setError("Nesprávný e-mail nebo heslo.");
-        } else if (msg.includes("Email not confirmed")) {
-          setError("Váš e-mail ještě nebyl potvrzen. Zkontrolujte svou schránku.");
-        } else {
-          setError(`Přihlášení se nezdařilo: ${msg}`);
-        }
-        return;
-      }
 
       const user = authData.user;
       if (!user) {
@@ -64,45 +100,47 @@ const B2BLogin = () => {
         return;
       }
 
-      const { data: profile, error: profileErr } = await withTimeout(
-        supabase
-          .from("b2b_profiles")
-          .select("status")
-          .eq("user_id", user.id)
-          .maybeSingle(),
+      const profile = await fetchJsonWithTimeout<Array<{ status: string }>>(
+        `${SUPABASE_URL}/rest/v1/b2b_profiles?select=status&user_id=eq.${user.id}&limit=1`,
+        {
+          method: "GET",
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${authData.access_token}`,
+          },
+        },
         "Ověření B2B účtu trvá příliš dlouho. Zkuste to prosím znovu."
       );
 
-      if (profileErr) {
-        console.error("[B2BLogin] b2b profile error:", profileErr);
-        setError(`Nelze ověřit B2B profil: ${profileErr.message}`);
-        return;
-      }
-
-      const status = profile?.status;
+      const status = profile[0]?.status;
 
       if (!status) {
         setError("K tomuto e-mailu nemáme B2B profil. Zaregistrujte se jako B2B partner.");
-        void supabase.auth.signOut();
         return;
       }
 
       if (status === "pending") {
         setError("Vaše registrace čeká na schválení.");
-        void supabase.auth.signOut();
         return;
       }
 
       if (status === "rejected") {
         setError("Vaše B2B registrace byla zamítnuta.");
-        void supabase.auth.signOut();
         return;
       }
 
-      navigate("/b2b-dashboard", { replace: true });
+      persistAuthSession(authData);
+      window.location.assign("/b2b-dashboard");
     } catch (err) {
       console.error("[B2BLogin] unexpected error:", err);
-      setError(`Neočekávaná chyba: ${err instanceof Error ? err.message : String(err)}`);
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg.includes("Invalid login") || msg.includes("invalid_credentials")) {
+        setError("Nesprávný e-mail nebo heslo.");
+      } else if (msg.includes("Email not confirmed")) {
+        setError("Váš e-mail ještě nebyl potvrzen. Zkontrolujte svou schránku.");
+      } else {
+        setError(`Neočekávaná chyba: ${msg}`);
+      }
     } finally {
       setLoading(false);
     }
