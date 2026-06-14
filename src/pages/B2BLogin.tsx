@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 
 const LOGIN_TIMEOUT_MS = 15000;
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
@@ -21,19 +20,6 @@ interface PasswordLoginResponse {
   error_description?: string;
   msg?: string;
 }
-
-const withTimeout = async <T,>(promise: PromiseLike<T>, message: string): Promise<T> => {
-  let timeoutId: number | undefined;
-  const timeout = new Promise<never>((_, reject) => {
-    timeoutId = window.setTimeout(() => reject(new Error(message)), LOGIN_TIMEOUT_MS);
-  });
-
-  try {
-    return await Promise.race([promise, timeout]);
-  } finally {
-    if (timeoutId) window.clearTimeout(timeoutId);
-  }
-};
 
 const getAuthStorageKey = () => {
   const host = new URL(SUPABASE_URL).host;
@@ -77,7 +63,6 @@ const persistAuthSession = (authData: PasswordLoginResponse) => {
 };
 
 const B2BLogin = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
