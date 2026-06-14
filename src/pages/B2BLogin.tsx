@@ -116,25 +116,21 @@ const B2BLogin = () => {
 
       if (!status) {
         setError("K tomuto e-mailu nemáme B2B profil. Zaregistrujte se jako B2B partner.");
-        void supabase.auth.signOut();
         return;
       }
 
       if (status === "pending") {
         setError("Vaše registrace čeká na schválení.");
-        void supabase.auth.signOut();
         return;
       }
 
       if (status === "rejected") {
         setError("Vaše B2B registrace byla zamítnuta.");
-        void supabase.auth.signOut();
         return;
       }
 
       persistAuthSession(authData);
-      await supabase.auth.setSession({ access_token: authData.access_token, refresh_token: authData.refresh_token });
-      navigate("/b2b-dashboard", { replace: true });
+      window.location.assign("/b2b-dashboard");
     } catch (err) {
       console.error("[B2BLogin] unexpected error:", err);
       const msg = err instanceof Error ? err.message : String(err);
