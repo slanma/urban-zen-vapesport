@@ -4,12 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, UserPlus, Loader2, CheckCircle } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { withTimeout } from "@/lib/b2bRegistration";
 
 const B2BRegister = () => {
   const navigate = useNavigate();
-  const { signUp } = useAuth();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -62,94 +61,45 @@ const B2BRegister = () => {
     setLoading(true);
     setGlobalError("");
 
-    // 1. Create auth user
-    const { user, error: signUpError } = await signUp(form.email, form.password);
+    try {
+      const { data, error } = await withTimeout(
+        supabase.functions.invoke("register-b2b", {
+          body: { email: form.email, password: form.password, ...form },
+        }),
+        "Registrace trvá příliš dlouho. Zkuste to prosím znovu.",
+      );
 
-    if (signUpError) {
       setLoading(false);
-      const msg = signUpError.message || "";
+
+      if (error || !data?.ok) {
+        const msg = data?.message || error?.message || "neznámá chyba";
       const lower = msg.toLowerCase();
-      if (lower.includes("already") || lower.includes("registered") || lower.includes("exists")) {
+        if (data?.code === "email_exists" || lower.includes("already") || lower.includes("registered") || lower.includes("exists")) {
         setGlobalError("Tento e-mail je již zaregistrován. Přihlaste se nebo použijte jiný e-mail.");
         setErrors((p) => ({ ...p, email: "E-mail je již zaregistrován." }));
-      } else if (lower.includes("password") && (lower.includes("weak") || lower.includes("pwned") || lower.includes("leaked") || lower.includes("compromise"))) {
+        } else if (data?.code === "weak_password" || (lower.includes("password") && (lower.includes("weak") || lower.includes("pwned") || lower.includes("leaked") || lower.includes("compromise")))) {
         setGlobalError("Toto heslo je příliš slabé nebo bylo nalezeno v úniku dat. Zvolte prosím jiné, silnější heslo.");
         setErrors((p) => ({ ...p, password: "Heslo je nevyhovující – zvolte silnější." }));
-      } else if (lower.includes("password")) {
+        } else if (data?.code === "invalid_email" || lower.includes("email") || lower.includes("e-mail")) {
+          setGlobalError(`E-mail nevyhovuje: ${msg}`);
+          setErrors((p) => ({ ...p, email: msg }));
+        } else if (data?.code === "invalid_ico") {
+          setGlobalError(msg);
+          setErrors((p) => ({ ...p, ico: msg }));
+        } else if (lower.includes("password")) {
         setGlobalError(`Heslo nevyhovuje: ${msg}`);
         setErrors((p) => ({ ...p, password: msg }));
-      } else if (lower.includes("email") || lower.includes("invalid")) {
-        setGlobalError(`E-mail nevyhovuje: ${msg}`);
-        setErrors((p) => ({ ...p, email: msg }));
-      } else if (lower.includes("disabled") || lower.includes("not allowed")) {
-        setGlobalError("Registrace je momentálně vypnutá. Kontaktujte nás prosím.");
       } else {
-        setGlobalError(`Registrace se nezdařila: ${msg || "neznámá chyba"}`);
-      }
-      return;
-    }
-
-    if (!user) {
-      setLoading(false);
-      setGlobalError("Registrace se nezdařila. Zkuste to prosím znovu.");
-      return;
-    }
-
-    // 2. Create B2B profile (RLS requires the user to be authenticated as user_id).
-    // signUp auto-creates a session when email confirmation is disabled. If there's
-    // no session yet (confirmation required), sign in with the credentials so the
-    // insert passes RLS.
-    const { data: sessionData } = await supabase.auth.getSession();
-    if (!sessionData.session) {
-      const { error: signInErr } = await supabase.auth.signInWithPassword({
-        email: form.email,
-        password: form.password,
-      });
-      if (signInErr) {
-        setLoading(false);
-        setGlobalError(`Účet vytvořen, ale firemní profil se nepodařilo uložit (přihlášení selhalo): ${signInErr.message}`);
+          setGlobalError(`Registrace se nezdařila: ${msg}`);
+        }
         return;
       }
+
+      setSuccess(true);
+    } catch (err) {
+      setLoading(false);
+      setGlobalError(err instanceof Error ? err.message : "Registrace se nezdařila. Zkuste to prosím znovu.");
     }
-
-    const { error: profileError } = await supabase.from("b2b_profiles").insert({
-      user_id: user.id,
-      company_name: form.companyName,
-      ico: form.ico,
-      dic: form.dic || null,
-      contact_person: form.contactName,
-      phone: form.phone,
-      address: form.address,
-      city: form.city,
-      zip: form.zip,
-    });
-
-    setLoading(false);
-
-    if (profileError) {
-      setGlobalError(`Profil se nepodařilo vytvořit: ${profileError.message}`);
-      return;
-    }
-
-
-    // 3. Send webhook notification (fire and forget)
-    supabase.functions.invoke('notify-b2b-registration', {
-      body: {
-        companyName: form.companyName,
-        ico: form.ico,
-        dic: form.dic,
-        contactPerson: form.contactName,
-        email: form.email,
-        phone: form.phone,
-        address: form.address,
-        city: form.city,
-        zip: form.zip,
-      },
-    }).catch((err) => console.error('Webhook notification failed:', err));
-
-    // Sign out after registration (pending approval)
-    await supabase.auth.signOut();
-    setSuccess(true);
   };
 
   if (success) {
