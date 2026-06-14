@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, UserPlus, Loader2, CheckCircle } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { withTimeout } from "@/lib/b2bRegistration";
+import { registerB2B } from "@/lib/b2bRegistration";
 
 const B2BRegister = () => {
   const navigate = useNavigate();
@@ -62,24 +61,19 @@ const B2BRegister = () => {
     setGlobalError("");
 
     try {
-      const { data, error } = await withTimeout(
-        supabase.functions.invoke("register-b2b", {
-          body: { email: form.email, password: form.password, ...form },
-        }),
-        "Registrace trvá příliš dlouho. Zkuste to prosím znovu.",
-      );
+      const data = await registerB2B({ email: form.email, password: form.password, ...form });
 
       setLoading(false);
 
-      if (error || !data?.ok) {
-        const msg = data?.message || error?.message || "neznámá chyba";
-      const lower = msg.toLowerCase();
+      if (!data?.ok) {
+        const msg = data?.message || "neznámá chyba";
+        const lower = msg.toLowerCase();
         if (data?.code === "email_exists" || lower.includes("already") || lower.includes("registered") || lower.includes("exists")) {
-        setGlobalError("Tento e-mail je již zaregistrován. Přihlaste se nebo použijte jiný e-mail.");
-        setErrors((p) => ({ ...p, email: "E-mail je již zaregistrován." }));
+          setGlobalError("Tento e-mail je již zaregistrován. Přihlaste se nebo použijte jiný e-mail.");
+          setErrors((p) => ({ ...p, email: "E-mail je již zaregistrován." }));
         } else if (data?.code === "weak_password" || (lower.includes("password") && (lower.includes("weak") || lower.includes("pwned") || lower.includes("leaked") || lower.includes("compromise")))) {
-        setGlobalError("Toto heslo je příliš slabé nebo bylo nalezeno v úniku dat. Zvolte prosím jiné, silnější heslo.");
-        setErrors((p) => ({ ...p, password: "Heslo je nevyhovující – zvolte silnější." }));
+          setGlobalError("Toto heslo je příliš slabé nebo bylo nalezeno v úniku dat. Zvolte prosím jiné, silnější heslo.");
+          setErrors((p) => ({ ...p, password: "Heslo je nevyhovující – zvolte silnější." }));
         } else if (data?.code === "invalid_email" || lower.includes("email") || lower.includes("e-mail")) {
           setGlobalError(`E-mail nevyhovuje: ${msg}`);
           setErrors((p) => ({ ...p, email: msg }));
@@ -87,9 +81,9 @@ const B2BRegister = () => {
           setGlobalError(msg);
           setErrors((p) => ({ ...p, ico: msg }));
         } else if (lower.includes("password")) {
-        setGlobalError(`Heslo nevyhovuje: ${msg}`);
-        setErrors((p) => ({ ...p, password: msg }));
-      } else {
+          setGlobalError(`Heslo nevyhovuje: ${msg}`);
+          setErrors((p) => ({ ...p, password: msg }));
+        } else {
           setGlobalError(`Registrace se nezdařila: ${msg}`);
         }
         return;
