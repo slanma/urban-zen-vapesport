@@ -6,8 +6,23 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Plus, Minus, ShoppingCart, Send, LogOut, Loader2 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+const ACCESS_TIMEOUT_MS = 12000;
+
+interface StoredB2BSession {
+  access_token: string;
+  refresh_token?: string;
+  expires_at?: number;
+  user?: { id: string; email?: string };
+}
+
+interface B2BProfileData {
+  company_name: string;
+  discount_percent: number;
+  status: string;
+}
 
 interface CartItem {
   productId: string;
@@ -25,39 +40,92 @@ const skuMap: Record<string, string> = {
   "neopren-baterie": "VL-LEG-004",
 };
 
+const getAuthStorageKey = () => {
+  const host = new URL(SUPABASE_URL).host;
+  const projectRef = host.split(".")[0];
+  return `sb-${projectRef}-auth-token`;
+};
+
+const getStoredSession = (): StoredB2BSession | null => {
+  try {
+    const raw = window.localStorage.getItem(getAuthStorageKey());
+    if (!raw) return null;
+    return JSON.parse(raw) as StoredB2BSession;
+  } catch {
+    return null;
+  }
+};
+
+const clearStoredSession = () => window.localStorage.removeItem(getAuthStorageKey());
+
+const fetchProfile = async (session: StoredB2BSession): Promise<B2BProfileData | null> => {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), ACCESS_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/b2b_profiles?select=company_name,discount_percent,status&user_id=eq.${session.user?.id}&limit=1`,
+      {
+        method: "GET",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${session.access_token}`,
+          Accept: "application/json",
+        },
+        signal: controller.signal,
+      }
+    );
+
+    if (!response.ok) throw new Error(`Ověření profilu selhalo (${response.status}).`);
+    const rows = (await response.json()) as B2BProfileData[];
+    return rows[0] ?? null;
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error("Ověření B2B účtu trvá příliš dlouho. Zkuste stránku obnovit.");
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+};
+
 const B2BDashboard = () => {
   const navigate = useNavigate();
-  const { user, loading: authLoading, signOut } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [profile, setProfile] = useState<{ company_name: string; discount_percent: number } | null>(null);
+  const [profile, setProfile] = useState<B2BProfileData | null>(null);
+  const [accountLabel, setAccountLabel] = useState("");
   const [checkingAccess, setCheckingAccess] = useState(true);
+  const [accessError, setAccessError] = useState("");
 
   useEffect(() => {
-    if (authLoading) return;
-    if (!user) {
-      navigate("/b2b-login");
-      return;
-    }
-
     const checkAccess = async () => {
-      const { data: profileData, error } = await supabase
-        .from("b2b_profiles")
-        .select("company_name, discount_percent, status")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (error || profileData?.status !== "approved") {
-        await signOut();
-        navigate("/b2b-login");
+      const session = getStoredSession();
+      if (!session?.access_token || !session.user?.id) {
+        clearStoredSession();
+        navigate("/b2b-login", { replace: true });
         return;
       }
 
-      setProfile(profileData);
-      setCheckingAccess(false);
+      try {
+        const profileData = await fetchProfile(session);
+        if (profileData?.status !== "approved") {
+          clearStoredSession();
+          navigate("/b2b-login", { replace: true });
+          return;
+        }
+
+        setProfile(profileData);
+        setAccountLabel(profileData.company_name || session.user.email || "B2B účet");
+      } catch (error) {
+        console.error("[B2BDashboard] access check failed:", error);
+        setAccessError(error instanceof Error ? error.message : "B2B účet se nepodařilo ověřit.");
+      } finally {
+        setCheckingAccess(false);
+      }
     };
 
     checkAccess();
-  }, [user, authLoading, navigate, signOut]);
+  }, [navigate]);
 
   const b2bDiscount = profile ? (100 - profile.discount_percent) / 100 : 0.7;
 
