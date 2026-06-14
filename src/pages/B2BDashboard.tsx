@@ -257,7 +257,7 @@ const B2BDashboard = () => {
     );
   }
 
-  const discountLabel = profile ? `${profile.discount_percent} %` : "30 %";
+  const discountLabel = hasDiscount ? `${discountPercent} %` : "";
 
   return (
     <div className="min-h-screen bg-secondary">
