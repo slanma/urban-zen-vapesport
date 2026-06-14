@@ -301,14 +301,7 @@ const B2BWholesale = () => {
                         </div>
                       </div>
                       <div className="text-right text-sm">
-                        {totalQty >= 10 ? (
-                          <div>
-                            <div className="line-through text-muted-foreground text-xs">{fmtCZK(base)}</div>
-                            <div className="font-bold text-emerald-600">{fmtCZK(unit)}</div>
-                          </div>
-                        ) : (
-                          <div className="font-bold">{fmtCZK(base)}</div>
-                        )}
+                        <div className="font-bold">{fmtCZK(base)}</div>
                       </div>
                       <div className="text-center font-mono">{totalQty}</div>
                       <div className="text-right">
