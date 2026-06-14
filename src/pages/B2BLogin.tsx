@@ -7,6 +7,20 @@ import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const LOGIN_TIMEOUT_MS = 15000;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+
+interface PasswordLoginResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  expires_at?: number;
+  token_type: string;
+  user: { id: string; email?: string };
+  error?: string;
+  error_description?: string;
+  msg?: string;
+}
 
 const withTimeout = async <T,>(promise: PromiseLike<T>, message: string): Promise<T> => {
   let timeoutId: number | undefined;
@@ -19,6 +33,47 @@ const withTimeout = async <T,>(promise: PromiseLike<T>, message: string): Promis
   } finally {
     if (timeoutId) window.clearTimeout(timeoutId);
   }
+};
+
+const getAuthStorageKey = () => {
+  const host = new URL(SUPABASE_URL).host;
+  const projectRef = host.split(".")[0];
+  return `sb-${projectRef}-auth-token`;
+};
+
+const fetchJsonWithTimeout = async <T,>(url: string, init: RequestInit, message: string): Promise<T> => {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), LOGIN_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, { ...init, signal: controller.signal });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+      const errorPayload = payload as Partial<PasswordLoginResponse> | null;
+      throw new Error(errorPayload?.error_description || errorPayload?.msg || errorPayload?.error || `HTTP ${response.status}`);
+    }
+    return payload as T;
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") throw new Error(message);
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+};
+
+const persistAuthSession = (authData: PasswordLoginResponse) => {
+  const expiresAt = authData.expires_at ?? Math.floor(Date.now() / 1000) + authData.expires_in;
+  window.localStorage.setItem(
+    getAuthStorageKey(),
+    JSON.stringify({
+      access_token: authData.access_token,
+      refresh_token: authData.refresh_token,
+      expires_in: authData.expires_in,
+      expires_at: expiresAt,
+      token_type: authData.token_type || "bearer",
+      user: authData.user,
+    })
+  );
 };
 
 const B2BLogin = () => {
