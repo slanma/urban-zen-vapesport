@@ -7,6 +7,29 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Plus, Minus, ShoppingCart, Send, LogOut, Loader2 } from "lucide-react";
+import ebikeSilhouette from "@/assets/bike-lineart.png";
+import {
+  HOTSPOT_LABELS,
+  getProductsByHotspot,
+  type Hotspot,
+} from "@/data/productHotspots";
+
+type HotspotFilter = Hotspot | "All";
+
+interface BikeDot {
+  id: Hotspot;
+  label: string;
+  top: string;
+  left: string;
+}
+
+const BIKE_DOTS: BikeDot[] = [
+  { id: "Handlebar",   label: "Řídítka",       top: "20%", left: "62%" },
+  { id: "TopTube",     label: "Horní trubka",  top: "34%", left: "50%" },
+  { id: "Frame",       label: "Rám",           top: "48%", left: "44%" },
+  { id: "UnderSaddle", label: "Pod sedlo",     top: "23%", left: "43%" },
+  { id: "RearRack",    label: "Nosič",         top: "33%", left: "32%" },
+];
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
