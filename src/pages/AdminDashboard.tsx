@@ -30,7 +30,7 @@ const statusColor: Record<string, string> = {
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [view, setView] = useState<View>("overview");
   const [collapsed, setCollapsed] = useState(false);
   const [registrations, setRegistrations] = useState<Tables<"b2b_profiles">[]>([]);
