@@ -477,9 +477,9 @@ const B2BDashboard = () => {
             <span className="text-xl font-bold">{totalItems} ks</span>
             <span className="text-xl font-bold">{totalPrice.toLocaleString("cs-CZ")}&nbsp;Kč bez DPH</span>
           </div>
-          <Button size="lg" className="h-14 px-10 text-lg font-bold gap-3" disabled={totalItems === 0 || submitting} onClick={handleSubmitOrder}>
-            {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
-            {submitting ? "Odesílám…" : "Odeslat B2B objednávku"}
+          <Button size="lg" className="h-14 px-10 text-lg font-bold gap-3" disabled={totalItems === 0} onClick={handleSubmitOrder}>
+            <ShoppingCart className="w-5 h-5" />
+            Pokračovat do košíku
           </Button>
         </div>
       </aside>
