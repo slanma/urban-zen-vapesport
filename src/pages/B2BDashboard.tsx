@@ -120,6 +120,13 @@ const B2BDashboard = () => {
   const [accountLabel, setAccountLabel] = useState("");
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [accessError, setAccessError] = useState("");
+  const [activeHotspot, setActiveHotspot] = useState<HotspotFilter>("All");
+
+  const visibleProducts = useMemo(() => {
+    if (activeHotspot === "All") return products;
+    const ids = new Set(getProductsByHotspot(activeHotspot).map((p) => p.id));
+    return products.filter((p) => ids.has(p.id));
+  }, [activeHotspot]);
 
   useEffect(() => {
     const checkAccess = async () => {
