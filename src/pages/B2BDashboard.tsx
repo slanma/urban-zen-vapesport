@@ -44,7 +44,6 @@ interface StoredB2BSession {
 
 interface B2BProfileData {
   company_name: string;
-  discount_percent: number;
   status: string;
 }
 
@@ -88,7 +87,7 @@ const fetchProfile = async (session: StoredB2BSession): Promise<B2BProfileData |
 
   try {
     const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/b2b_profiles?select=company_name,discount_percent,status&user_id=eq.${session.user?.id}&limit=1`,
+      `${SUPABASE_URL}/rest/v1/b2b_profiles?select=company_name,status&user_id=eq.${session.user?.id}&limit=1`,
       {
         method: "GET",
         headers: {
@@ -158,10 +157,6 @@ const B2BDashboard = () => {
     checkAccess();
   }, [navigate]);
 
-  const discountPercent = profile?.discount_percent ?? 0;
-  const hasDiscount = discountPercent > 0;
-  const b2bDiscount = (100 - discountPercent) / 100;
-
   const getQty = (id: string) => cart.find((c) => c.productId === id)?.qty ?? 0;
 
   const setQty = (id: string, qty: number) => {
@@ -180,9 +175,9 @@ const B2BDashboard = () => {
   const totalPrice = useMemo(
     () => cart.reduce((sum, c) => {
       const product = getProductById(c.productId);
-      return sum + (product ? product.price * b2bDiscount * c.qty : 0);
+      return sum + (product ? product.price * c.qty : 0);
     }, 0),
-    [cart, b2bDiscount]
+    [cart]
   );
 
   const [submitting, setSubmitting] = useState(false);
@@ -203,7 +198,7 @@ const B2BDashboard = () => {
 
     const items = cart.map((c) => {
       const product = getProductById(c.productId);
-      const unitPrice = product ? Math.round(product.price * b2bDiscount) : 0;
+      const unitPrice = product ? product.price : 0;
       return {
         productId: c.productId,
         sku: skuMap[c.productId] || c.productId,
@@ -215,7 +210,7 @@ const B2BDashboard = () => {
 
     const payload = {
       items,
-      discountLabel: hasDiscount ? `${discountPercent} %` : "",
+      discountLabel: "",
       accountLabel,
       email: session.user.email ?? "",
       companyName: profile?.company_name ?? null,
@@ -256,8 +251,6 @@ const B2BDashboard = () => {
       </main>
     );
   }
-
-  const discountLabel = hasDiscount ? `${discountPercent} %` : "";
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -415,7 +408,6 @@ const B2BDashboard = () => {
                 <TableBody>
                   {visibleProducts.map((product) => {
                     const qty = getQty(product.id);
-                    const b2bPrice = Math.round(product.price * b2bDiscount);
                     const sku = skuMap[product.id] || product.id;
 
                     return (
@@ -437,15 +429,7 @@ const B2BDashboard = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex flex-col items-end gap-0.5">
-                            {hasDiscount ? (
-                              <>
-                                <span className="text-sm text-muted-foreground line-through">VOC {product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
-                                <span className="text-lg font-bold text-primary">{b2bPrice.toLocaleString("cs-CZ")}&nbsp;Kč</span>
-                                <span className="text-xs font-semibold text-primary/70">Sleva {discountLabel}</span>
-                              </>
-                            ) : (
-                              <span className="text-lg font-bold text-foreground">{product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
-                            )}
+                            <span className="text-lg font-bold text-foreground">VOC {product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
                           </div>
                         </TableCell>
                         <TableCell>
