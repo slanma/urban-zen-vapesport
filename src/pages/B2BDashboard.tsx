@@ -328,7 +328,7 @@ const B2BDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {products.map((product) => {
+                  {visibleProducts.map((product) => {
                     const qty = getQty(product.id);
                     const b2bPrice = Math.round(product.price * b2bDiscount);
                     const sku = skuMap[product.id] || product.id;
