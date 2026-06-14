@@ -158,7 +158,9 @@ const B2BDashboard = () => {
     checkAccess();
   }, [navigate]);
 
-  const b2bDiscount = profile ? (100 - profile.discount_percent) / 100 : 0.7;
+  const discountPercent = profile?.discount_percent ?? 0;
+  const hasDiscount = discountPercent > 0;
+  const b2bDiscount = (100 - discountPercent) / 100;
 
   const getQty = (id: string) => cart.find((c) => c.productId === id)?.qty ?? 0;
 
