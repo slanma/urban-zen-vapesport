@@ -266,12 +266,12 @@ const B2BWholesale = () => {
         <main>
           <div id="b2b-matrix-top" />
           <div className="bg-background border border-border rounded-xl overflow-hidden">
-            <div className="grid grid-cols-[60px_1fr_120px_90px_140px_50px] gap-3 px-4 py-3 bg-muted/40 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <div className="grid grid-cols-[60px_1fr_140px_90px_160px_50px] gap-3 px-4 py-3 bg-muted/40 text-xs font-bold uppercase tracking-wider text-muted-foreground">
               <div>Foto</div>
               <div>Kód / Název</div>
               <div className="text-right">B2B / ks bez DPH</div>
               <div className="text-center">Množství</div>
-              <div className="text-right">Celkem bez DPH</div>
+              <div className="text-right">Konečná cena s DPH</div>
               <div />
             </div>
             <div className="divide-y divide-border">
