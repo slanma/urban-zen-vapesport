@@ -95,23 +95,19 @@ const B2BLogin = () => {
     setError("");
 
     try {
-      const { data: authData, error: authError } = await withTimeout(
-        supabase.auth.signInWithPassword({ email: email.trim(), password }),
+      const authData = await fetchJsonWithTimeout<PasswordLoginResponse>(
+        `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+          },
+          body: JSON.stringify({ email: email.trim(), password }),
+        },
         "Přihlášení trvá příliš dlouho. Zkuste to prosím znovu."
       );
-
-      if (authError) {
-        console.error("[B2BLogin] signIn error:", authError);
-        const msg = authError.message || "";
-        if (msg.includes("Invalid login")) {
-          setError("Nesprávný e-mail nebo heslo.");
-        } else if (msg.includes("Email not confirmed")) {
-          setError("Váš e-mail ještě nebyl potvrzen. Zkontrolujte svou schránku.");
-        } else {
-          setError(`Přihlášení se nezdařilo: ${msg}`);
-        }
-        return;
-      }
 
       const user = authData.user;
       if (!user) {
@@ -119,22 +115,19 @@ const B2BLogin = () => {
         return;
       }
 
-      const { data: profile, error: profileErr } = await withTimeout(
-        supabase
-          .from("b2b_profiles")
-          .select("status")
-          .eq("user_id", user.id)
-          .maybeSingle(),
+      const profile = await fetchJsonWithTimeout<Array<{ status: string }>>(
+        `${SUPABASE_URL}/rest/v1/b2b_profiles?select=status&user_id=eq.${user.id}&limit=1`,
+        {
+          method: "GET",
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${authData.access_token}`,
+          },
+        },
         "Ověření B2B účtu trvá příliš dlouho. Zkuste to prosím znovu."
       );
 
-      if (profileErr) {
-        console.error("[B2BLogin] b2b profile error:", profileErr);
-        setError(`Nelze ověřit B2B profil: ${profileErr.message}`);
-        return;
-      }
-
-      const status = profile?.status;
+      const status = profile[0]?.status;
 
       if (!status) {
         setError("K tomuto e-mailu nemáme B2B profil. Zaregistrujte se jako B2B partner.");
@@ -154,10 +147,19 @@ const B2BLogin = () => {
         return;
       }
 
+      persistAuthSession(authData);
+      await supabase.auth.setSession({ access_token: authData.access_token, refresh_token: authData.refresh_token });
       navigate("/b2b-dashboard", { replace: true });
     } catch (err) {
       console.error("[B2BLogin] unexpected error:", err);
-      setError(`Neočekávaná chyba: ${err instanceof Error ? err.message : String(err)}`);
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg.includes("Invalid login") || msg.includes("invalid_credentials")) {
+        setError("Nesprávný e-mail nebo heslo.");
+      } else if (msg.includes("Email not confirmed")) {
+        setError("Váš e-mail ještě nebyl potvrzen. Zkontrolujte svou schránku.");
+      } else {
+        setError(`Neočekávaná chyba: ${msg}`);
+      }
     } finally {
       setLoading(false);
     }
