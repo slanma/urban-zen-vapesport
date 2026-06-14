@@ -153,15 +153,32 @@ const B2BDashboard = () => {
   );
 
   const handleLogout = async () => {
-    await signOut();
-    navigate("/b2b-login");
+    clearStoredSession();
+    navigate("/b2b-login", { replace: true });
   };
 
-  if (authLoading || checkingAccess) {
+  if (checkingAccess) {
     return (
       <div className="min-h-screen bg-secondary flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
+    );
+  }
+
+  if (accessError) {
+    return (
+      <main className="min-h-screen bg-secondary flex items-center justify-center px-4">
+        <section className="w-full max-w-md bg-background border border-border rounded-lg p-8 text-center space-y-5">
+          <h1 className="text-2xl font-heading font-bold text-foreground">B2B účet nelze ověřit</h1>
+          <p className="text-destructive text-base font-medium">{accessError}</p>
+          <Button onClick={() => window.location.reload()} className="w-full h-12 font-bold">
+            Zkusit znovu
+          </Button>
+          <Button variant="outline" onClick={handleLogout} className="w-full h-12 font-bold">
+            Zpět na přihlášení
+          </Button>
+        </section>
+      </main>
     );
   }
 
@@ -179,7 +196,7 @@ const B2BDashboard = () => {
               Velkoobchodní matrix →
             </a>
             <span className="text-base text-muted-foreground hidden sm:inline">
-              {profile?.company_name || user?.email}
+              {accountLabel}
             </span>
             <Button variant="outline" size="sm" className="gap-2 text-base h-10 px-4" onClick={handleLogout}>
               <LogOut className="w-4 h-4" />
