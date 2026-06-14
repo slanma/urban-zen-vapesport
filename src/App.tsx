@@ -15,6 +15,7 @@ import B2BLogin from "./pages/B2BLogin";
 import B2BRegister from "./pages/B2BRegister";
 import B2BDashboard from "./pages/B2BDashboard";
 import B2BWholesale from "./pages/B2BWholesale";
+import B2BCheckout from "./pages/B2BCheckout";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -58,6 +59,7 @@ const App = () => (
             <Route path="/b2b-register" element={<B2BRegister />} />
             <Route path="/b2b-dashboard" element={<B2BDashboard />} />
             <Route path="/b2b-velkoobchod" element={<B2BWholesale />} />
+            <Route path="/b2b-pokladna" element={<B2BCheckout />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/admin" element={<AdminLayout />}>
