@@ -108,6 +108,9 @@ const B2BDashboard = () => {
             Vapesport <span className="text-primary font-medium text-sm ml-1">B2B</span>
           </a>
           <div className="flex items-center gap-4">
+            <a href="/b2b-velkoobchod" className="text-sm font-semibold text-primary hover:underline hidden sm:inline">
+              Velkoobchodní matrix →
+            </a>
             <span className="text-base text-muted-foreground hidden sm:inline">
               {profile?.company_name || user?.email}
             </span>
