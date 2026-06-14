@@ -67,10 +67,24 @@ const B2BRegister = () => {
 
     if (signUpError) {
       setLoading(false);
-      if (signUpError.message.includes("already registered")) {
+      const msg = signUpError.message || "";
+      const lower = msg.toLowerCase();
+      if (lower.includes("already") || lower.includes("registered") || lower.includes("exists")) {
         setGlobalError("Tento e-mail je již zaregistrován. Přihlaste se nebo použijte jiný e-mail.");
+        setErrors((p) => ({ ...p, email: "E-mail je již zaregistrován." }));
+      } else if (lower.includes("password") && (lower.includes("weak") || lower.includes("pwned") || lower.includes("leaked") || lower.includes("compromise"))) {
+        setGlobalError("Toto heslo je příliš slabé nebo bylo nalezeno v úniku dat. Zvolte prosím jiné, silnější heslo.");
+        setErrors((p) => ({ ...p, password: "Heslo je nevyhovující – zvolte silnější." }));
+      } else if (lower.includes("password")) {
+        setGlobalError(`Heslo nevyhovuje: ${msg}`);
+        setErrors((p) => ({ ...p, password: msg }));
+      } else if (lower.includes("email") || lower.includes("invalid")) {
+        setGlobalError(`E-mail nevyhovuje: ${msg}`);
+        setErrors((p) => ({ ...p, email: msg }));
+      } else if (lower.includes("disabled") || lower.includes("not allowed")) {
+        setGlobalError("Registrace je momentálně vypnutá. Kontaktujte nás prosím.");
       } else {
-        setGlobalError("Registrace se nezdařila. Zkuste to prosím znovu.");
+        setGlobalError(`Registrace se nezdařila: ${msg || "neznámá chyba"}`);
       }
       return;
     }
@@ -81,7 +95,23 @@ const B2BRegister = () => {
       return;
     }
 
-    // 2. Create B2B profile
+    // 2. Create B2B profile (RLS requires the user to be authenticated as user_id).
+    // signUp auto-creates a session when email confirmation is disabled. If there's
+    // no session yet (confirmation required), sign in with the credentials so the
+    // insert passes RLS.
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (!sessionData.session) {
+      const { error: signInErr } = await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
+      });
+      if (signInErr) {
+        setLoading(false);
+        setGlobalError(`Účet vytvořen, ale firemní profil se nepodařilo uložit (přihlášení selhalo): ${signInErr.message}`);
+        return;
+      }
+    }
+
     const { error: profileError } = await supabase.from("b2b_profiles").insert({
       user_id: user.id,
       company_name: form.companyName,
@@ -97,9 +127,10 @@ const B2BRegister = () => {
     setLoading(false);
 
     if (profileError) {
-      setGlobalError("Profil se nepodařilo vytvořit. Kontaktujte nás prosím.");
+      setGlobalError(`Profil se nepodařilo vytvořit: ${profileError.message}`);
       return;
     }
+
 
     // 3. Send webhook notification (fire and forget)
     supabase.functions.invoke('notify-b2b-registration', {
@@ -267,9 +298,25 @@ const B2BRegister = () => {
               </div>
             </fieldset>
 
-            {globalError && (
-              <p role="alert" className="text-destructive text-base font-medium">{globalError}</p>
+            {(globalError || Object.values(errors).some(Boolean)) && (
+              <div
+                role="alert"
+                ref={(el) => el?.scrollIntoView({ behavior: "smooth", block: "center" })}
+                className="rounded-md border-2 border-destructive bg-destructive/10 p-4 space-y-2"
+              >
+                {globalError && (
+                  <p className="text-destructive text-base font-bold">{globalError}</p>
+                )}
+                {Object.entries(errors).filter(([, v]) => v).length > 0 && (
+                  <ul className="list-disc list-inside text-destructive text-base font-medium">
+                    {Object.entries(errors).filter(([, v]) => v).map(([k, v]) => (
+                      <li key={k}>{v}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             )}
+
 
             <Button type="submit" className="w-full h-16 text-xl font-bold tracking-wide gap-3" size="lg" disabled={loading}>
               {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <UserPlus className="w-6 h-6" />}
