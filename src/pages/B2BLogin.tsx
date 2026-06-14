@@ -26,51 +26,69 @@ const B2BLogin = () => {
     setLoading(true);
     setError("");
 
-    const { error: authError } = await signIn(email, password);
+    try {
+      const { error: authError } = await signIn(email, password);
 
-    if (authError) {
-      setLoading(false);
-      if (authError.message.includes("Invalid login")) {
-        setError("Nesprávný e-mail nebo heslo.");
-      } else if (authError.message.includes("Email not confirmed")) {
-        setError("Váš e-mail ještě nebyl potvrzen. Zkontrolujte svou schránku.");
-      } else {
-        setError("Přihlášení se nezdařilo. Zkuste to prosím znovu.");
+      if (authError) {
+        console.error("[B2BLogin] signIn error:", authError);
+        const msg = authError.message || "";
+        if (msg.includes("Invalid login")) {
+          setError("Nesprávný e-mail nebo heslo.");
+        } else if (msg.includes("Email not confirmed")) {
+          setError("Váš e-mail ještě nebyl potvrzen. Zkontrolujte svou schránku.");
+        } else {
+          setError(`Přihlášení se nezdařilo: ${msg}`);
+        }
+        setLoading(false);
+        return;
       }
-      return;
-    }
 
-    // Check B2B profile status
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+      const { data: { user }, error: userErr } = await supabase.auth.getUser();
+      if (userErr || !user) {
+        console.error("[B2BLogin] getUser error:", userErr);
+        setError("Přihlášení se nezdařilo (relace).");
+        setLoading(false);
+        return;
+      }
+
+      const { data: status, error: rpcErr } = await supabase.rpc("get_b2b_status", { _user_id: user.id });
+      if (rpcErr) {
+        console.error("[B2BLogin] get_b2b_status error:", rpcErr);
+        setError(`Nelze ověřit B2B status: ${rpcErr.message}`);
+        setLoading(false);
+        return;
+      }
+
+      console.log("[B2BLogin] b2b status =", status);
+
+      if (!status) {
+        setError("K tomuto e-mailu nemáme B2B profil. Zaregistrujte se jako B2B partner.");
+        await supabase.auth.signOut();
+        setLoading(false);
+        return;
+      }
+
+      if (status === "pending") {
+        setError("Vaše registrace čeká na schválení.");
+        await supabase.auth.signOut();
+        setLoading(false);
+        return;
+      }
+
+      if (status === "rejected") {
+        setError("Vaše B2B registrace byla zamítnuta.");
+        await supabase.auth.signOut();
+        setLoading(false);
+        return;
+      }
+
       setLoading(false);
-      setError("Přihlášení se nezdařilo.");
-      return;
+      navigate("/b2b-dashboard");
+    } catch (err) {
+      console.error("[B2BLogin] unexpected error:", err);
+      setError(`Neočekávaná chyba: ${err instanceof Error ? err.message : String(err)}`);
+      setLoading(false);
     }
-
-    const { data: status } = await supabase.rpc("get_b2b_status", { _user_id: user.id });
-
-    setLoading(false);
-
-    if (!status) {
-      setError("Nemáte B2B účet. Zaregistrujte se jako B2B partner.");
-      await supabase.auth.signOut();
-      return;
-    }
-
-    if (status === "pending") {
-      setError("Vaše registrace čeká na schválení. Budeme vás informovat e-mailem.");
-      await supabase.auth.signOut();
-      return;
-    }
-
-    if (status === "rejected") {
-      setError("Vaše B2B registrace byla zamítnuta. Kontaktujte nás pro více informací.");
-      await supabase.auth.signOut();
-      return;
-    }
-
-    navigate("/b2b-dashboard");
   };
 
   return (
