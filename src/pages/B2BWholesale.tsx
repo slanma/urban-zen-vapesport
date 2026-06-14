@@ -289,7 +289,7 @@ const B2BWholesale = () => {
                 return (
                   <div key={row.baseId} ref={(el) => (rowRefs.current[row.baseId] = el)}>
                     {/* Parent row */}
-                    <div className="grid grid-cols-[60px_1fr_120px_90px_140px_50px] gap-3 px-4 py-3 items-center hover:bg-muted/20">
+                    <div className="grid grid-cols-[60px_1fr_140px_90px_160px_50px] gap-3 px-4 py-3 items-center hover:bg-muted/20">
                       <a href={detailHref} target="_blank" rel="noopener noreferrer" className="block">
                         <img src={row.base.image} alt={row.base.name} className="w-12 h-12 rounded object-cover shadow-sm" />
                       </a>
@@ -308,12 +308,20 @@ const B2BWholesale = () => {
                         </div>
                       </div>
                       <div className="text-right text-sm">
-                        <div className="font-bold">{fmtCZK(base)}</div>
+                        {qualifiesForVolume(row) ? (
+                          <div className="flex flex-col items-end leading-tight">
+                            <span className="text-xs text-muted-foreground line-through">{fmtCZK(base)}</span>
+                            <span className="font-bold text-emerald-600">{fmtCZK(unit)}</span>
+                            <span className="text-[10px] uppercase tracking-wider text-emerald-600 font-semibold">−2 % ≥10 ks</span>
+                          </div>
+                        ) : (
+                          <div className="font-bold">{fmtCZK(base)}</div>
+                        )}
                       </div>
                       <div className="text-center font-mono">{totalQty}</div>
                       <div className="text-right">
-                        <div className="font-bold text-sm">{fmtCZK(modelTotalNet(row))}</div>
-                        <div className="text-xs text-muted-foreground">{fmtCZK(modelTotalGross(row))} s DPH</div>
+                        <div className="font-bold text-base">{fmtCZK(modelTotalGross(row))}</div>
+                        <div className="text-xs text-muted-foreground">{fmtCZK(modelTotalNet(row))} bez DPH</div>
                       </div>
                       <button onClick={() => toggleExpand(row.baseId)} className="justify-self-end p-2 hover:bg-muted rounded" aria-label="Rozbalit varianty">
                         {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
