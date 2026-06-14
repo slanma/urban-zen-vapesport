@@ -95,6 +95,7 @@ const B2BLogin = () => {
 
       if (status === "rejected") {
         setError("Vaše B2B registrace byla zamítnuta.");
+        void supabase.auth.signOut();
         return;
       }
 
