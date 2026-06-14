@@ -57,6 +57,7 @@ const App = () => (
             <Route path="/b2b-login" element={<B2BLogin />} />
             <Route path="/b2b-register" element={<B2BRegister />} />
             <Route path="/b2b-dashboard" element={<B2BDashboard />} />
+            <Route path="/b2b-velkoobchod" element={<B2BWholesale />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/admin" element={<AdminLayout />}>
