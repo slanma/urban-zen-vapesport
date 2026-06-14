@@ -437,9 +437,15 @@ const B2BDashboard = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex flex-col items-end gap-0.5">
-                            <span className="text-sm text-muted-foreground line-through">MOC {product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
-                            <span className="text-lg font-bold text-primary">{b2bPrice.toLocaleString("cs-CZ")}&nbsp;Kč</span>
-                            <span className="text-xs font-semibold text-primary/70">Sleva {discountLabel}</span>
+                            {hasDiscount ? (
+                              <>
+                                <span className="text-sm text-muted-foreground line-through">VOC {product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
+                                <span className="text-lg font-bold text-primary">{b2bPrice.toLocaleString("cs-CZ")}&nbsp;Kč</span>
+                                <span className="text-xs font-semibold text-primary/70">Sleva {discountLabel}</span>
+                              </>
+                            ) : (
+                              <span className="text-lg font-bold text-foreground">{product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
+                            )}
                           </div>
                         </TableCell>
                         <TableCell>
