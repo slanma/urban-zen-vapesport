@@ -40,18 +40,17 @@ const B2BDashboard = () => {
     }
 
     const checkAccess = async () => {
-      const { data: status } = await supabase.rpc("get_b2b_status", { _user_id: user.id });
-      if (status !== "approved") {
+      const { data: profileData, error } = await supabase
+        .from("b2b_profiles")
+        .select("company_name, discount_percent, status")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (error || profileData?.status !== "approved") {
         await signOut();
         navigate("/b2b-login");
         return;
       }
-
-      const { data: profileData } = await supabase
-        .from("b2b_profiles")
-        .select("company_name, discount_percent")
-        .eq("user_id", user.id)
-        .single();
 
       setProfile(profileData);
       setCheckingAccess(false);
