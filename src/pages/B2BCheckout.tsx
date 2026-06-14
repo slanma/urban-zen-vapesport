@@ -470,10 +470,10 @@ const B2BCheckout = () => {
             onClick={handleSubmit}
             disabled={step !== 4 || submitting || !termsAccepted}
             className="h-16 px-8 text-lg font-extrabold uppercase tracking-wide bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60 w-full sm:w-auto"
-            aria-label="Závazně objednat a zaplatit"
+            aria-label="ZÁVAZNĚ OBJEDNAT"
           >
             {submitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-            Závazně objednat a zaplatit
+            ZÁVAZNĚ OBJEDNAT
           </Button>
         </div>
         {step !== 4 && (
