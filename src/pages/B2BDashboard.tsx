@@ -158,7 +158,9 @@ const B2BDashboard = () => {
     checkAccess();
   }, [navigate]);
 
-  const b2bDiscount = profile ? (100 - profile.discount_percent) / 100 : 0.7;
+  const discountPercent = profile?.discount_percent ?? 0;
+  const hasDiscount = discountPercent > 0;
+  const b2bDiscount = (100 - discountPercent) / 100;
 
   const getQty = (id: string) => cart.find((c) => c.productId === id)?.qty ?? 0;
 
@@ -213,7 +215,7 @@ const B2BDashboard = () => {
 
     const payload = {
       items,
-      discountLabel: profile ? `${profile.discount_percent} %` : "30 %",
+      discountLabel: hasDiscount ? `${discountPercent} %` : "",
       accountLabel,
       email: session.user.email ?? "",
       companyName: profile?.company_name ?? null,
@@ -255,7 +257,7 @@ const B2BDashboard = () => {
     );
   }
 
-  const discountLabel = profile ? `${profile.discount_percent} %` : "30 %";
+  const discountLabel = hasDiscount ? `${discountPercent} %` : "";
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -435,9 +437,15 @@ const B2BDashboard = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex flex-col items-end gap-0.5">
-                            <span className="text-sm text-muted-foreground line-through">MOC {product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
-                            <span className="text-lg font-bold text-primary">{b2bPrice.toLocaleString("cs-CZ")}&nbsp;Kč</span>
-                            <span className="text-xs font-semibold text-primary/70">Sleva {discountLabel}</span>
+                            {hasDiscount ? (
+                              <>
+                                <span className="text-sm text-muted-foreground line-through">VOC {product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
+                                <span className="text-lg font-bold text-primary">{b2bPrice.toLocaleString("cs-CZ")}&nbsp;Kč</span>
+                                <span className="text-xs font-semibold text-primary/70">Sleva {discountLabel}</span>
+                              </>
+                            ) : (
+                              <span className="text-lg font-bold text-foreground">{product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
+                            )}
                           </div>
                         </TableCell>
                         <TableCell>

@@ -254,7 +254,9 @@ const B2BCheckout = () => {
               <>
                 <h1 className="text-2xl font-heading font-bold text-foreground mb-2">Košík</h1>
                 <p className="text-base text-muted-foreground mb-6">
-                  Zkontrolujte zboží před pokračováním. Ceny jsou se slevou {payload.discountLabel}.
+                  {payload.discountLabel
+                    ? `Zkontrolujte zboží před pokračováním. Ceny jsou se slevou ${payload.discountLabel}.`
+                    : "Zkontrolujte zboží před pokračováním."}
                 </p>
                 <ul className="divide-y divide-border">
                   {payload.items.map((item) => {
