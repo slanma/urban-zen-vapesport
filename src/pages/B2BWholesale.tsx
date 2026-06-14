@@ -94,18 +94,11 @@ const B2BWholesale = () => {
     return colors.reduce((s, c) => s + getQty(row.baseId, c), 0);
   };
 
-  const baseUnitNet = (row: BaseRow) => {
+  const unitNet = (row: BaseRow) => {
     const pricing = getEffectiveUnitPricing(row.base, row.override, isPartner, profile?.discount_percent ?? 0);
     return Math.round(pricing.unitNet);
   };
-  /** ≥10 ks z jednoho modelu → automatická sleva 2 % */
-  const VOLUME_THRESHOLD = 10;
-  const VOLUME_DISCOUNT = 0.02;
-  const qualifiesForVolume = (row: BaseRow) => modelTotalQty(row) >= VOLUME_THRESHOLD;
-  const unitNet = (row: BaseRow) => {
-    const base = baseUnitNet(row);
-    return qualifiesForVolume(row) ? Math.round(base * (1 - VOLUME_DISCOUNT)) : base;
-  };
+  const baseUnitNet = (row: BaseRow) => unitNet(row);
 
   const modelTotalNet = (row: BaseRow) => unitNet(row) * modelTotalQty(row);
   const modelTotalGross = (row: BaseRow) => Math.round(grossFromNet(modelTotalNet(row)));
@@ -308,15 +301,7 @@ const B2BWholesale = () => {
                         </div>
                       </div>
                       <div className="text-right text-sm">
-                        {qualifiesForVolume(row) ? (
-                          <div className="flex flex-col items-end leading-tight">
-                            <span className="text-xs text-muted-foreground line-through">{fmtCZK(base)}</span>
-                            <span className="font-bold text-emerald-600">{fmtCZK(unit)}</span>
-                            <span className="text-[10px] uppercase tracking-wider text-emerald-600 font-semibold">−2 % ≥10 ks</span>
-                          </div>
-                        ) : (
-                          <div className="font-bold">{fmtCZK(base)}</div>
-                        )}
+                        <div className="font-bold">{fmtCZK(base)}</div>
                       </div>
                       <div className="text-center font-mono">{totalQty}</div>
                       <div className="text-right">
