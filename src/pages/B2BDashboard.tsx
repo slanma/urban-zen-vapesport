@@ -153,9 +153,74 @@ const B2BDashboard = () => {
     [cart, b2bDiscount]
   );
 
+  const [submitting, setSubmitting] = useState(false);
+
   const handleLogout = async () => {
     clearStoredSession();
     navigate("/b2b-login", { replace: true });
+  };
+
+  const handleSubmitOrder = async () => {
+    const session = getStoredSession();
+    if (!session?.access_token || !session.user?.id) {
+      toast.error("Pro odeslání objednávky se přihlaste znovu.");
+      navigate("/b2b-login", { replace: true });
+      return;
+    }
+    if (cart.length === 0) return;
+
+    const items = cart.map((c) => {
+      const product = getProductById(c.productId);
+      const unitPrice = product ? Math.round(product.price * b2bDiscount) : 0;
+      return {
+        product_id: c.productId,
+        sku: skuMap[c.productId] || c.productId,
+        name: product?.name ?? c.productId,
+        qty: c.qty,
+        unit_price: unitPrice,
+        line_total: unitPrice * c.qty,
+      };
+    });
+
+    const orderNumber = `B2B-${Date.now()}`;
+    const payload = {
+      order_number: orderNumber,
+      user_id: session.user.id,
+      is_b2b: true,
+      email: session.user.email ?? "",
+      company_name: profile?.company_name ?? null,
+      items,
+      subtotal_gross: Math.round(totalPrice),
+      total_gross: Math.round(totalPrice),
+      status: "nova",
+    };
+
+    setSubmitting(true);
+    try {
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || `HTTP ${response.status}`);
+      }
+      toast.success("Objednávka byla odeslána", { description: `Číslo objednávky: ${orderNumber}` });
+      setCart([]);
+    } catch (error) {
+      console.error("[B2BDashboard] submit order failed:", error);
+      toast.error("Objednávku se nepodařilo odeslat", {
+        description: error instanceof Error ? error.message : "Zkuste to prosím znovu.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (checkingAccess) {
