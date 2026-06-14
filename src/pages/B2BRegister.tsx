@@ -298,9 +298,25 @@ const B2BRegister = () => {
               </div>
             </fieldset>
 
-            {globalError && (
-              <p role="alert" className="text-destructive text-base font-medium">{globalError}</p>
+            {(globalError || Object.values(errors).some(Boolean)) && (
+              <div
+                role="alert"
+                ref={(el) => el?.scrollIntoView({ behavior: "smooth", block: "center" })}
+                className="rounded-md border-2 border-destructive bg-destructive/10 p-4 space-y-2"
+              >
+                {globalError && (
+                  <p className="text-destructive text-base font-bold">{globalError}</p>
+                )}
+                {Object.entries(errors).filter(([, v]) => v).length > 0 && (
+                  <ul className="list-disc list-inside text-destructive text-base font-medium">
+                    {Object.entries(errors).filter(([, v]) => v).map(([k, v]) => (
+                      <li key={k}>{v}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             )}
+
 
             <Button type="submit" className="w-full h-16 text-xl font-bold tracking-wide gap-3" size="lg" disabled={loading}>
               {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <UserPlus className="w-6 h-6" />}
