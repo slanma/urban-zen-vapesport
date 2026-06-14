@@ -56,3 +56,48 @@ export const withTimeout = async <T,>(promise: Promise<T>, errorMessage: string,
     if (timeoutId) window.clearTimeout(timeoutId);
   }
 };
+
+export interface RegisterB2BResponse {
+  ok: boolean;
+  status?: "pending";
+  code?: string;
+  message?: string;
+}
+
+export const registerB2B = async (
+  body: B2BRegistrationPayload & { email: string; password: string },
+  ms = 18000,
+): Promise<RegisterB2BResponse> => {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), ms);
+
+  try {
+    const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/register-b2b`;
+    const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: publishableKey,
+        Authorization: `Bearer ${publishableKey}`,
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+
+    const payload = await response.json().catch(() => null) as RegisterB2BResponse | null;
+    if (payload) return payload;
+    return { ok: false, code: "network", message: `Registrace se nezdařila (HTTP ${response.status}).` };
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      return { ok: false, code: "timeout", message: "Registrace trvá příliš dlouho. Zkuste to prosím znovu." };
+    }
+    return {
+      ok: false,
+      code: "network",
+      message: error instanceof Error ? error.message : "Registrace se nezdařila. Zkuste to prosím znovu.",
+    };
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+};
