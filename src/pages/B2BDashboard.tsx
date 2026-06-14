@@ -286,7 +286,7 @@ const B2BDashboard = () => {
               Rychlá B2B objednávka
             </h1>
             <p className="text-lg text-muted-foreground">
-              Vyberte produkty a zadejte množství. Ceny jsou po slevě {discountLabel} z&nbsp;maloobchodní ceny.
+              Vyberte produkty a zadejte množství.&nbsp;
             </p>
           </header>
 
