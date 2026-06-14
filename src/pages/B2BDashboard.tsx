@@ -7,6 +7,29 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Plus, Minus, ShoppingCart, Send, LogOut, Loader2 } from "lucide-react";
+import ebikeSilhouette from "@/assets/bike-lineart.png";
+import {
+  HOTSPOT_LABELS,
+  getProductsByHotspot,
+  type Hotspot,
+} from "@/data/productHotspots";
+
+type HotspotFilter = Hotspot | "All";
+
+interface BikeDot {
+  id: Hotspot;
+  label: string;
+  top: string;
+  left: string;
+}
+
+const BIKE_DOTS: BikeDot[] = [
+  { id: "Handlebar",   label: "Řídítka",       top: "20%", left: "62%" },
+  { id: "TopTube",     label: "Horní trubka",  top: "34%", left: "50%" },
+  { id: "Frame",       label: "Rám",           top: "48%", left: "44%" },
+  { id: "UnderSaddle", label: "Pod sedlo",     top: "23%", left: "43%" },
+  { id: "RearRack",    label: "Nosič",         top: "33%", left: "32%" },
+];
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
@@ -97,6 +120,13 @@ const B2BDashboard = () => {
   const [accountLabel, setAccountLabel] = useState("");
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [accessError, setAccessError] = useState("");
+  const [activeHotspot, setActiveHotspot] = useState<HotspotFilter>("All");
+
+  const visibleProducts = useMemo(() => {
+    if (activeHotspot === "All") return products;
+    const ids = new Set(getProductsByHotspot(activeHotspot).map((p) => p.id));
+    return products.filter((p) => ids.has(p.id));
+  }, [activeHotspot]);
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -283,6 +313,112 @@ const B2BDashboard = () => {
             </p>
           </header>
 
+          {/* Interactive e-bike filter */}
+          <section
+            aria-label="Filtrace produktů podle umístění na elektrokole"
+            className="mb-8 bg-background border border-border rounded-lg p-4 md:p-6"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_280px] gap-6 items-center">
+              <div
+                className="relative w-full aspect-[16/9] mx-auto select-none max-w-[640px]"
+                role="group"
+                aria-label="Body na elektrokole představující umístění brašen"
+              >
+                <img
+                  src={ebikeSilhouette}
+                  alt="Boční profil elektrokola s vyznačenými místy pro brašny"
+                  className="w-full h-full object-contain pointer-events-none"
+                  draggable={false}
+                />
+                {BIKE_DOTS.map((d) => {
+                  const isActive = activeHotspot === d.id;
+                  return (
+                    <div key={d.id} className="absolute" style={{ top: d.top, left: d.left }}>
+                      <button
+                        type="button"
+                        aria-label={`Zobrazit brašny: ${d.label}`}
+                        aria-pressed={isActive}
+                        onClick={() => setActiveHotspot(isActive ? "All" : d.id)}
+                        className="relative w-10 h-10 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer group rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      >
+                        {!isActive && (
+                          <span aria-hidden="true" className="absolute inset-2 rounded-full border-2 border-primary animate-ping opacity-40" />
+                        )}
+                        <span
+                          aria-hidden="true"
+                          className={`absolute inset-2.5 rounded-full border-2 transition-colors ${
+                            isActive ? "border-primary bg-primary" : "border-primary bg-background/80 group-hover:bg-primary/20"
+                          }`}
+                        />
+                        <span
+                          aria-hidden="true"
+                          className={`relative w-2 h-2 rounded-full transition-colors ${
+                            isActive ? "bg-primary-foreground" : "bg-primary"
+                          }`}
+                        />
+                      </button>
+                      <span
+                        aria-hidden="true"
+                        className={`hidden sm:block absolute left-1/2 top-1/2 -translate-x-1/2 mt-4 whitespace-nowrap text-[11px] font-body font-semibold px-2 py-0.5 rounded shadow-sm pointer-events-none ${
+                          isActive ? "bg-primary text-primary-foreground" : "bg-background/90 text-foreground"
+                        }`}
+                      >
+                        {d.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                  Kategorie podle umístění
+                </p>
+                <div className="flex flex-wrap gap-2" role="tablist">
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={activeHotspot === "All"}
+                    onClick={() => setActiveHotspot("All")}
+                    className={`min-h-10 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                      activeHotspot === "All"
+                        ? "bg-primary text-primary-foreground shadow-md"
+                        : "bg-secondary text-foreground hover:bg-accent"
+                    }`}
+                  >
+                    Vše ({products.length})
+                  </button>
+                  {BIKE_DOTS.map((d) => {
+                    const count = getProductsByHotspot(d.id).length;
+                    const isActive = activeHotspot === d.id;
+                    return (
+                      <button
+                        key={d.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => setActiveHotspot(isActive ? "All" : d.id)}
+                        className={`min-h-10 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                          isActive
+                            ? "bg-primary text-primary-foreground shadow-md"
+                            : "bg-secondary text-foreground hover:bg-accent"
+                        }`}
+                      >
+                        {HOTSPOT_LABELS[d.id]} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="sr-only" aria-live="polite">
+                  {activeHotspot === "All"
+                    ? `Zobrazeno všech ${products.length} produktů.`
+                    : `Filtr: ${HOTSPOT_LABELS[activeHotspot]}. ${visibleProducts.length} produktů.`}
+                </p>
+              </div>
+            </div>
+          </section>
+
+
           <div className="bg-background border border-border rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
               <Table>
@@ -298,7 +434,7 @@ const B2BDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {products.map((product) => {
+                  {visibleProducts.map((product) => {
                     const qty = getQty(product.id);
                     const b2bPrice = Math.round(product.price * b2bDiscount);
                     const sku = skuMap[product.id] || product.id;
