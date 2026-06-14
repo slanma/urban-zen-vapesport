@@ -39,17 +39,13 @@ export const useB2BPartner = () => {
         }
         return;
       }
-      const { data: status } = await supabase.rpc("get_b2b_status", { _user_id: user.id });
-      const approved = status === "approved";
-      let prof: B2BProfile | null = null;
-      if (approved) {
-        const { data } = await supabase
-          .from("b2b_profiles")
-          .select("user_id,company_name,ico,dic,contact_person,phone,address,city,zip,discount_percent,free_shipping")
-          .eq("user_id", user.id)
-          .maybeSingle();
-        if (data) prof = data as B2BProfile;
-      }
+      const { data } = await supabase
+        .from("b2b_profiles")
+        .select("user_id,company_name,ico,dic,contact_person,phone,address,city,zip,discount_percent,free_shipping,status")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      const approved = data?.status === "approved";
+      const prof = approved ? data as B2BProfile : null;
       if (!cancelled) {
         setIsPartner(approved);
         setProfile(prof);

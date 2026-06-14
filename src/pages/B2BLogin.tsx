@@ -51,15 +51,19 @@ const B2BLogin = () => {
         return;
       }
 
-      const { data: status, error: rpcErr } = await supabase.rpc("get_b2b_status", { _user_id: user.id });
-      if (rpcErr) {
-        console.error("[B2BLogin] get_b2b_status error:", rpcErr);
-        setError(`Nelze ověřit B2B status: ${rpcErr.message}`);
+      const { data: profile, error: profileErr } = await supabase
+        .from("b2b_profiles")
+        .select("status")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (profileErr) {
+        console.error("[B2BLogin] b2b profile error:", profileErr);
+        setError(`Nelze ověřit B2B profil: ${profileErr.message}`);
         setLoading(false);
         return;
       }
 
-      console.log("[B2BLogin] b2b status =", status);
+      const status = profile?.status;
 
       if (!status) {
         setError("K tomuto e-mailu nemáme B2B profil. Zaregistrujte se jako B2B partner.");
