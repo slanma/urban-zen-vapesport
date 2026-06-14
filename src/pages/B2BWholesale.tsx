@@ -94,18 +94,11 @@ const B2BWholesale = () => {
     return colors.reduce((s, c) => s + getQty(row.baseId, c), 0);
   };
 
-  const baseUnitNet = (row: BaseRow) => {
+  const unitNet = (row: BaseRow) => {
     const pricing = getEffectiveUnitPricing(row.base, row.override, isPartner, profile?.discount_percent ?? 0);
     return Math.round(pricing.unitNet);
   };
-  /** ≥10 ks z jednoho modelu → automatická sleva 2 % */
-  const VOLUME_THRESHOLD = 10;
-  const VOLUME_DISCOUNT = 0.02;
-  const qualifiesForVolume = (row: BaseRow) => modelTotalQty(row) >= VOLUME_THRESHOLD;
-  const unitNet = (row: BaseRow) => {
-    const base = baseUnitNet(row);
-    return qualifiesForVolume(row) ? Math.round(base * (1 - VOLUME_DISCOUNT)) : base;
-  };
+  const baseUnitNet = (row: BaseRow) => unitNet(row);
 
   const modelTotalNet = (row: BaseRow) => unitNet(row) * modelTotalQty(row);
   const modelTotalGross = (row: BaseRow) => Math.round(grossFromNet(modelTotalNet(row)));
