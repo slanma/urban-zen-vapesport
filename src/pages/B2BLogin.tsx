@@ -4,12 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+
+const LOGIN_TIMEOUT_MS = 15000;
+
+const withTimeout = async <T,>(promise: PromiseLike<T>, message: string): Promise<T> => {
+  let timeoutId: number | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timeoutId = window.setTimeout(() => reject(new Error(message)), LOGIN_TIMEOUT_MS);
+  });
+
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    if (timeoutId) window.clearTimeout(timeoutId);
+  }
+};
 
 const B2BLogin = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +40,10 @@ const B2BLogin = () => {
     setError("");
 
     try {
-      const { error: authError } = await signIn(email, password);
+      const { data: authData, error: authError } = await withTimeout(
+        supabase.auth.signInWithPassword({ email: email.trim(), password }),
+        "Přihlášení trvá příliš dlouho. Zkuste to prosím znovu."
+      );
 
       if (authError) {
         console.error("[B2BLogin] signIn error:", authError);
@@ -39,27 +55,27 @@ const B2BLogin = () => {
         } else {
           setError(`Přihlášení se nezdařilo: ${msg}`);
         }
-        setLoading(false);
         return;
       }
 
-      const { data: { user }, error: userErr } = await supabase.auth.getUser();
-      if (userErr || !user) {
-        console.error("[B2BLogin] getUser error:", userErr);
+      const user = authData.user;
+      if (!user) {
         setError("Přihlášení se nezdařilo (relace).");
-        setLoading(false);
         return;
       }
 
-      const { data: profile, error: profileErr } = await supabase
-        .from("b2b_profiles")
-        .select("status")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      const { data: profile, error: profileErr } = await withTimeout(
+        supabase
+          .from("b2b_profiles")
+          .select("status")
+          .eq("user_id", user.id)
+          .maybeSingle(),
+        "Ověření B2B účtu trvá příliš dlouho. Zkuste to prosím znovu."
+      );
+
       if (profileErr) {
         console.error("[B2BLogin] b2b profile error:", profileErr);
         setError(`Nelze ověřit B2B profil: ${profileErr.message}`);
-        setLoading(false);
         return;
       }
 
@@ -67,30 +83,27 @@ const B2BLogin = () => {
 
       if (!status) {
         setError("K tomuto e-mailu nemáme B2B profil. Zaregistrujte se jako B2B partner.");
-        await supabase.auth.signOut();
-        setLoading(false);
+        void supabase.auth.signOut();
         return;
       }
 
       if (status === "pending") {
         setError("Vaše registrace čeká na schválení.");
-        await supabase.auth.signOut();
-        setLoading(false);
+        void supabase.auth.signOut();
         return;
       }
 
       if (status === "rejected") {
         setError("Vaše B2B registrace byla zamítnuta.");
-        await supabase.auth.signOut();
-        setLoading(false);
+        void supabase.auth.signOut();
         return;
       }
 
-      setLoading(false);
-      navigate("/b2b-dashboard");
+      navigate("/b2b-dashboard", { replace: true });
     } catch (err) {
       console.error("[B2BLogin] unexpected error:", err);
       setError(`Neočekávaná chyba: ${err instanceof Error ? err.message : String(err)}`);
+    } finally {
       setLoading(false);
     }
   };
