@@ -203,7 +203,7 @@ const B2BDashboard = () => {
           apikey: SUPABASE_KEY,
           Authorization: `Bearer ${session.access_token}`,
           "Content-Type": "application/json",
-          Prefer: "return=representation",
+          Prefer: "return=minimal",
         },
         body: JSON.stringify(payload),
       });
