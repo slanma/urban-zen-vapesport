@@ -215,7 +215,7 @@ const B2BDashboard = () => {
 
     const payload = {
       items,
-      discountLabel: profile ? `${profile.discount_percent} %` : "30 %",
+      discountLabel: hasDiscount ? `${discountPercent} %` : "",
       accountLabel,
       email: session.user.email ?? "",
       companyName: profile?.company_name ?? null,
