@@ -6,7 +6,7 @@ const Footer = () => {
           <div>
             <h3 className="font-heading text-xl font-bold text-primary-foreground mb-4">Vapesport</h3>
             <p className="text-primary-foreground/60 text-sm leading-relaxed">
-              Prémiová pouzdra pro aktivní životní styl. Česká značka.
+              Prémiové brašny pro aktivní životní styl. Česká značka.
             </p>
           </div>
           <div>
@@ -32,7 +32,7 @@ const Footer = () => {
         </div>
         <div className="border-t border-primary-foreground/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-primary-foreground/40 text-xs">
-            © 2024 Vapesport. Všechna práva vyhrazena.
+            © 2026 Vapesport Vlach s.r.o. Všechna práva vyhrazena.
           </p>
           <nav className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <a
