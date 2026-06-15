@@ -25,8 +25,8 @@ const Footer = () => {
             <h4 className="font-heading font-semibold text-primary-foreground mb-4 text-sm uppercase tracking-widest">Kontakt</h4>
             <ul className="space-y-2 text-sm text-primary-foreground/60">
               <li>info@vapesport.cz</li>
-              <li>+420 123 456 789</li>
-              <li>Praha, Česká republika</li>
+              <li>+420 606 080 922</li>
+              <li>Ostrava, Česká republika</li>
             </ul>
           </div>
         </div>
