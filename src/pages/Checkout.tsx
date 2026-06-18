@@ -141,16 +141,31 @@ const Checkout = () => {
           const ov = getOverride(product.id);
           if (ov?.visible === false) return null;
           const pricing = getEffectiveUnitPricing(product, ov, isPartner, profile?.discount_percent);
+          const code = getEffectiveProductCode(product, ov);
           return {
-            name: item.color ? `${product.name} – ${item.color}` : product.name,
+            code,
+            name: product.name,
+            color: item.color ?? null,
             qty: item.quantity,
             unitGross: pricing.unitGross,
+            unitNet: pricing.unitNet,
             isB2B: pricing.isB2B,
+            auto: item.meta?.auto === true,
           };
         })
-        .filter((x): x is { name: string; qty: number; unitGross: number; isB2B: boolean } => !!x),
-    [cartItems, getOverride, isPartner],
+        .filter((x): x is {
+          code: string;
+          name: string;
+          color: string | null;
+          qty: number;
+          unitGross: number;
+          unitNet: number;
+          isB2B: boolean;
+          auto: boolean;
+        } => !!x),
+    [cartItems, getOverride, isPartner, profile?.discount_percent],
   );
+
 
   const subtotalGross = orderLines.reduce((s, it) => s + it.unitGross * it.qty, 0);
   const shippingPrice = freeShipping ? 0 : (shippingOpt?.price ?? 0);
