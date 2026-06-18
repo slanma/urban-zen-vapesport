@@ -429,12 +429,28 @@ const B2BCheckout = () => {
 
                 <div className="space-y-4 text-base text-foreground mb-6">
                   <div className="flex justify-between"><span>Zboží</span><strong>{fmtCZK(itemsSubtotalGross)}</strong></div>
-                  <div className="flex justify-between"><span>Způsob dopravy – <strong>{shippingOpt.label}</strong></span><strong>{shippingOpt.price === 0 ? "Zdarma" : fmtCZK(shippingOpt.price)}</strong></div>
+                  <div className="flex justify-between">
+                    <span>Způsob dopravy – <strong>{shippingOpt.label}</strong></span>
+                    <strong>
+                      {freeShipping && shippingOpt.price > 0 ? (
+                        <>
+                          <span className="line-through text-muted-foreground mr-2 font-normal">{fmtCZK(shippingOpt.price)}</span>
+                          Zdarma
+                        </>
+                      ) : shippingPrice === 0 ? "Zdarma" : fmtCZK(shippingPrice)}
+                    </strong>
+                  </div>
                   <div className="flex justify-between"><span>Způsob platby – <strong>{PAYMENT_LABELS[payment]}</strong></span><strong>Zdarma</strong></div>
+                  {appliedPromo && discountGross > 0 && (
+                    <div className="flex justify-between text-primary"><span>Sleva (Kód: {appliedPromo.code})</span><strong>−{fmtCZK(discountGross)}</strong></div>
+                  )}
                   <div className="flex justify-between text-lg border-t border-border pt-3"><span className="font-bold text-primary">K úhradě</span><span className="font-bold text-primary">{fmtCZK(totalGross)}</span></div>
                   <div className="flex justify-between text-sm text-muted-foreground"><span>Cena bez DPH</span><span>{fmtCZK(totalNet)}</span></div>
                   <div className="flex justify-between text-sm text-muted-foreground"><span>DPH 21 %</span><span>{fmtCZK(totalVat)}</span></div>
                 </div>
+
+                <PromoCodeBox className="mb-6" />
+
 
                 <label className="flex items-start gap-3 p-4 bg-muted/40 border border-border rounded-md cursor-pointer">
                   <input
