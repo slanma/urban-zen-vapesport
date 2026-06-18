@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Loader2, ChevronLeft, ShoppingCart, Truck, FileText, CheckCircle2 } from "lucide-react";
+import { Loader2, ChevronLeft, ShoppingCart, Truck, FileText, CheckCircle2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getProductById } from "@/data/products";
-import { fmtCZK, netFromGross, vatOfGross } from "@/lib/vat";
+import { fmtCZK, grossFromNet, vatOfGross } from "@/lib/vat";
+import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { usePromoCode } from "@/hooks/usePromoCode";
+import PromoCodeBox from "@/components/PromoCodeBox";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
@@ -14,7 +17,7 @@ interface B2BCheckoutItem {
   sku: string;
   name: string;
   qty: number;
-  unitPrice: number; // gross with VAT (B2B price)
+  unitPrice: number; // NET (VOC bez DPH)
 }
 
 interface B2BCheckoutPayload {
@@ -61,6 +64,8 @@ const STORAGE_KEY = "vapesport_b2b_checkout";
 
 const B2BCheckout = () => {
   const navigate = useNavigate();
+  const { profile: partnerProfile } = useB2BPartner();
+  const { appliedPromo, computeDiscountGross } = usePromoCode();
   const [payload, setPayload] = useState<B2BCheckoutPayload | null>(null);
   const [step, setStep] = useState(1);
   const [shipping, setShipping] = useState<ShippingId>("osobni");
@@ -104,15 +109,26 @@ const B2BCheckout = () => {
     }
   }, [navigate]);
 
-  const itemsSubtotalGross = useMemo(
+  // Items are stored as NET (VOC bez DPH). Compute gross with VAT.
+  const itemsSubtotalNet = useMemo(
     () => (payload?.items ?? []).reduce((s, i) => s + i.unitPrice * i.qty, 0),
+    [payload]
+  );
+  const itemsSubtotalGross = useMemo(
+    () => (payload?.items ?? []).reduce((s, i) => s + grossFromNet(i.unitPrice) * i.qty, 0),
     [payload]
   );
 
   const shippingOpt = SHIPPING_OPTIONS.find((s) => s.id === shipping)!;
-  const totalGross = itemsSubtotalGross + shippingOpt.price;
-  const totalNet = netFromGross(totalGross);
+  // Doprava zdarma se uplatní POUZE pokud je v administraci nastavena na profilu B2B partnera.
+  const freeShipping = partnerProfile?.free_shipping === true;
+  const shippingPrice = freeShipping ? 0 : shippingOpt.price;
+
+  const preDiscountGross = itemsSubtotalGross + shippingPrice;
+  const discountGross = computeDiscountGross(preDiscountGross);
+  const totalGross = Math.max(0, preDiscountGross - discountGross);
   const totalVat = vatOfGross(totalGross);
+  const totalNet = totalGross - totalVat;
 
   const availablePayments = PAYMENT_MATRIX[shipping];
   useEffect(() => {
@@ -162,10 +178,14 @@ const B2BCheckout = () => {
         line_total: i.unitPrice * i.qty,
       })),
       subtotal_gross: Math.round(itemsSubtotalGross),
-      shipping_label: shippingOpt.label,
-      shipping_gross: shippingOpt.price,
+      shipping_label: freeShipping && shippingOpt.price > 0
+        ? `${shippingOpt.label} (zdarma – B2B)`
+        : shippingOpt.label,
+      shipping_gross: shippingPrice,
       payment_label: PAYMENT_LABELS[payment],
       payment_gross: 0,
+      promo_code: appliedPromo?.code ?? null,
+      discount_gross: discountGross,
       total_gross: Math.round(totalGross),
       status: "nova",
     };
@@ -273,8 +293,8 @@ const B2BCheckout = () => {
                           <p className="text-sm text-muted-foreground font-mono">{item.sku}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-base font-semibold text-foreground">{item.qty} × {fmtCZK(item.unitPrice)}</p>
-                          <p className="text-base font-bold text-primary">{fmtCZK(item.unitPrice * item.qty)}</p>
+                          <p className="text-base font-semibold text-foreground">{item.qty} × {fmtCZK(item.unitPrice)} <span className="text-xs text-muted-foreground font-normal">bez DPH</span></p>
+                          <p className="text-base font-bold text-primary">{fmtCZK(item.unitPrice * item.qty)} <span className="text-xs text-muted-foreground font-normal">bez DPH</span></p>
                         </div>
                       </li>
                     );
@@ -286,26 +306,46 @@ const B2BCheckout = () => {
             {step === 2 && (
               <>
                 <h1 className="text-2xl font-heading font-bold text-primary mb-6">Způsob dopravy</h1>
+                {freeShipping && (
+                  <div className="mb-4 p-3 rounded-md bg-primary/10 border border-primary/30 text-sm font-semibold text-primary flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4" />
+                    Doprava zdarma (B2B Partner) — všechny způsoby dopravy máte za 0 Kč.
+                  </div>
+                )}
                 <div className="space-y-3 mb-8">
-                  {SHIPPING_OPTIONS.map((opt) => (
-                    <label
-                      key={opt.id}
-                      className={`flex items-center gap-4 p-4 rounded-md border cursor-pointer transition-all ${
-                        shipping === opt.id ? "border-primary bg-primary/5" : "border-border bg-muted/30 hover:border-primary/40"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="shipping"
-                        checked={shipping === opt.id}
-                        onChange={() => setShipping(opt.id)}
-                        className="w-5 h-5 accent-[hsl(var(--primary))]"
-                      />
-                      <span className="flex-1 text-base text-foreground">
-                        {opt.label} – {opt.price === 0 ? "0 Kč" : fmtCZK(opt.price)}
-                      </span>
-                    </label>
-                  ))}
+                  {SHIPPING_OPTIONS.map((opt) => {
+                    const effectivePrice = freeShipping ? 0 : opt.price;
+                    const wasFree = freeShipping && opt.price > 0;
+                    return (
+                      <label
+                        key={opt.id}
+                        className={`flex items-center gap-4 p-4 rounded-md border cursor-pointer transition-all ${
+                          shipping === opt.id ? "border-primary bg-primary/5" : "border-border bg-muted/30 hover:border-primary/40"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="shipping"
+                          checked={shipping === opt.id}
+                          onChange={() => setShipping(opt.id)}
+                          className="w-5 h-5 accent-[hsl(var(--primary))]"
+                        />
+                        <span className="flex-1 text-base text-foreground">
+                          {opt.label} –{" "}
+                          {wasFree ? (
+                            <>
+                              <span className="line-through text-muted-foreground mr-1">{fmtCZK(opt.price)}</span>
+                              <span className="font-bold text-primary">Zdarma</span>
+                            </>
+                          ) : effectivePrice === 0 ? (
+                            "0 Kč"
+                          ) : (
+                            fmtCZK(effectivePrice)
+                          )}
+                        </span>
+                      </label>
+                    );
+                  })}
                 </div>
 
                 <h2 className="text-2xl font-heading font-bold text-primary mb-6">Způsob platby</h2>
@@ -389,12 +429,28 @@ const B2BCheckout = () => {
 
                 <div className="space-y-4 text-base text-foreground mb-6">
                   <div className="flex justify-between"><span>Zboží</span><strong>{fmtCZK(itemsSubtotalGross)}</strong></div>
-                  <div className="flex justify-between"><span>Způsob dopravy – <strong>{shippingOpt.label}</strong></span><strong>{shippingOpt.price === 0 ? "Zdarma" : fmtCZK(shippingOpt.price)}</strong></div>
+                  <div className="flex justify-between">
+                    <span>Způsob dopravy – <strong>{shippingOpt.label}</strong></span>
+                    <strong>
+                      {freeShipping && shippingOpt.price > 0 ? (
+                        <>
+                          <span className="line-through text-muted-foreground mr-2 font-normal">{fmtCZK(shippingOpt.price)}</span>
+                          Zdarma
+                        </>
+                      ) : shippingPrice === 0 ? "Zdarma" : fmtCZK(shippingPrice)}
+                    </strong>
+                  </div>
                   <div className="flex justify-between"><span>Způsob platby – <strong>{PAYMENT_LABELS[payment]}</strong></span><strong>Zdarma</strong></div>
+                  {appliedPromo && discountGross > 0 && (
+                    <div className="flex justify-between text-primary"><span>Sleva (Kód: {appliedPromo.code})</span><strong>−{fmtCZK(discountGross)}</strong></div>
+                  )}
                   <div className="flex justify-between text-lg border-t border-border pt-3"><span className="font-bold text-primary">K úhradě</span><span className="font-bold text-primary">{fmtCZK(totalGross)}</span></div>
                   <div className="flex justify-between text-sm text-muted-foreground"><span>Cena bez DPH</span><span>{fmtCZK(totalNet)}</span></div>
                   <div className="flex justify-between text-sm text-muted-foreground"><span>DPH 21 %</span><span>{fmtCZK(totalVat)}</span></div>
                 </div>
+
+                <PromoCodeBox className="mb-6" />
+
 
                 <label className="flex items-start gap-3 p-4 bg-muted/40 border border-border rounded-md cursor-pointer">
                   <input
@@ -442,8 +498,18 @@ const B2BCheckout = () => {
               <h2 className="text-lg font-heading font-bold text-foreground mb-4">Souhrn</h2>
               <dl className="space-y-2 text-base text-foreground">
                 <div className="flex justify-between"><dt>Zboží ({payload.items.reduce((s, i) => s + i.qty, 0)} ks)</dt><dd>{fmtCZK(itemsSubtotalGross)}</dd></div>
-                <div className="flex justify-between"><dt>Doprava</dt><dd>{shippingOpt.price === 0 ? "Zdarma" : fmtCZK(shippingOpt.price)}</dd></div>
+                <div className="flex justify-between">
+                  <dt>Doprava</dt>
+                  <dd>
+                    {freeShipping && shippingOpt.price > 0 ? (
+                      <span className="text-primary font-semibold">Zdarma (B2B)</span>
+                    ) : shippingPrice === 0 ? "Zdarma" : fmtCZK(shippingPrice)}
+                  </dd>
+                </div>
                 <div className="flex justify-between"><dt>Platba</dt><dd>Zdarma</dd></div>
+                {appliedPromo && discountGross > 0 && (
+                  <div className="flex justify-between text-primary"><dt>Sleva ({appliedPromo.code})</dt><dd>−{fmtCZK(discountGross)}</dd></div>
+                )}
                 <div className="flex justify-between border-t border-border pt-3 mt-3">
                   <dt className="font-bold text-foreground">Cena bez DPH</dt>
                   <dd className="font-semibold">{fmtCZK(totalNet)}</dd>

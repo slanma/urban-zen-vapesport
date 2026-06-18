@@ -16,6 +16,8 @@ import { fmtCZK } from "@/lib/vat";
 import { getEffectiveProductCode } from "@/lib/effectiveProduct";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { usePromoCode } from "@/hooks/usePromoCode";
+import PromoCodeBox from "@/components/PromoCodeBox";
 
 
 type ShippingId = "zasilkovna" | "ppl" | "osobni";
@@ -83,14 +85,8 @@ const Checkout = () => {
   const [packetaReady, setPacketaReady] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  // Promo code
-  const [promoInput, setPromoInput] = useState("");
-  const [promoApplying, setPromoApplying] = useState(false);
-  const [appliedPromo, setAppliedPromo] = useState<{
-    code: string;
-    type: "percentage" | "fixed_amount";
-    value: number;
-  } | null>(null);
+  // Promo code – shared with Cart / B2B Checkout
+  const { appliedPromo, computeDiscountGross } = usePromoCode();
 
   // Pre-fill from B2B profile once it loads.
   useEffect(() => {
@@ -172,45 +168,8 @@ const Checkout = () => {
   const paymentPrice = paymentOpt?.price ?? 0;
   const preDiscountGross = subtotalGross + shippingPrice + paymentPrice;
 
-  const rawDiscountGross = appliedPromo
-    ? appliedPromo.type === "percentage"
-      ? Math.round(preDiscountGross * (Number(appliedPromo.value) / 100))
-      : Math.round(Number(appliedPromo.value))
-    : 0;
-  const discountGross = Math.max(0, Math.min(rawDiscountGross, preDiscountGross));
+  const discountGross = computeDiscountGross(preDiscountGross);
   const grandGross = Math.max(0, preDiscountGross - discountGross);
-
-  const applyPromo = async () => {
-    const code = promoInput.trim().toUpperCase();
-    if (!code) return;
-    setPromoApplying(true);
-    try {
-      const { data, error } = await supabase.rpc("validate_promo_code", {
-        _code: code,
-      });
-      if (error) throw error;
-      const row = Array.isArray(data) ? data[0] : data;
-      if (!row) {
-        toast.error("Neplatný nebo neaktivní kód.");
-        return;
-      }
-      setAppliedPromo({
-        code: row.code,
-        type: row.type as "percentage" | "fixed_amount",
-        value: Number(row.value),
-      });
-      toast.success(`Slevový kód „${row.code}" byl uplatněn.`);
-    } catch {
-      toast.error("Kód se nepodařilo ověřit.");
-    } finally {
-      setPromoApplying(false);
-    }
-  };
-
-  const removePromo = () => {
-    setAppliedPromo(null);
-    setPromoInput("");
-  };
 
   const handleInput = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -585,54 +544,8 @@ const Checkout = () => {
 
 
                 {/* Promo code */}
-                <div className="border border-border rounded-lg p-4 bg-muted/20">
-                  <label htmlFor="promo" className="block text-sm font-body font-semibold text-foreground mb-2">
-                    Máte slevový kód?
-                  </label>
-                  {appliedPromo ? (
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="text-sm font-body">
-                        <span className="inline-block px-2 py-0.5 rounded bg-primary/15 text-primary font-bold font-mono text-xs mr-2">
-                          {appliedPromo.code}
-                        </span>
-                        <span className="text-muted-foreground">
-                          {appliedPromo.type === "percentage"
-                            ? `−${appliedPromo.value} %`
-                            : `−${fmtCZK(appliedPromo.value)}`}{" "}
-                          uplatněno
-                        </span>
-                      </div>
-                      <Button type="button" variant="outline" size="sm" onClick={removePromo}>
-                        Odebrat
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <input
-                        id="promo"
-                        type="text"
-                        placeholder="Např. VAPE10"
-                        value={promoInput}
-                        onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            applyPromo();
-                          }
-                        }}
-                        className="flex-1 h-11 px-3 text-sm font-body bg-background border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary uppercase font-mono tracking-wider"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={applyPromo}
-                        disabled={promoApplying || !promoInput.trim()}
-                      >
-                        {promoApplying ? <Loader2 className="w-4 h-4 animate-spin" /> : "Uplatnit"}
-                      </Button>
-                    </div>
-                  )}
-                </div>
+                <PromoCodeBox className="border border-border rounded-lg p-4 bg-muted/20" compact />
+
 
                 {(!shipping || !payment) && (
                   <p className="text-xs text-destructive font-body">

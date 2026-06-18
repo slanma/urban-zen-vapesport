@@ -13,6 +13,10 @@ import {
   getProductsByHotspot,
   type Hotspot,
 } from "@/data/productHotspots";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { getEffectiveUnitPricing } from "@/lib/pricing";
+import { fmtCZK, netFromGross } from "@/lib/vat";
 
 type HotspotFilter = Hotspot | "All";
 
@@ -121,6 +125,22 @@ const B2BDashboard = () => {
   const [accessError, setAccessError] = useState("");
   const [activeHotspot, setActiveHotspot] = useState<HotspotFilter>("All");
 
+  const { get: getOverride } = useProductOverrides();
+  const { profile: b2bProfile } = useB2BPartner();
+  const discount = b2bProfile?.discount_percent ?? 0;
+
+  /**
+   * VOC unit price (net) for a product respecting admin overrides and the
+   * partner's individually approved discount. No discount applied unless the
+   * admin explicitly set `discount_percent` on the b2b_profile.
+   */
+  const getUnitNet = (productId: string): number => {
+    const product = getProductById(productId);
+    if (!product) return 0;
+    const pricing = getEffectiveUnitPricing(product, getOverride(productId), true, discount);
+    return pricing.unitNet;
+  };
+
   const visibleProducts = useMemo(() => {
     if (activeHotspot === "All") return products;
     const ids = new Set(getProductsByHotspot(activeHotspot).map((p) => p.id));
@@ -173,11 +193,9 @@ const B2BDashboard = () => {
 
   const totalItems = useMemo(() => cart.reduce((sum, c) => sum + c.qty, 0), [cart]);
   const totalPrice = useMemo(
-    () => cart.reduce((sum, c) => {
-      const product = getProductById(c.productId);
-      return sum + (product ? product.price * c.qty : 0);
-    }, 0),
-    [cart]
+    () => cart.reduce((sum, c) => sum + getUnitNet(c.productId) * c.qty, 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cart, discount, getOverride]
   );
 
   const [submitting, setSubmitting] = useState(false);
@@ -198,7 +216,7 @@ const B2BDashboard = () => {
 
     const items = cart.map((c) => {
       const product = getProductById(c.productId);
-      const unitPrice = product ? product.price : 0;
+      const unitPrice = getUnitNet(c.productId); // NET (VOC bez DPH)
       return {
         productId: c.productId,
         sku: skuMap[c.productId] || c.productId,
@@ -429,7 +447,8 @@ const B2BDashboard = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex flex-col items-end gap-0.5">
-                            <span className="text-lg font-bold text-foreground">VOC {product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
+                            <span className="text-lg font-bold text-foreground">VOC {fmtCZK(getUnitNet(product.id))}</span>
+                            <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">bez DPH</span>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -467,7 +486,7 @@ const B2BDashboard = () => {
               <span className="text-lg font-semibold">Celkem v košíku:</span>
             </div>
             <span className="text-xl font-bold">{totalItems} ks</span>
-            <span className="text-xl font-bold">{totalPrice.toLocaleString("cs-CZ")}&nbsp;Kč bez DPH</span>
+            <span className="text-xl font-bold">{fmtCZK(totalPrice)} bez DPH</span>
           </div>
           <Button size="lg" className="h-14 px-10 text-lg font-bold gap-3" disabled={totalItems === 0} onClick={handleSubmitOrder}>
             <ShoppingCart className="w-5 h-5" />
