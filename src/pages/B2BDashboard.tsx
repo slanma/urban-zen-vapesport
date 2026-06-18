@@ -216,7 +216,7 @@ const B2BDashboard = () => {
 
     const items = cart.map((c) => {
       const product = getProductById(c.productId);
-      const unitPrice = product ? product.price : 0;
+      const unitPrice = getUnitNet(c.productId); // NET (VOC bez DPH)
       return {
         productId: c.productId,
         sku: skuMap[c.productId] || c.productId,
