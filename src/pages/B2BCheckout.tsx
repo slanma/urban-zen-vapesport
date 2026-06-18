@@ -178,10 +178,14 @@ const B2BCheckout = () => {
         line_total: i.unitPrice * i.qty,
       })),
       subtotal_gross: Math.round(itemsSubtotalGross),
-      shipping_label: shippingOpt.label,
-      shipping_gross: shippingOpt.price,
+      shipping_label: freeShipping && shippingOpt.price > 0
+        ? `${shippingOpt.label} (zdarma – B2B)`
+        : shippingOpt.label,
+      shipping_gross: shippingPrice,
       payment_label: PAYMENT_LABELS[payment],
       payment_gross: 0,
+      promo_code: appliedPromo?.code ?? null,
+      discount_gross: discountGross,
       total_gross: Math.round(totalGross),
       status: "nova",
     };
