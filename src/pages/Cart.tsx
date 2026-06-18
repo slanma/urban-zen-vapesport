@@ -225,9 +225,10 @@ const Cart = () => {
                     size="lg"
                     className="w-full h-14 text-base font-bold rounded-full tracking-wide"
                   >
-                    PŘEJÍT K POKLADNĚ
+                    Pokračovat do pokladny
                   </Button>
                 </Link>
+
 
                 <div className="flex items-center gap-2 justify-center text-xs text-muted-foreground font-body pt-1">
                   <ShieldCheck className="w-4 h-4 text-primary" />
