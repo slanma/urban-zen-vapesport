@@ -1,4 +1,5 @@
 import { feedProducts } from "./feedProducts";
+import { getProductCutout } from "./productCutouts";
 
 export interface Product {
   id: string;
@@ -110,13 +111,16 @@ export const legacyProductAliases: Record<string, string> = {
 export const products: Product[] = feedProducts
   .filter((p) => p.image.trim().length > 0)
   .map((p) => {
-    if (MORSEO_BASE_ONLY_IDS.has(p.id)) {
-      return { ...p, available_colors: MORSEO_COLORS };
+    const cutout = getProductCutout(p.id, p.baseId);
+    const normalized = cutout ? { ...p, image: cutout } : p;
+
+    if (MORSEO_BASE_ONLY_IDS.has(normalized.id)) {
+      return { ...normalized, available_colors: MORSEO_COLORS };
     }
-    if (VAPE_LEGENDS_BASE_ONLY_IDS.has(p.id)) {
-      return { ...p, available_colors: VAPE_LEGENDS_COLORS };
+    if (VAPE_LEGENDS_BASE_ONLY_IDS.has(normalized.id)) {
+      return { ...normalized, available_colors: VAPE_LEGENDS_COLORS };
     }
-    return p;
+    return normalized;
   });
 
 /** Variants keyed by their base id (kept for hotspot/admin compatibility). */
