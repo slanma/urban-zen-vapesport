@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Loader2, ChevronLeft, ShoppingCart, Truck, FileText, CheckCircle2 } from "lucide-react";
+import { Loader2, ChevronLeft, ShoppingCart, Truck, FileText, CheckCircle2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getProductById } from "@/data/products";
-import { fmtCZK, netFromGross, vatOfGross } from "@/lib/vat";
+import { fmtCZK, grossFromNet, vatOfGross } from "@/lib/vat";
+import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { usePromoCode } from "@/hooks/usePromoCode";
+import PromoCodeBox from "@/components/PromoCodeBox";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
@@ -14,7 +17,7 @@ interface B2BCheckoutItem {
   sku: string;
   name: string;
   qty: number;
-  unitPrice: number; // gross with VAT (B2B price)
+  unitPrice: number; // NET (VOC bez DPH)
 }
 
 interface B2BCheckoutPayload {
@@ -61,6 +64,8 @@ const STORAGE_KEY = "vapesport_b2b_checkout";
 
 const B2BCheckout = () => {
   const navigate = useNavigate();
+  const { profile: partnerProfile } = useB2BPartner();
+  const { appliedPromo, computeDiscountGross } = usePromoCode();
   const [payload, setPayload] = useState<B2BCheckoutPayload | null>(null);
   const [step, setStep] = useState(1);
   const [shipping, setShipping] = useState<ShippingId>("osobni");
@@ -104,15 +109,26 @@ const B2BCheckout = () => {
     }
   }, [navigate]);
 
-  const itemsSubtotalGross = useMemo(
+  // Items are stored as NET (VOC bez DPH). Compute gross with VAT.
+  const itemsSubtotalNet = useMemo(
     () => (payload?.items ?? []).reduce((s, i) => s + i.unitPrice * i.qty, 0),
+    [payload]
+  );
+  const itemsSubtotalGross = useMemo(
+    () => (payload?.items ?? []).reduce((s, i) => s + grossFromNet(i.unitPrice) * i.qty, 0),
     [payload]
   );
 
   const shippingOpt = SHIPPING_OPTIONS.find((s) => s.id === shipping)!;
-  const totalGross = itemsSubtotalGross + shippingOpt.price;
-  const totalNet = netFromGross(totalGross);
+  // Doprava zdarma se uplatní POUZE pokud je v administraci nastavena na profilu B2B partnera.
+  const freeShipping = partnerProfile?.free_shipping === true;
+  const shippingPrice = freeShipping ? 0 : shippingOpt.price;
+
+  const preDiscountGross = itemsSubtotalGross + shippingPrice;
+  const discountGross = computeDiscountGross(preDiscountGross);
+  const totalGross = Math.max(0, preDiscountGross - discountGross);
   const totalVat = vatOfGross(totalGross);
+  const totalNet = totalGross - totalVat;
 
   const availablePayments = PAYMENT_MATRIX[shipping];
   useEffect(() => {
