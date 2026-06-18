@@ -13,8 +13,10 @@ import { ShieldCheck, Lock, ChevronLeft, MapPin, Building2, Loader2 } from "luci
 import { Button } from "@/components/ui/button";
 import OrderSummaryTable from "@/components/OrderSummaryTable";
 import { fmtCZK } from "@/lib/vat";
+import { getEffectiveProductCode } from "@/lib/effectiveProduct";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
 
 type ShippingId = "zasilkovna" | "ppl" | "osobni";
 type PaymentId = "cash" | "transfer" | "cod" | "invoice";
@@ -139,16 +141,31 @@ const Checkout = () => {
           const ov = getOverride(product.id);
           if (ov?.visible === false) return null;
           const pricing = getEffectiveUnitPricing(product, ov, isPartner, profile?.discount_percent);
+          const code = getEffectiveProductCode(product, ov);
           return {
-            name: item.color ? `${product.name} – ${item.color}` : product.name,
+            code,
+            name: product.name,
+            color: item.color ?? null,
             qty: item.quantity,
             unitGross: pricing.unitGross,
+            unitNet: pricing.unitNet,
             isB2B: pricing.isB2B,
+            auto: item.meta?.auto === true,
           };
         })
-        .filter((x): x is { name: string; qty: number; unitGross: number; isB2B: boolean } => !!x),
-    [cartItems, getOverride, isPartner],
+        .filter((x): x is {
+          code: string;
+          name: string;
+          color: string | null;
+          qty: number;
+          unitGross: number;
+          unitNet: number;
+          isB2B: boolean;
+          auto: boolean;
+        } => !!x),
+    [cartItems, getOverride, isPartner, profile?.discount_percent],
   );
+
 
   const subtotalGross = orderLines.reduce((s, it) => s + it.unitGross * it.qty, 0);
   const shippingPrice = freeShipping ? 0 : (shippingOpt?.price ?? 0);
@@ -258,7 +275,23 @@ const Checkout = () => {
         company_name: form.company || null,
         ico: form.ico || null,
         dic: form.dic || null,
-        items: orderLines,
+        items: [...orderLines]
+          .sort((a, b) =>
+            a.code.localeCompare(b.code, "cs") ||
+            (a.color ?? "").localeCompare(b.color ?? "", "cs"),
+          )
+          .map((l) => ({
+            code: l.code,
+            name: l.name,
+            color: l.color,
+            qty: l.qty,
+            unit_gross: l.unitGross,
+            unit_net: l.unitNet,
+            line_gross: l.unitGross * l.qty,
+            line_net: l.unitNet * l.qty,
+            auto: l.auto,
+          })),
+
         subtotal_gross: subtotalGross,
         shipping_label: shippingOpt
           ? freeShipping && shippingOpt.price > 0
@@ -537,7 +570,11 @@ const Checkout = () => {
                 </h2>
 
                 <OrderSummaryTable
-                  items={orderLines}
+                  items={orderLines.map((l) => ({
+                    name: l.color ? `[${l.code}] ${l.name} – ${l.color}` : `[${l.code}] ${l.name}`,
+                    qty: l.qty,
+                    unitGross: l.unitGross,
+                  }))}
                   shippingGross={shippingPrice}
                   paymentGross={paymentPrice}
                   shippingLabel={shippingOpt?.label ?? "Doprava (nezvoleno)"}
@@ -545,6 +582,7 @@ const Checkout = () => {
                   discountGross={discountGross}
                   discountLabel={appliedPromo ? `Sleva (Kód: ${appliedPromo.code})` : "Sleva"}
                 />
+
 
                 {/* Promo code */}
                 <div className="border border-border rounded-lg p-4 bg-muted/20">
@@ -627,6 +665,18 @@ const Checkout = () => {
                   </span>
                 </label>
 
+                {/* Legally required pre-button total (EU 2026 directive).
+                    Must appear DIRECTLY above the order button with no
+                    intervening text, links, or checkboxes. */}
+                <div className="flex items-baseline justify-between border-t-2 border-foreground/15 pt-4">
+                  <span className="font-heading text-base md:text-lg font-bold text-foreground">
+                    Celkem k úhradě:
+                  </span>
+                  <span className="font-heading text-2xl md:text-3xl font-bold text-foreground tabular-nums">
+                    {fmtCZK(grandGross)} <span className="text-sm font-body font-semibold text-muted-foreground">s DPH</span>
+                  </span>
+                </div>
+
                 <Button
                   size="lg"
                   onClick={handleSubmit}
@@ -639,7 +689,7 @@ const Checkout = () => {
                     (shipping === "zasilkovna" && !packetaPoint) ||
                     !b2bFieldsOk
                   }
-                  className="w-full h-16 text-base md:text-lg font-bold rounded-full tracking-wide gap-2 px-4 text-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full h-16 text-base md:text-lg font-extrabold rounded-full tracking-wide gap-2 px-4 text-center bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submitting ? (
                     <Loader2 className="w-5 h-5 animate-spin shrink-0" />
@@ -647,13 +697,10 @@ const Checkout = () => {
                     <Lock className="w-5 h-5 shrink-0" />
                   )}
                   <span>
-                    {submitting
-                      ? "Odesílám…"
-                      : isPartner
-                        ? `Objednat (B2B faktura) — ${fmtCZK(grandGross)}`
-                        : `Objednat s povinností platby — ${fmtCZK(grandGross)}`}
+                    {submitting ? "Odesílám…" : "Závazně objednat a zaplatit"}
                   </span>
                 </Button>
+
 
                 <div className="flex flex-col items-center gap-2 pt-1">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground font-body">
