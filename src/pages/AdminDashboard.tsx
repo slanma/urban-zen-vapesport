@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { checkAdminRole, clearStoredAdminSession, getStoredAdminSession } from "@/lib/adminAuth";
 import { toast } from "sonner";
 import type { Tables } from "@/integrations/supabase/types";
+import { products } from "@/data/products";
 
 type View = "overview" | "orders" | "b2b" | "products" | "settings" | "promo";
 
