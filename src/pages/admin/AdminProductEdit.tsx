@@ -318,7 +318,10 @@ const AdminProductEdit = () => {
         max_frame_circumference_cm:
           typeof maxFrameCirc === "number" ? maxFrameCirc : null,
       });
-      toast({ title: "Změny uloženy" });
+      toast({
+        title: "Uloženo do systému e-shopu",
+        description: "Změny se propsaly do obchodu (B2C) i do B2B portálu.",
+      });
     } catch (error) {
       console.error("Product save failed", error);
       toast({
@@ -467,7 +470,7 @@ const AdminProductEdit = () => {
           </Button>
           <Button onClick={handleSave} disabled={saving} className="gap-2">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            Uložit změny
+            Uložit do systému e-shopu
           </Button>
         </div>
       </div>
@@ -1008,7 +1011,7 @@ const AdminProductEdit = () => {
         </Button>
         <Button onClick={handleSave} disabled={saving} size="lg" className="gap-2 shadow-lg">
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          Uložit změny
+          Uložit do systému e-shopu
         </Button>
       </div>
     </section>
