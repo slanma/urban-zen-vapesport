@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, Users, Package, Sparkles as SparklesIcon, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
@@ -36,6 +36,7 @@ const statusLabel: Record<string, string> = {
 };
 
 const AdminOverview = () => {
+  const navigate = useNavigate();
   const [pendingB2B, setPendingB2B] = useState<Tables<"b2b_profiles">[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
 
@@ -181,7 +182,20 @@ const AdminOverview = () => {
             </thead>
             <tbody>
               {orders.slice(0, 5).map((o) => (
-                <tr key={o.id} className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors">
+                <tr
+                  key={o.id}
+                  onClick={() => navigate("/admin/objednavky", { state: { selectedOrderId: o.id } })}
+                  className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate("/admin/objednavky", { state: { selectedOrderId: o.id } });
+                    }
+                  }}
+                  aria-label={`Otevřít objednávku ${o.order_number}`}
+                >
                   <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{o.order_number}</td>
                   <td className="px-4 py-3">{new Date(o.created_at).toLocaleDateString("cs-CZ")}</td>
                   <td className="px-4 py-3 font-medium">

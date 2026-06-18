@@ -189,7 +189,7 @@ const AdminDashboard = () => {
               </article>
               <article className="bg-background border border-border rounded-lg p-5">
                 <p className="text-sm text-muted-foreground mb-1">Celkem produktů</p>
-                <p className="text-3xl font-heading font-bold text-foreground">6</p>
+                <p className="text-3xl font-heading font-bold text-foreground">{products.length}</p>
               </article>
             </div>
             <h2 className="text-lg font-heading font-bold text-foreground mb-3">Poslední objednávky</h2>
