@@ -58,6 +58,9 @@ import { COLOR_PALETTE } from "@/lib/colorPalette";
 import { PRODUCT_FEATURES } from "@/lib/productFeatures";
 
 
+const stripColorFeatureLines = (lines: string[]) =>
+  lines.filter((line) => !/^\s*dostupné\s+barvy\s*:/i.test(line));
+
 
 const AdminProductEdit = () => {
   const { id } = useParams<{ id: string }>();
@@ -184,7 +187,7 @@ const AdminProductEdit = () => {
       setB2bPrice("");
       setStockQty("");
       setShortDescription(product.shortDescription);
-      setFeaturesText((product.features ?? []).join("\n"));
+      setFeaturesText(stripColorFeatureLines(product.features ?? []).join("\n"));
       setImages(getEffectiveGallery(product));
       setActiveColors([]);
       setSku(getProductCode(product));
@@ -222,7 +225,7 @@ const AdminProductEdit = () => {
       else if (!o.in_stock) setStockQty(0);
       if (o.short_description_override !== null) setShortDescription(o.short_description_override);
       if (Array.isArray(o.features_override)) {
-        setFeaturesText(o.features_override.join("\n"));
+        setFeaturesText(stripColorFeatureLines(o.features_override).join("\n"));
       }
       const gallery = getEffectiveGallery(product, o);
       if (gallery.length > 0) setImages(gallery);
@@ -267,10 +270,12 @@ const AdminProductEdit = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const cleanFeatures = featuresText
-        .split("\n")
-        .map((l) => l.trim())
-        .filter(Boolean);
+      const cleanFeatures = stripColorFeatureLines(
+        featuresText
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean),
+      );
       const qty = typeof stockQty === "number" ? stockQty : null;
       const cleanSku = sku.trim() || getProductCode(product);
       const bikes = compatibleBikes
@@ -290,6 +295,7 @@ const AdminProductEdit = () => {
         short_description_override:
           shortDescription !== product.shortDescription ? shortDescription : null,
         features_override: cleanFeatures,
+        colors_override: activeColors.length > 0 ? activeColors : null,
         specs_override: getSpecsOverrideForSave(product, get(product.id), cleanSku),
         subtitle_override: subtitle.trim() || null,
         problem_bullet: problemBullet.trim() || null,
