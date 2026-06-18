@@ -11,11 +11,14 @@ import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { getEffectiveProductCode } from "@/lib/effectiveProduct";
 import { fmtCZK } from "@/lib/vat";
+import PromoCodeBox from "@/components/PromoCodeBox";
+import { usePromoCode } from "@/hooks/usePromoCode";
 
 const Cart = () => {
   const { items: cart, updateQty, removeItem } = useCart();
   const { get } = useProductOverrides();
   const { isPartner, profile } = useB2BPartner();
+  const { appliedPromo, computeDiscountGross } = usePromoCode();
 
   const lines = cart
     .map((item) => {
