@@ -13,6 +13,10 @@ import {
   getProductsByHotspot,
   type Hotspot,
 } from "@/data/productHotspots";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { getEffectiveUnitPricing } from "@/lib/pricing";
+import { fmtCZK, netFromGross } from "@/lib/vat";
 
 type HotspotFilter = Hotspot | "All";
 
