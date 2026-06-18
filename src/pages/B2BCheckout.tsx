@@ -293,8 +293,8 @@ const B2BCheckout = () => {
                           <p className="text-sm text-muted-foreground font-mono">{item.sku}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-base font-semibold text-foreground">{item.qty} × {fmtCZK(item.unitPrice)}</p>
-                          <p className="text-base font-bold text-primary">{fmtCZK(item.unitPrice * item.qty)}</p>
+                          <p className="text-base font-semibold text-foreground">{item.qty} × {fmtCZK(item.unitPrice)} <span className="text-xs text-muted-foreground font-normal">bez DPH</span></p>
+                          <p className="text-base font-bold text-primary">{fmtCZK(item.unitPrice * item.qty)} <span className="text-xs text-muted-foreground font-normal">bez DPH</span></p>
                         </div>
                       </li>
                     );
@@ -306,26 +306,46 @@ const B2BCheckout = () => {
             {step === 2 && (
               <>
                 <h1 className="text-2xl font-heading font-bold text-primary mb-6">Způsob dopravy</h1>
+                {freeShipping && (
+                  <div className="mb-4 p-3 rounded-md bg-primary/10 border border-primary/30 text-sm font-semibold text-primary flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4" />
+                    Doprava zdarma (B2B Partner) — všechny způsoby dopravy máte za 0 Kč.
+                  </div>
+                )}
                 <div className="space-y-3 mb-8">
-                  {SHIPPING_OPTIONS.map((opt) => (
-                    <label
-                      key={opt.id}
-                      className={`flex items-center gap-4 p-4 rounded-md border cursor-pointer transition-all ${
-                        shipping === opt.id ? "border-primary bg-primary/5" : "border-border bg-muted/30 hover:border-primary/40"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="shipping"
-                        checked={shipping === opt.id}
-                        onChange={() => setShipping(opt.id)}
-                        className="w-5 h-5 accent-[hsl(var(--primary))]"
-                      />
-                      <span className="flex-1 text-base text-foreground">
-                        {opt.label} – {opt.price === 0 ? "0 Kč" : fmtCZK(opt.price)}
-                      </span>
-                    </label>
-                  ))}
+                  {SHIPPING_OPTIONS.map((opt) => {
+                    const effectivePrice = freeShipping ? 0 : opt.price;
+                    const wasFree = freeShipping && opt.price > 0;
+                    return (
+                      <label
+                        key={opt.id}
+                        className={`flex items-center gap-4 p-4 rounded-md border cursor-pointer transition-all ${
+                          shipping === opt.id ? "border-primary bg-primary/5" : "border-border bg-muted/30 hover:border-primary/40"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="shipping"
+                          checked={shipping === opt.id}
+                          onChange={() => setShipping(opt.id)}
+                          className="w-5 h-5 accent-[hsl(var(--primary))]"
+                        />
+                        <span className="flex-1 text-base text-foreground">
+                          {opt.label} –{" "}
+                          {wasFree ? (
+                            <>
+                              <span className="line-through text-muted-foreground mr-1">{fmtCZK(opt.price)}</span>
+                              <span className="font-bold text-primary">Zdarma</span>
+                            </>
+                          ) : effectivePrice === 0 ? (
+                            "0 Kč"
+                          ) : (
+                            fmtCZK(effectivePrice)
+                          )}
+                        </span>
+                      </label>
+                    );
+                  })}
                 </div>
 
                 <h2 className="text-2xl font-heading font-bold text-primary mb-6">Způsob platby</h2>
