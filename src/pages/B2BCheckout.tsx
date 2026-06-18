@@ -498,8 +498,18 @@ const B2BCheckout = () => {
               <h2 className="text-lg font-heading font-bold text-foreground mb-4">Souhrn</h2>
               <dl className="space-y-2 text-base text-foreground">
                 <div className="flex justify-between"><dt>Zboží ({payload.items.reduce((s, i) => s + i.qty, 0)} ks)</dt><dd>{fmtCZK(itemsSubtotalGross)}</dd></div>
-                <div className="flex justify-between"><dt>Doprava</dt><dd>{shippingOpt.price === 0 ? "Zdarma" : fmtCZK(shippingOpt.price)}</dd></div>
+                <div className="flex justify-between">
+                  <dt>Doprava</dt>
+                  <dd>
+                    {freeShipping && shippingOpt.price > 0 ? (
+                      <span className="text-primary font-semibold">Zdarma (B2B)</span>
+                    ) : shippingPrice === 0 ? "Zdarma" : fmtCZK(shippingPrice)}
+                  </dd>
+                </div>
                 <div className="flex justify-between"><dt>Platba</dt><dd>Zdarma</dd></div>
+                {appliedPromo && discountGross > 0 && (
+                  <div className="flex justify-between text-primary"><dt>Sleva ({appliedPromo.code})</dt><dd>−{fmtCZK(discountGross)}</dd></div>
+                )}
                 <div className="flex justify-between border-t border-border pt-3 mt-3">
                   <dt className="font-bold text-foreground">Cena bez DPH</dt>
                   <dd className="font-semibold">{fmtCZK(totalNet)}</dd>
