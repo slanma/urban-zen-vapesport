@@ -1011,7 +1011,7 @@ const AdminProductEdit = () => {
         </Button>
         <Button onClick={handleSave} disabled={saving} size="lg" className="gap-2 shadow-lg">
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          Uložit změny
+          Uložit do systému e-shopu
         </Button>
       </div>
     </section>
