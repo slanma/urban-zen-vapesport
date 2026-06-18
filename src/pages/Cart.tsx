@@ -66,12 +66,14 @@ const Cart = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {/* Cart items */}
             <div className="lg:col-span-8 space-y-4">
-              {lines.map(({ item, product, pricing }) => {
+              {lines.map(({ item, product, pricing, code, isAuto }) => {
                 const lineTotal = (pricing.isB2B ? pricing.unitNet : pricing.unitGross) * item.quantity;
                 return (
                   <div
                     key={`${item.productId}-${item.color ?? ""}`}
-                    className="flex items-center gap-4 md:gap-6 bg-card border border-border rounded-xl p-4 md:p-5"
+                    className={`flex items-center gap-4 md:gap-6 bg-card border rounded-xl p-4 md:p-5 ${
+                      isAuto ? "border-primary/40 bg-primary/[0.04]" : "border-border"
+                    }`}
                   >
                     <Link
                       to={`/produkt/${product.id}`}
@@ -81,62 +83,91 @@ const Cart = () => {
                     </Link>
 
                     <div className="flex-1 min-w-0">
+                      {isAuto && (
+                        <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold bg-primary/15 text-primary px-2 py-0.5 rounded mb-1">
+                          <Sparkles className="w-3 h-3" /> Přidáno automaticky
+                        </span>
+                      )}
                       <Link
                         to={`/produkt/${product.id}`}
-                        className="font-heading text-base md:text-lg font-bold text-foreground hover:text-primary transition-colors line-clamp-1"
+                        className="block font-heading text-base md:text-lg font-bold text-foreground hover:text-primary transition-colors line-clamp-1"
                       >
                         {product.name}
                       </Link>
+                      <p className="text-xs font-mono text-muted-foreground mt-0.5">
+                        Kód: <span className="text-foreground/80">{code}</span>
+                        {item.color && (
+                          <>
+                            {" · "}Barva: <span className="text-foreground/80">{item.color}</span>
+                          </>
+                        )}
+                      </p>
                       <p className="text-sm font-body text-muted-foreground mt-0.5">
-                        {item.color ? `${product.categoryLabel} · ${item.color}` : product.categoryLabel}
+                        {product.categoryLabel}
                       </p>
                       <p className="font-heading text-lg font-bold text-foreground mt-1 md:hidden">
                         {fmtCZK(lineTotal)}
                         <span className="text-[10px] text-muted-foreground ml-1 font-body font-normal">
-                          {pricing.isB2B ? "VOC bez DPH" : "s DPH"}
+                          {pricing.isB2B ? "bez DPH" : "s DPH"}
                         </span>
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => updateQty(item.productId, -1, item.color)}
-                        className="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-accent transition-colors text-lg font-bold"
-                        aria-label="Snížit množství"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="w-10 md:w-12 text-center font-heading text-lg font-bold text-foreground">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQty(item.productId, 1, item.color)}
-                        className="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-accent transition-colors text-lg font-bold"
-                        aria-label="Zvýšit množství"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
-                    </div>
+                    {isAuto ? (
+                      <div className="hidden md:flex flex-col items-center w-32 text-center">
+                        <span className="font-heading text-sm font-bold text-foreground tabular-nums">
+                          ks {item.quantity}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
+                          Vázáno na produkt
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => updateQty(item.productId, -1, item.color)}
+                          className="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-accent transition-colors text-lg font-bold"
+                          aria-label="Snížit množství"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </button>
+                        <span className="w-10 md:w-12 text-center font-heading text-lg font-bold text-foreground">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => updateQty(item.productId, 1, item.color)}
+                          className="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-accent transition-colors text-lg font-bold"
+                          aria-label="Zvýšit množství"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
 
                     <div className="hidden md:flex flex-col items-end w-32">
                       <span className="font-heading text-xl font-bold text-foreground tabular-nums">
-                        {fmtCZK(lineTotal)}
+                        {lineTotal === 0 ? "Zdarma" : fmtCZK(lineTotal)}
                       </span>
                       <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
-                        {pricing.isB2B ? "VOC bez DPH" : "s DPH"}
+                        {pricing.isB2B ? "bez DPH" : "s DPH"}
                       </span>
                     </div>
 
-                    <button
-                      onClick={() => removeItem(item.productId, item.color)}
-                      className="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                      aria-label={`Odstranit ${product.name}`}
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+                    {isAuto ? (
+                      <div className="shrink-0 w-10 h-10" aria-hidden />
+                    ) : (
+                      <button
+                        onClick={() => removeItem(item.productId, item.color)}
+                        className="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                        aria-label={`Odstranit ${product.name}`}
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    )}
                   </div>
                 );
               })}
+
             </div>
 
             {/* Summary */}
