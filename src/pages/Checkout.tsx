@@ -17,6 +17,7 @@ import { getEffectiveProductCode } from "@/lib/effectiveProduct";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { usePromoCode } from "@/hooks/usePromoCode";
+import PromoCodeBox from "@/components/PromoCodeBox";
 
 
 type ShippingId = "zasilkovna" | "ppl" | "osobni";
