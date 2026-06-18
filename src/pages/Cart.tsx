@@ -3,12 +3,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import B2BModeBanner from "@/components/B2BModeBanner";
 import { getProductById } from "@/data/products";
-import { Minus, Plus, Trash2, ShieldCheck, Lock } from "lucide-react";
+import { Minus, Plus, Trash2, ShieldCheck, Lock, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
+import { getEffectiveProductCode } from "@/lib/effectiveProduct";
 import { fmtCZK } from "@/lib/vat";
 
 const Cart = () => {
@@ -23,13 +24,16 @@ const Cart = () => {
       const ov = get(product.id);
       if (ov?.visible === false) return null;
       const pricing = getEffectiveUnitPricing(product, ov, isPartner, profile?.discount_percent);
-      return { item, product, pricing };
+      const code = getEffectiveProductCode(product, ov);
+      const isAuto = item.meta?.auto === true;
+      return { item, product, pricing, code, isAuto };
     })
-    .filter((x): x is { item: typeof cart[0]; product: NonNullable<ReturnType<typeof getProductById>>; pricing: ReturnType<typeof getEffectiveUnitPricing> } => !!x);
+    .filter((x): x is { item: typeof cart[0]; product: NonNullable<ReturnType<typeof getProductById>>; pricing: ReturnType<typeof getEffectiveUnitPricing>; code: string; isAuto: boolean } => !!x);
 
   const subtotalGross = lines.reduce((s, l) => s + l.pricing.unitGross * l.item.quantity, 0);
   const subtotalNet = lines.reduce((s, l) => s + l.pricing.unitNet * l.item.quantity, 0);
   const subtotalVat = subtotalGross - subtotalNet;
+
 
   return (
     <main className="min-h-screen bg-background">
