@@ -318,7 +318,10 @@ const AdminProductEdit = () => {
         max_frame_circumference_cm:
           typeof maxFrameCirc === "number" ? maxFrameCirc : null,
       });
-      toast({ title: "Změny uloženy" });
+      toast({
+        title: "Uloženo do systému e-shopu",
+        description: "Změny se propsaly do obchodu (B2C) i do B2B portálu.",
+      });
     } catch (error) {
       console.error("Product save failed", error);
       toast({
