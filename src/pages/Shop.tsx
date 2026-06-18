@@ -14,6 +14,7 @@ import { getPrimaryImage } from "@/lib/productImages";
 import { RichText } from "@/lib/richText";
 import FeatureBadges from "@/components/FeatureBadges";
 import PriceTag from "@/components/PriceTag";
+import ColorSwatchRow from "@/components/product/ColorSwatchRow";
 import { applyProductOverride } from "@/lib/effectiveProduct";
 
 interface HotspotDot {
