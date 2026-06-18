@@ -9,6 +9,7 @@ import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { getEffectiveGallery } from "@/lib/productImages";
 import { RichText, stripRichMarkers } from "@/lib/richText";
 import { applyProductOverride, getEffectiveProductCode } from "@/lib/effectiveProduct";
+import { resolveColor } from "@/lib/colorPalette";
 import { netFromGross, fmtCZK } from "@/lib/vat";
 
 import { ArrowLeft, ShoppingCart, Check, PackageCheck, PackageX } from "lucide-react";
@@ -57,7 +58,7 @@ const ProductDetail = () => {
   const inStock = override?.in_stock ?? true;
   const gallery = product ? getEffectiveGallery(product, override) : [];
   const [activeImg, setActiveImg] = useState(0);
-  const availableColors = product?.available_colors ?? null;
+  const availableColors = override?.colors_override?.filter(Boolean) ?? null;
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [frameCirc, setFrameCirc] = useState<string>("");
@@ -95,6 +96,17 @@ const ProductDetail = () => {
     const globalMax = parseFloat(getSetting("default_max_frame_circumference_cm", "7.5"));
     return Number.isFinite(globalMax) && globalMax > 0 ? globalMax : 7.5;
   }, [override?.max_frame_circumference_cm, getSetting]);
+
+  const selectedColorLabel = selectedColor ? resolveColor(selectedColor).label : "Vyberte";
+  const visibleFeatures = useMemo(() => {
+    if (!product) return [];
+    const withoutStaleColorLine = product.features.filter(
+      (feature) => !/^\s*dostupné\s+barvy\s*:/i.test(feature),
+    );
+    if (!availableColors || availableColors.length === 0) return withoutStaleColorLine;
+    const colorLabels = availableColors.map((color) => resolveColor(color).label).join(", ");
+    return [...withoutStaleColorLine, `Dostupné barvy: ${colorLabels}`];
+  }, [product, availableColors]);
 
   const isDeleted = override ? override.visible === false : false;
 
@@ -286,7 +298,7 @@ const ProductDetail = () => {
                     Barva
                   </h2>
                   <span className="font-body text-sm text-muted-foreground">
-                    {selectedColor ?? "Vyberte"}
+                    {selectedColorLabel}
                   </span>
                 </div>
                 <ColorCells
@@ -367,7 +379,7 @@ const ProductDetail = () => {
                 </AccordionTrigger>
                 <AccordionContent>
                   <ul className="space-y-3 pt-1">
-                    {product.features.map((feat) => (
+                    {visibleFeatures.map((feat) => (
                       <li
                         key={feat}
                         className="flex items-start gap-3 text-sm font-body text-foreground"
