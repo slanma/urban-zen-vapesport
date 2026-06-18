@@ -143,7 +143,7 @@ const AdminProductEdit = () => {
    * interaction model as the color palette. Custom lines added by the
    * admin in the textarea are preserved.
    */
-  const toggleFeature = (label: string) => {
+  const toggleFeature = async (label: string) => {
     const lines = featuresText.split("\n").map((l) => l.trim());
     const idx = lines.findIndex((l) => l.toLowerCase() === label.toLowerCase());
     let next: string[];
@@ -152,7 +152,17 @@ const AdminProductEdit = () => {
     } else {
       next = [...lines.filter(Boolean), label];
     }
-    setFeaturesText(next.join("\n"));
+    const cleaned = next.filter(Boolean);
+    setFeaturesText(cleaned.join("\n"));
+    // Persist immediately (same UX as color variants) so the choice survives reload
+    // even when admin forgets to press "Uložit do systému e-shopu".
+    if (product) {
+      try {
+        await upsert(product.id, { features_override: stripColorFeatureLines(cleaned) });
+      } catch {
+        toast({ title: "Uložení vlastnosti selhalo", variant: "destructive" });
+      }
+    }
   };
 
   const activeFeatures = new Set(
