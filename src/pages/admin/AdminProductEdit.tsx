@@ -632,14 +632,17 @@ const AdminProductEdit = () => {
                     onClick={() => toggleFeature(label)}
                     aria-pressed={active}
                     title={tooltip}
-                    className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition ${
+                    className={`group flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition ${
                       active
                         ? "border-primary bg-primary/10 text-foreground shadow-sm"
                         : "border-border bg-muted/40 text-muted-foreground opacity-60 hover:opacity-100"
                     }`}
                   >
-                    <Icon className="w-4 h-4" aria-hidden />
-                    <span>{label}</span>
+                    <Icon className={`w-4 h-4 ${active ? "text-primary" : ""}`} aria-hidden />
+                    <span className="font-medium">{label}</span>
+                    <span className={`text-[10px] uppercase tracking-wide ${active ? "text-primary" : "text-muted-foreground"}`}>
+                      {active ? "Zvoleno" : "Nezvoleno"}
+                    </span>
                   </button>
                 </li>
               );
