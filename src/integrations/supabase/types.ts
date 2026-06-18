@@ -451,6 +451,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      validate_promo_code: {
+        Args: { _code: string }
+        Returns: {
+          code: string
+          type: Database["public"]["Enums"]["promo_code_type"]
+          value: number
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
