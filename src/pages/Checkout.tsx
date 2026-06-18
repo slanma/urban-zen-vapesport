@@ -649,6 +649,18 @@ const Checkout = () => {
                   </span>
                 </label>
 
+                {/* Legally required pre-button total (EU 2026 directive).
+                    Must appear DIRECTLY above the order button with no
+                    intervening text, links, or checkboxes. */}
+                <div className="flex items-baseline justify-between border-t-2 border-foreground/15 pt-4">
+                  <span className="font-heading text-base md:text-lg font-bold text-foreground">
+                    Celkem k úhradě:
+                  </span>
+                  <span className="font-heading text-2xl md:text-3xl font-bold text-foreground tabular-nums">
+                    {fmtCZK(grandGross)} <span className="text-sm font-body font-semibold text-muted-foreground">s DPH</span>
+                  </span>
+                </div>
+
                 <Button
                   size="lg"
                   onClick={handleSubmit}
@@ -661,7 +673,7 @@ const Checkout = () => {
                     (shipping === "zasilkovna" && !packetaPoint) ||
                     !b2bFieldsOk
                   }
-                  className="w-full h-16 text-base md:text-lg font-bold rounded-full tracking-wide gap-2 px-4 text-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full h-16 text-base md:text-lg font-extrabold rounded-full tracking-wide gap-2 px-4 text-center bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submitting ? (
                     <Loader2 className="w-5 h-5 animate-spin shrink-0" />
@@ -669,13 +681,10 @@ const Checkout = () => {
                     <Lock className="w-5 h-5 shrink-0" />
                   )}
                   <span>
-                    {submitting
-                      ? "Odesílám…"
-                      : isPartner
-                        ? `Objednat (B2B faktura) — ${fmtCZK(grandGross)}`
-                        : `Objednat s povinností platby — ${fmtCZK(grandGross)}`}
+                    {submitting ? "Odesílám…" : "Závazně objednat a zaplatit"}
                   </span>
                 </Button>
+
 
                 <div className="flex flex-col items-center gap-2 pt-1">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground font-body">
