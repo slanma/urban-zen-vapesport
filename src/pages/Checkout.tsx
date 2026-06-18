@@ -13,8 +13,10 @@ import { ShieldCheck, Lock, ChevronLeft, MapPin, Building2, Loader2 } from "luci
 import { Button } from "@/components/ui/button";
 import OrderSummaryTable from "@/components/OrderSummaryTable";
 import { fmtCZK } from "@/lib/vat";
+import { getEffectiveProductCode } from "@/lib/effectiveProduct";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
 
 type ShippingId = "zasilkovna" | "ppl" | "osobni";
 type PaymentId = "cash" | "transfer" | "cod" | "invoice";
