@@ -336,8 +336,12 @@ const Shop = () => {
                   />
                   <FeatureBadges
                     features={get(product.id).features_override ?? product.features}
-                    className="mb-4"
+                    className="mb-3"
                     size="sm"
+                  />
+                  <ColorSwatchRow
+                    colors={get(product.id).colors_override}
+                    className="mb-4"
                   />
                   <div className="flex items-center justify-between mt-auto">
                     <PriceTag
