@@ -14,6 +14,7 @@ import { getPrimaryImage } from "@/lib/productImages";
 import { RichText } from "@/lib/richText";
 import FeatureBadges from "@/components/FeatureBadges";
 import PriceTag from "@/components/PriceTag";
+import ColorSwatchRow from "@/components/product/ColorSwatchRow";
 import { applyProductOverride } from "@/lib/effectiveProduct";
 
 interface HotspotDot {
@@ -269,8 +270,12 @@ const Shop = () => {
                   />
                   <FeatureBadges
                     features={get(product.id).features_override ?? product.features}
-                    className="mb-4"
+                    className="mb-3"
                     size="sm"
+                  />
+                  <ColorSwatchRow
+                    colors={get(product.id).colors_override}
+                    className="mb-4"
                   />
                   <div className="flex items-center justify-between mt-auto gap-3">
                     <PriceTag
@@ -331,8 +336,12 @@ const Shop = () => {
                   />
                   <FeatureBadges
                     features={get(product.id).features_override ?? product.features}
-                    className="mb-4"
+                    className="mb-3"
                     size="sm"
+                  />
+                  <ColorSwatchRow
+                    colors={get(product.id).colors_override}
+                    className="mb-4"
                   />
                   <div className="flex items-center justify-between mt-auto">
                     <PriceTag
