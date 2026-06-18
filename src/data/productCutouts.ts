@@ -8,6 +8,7 @@ import vsM2Podsedlo925467 from "@/assets/products/vs-m2-podsedlo-925467.png";
 import vsMalyTrojuhlenik3Kapsy904673 from "@/assets/products/vs-maly-trojuhlenik-3kapsy-904673.png";
 import vsMobil55Pe904696 from "@/assets/products/vs-mobil-5-5-pe-904696.png";
 import vsNeoprenovyObal938229 from "@/assets/products/vs-neoprenovy-obal-938229.png";
+import vsObalNaDisplayPrevozElektrokola943568 from "@/assets/products/vs-obal-na-display-prevoz-elektrokola-943568.png";
 import vsObalNaTlumic908656 from "@/assets/products/vs-obal-na-tlumic-908656.png";
 import vsPlochyTrojuhelnik4KapsyVape904677 from "@/assets/products/vs-plochy-trojuhelnik-4kapsy-vape-904677.png";
 import vsPodsedloMalaSpe904708 from "@/assets/products/vs-podsedlo-mala-spe-904708.png";
@@ -37,6 +38,7 @@ export const productCutouts: Record<string, string> = {
   "vs-maly-trojuhlenik-3kapsy-904673": vsMalyTrojuhlenik3Kapsy904673,
   "vs-mobil-5-5-pe-904696": vsMobil55Pe904696,
   "vs-neoprenovy-obal-938229": vsNeoprenovyObal938229,
+  "vs-obal-na-display-prevoz-elektrokola-943568": vsObalNaDisplayPrevozElektrokola943568,
   "vs-obal-na-tlumic-908656": vsObalNaTlumic908656,
   "vs-plochy-trojuhelnik-4kapsy-vape-904677": vsPlochyTrojuhelnik4KapsyVape904677,
   "vs-podsedlo-mala-spe-904708": vsPodsedloMalaSpe904708,
