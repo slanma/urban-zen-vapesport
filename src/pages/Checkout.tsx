@@ -275,7 +275,23 @@ const Checkout = () => {
         company_name: form.company || null,
         ico: form.ico || null,
         dic: form.dic || null,
-        items: orderLines,
+        items: [...orderLines]
+          .sort((a, b) =>
+            a.code.localeCompare(b.code, "cs") ||
+            (a.color ?? "").localeCompare(b.color ?? "", "cs"),
+          )
+          .map((l) => ({
+            code: l.code,
+            name: l.name,
+            color: l.color,
+            qty: l.qty,
+            unit_gross: l.unitGross,
+            unit_net: l.unitNet,
+            line_gross: l.unitGross * l.qty,
+            line_net: l.unitNet * l.qty,
+            auto: l.auto,
+          })),
+
         subtotal_gross: subtotalGross,
         shipping_label: shippingOpt
           ? freeShipping && shippingOpt.price > 0
