@@ -125,6 +125,22 @@ const B2BDashboard = () => {
   const [accessError, setAccessError] = useState("");
   const [activeHotspot, setActiveHotspot] = useState<HotspotFilter>("All");
 
+  const { get: getOverride } = useProductOverrides();
+  const { profile: b2bProfile } = useB2BPartner();
+  const discount = b2bProfile?.discount_percent ?? 0;
+
+  /**
+   * VOC unit price (net) for a product respecting admin overrides and the
+   * partner's individually approved discount. No discount applied unless the
+   * admin explicitly set `discount_percent` on the b2b_profile.
+   */
+  const getUnitNet = (productId: string): number => {
+    const product = getProductById(productId);
+    if (!product) return 0;
+    const pricing = getEffectiveUnitPricing(product, getOverride(productId), true, discount);
+    return pricing.unitNet;
+  };
+
   const visibleProducts = useMemo(() => {
     if (activeHotspot === "All") return products;
     const ids = new Set(getProductsByHotspot(activeHotspot).map((p) => p.id));
@@ -177,11 +193,9 @@ const B2BDashboard = () => {
 
   const totalItems = useMemo(() => cart.reduce((sum, c) => sum + c.qty, 0), [cart]);
   const totalPrice = useMemo(
-    () => cart.reduce((sum, c) => {
-      const product = getProductById(c.productId);
-      return sum + (product ? product.price * c.qty : 0);
-    }, 0),
-    [cart]
+    () => cart.reduce((sum, c) => sum + getUnitNet(c.productId) * c.qty, 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cart, discount, getOverride]
   );
 
   const [submitting, setSubmitting] = useState(false);
