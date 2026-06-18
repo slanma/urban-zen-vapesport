@@ -168,23 +168,21 @@ const Checkout = () => {
     if (!code) return;
     setPromoApplying(true);
     try {
-      const { data, error } = await supabase
-        .from("promo_codes")
-        .select("code, type, value, active")
-        .eq("code", code)
-        .eq("active", true)
-        .maybeSingle();
+      const { data, error } = await supabase.rpc("validate_promo_code", {
+        _code: code,
+      });
       if (error) throw error;
-      if (!data) {
+      const row = Array.isArray(data) ? data[0] : data;
+      if (!row) {
         toast.error("Neplatný nebo neaktivní kód.");
         return;
       }
       setAppliedPromo({
-        code: data.code,
-        type: data.type as "percentage" | "fixed_amount",
-        value: Number(data.value),
+        code: row.code,
+        type: row.type as "percentage" | "fixed_amount",
+        value: Number(row.value),
       });
-      toast.success(`Slevový kód „${data.code}" byl uplatněn.`);
+      toast.success(`Slevový kód „${row.code}" byl uplatněn.`);
     } catch {
       toast.error("Kód se nepodařilo ověřit.");
     } finally {
