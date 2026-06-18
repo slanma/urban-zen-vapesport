@@ -222,6 +222,13 @@ const Cart = () => {
                     </div>
                   </div>
                 )}
+                <PromoCodeBox compact />
+                {appliedPromo && computeDiscountGross(subtotalGross) > 0 && (
+                  <p className="text-xs text-muted-foreground font-body -mt-3">
+                    Sleva se uplatní v pokladně po výpočtu dopravy a platby.
+                  </p>
+                )}
+
 
                 <Link to="/pokladna" className="block">
                   <Button
