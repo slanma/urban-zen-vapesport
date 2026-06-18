@@ -554,7 +554,11 @@ const Checkout = () => {
                 </h2>
 
                 <OrderSummaryTable
-                  items={orderLines}
+                  items={orderLines.map((l) => ({
+                    name: l.color ? `[${l.code}] ${l.name} – ${l.color}` : `[${l.code}] ${l.name}`,
+                    qty: l.qty,
+                    unitGross: l.unitGross,
+                  }))}
                   shippingGross={shippingPrice}
                   paymentGross={paymentPrice}
                   shippingLabel={shippingOpt?.label ?? "Doprava (nezvoleno)"}
@@ -562,6 +566,7 @@ const Checkout = () => {
                   discountGross={discountGross}
                   discountLabel={appliedPromo ? `Sleva (Kód: ${appliedPromo.code})` : "Sleva"}
                 />
+
 
                 {/* Promo code */}
                 <div className="border border-border rounded-lg p-4 bg-muted/20">
