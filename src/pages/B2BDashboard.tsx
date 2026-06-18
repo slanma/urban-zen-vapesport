@@ -447,7 +447,8 @@ const B2BDashboard = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex flex-col items-end gap-0.5">
-                            <span className="text-lg font-bold text-foreground">VOC {product.price.toLocaleString("cs-CZ")}&nbsp;Kč</span>
+                            <span className="text-lg font-bold text-foreground">VOC {fmtCZK(getUnitNet(product.id))}</span>
+                            <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">bez DPH</span>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -485,7 +486,7 @@ const B2BDashboard = () => {
               <span className="text-lg font-semibold">Celkem v košíku:</span>
             </div>
             <span className="text-xl font-bold">{totalItems} ks</span>
-            <span className="text-xl font-bold">{totalPrice.toLocaleString("cs-CZ")}&nbsp;Kč bez DPH</span>
+            <span className="text-xl font-bold">{fmtCZK(totalPrice)} bez DPH</span>
           </div>
           <Button size="lg" className="h-14 px-10 text-lg font-bold gap-3" disabled={totalItems === 0} onClick={handleSubmitOrder}>
             <ShoppingCart className="w-5 h-5" />
