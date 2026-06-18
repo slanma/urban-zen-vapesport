@@ -543,54 +543,8 @@ const Checkout = () => {
 
 
                 {/* Promo code */}
-                <div className="border border-border rounded-lg p-4 bg-muted/20">
-                  <label htmlFor="promo" className="block text-sm font-body font-semibold text-foreground mb-2">
-                    Máte slevový kód?
-                  </label>
-                  {appliedPromo ? (
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="text-sm font-body">
-                        <span className="inline-block px-2 py-0.5 rounded bg-primary/15 text-primary font-bold font-mono text-xs mr-2">
-                          {appliedPromo.code}
-                        </span>
-                        <span className="text-muted-foreground">
-                          {appliedPromo.type === "percentage"
-                            ? `−${appliedPromo.value} %`
-                            : `−${fmtCZK(appliedPromo.value)}`}{" "}
-                          uplatněno
-                        </span>
-                      </div>
-                      <Button type="button" variant="outline" size="sm" onClick={removePromo}>
-                        Odebrat
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <input
-                        id="promo"
-                        type="text"
-                        placeholder="Např. VAPE10"
-                        value={promoInput}
-                        onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            applyPromo();
-                          }
-                        }}
-                        className="flex-1 h-11 px-3 text-sm font-body bg-background border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary uppercase font-mono tracking-wider"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={applyPromo}
-                        disabled={promoApplying || !promoInput.trim()}
-                      >
-                        {promoApplying ? <Loader2 className="w-4 h-4 animate-spin" /> : "Uplatnit"}
-                      </Button>
-                    </div>
-                  )}
-                </div>
+                <PromoCodeBox className="border border-border rounded-lg p-4 bg-muted/20" compact />
+
 
                 {(!shipping || !payment) && (
                   <p className="text-xs text-destructive font-body">
