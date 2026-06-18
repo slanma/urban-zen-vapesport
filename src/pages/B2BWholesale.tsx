@@ -15,6 +15,7 @@ import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { fmtCZK, grossFromNet } from "@/lib/vat";
 import { productHotspotEntries, type Hotspot } from "@/data/productHotspots";
 import { supabase } from "@/integrations/supabase/client";
+import FeatureBadges from "@/components/FeatureBadges";
 
 const HOTSPOT_POSITIONS: { id: Hotspot; label: string; x: number; y: number }[] = [
   { id: "Frame",        label: "Přední trojúhelník rámu", x: 54, y: 42 },
@@ -299,6 +300,11 @@ const B2BWholesale = () => {
                             <Eye className="w-3 h-3" />Popis
                           </button>
                         </div>
+                        <FeatureBadges
+                          features={row.override.features_override ?? row.base.features}
+                          className="mt-1.5"
+                          size="sm"
+                        />
                       </div>
                       <div className="text-right text-sm">
                         <div className="font-bold">{fmtCZK(base)}</div>

@@ -12,6 +12,8 @@ import PriceTag from "@/components/PriceTag";
 import { RichText } from "@/lib/richText";
 import { PILLARS, getPillar, pickPillarImage, type PillarKey } from "@/lib/productPillars";
 import { applyProductOverride, getProductCode } from "@/lib/effectiveProduct";
+import FeatureBadges from "@/components/FeatureBadges";
+import ColorSwatchRow from "@/components/product/ColorSwatchRow";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -320,8 +322,17 @@ const Products = () => {
                 </h3>
                 <RichText
                   as="p"
-                  className="text-sm font-body text-muted-foreground leading-relaxed mb-4 flex-1"
+                  className="text-sm font-body text-muted-foreground leading-relaxed mb-3 flex-1"
                   text={product.shortDescription}
+                />
+                <FeatureBadges
+                  features={getOverride(product.id).features_override ?? product.features}
+                  className="mb-3"
+                  size="sm"
+                />
+                <ColorSwatchRow
+                  colors={getOverride(product.id).colors_override}
+                  className="mb-4"
                 />
                 <div className="flex items-center justify-between mt-auto gap-3">
                   <PriceTag

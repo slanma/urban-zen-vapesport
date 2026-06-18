@@ -1,35 +1,31 @@
-## Cíl
-V B2B prostředí už nepoužívat napevno 30% slevu. Defaultní chování = obchodník vidí běžnou VOC (MOC) cenu. Sleva se aplikuje pouze pokud má v jeho profilu (`b2b_profiles.discount_percent`) hodnotu > 0 nastavenou administrátorem.
+Zjistil jsem, proč to působí jako „uložené, ale neviditelné“:
 
-## Změny v `src/pages/B2BDashboard.tsx`
+- U konkrétního produktu `vs-maly-trojuhlenik-3kapsy-904673` jsou technologie v databázi uložené správně.
+- Barvy ale uložené nejsou: `colors_override` je u tohoto produktu stále `null`, proto se v obchodě nemají z čeho zobrazit.
+- V B2C katalogu `/produkty` se aktuálně technologie ani barvy na kartách vůbec nevykreslují, i když v `/obchod` už část logiky je.
+- V B2B velkoobchodu se barvy používají pro varianty, ale technologie se v řádku produktu nezobrazují.
 
-1. **Logika slevy**
-   - `b2bDiscount` → nahradit konstantou `discountPercent = profile?.discount_percent ?? 0` a multiplikátorem `priceMultiplier = (100 - discountPercent) / 100`.
-   - Když `discountPercent === 0`, použít `product.price` přímo (žádné násobení).
-   - Odstranit fallback `"30 %"` v `discountLabel` a v payloadu pro checkout (pošle se `""` nebo se klíč vynechá, když není sleva).
+Plán úprav:
 
-2. **Zobrazení ceny v tabulce produktů** (řádky 437–441)
-   - **Bez slevy** (default): jen jeden řádek – `{product.price} Kč` tučně jako hlavní B2B cena. Žádné „MOC", žádné přeškrtnutí, žádný label „Sleva".
-   - **Se slevou** (`discountPercent > 0`):
-     - Horní řádek: `MOC {product.price} Kč` – malé, přeškrtnuté, šedé.
-     - Spodní řádek: `{b2bPrice} Kč` – tučné, v `text-primary`.
-     - Pod tím malý label `Sleva {discountPercent} %`.
+1. Upravit administraci produktu tak, aby výběr technologií fungoval stejně jasně jako barvy:
+   - aktivní chipy budou zřetelně zaškrtnuté,
+   - hodnota se bude ukládat přes `features_override`,
+   - po uložení zůstane výběr viditelný i po reloadu.
 
-3. **Souhrn dole / celková cena**
-   - `totalPrice` bude i nadále počítat s `priceMultiplier`, ale když je sleva 0, vyjde rovno MOC – beze změny chování.
+2. Zkontrolovat a zpřesnit ukládání barev:
+   - barvy zůstanou ukládané do `colors_override`,
+   - uložení přes hlavní tlačítko bude vždy posílat aktuálně vybrané barvy,
+   - administrace bude lépe ukazovat, že neaktivní barva znamená „nezobrazuje se v obchodě“.
 
-## Změny v `src/pages/B2BCheckout.tsx`
+3. Doplnit zobrazení technologií a barev do B2C katalogu `/produkty`:
+   - na produktových kartách se zobrazí stejné technologické ikonky jako v `/obchod`,
+   - pod nimi se zobrazí barevné swatche, pokud jsou pro produkt uložené.
 
-4. **Věta nad košíkem** (řádek 257)
-   - Pokud `payload.discountLabel` je prázdný / `"0 %"`, větu „Ceny jsou se slevou …" nezobrazovat – ukázat jen „Zkontrolujte zboží před pokračováním."
-   - Když sleva existuje, zachovat původní text.
+4. Doplnit zobrazení technologií do B2B velkoobchodu:
+   - u názvu produktu v B2B matrixu se zobrazí ikonky uložených technologií,
+   - v rozbaleném popisu se vypíšou klíčové vlastnosti z administrace.
 
-## Mimo rozsah
-- Žádné DB změny (sloupec `discount_percent` v `b2b_profiles` už existuje a admin ho nastavuje).
-- Žádné úpravy admin rozhraní.
-- Žádné změny v `B2BWholesale.tsx` (sleva tam už byla odstraněna dřív).
-
-## Technické detaily
-- Soubory: `src/pages/B2BDashboard.tsx`, `src/pages/B2BCheckout.tsx`.
-- Cena pro výpočet `b2bPrice` v jednom kroku: `Math.round(product.price * (100 - discountPercent) / 100)`.
-- Pomocná proměnná `hasDiscount = discountPercent > 0` pro podmíněný JSX render.
+5. Ověřit konkrétní produkt:
+   - po uložení v administraci ověřit databázový záznam,
+   - zkontrolovat detail produktu `/produkt/vs-maly-trojuhlenik-3kapsy-904673`,
+   - zkontrolovat `/produkty`, `/obchod` a B2B velkoobchod, že berou stejné uložené hodnoty.

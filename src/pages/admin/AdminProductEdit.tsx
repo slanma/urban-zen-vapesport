@@ -143,7 +143,7 @@ const AdminProductEdit = () => {
    * interaction model as the color palette. Custom lines added by the
    * admin in the textarea are preserved.
    */
-  const toggleFeature = (label: string) => {
+  const toggleFeature = async (label: string) => {
     const lines = featuresText.split("\n").map((l) => l.trim());
     const idx = lines.findIndex((l) => l.toLowerCase() === label.toLowerCase());
     let next: string[];
@@ -152,7 +152,17 @@ const AdminProductEdit = () => {
     } else {
       next = [...lines.filter(Boolean), label];
     }
-    setFeaturesText(next.join("\n"));
+    const cleaned = next.filter(Boolean);
+    setFeaturesText(cleaned.join("\n"));
+    // Persist immediately (same UX as color variants) so the choice survives reload
+    // even when admin forgets to press "Uložit do systému e-shopu".
+    if (product) {
+      try {
+        await upsert(product.id, { features_override: stripColorFeatureLines(cleaned) });
+      } catch {
+        toast({ title: "Uložení vlastnosti selhalo", variant: "destructive" });
+      }
+    }
   };
 
   const activeFeatures = new Set(
@@ -622,14 +632,17 @@ const AdminProductEdit = () => {
                     onClick={() => toggleFeature(label)}
                     aria-pressed={active}
                     title={tooltip}
-                    className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition ${
+                    className={`group flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition ${
                       active
                         ? "border-primary bg-primary/10 text-foreground shadow-sm"
                         : "border-border bg-muted/40 text-muted-foreground opacity-60 hover:opacity-100"
                     }`}
                   >
-                    <Icon className="w-4 h-4" aria-hidden />
-                    <span>{label}</span>
+                    <Icon className={`w-4 h-4 ${active ? "text-primary" : ""}`} aria-hidden />
+                    <span className="font-medium">{label}</span>
+                    <span className={`text-[10px] uppercase tracking-wide ${active ? "text-primary" : "text-muted-foreground"}`}>
+                      {active ? "Zvoleno" : "Nezvoleno"}
+                    </span>
                   </button>
                 </li>
               );
