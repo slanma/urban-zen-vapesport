@@ -108,6 +108,34 @@ export const legacyProductAliases: Record<string, string> = {
 /** Public product catalogue. MORSEO and Vape Legends base entries stay as a
  *  single card with available_colors so the PDP renders a color picker
  *  instead of one card per color. */
+/** Parse a "Dostupné barvy: Černá, Bílá, …" line from features/specs and
+ *  return only color names recognized by ALL_COLOR_NAMES (case-insensitive). */
+const KNOWN_COLOR_LOOKUP = new Map(
+  ALL_COLOR_NAMES.map((c) => [c.toLowerCase(), c] as const),
+);
+
+const parseColorsFromText = (text: string): string[] => {
+  const match = text.match(/dostupn[éeě]\s*barvy\s*[:\-–]\s*(.+)$/i);
+  if (!match) return [];
+  return match[1]
+    .split(/[,;/|]/)
+    .map((s) => s.trim().replace(/[.\s]+$/, ""))
+    .map((s) => KNOWN_COLOR_LOOKUP.get(s.toLowerCase()))
+    .filter((c): c is string => Boolean(c));
+};
+
+const deriveColorsFromFeed = (p: Product): readonly string[] | undefined => {
+  const sources: string[] = [
+    ...(p.features ?? []),
+    ...(p.specs?.map((s) => `${s.label}: ${s.value}`) ?? []),
+  ];
+  for (const line of sources) {
+    const colors = parseColorsFromText(line);
+    if (colors.length >= 2) return colors;
+  }
+  return undefined;
+};
+
 export const products: Product[] = feedProducts
   .filter((p) => p.image.trim().length > 0)
   .map((p) => {
@@ -119,6 +147,10 @@ export const products: Product[] = feedProducts
     }
     if (VAPE_LEGENDS_BASE_ONLY_IDS.has(normalized.id)) {
       return { ...normalized, available_colors: VAPE_LEGENDS_COLORS };
+    }
+    const derived = deriveColorsFromFeed(normalized);
+    if (derived && derived.length > 0) {
+      return { ...normalized, available_colors: derived };
     }
     return normalized;
   });
