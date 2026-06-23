@@ -277,23 +277,6 @@ const AdminProductEdit = () => {
     );
   }
 
-  if (loading) {
-    return (
-      <section className="p-8 max-w-[900px]">
-        <Link
-          to="/admin/produkty"
-          className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1 mb-4"
-        >
-          <ArrowLeft className="w-4 h-4" /> Zpět na produkty
-        </Link>
-        <article className="bg-background border border-border rounded-lg p-8 flex items-center gap-3 text-muted-foreground">
-          <Loader2 className="w-5 h-5 animate-spin text-primary" />
-          <span>Načítám uložené údaje produktu…</span>
-        </article>
-      </section>
-    );
-  }
-
   const handleSave = async (): Promise<boolean> => {
     setSaving(true);
     try {
