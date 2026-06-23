@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getProductById } from "@/data/products";
-import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { refreshOverrides, useProductOverrides } from "@/hooks/useProductOverrides";
 import { fmtCZK, netFromGross, grossFromNet, vatOfGross } from "@/lib/vat";
 import { getEffectiveGallery } from "@/lib/productImages";
 import { supabase } from "@/integrations/supabase/client";
@@ -277,7 +277,7 @@ const AdminProductEdit = () => {
     );
   }
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<boolean> => {
     setSaving(true);
     try {
       const cleanFeatures = stripColorFeatureLines(
@@ -328,10 +328,12 @@ const AdminProductEdit = () => {
         max_frame_circumference_cm:
           typeof maxFrameCirc === "number" ? maxFrameCirc : null,
       });
+      await refreshOverrides();
       toast({
         title: "Uloženo do systému e-shopu",
         description: "Změny se propsaly do obchodu (B2C) i do B2B portálu.",
       });
+      return true;
     } catch (error) {
       console.error("Product save failed", error);
       toast({
@@ -339,6 +341,7 @@ const AdminProductEdit = () => {
         description: error instanceof Error ? error.message : "Zkuste to prosím znovu.",
         variant: "destructive",
       });
+      return false;
     } finally {
       setSaving(false);
     }
@@ -464,12 +467,12 @@ const AdminProductEdit = () => {
               // Open the tab synchronously within the click gesture, otherwise
               // popup blockers cancel window.open() after the await.
               const win = window.open("about:blank", "_blank", "noopener");
-              try {
-                await handleSave();
+              const saved = await handleSave();
+              if (saved) {
                 const url = `/produkt/${product.id}`;
                 if (win && !win.closed) win.location.href = url;
                 else window.location.assign(url);
-              } catch {
+              } else {
                 if (win && !win.closed) win.close();
               }
             }}
@@ -1010,12 +1013,12 @@ const AdminProductEdit = () => {
           size="lg"
           onClick={async () => {
             const win = window.open("about:blank", "_blank", "noopener");
-            try {
-              await handleSave();
+            const saved = await handleSave();
+            if (saved) {
               const url = `/produkt/${product.id}`;
               if (win && !win.closed) win.location.href = url;
               else window.location.assign(url);
-            } catch {
+            } else {
               if (win && !win.closed) win.close();
             }
           }}
