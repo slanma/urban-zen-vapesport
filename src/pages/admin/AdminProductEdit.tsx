@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getProductById } from "@/data/products";
-import { refreshOverrides, useProductOverrides } from "@/hooks/useProductOverrides";
+import { DEFAULT_OVERRIDE, refreshOverrides, useProductOverrides, type ProductOverride } from "@/hooks/useProductOverrides";
 import { fmtCZK, netFromGross, grossFromNet, vatOfGross } from "@/lib/vat";
 import { getEffectiveGallery } from "@/lib/productImages";
 import { supabase } from "@/integrations/supabase/client";
@@ -83,6 +83,7 @@ const AdminProductEdit = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const shortDescRef = useRef<HTMLTextAreaElement>(null);
   const [dragging, setDragging] = useState(false);
+  const [overrideLoadedFor, setOverrideLoadedFor] = useState<string | null>(null);
 
   // Detail-page extensions
   const [subtitle, setSubtitle] = useState("");
@@ -178,14 +179,54 @@ const AdminProductEdit = () => {
   // overlay any saved admin values on top. Each phase runs at most once
   // per product so in-progress local edits are never clobbered.
   const baseInitedFor = useRef<string | null>(null);
-  const overrideAppliedFor = useRef<string | null>(null);
+  const applySavedOverrideToForm = (o: ProductOverride) => {
+    if (!product) return;
+    if (o.name_override !== null) setName(o.name_override);
+    const curCat = o.category_override ?? product.categoryLabel;
+    if ((CATEGORY_OPTIONS as readonly string[]).includes(curCat)) {
+      setCategory(curCat);
+    }
+    if (o.price_override != null) setPrice(o.price_override);
+    if (o.b2b_price != null) setB2bPrice(o.b2b_price);
+    if (o.stock_qty != null) setStockQty(o.stock_qty);
+    else if (!o.in_stock) setStockQty(0);
+    if (o.short_description_override !== null) setShortDescription(o.short_description_override);
+    if (Array.isArray(o.features_override)) {
+      setFeaturesText(stripColorFeatureLines(o.features_override).join("\n"));
+    }
+    const gallery = getEffectiveGallery(product, o);
+    if (gallery.length > 0) setImages(gallery);
+    if (Array.isArray(o.colors_override)) setActiveColors(o.colors_override);
+    setSku(getEffectiveProductCode(product, o));
+
+    if (o.subtitle_override) setSubtitle(o.subtitle_override);
+    if (o.problem_bullet) setProblemBullet(o.problem_bullet);
+    if (o.function_bullet) setFunctionBullet(o.function_bullet);
+    if (o.usage_bullet) setUsageBullet(o.usage_bullet);
+    if (o.ebike_integrated_battery !== null) setEbikeIntegrated(o.ebike_integrated_battery ? "yes" : "no");
+    if (o.ebike_full_suspension !== null) setEbikeFull(o.ebike_full_suspension ? "yes" : "no");
+    if (o.motor_type) setMotorType(o.motor_type);
+    if (o.battery_location) setBatteryLocation(o.battery_location);
+    if (o.dimensions_l_cm != null) setDimL(o.dimensions_l_cm);
+    if (o.dimensions_h_cm != null) setDimH(o.dimensions_h_cm);
+    if (o.dimensions_w_cm != null) setDimW(o.dimensions_w_cm);
+    if (o.touch_film) setTouchFilm(o.touch_film);
+    if (o.material) setMaterial(o.material);
+    if (o.low_step_compatible !== null) setLowStep(o.low_step_compatible ? "yes" : "no");
+    if (o.manufacturer) setManufacturer(o.manufacturer);
+    if (o.color_stock && typeof o.color_stock === "object") setColorStock(o.color_stock);
+    if (Array.isArray(o.compatible_bikes)) setCompatibleBikes(o.compatible_bikes.join(", "));
+    if (o.rag_content) setRagContent(o.rag_content);
+    if (o.max_frame_circumference_cm != null) setMaxFrameCirc(o.max_frame_circumference_cm);
+  };
+
   useEffect(() => {
     if (!product) return;
 
     // Phase 1 — shop values (runs immediately, doesn't wait for overrides).
     if (baseInitedFor.current !== product.id) {
       baseInitedFor.current = product.id;
-      overrideAppliedFor.current = null;
+      setOverrideLoadedFor(null);
       setName(product.name);
       const cat = product.categoryLabel;
       setCategory(
@@ -219,50 +260,35 @@ const AdminProductEdit = () => {
       setRagContent("");
       setMaxFrameCirc("");
     }
+  }, [product]);
 
-    // Phase 2 — overlay overrides once they have loaded.
-    if (!loading && overrideAppliedFor.current !== product.id) {
-      overrideAppliedFor.current = product.id;
-      const o = get(product.id);
-      if (o.name_override !== null) setName(o.name_override);
-      const curCat = o.category_override ?? product.categoryLabel;
-      if ((CATEGORY_OPTIONS as readonly string[]).includes(curCat)) {
-        setCategory(curCat);
+  useEffect(() => {
+    if (!product) return;
+    let cancelled = false;
+    setOverrideLoadedFor(null);
+    (async () => {
+      const { data, error } = await (supabase.from("product_overrides") as any)
+        .select("*")
+        .eq("product_id", product.id)
+        .maybeSingle();
+      if (cancelled) return;
+      if (error) {
+        toast({ title: "Načtení uložených údajů selhalo", variant: "destructive" });
+        setOverrideLoadedFor(product.id);
+        return;
       }
-      if (o.price_override != null) setPrice(o.price_override);
-      if (o.b2b_price != null) setB2bPrice(o.b2b_price);
-      if (o.stock_qty != null) setStockQty(o.stock_qty);
-      else if (!o.in_stock) setStockQty(0);
-      if (o.short_description_override !== null) setShortDescription(o.short_description_override);
-      if (Array.isArray(o.features_override)) {
-        setFeaturesText(stripColorFeatureLines(o.features_override).join("\n"));
-      }
-      const gallery = getEffectiveGallery(product, o);
-      if (gallery.length > 0) setImages(gallery);
-      if (Array.isArray(o.colors_override)) setActiveColors(o.colors_override);
-      setSku(getEffectiveProductCode(product, o));
-
-      if (o.subtitle_override) setSubtitle(o.subtitle_override);
-      if (o.problem_bullet) setProblemBullet(o.problem_bullet);
-      if (o.function_bullet) setFunctionBullet(o.function_bullet);
-      if (o.usage_bullet) setUsageBullet(o.usage_bullet);
-      if (o.ebike_integrated_battery !== null) setEbikeIntegrated(o.ebike_integrated_battery ? "yes" : "no");
-      if (o.ebike_full_suspension !== null) setEbikeFull(o.ebike_full_suspension ? "yes" : "no");
-      if (o.motor_type) setMotorType(o.motor_type);
-      if (o.battery_location) setBatteryLocation(o.battery_location);
-      if (o.dimensions_l_cm != null) setDimL(o.dimensions_l_cm);
-      if (o.dimensions_h_cm != null) setDimH(o.dimensions_h_cm);
-      if (o.dimensions_w_cm != null) setDimW(o.dimensions_w_cm);
-      if (o.touch_film) setTouchFilm(o.touch_film);
-      if (o.material) setMaterial(o.material);
-      if (o.low_step_compatible !== null) setLowStep(o.low_step_compatible ? "yes" : "no");
-      if (o.manufacturer) setManufacturer(o.manufacturer);
-      if (o.color_stock && typeof o.color_stock === "object") setColorStock(o.color_stock);
-      if (Array.isArray(o.compatible_bikes)) setCompatibleBikes(o.compatible_bikes.join(", "));
-      if (o.rag_content) setRagContent(o.rag_content);
-      if (o.max_frame_circumference_cm != null) setMaxFrameCirc(o.max_frame_circumference_cm);
-    }
-  }, [product, loading, get]);
+      const saved = {
+        product_id: product.id,
+        ...DEFAULT_OVERRIDE,
+        ...(data ?? {}),
+      } as ProductOverride;
+      applySavedOverrideToForm(saved);
+      setOverrideLoadedFor(product.id);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [product?.id]);
 
 
 
