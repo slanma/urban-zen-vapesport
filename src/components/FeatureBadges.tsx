@@ -1,10 +1,9 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { matchFeatureBadges } from "@/lib/productFeatures";
 
 /**
- * Renders a row of small icon chips for every matched product feature.
- * Hovering / focusing an icon reveals a tooltip explaining the feature
- * in plain Czech for shoppers (60+ friendly).
+ * Row of coin-style icon chips for matched product technologies.
+ * Click/tap opens a popover with the feature name + plain-Czech explanation.
  */
 const FeatureBadges = ({
   features,
@@ -13,21 +12,21 @@ const FeatureBadges = ({
 }: {
   features: ReadonlyArray<string> | undefined;
   className?: string;
-  size?: "sm" | "md";
+  size?: "sm" | "md" | "lg";
 }) => {
   const matched = matchFeatureBadges(features ?? []);
   if (matched.length === 0) return null;
-  const box = size === "sm" ? "w-7 h-7" : "w-8 h-8";
-  const icon = size === "sm" ? "w-3.5 h-3.5" : "w-4 h-4";
+  const box =
+    size === "sm" ? "w-9 h-9" : size === "lg" ? "w-14 h-14" : "w-11 h-11";
   return (
     <ul
-      className={`flex flex-wrap items-center gap-1.5 ${className}`}
+      className={`flex flex-wrap items-center gap-2 ${className}`}
       aria-label="Vlastnosti produktu"
     >
-      {matched.map(({ label, icon: Icon, tooltip }) => (
+      {matched.map(({ label, image, tooltip }) => (
         <li key={label}>
-          <Tooltip>
-            <TooltipTrigger asChild>
+          <Popover>
+            <PopoverTrigger asChild>
               <button
                 type="button"
                 aria-label={label}
@@ -36,16 +35,16 @@ const FeatureBadges = ({
                   e.preventDefault();
                   e.stopPropagation();
                 }}
-                className={`${box} flex items-center justify-center rounded-full border border-border bg-muted/60 text-foreground/80 hover:bg-primary/10 hover:text-primary hover:border-primary transition-colors`}
+                className={`${box} rounded-full overflow-hidden border border-border bg-muted hover:border-primary hover:ring-2 hover:ring-primary/30 transition`}
               >
-                <Icon className={icon} aria-hidden />
+                <img src={image} alt={label} className="w-full h-full object-cover" />
               </button>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-[220px] text-xs leading-snug">
-              <p className="font-semibold mb-0.5">{label}</p>
-              <p className="text-muted-foreground">{tooltip}</p>
-            </TooltipContent>
-          </Tooltip>
+            </PopoverTrigger>
+            <PopoverContent side="top" className="w-64 text-sm">
+              <p className="font-heading font-bold text-foreground mb-1">{label}</p>
+              <p className="text-muted-foreground leading-snug">{tooltip}</p>
+            </PopoverContent>
+          </Popover>
         </li>
       ))}
     </ul>

@@ -24,6 +24,8 @@ import ProblemSolutionBullets from "@/components/product/ProblemSolutionBullets"
 import TechSpecTable from "@/components/product/TechSpecTable";
 import ColorCells from "@/components/product/ColorCells";
 import RagSeoBlock from "@/components/product/RagSeoBlock";
+import FeatureBadges from "@/components/FeatureBadges";
+import { isKnownFeature } from "@/lib/productFeatures";
 import {
   Accordion,
   AccordionContent,
@@ -381,17 +383,30 @@ const ProductDetail = () => {
                   Klíčové vlastnosti
                 </AccordionTrigger>
                 <AccordionContent>
-                  <ul className="space-y-3 pt-1">
-                    {visibleFeatures.map((feat) => (
-                      <li
-                        key={feat}
-                        className="flex items-start gap-3 text-sm font-body text-foreground"
-                      >
-                        <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {(() => {
+                    const techFeats = visibleFeatures.filter(isKnownFeature);
+                    const otherFeats = visibleFeatures.filter((f) => !isKnownFeature(f));
+                    return (
+                      <div className="space-y-4 pt-1">
+                        {techFeats.length > 0 && (
+                          <FeatureBadges features={techFeats} size="lg" />
+                        )}
+                        {otherFeats.length > 0 && (
+                          <ul className="space-y-3">
+                            {otherFeats.map((feat) => (
+                              <li
+                                key={feat}
+                                className="flex items-start gap-3 text-sm font-body text-foreground"
+                              >
+                                <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                                <span>{feat}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </AccordionContent>
               </AccordionItem>
 
