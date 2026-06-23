@@ -304,6 +304,14 @@ const AdminProductEdit = () => {
   }
 
   const handleSave = async (): Promise<boolean> => {
+    if (overrideLoadedFor !== product.id) {
+      toast({
+        title: "Produkt se ještě načítá",
+        description: "Počkejte prosím pár vteřin, aby se nepřepsala dříve uložená data.",
+        variant: "destructive",
+      });
+      return false;
+    }
     setSaving(true);
     try {
       const cleanFeatures = stripColorFeatureLines(
