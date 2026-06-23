@@ -83,6 +83,7 @@ const AdminProductEdit = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const shortDescRef = useRef<HTMLTextAreaElement>(null);
   const [dragging, setDragging] = useState(false);
+  const [overridesReadyFor, setOverridesReadyFor] = useState<string | null>(null);
 
   // Detail-page extensions
   const [subtitle, setSubtitle] = useState("");
@@ -186,6 +187,7 @@ const AdminProductEdit = () => {
     if (baseInitedFor.current !== product.id) {
       baseInitedFor.current = product.id;
       overrideAppliedFor.current = null;
+      setOverridesReadyFor(null);
       setName(product.name);
       const cat = product.categoryLabel;
       setCategory(
@@ -261,6 +263,7 @@ const AdminProductEdit = () => {
       if (Array.isArray(o.compatible_bikes)) setCompatibleBikes(o.compatible_bikes.join(", "));
       if (o.rag_content) setRagContent(o.rag_content);
       if (o.max_frame_circumference_cm != null) setMaxFrameCirc(o.max_frame_circumference_cm);
+      setOverridesReadyFor(product.id);
     }
   }, [product, loading, get]);
 
@@ -277,7 +280,34 @@ const AdminProductEdit = () => {
     );
   }
 
+  const overridesReady = !loading && overridesReadyFor === product.id;
+
+  if (!overridesReady) {
+    return (
+      <section className="p-8 max-w-[900px]">
+        <Link
+          to="/admin/produkty"
+          className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1 mb-4"
+        >
+          <ArrowLeft className="w-4 h-4" /> Zpět na produkty
+        </Link>
+        <article className="bg-background border border-border rounded-lg p-8 flex items-center gap-3 text-muted-foreground">
+          <Loader2 className="w-5 h-5 animate-spin text-primary" />
+          <span>Načítám uložené údaje produktu…</span>
+        </article>
+      </section>
+    );
+  }
+
   const handleSave = async (): Promise<boolean> => {
+    if (!overridesReady) {
+      toast({
+        title: "Produkt se ještě načítá",
+        description: "Počkejte prosím pár vteřin, aby se nepřepsala dříve uložená data.",
+        variant: "destructive",
+      });
+      return false;
+    }
     setSaving(true);
     try {
       const cleanFeatures = stripColorFeatureLines(
