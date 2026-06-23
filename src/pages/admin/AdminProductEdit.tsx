@@ -623,7 +623,7 @@ const AdminProductEdit = () => {
 
           {/* Clickable palette — same UX as color variants */}
           <ul className="flex flex-wrap gap-2 mt-2 mb-3" aria-label="Předdefinované vlastnosti">
-            {PRODUCT_FEATURES.map(({ label, icon: Icon, tooltip }) => {
+            {PRODUCT_FEATURES.map(({ label, image, tooltip }) => {
               const active = activeFeatures.has(label.toLowerCase());
               return (
                 <li key={label}>
@@ -638,7 +638,9 @@ const AdminProductEdit = () => {
                         : "border-border bg-muted/40 text-muted-foreground opacity-60 hover:opacity-100"
                     }`}
                   >
-                    <Icon className={`w-4 h-4 ${active ? "text-primary" : ""}`} aria-hidden />
+                    <span className={`w-7 h-7 rounded-full overflow-hidden border ${active ? "border-primary" : "border-border"}`}>
+                      <img src={image} alt="" className="w-full h-full object-cover" />
+                    </span>
                     <span className="font-medium">{label}</span>
                     <span className={`text-[10px] uppercase tracking-wide ${active ? "text-primary" : "text-muted-foreground"}`}>
                       {active ? "Zvoleno" : "Nezvoleno"}
