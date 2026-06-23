@@ -208,7 +208,10 @@ export const useProductOverrides = () => {
     setLoading(true);
     fetchAll()
       .then((m) => setMap(new Map(m)))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        if (cache) listeners.forEach((l) => l(new Map(cache!)));
+      });
     return () => {
       listeners.delete(listener);
     };
