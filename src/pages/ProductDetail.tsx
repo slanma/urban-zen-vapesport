@@ -24,6 +24,8 @@ import ProblemSolutionBullets from "@/components/product/ProblemSolutionBullets"
 import TechSpecTable from "@/components/product/TechSpecTable";
 import ColorCells from "@/components/product/ColorCells";
 import RagSeoBlock from "@/components/product/RagSeoBlock";
+import FeatureBadges from "@/components/FeatureBadges";
+import { isKnownFeature } from "@/lib/productFeatures";
 import {
   Accordion,
   AccordionContent,
