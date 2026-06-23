@@ -280,7 +280,7 @@ const AdminProductEdit = () => {
     );
   }
 
-  const overridesReady = !loading && overridesReadyFor === product.id;
+  const overridesReady = overridesReadyFor === product.id;
 
   if (!overridesReady) {
     return (
