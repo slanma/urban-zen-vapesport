@@ -1,31 +1,28 @@
-Zjistil jsem, proč to působí jako „uložené, ale neviditelné“:
+# Oprava rozostřeného hero obrázku na hlavní stránce
 
-- U konkrétního produktu `vs-maly-trojuhlenik-3kapsy-904673` jsou technologie v databázi uložené správně.
-- Barvy ale uložené nejsou: `colors_override` je u tohoto produktu stále `null`, proto se v obchodě nemají z čeho zobrazit.
-- V B2C katalogu `/produkty` se aktuálně technologie ani barvy na kartách vůbec nevykreslují, i když v `/obchod` už část logiky je.
-- V B2B velkoobchodu se barvy používají pro varianty, ale technologie se v řádku produktu nezobrazují.
+## Problém
+Hero obrázek (`src/assets/hero-bg-clean.jpg`) má rozlišení pouze **1344×768 px**. Na monitorech širších než ~1344 px (uživatel má 2137 px) prohlížeč obrázek zvětšuje přes `object-cover` na celou šířku i výšku viewportu, což způsobuje:
 
-Plán úprav:
+- rozmazaný mech i beton pod brašnou,
+- pocit, že „celá stránka je rozostřená", protože hero zabírá celou první obrazovku.
 
-1. Upravit administraci produktu tak, aby výběr technologií fungoval stejně jasně jako barvy:
-   - aktivní chipy budou zřetelně zaškrtnuté,
-   - hodnota se bude ukládat přes `features_override`,
-   - po uložení zůstane výběr viditelný i po reloadu.
+Není to problém CSS blur filtru — jde čistě o nedostatečné rozlišení zdrojového JPG.
 
-2. Zkontrolovat a zpřesnit ukládání barev:
-   - barvy zůstanou ukládané do `colors_override`,
-   - uložení přes hlavní tlačítko bude vždy posílat aktuálně vybrané barvy,
-   - administrace bude lépe ukazovat, že neaktivní barva znamená „nezobrazuje se v obchodě“.
+## Řešení
+Vygenerovat nový hero obrázek ve vyšším rozlišení (**1920×1080**, případně větší) se stejnou kompozicí:
 
-3. Doplnit zobrazení technologií a barev do B2C katalogu `/produkty`:
-   - na produktových kartách se zobrazí stejné technologické ikonky jako v `/obchod`,
-   - pod nimi se zobrazí barevné swatche, pokud jsou pro produkt uložené.
+- brašna Morseovape na betonovém podstavci,
+- mech vpravo dole u podstavce,
+- světle šedé pozadí (studio),
+- žádný text (text je overlay v Reactu).
 
-4. Doplnit zobrazení technologií do B2B velkoobchodu:
-   - u názvu produktu v B2B matrixu se zobrazí ikonky uložených technologií,
-   - v rozbaleném popisu se vypíšou klíčové vlastnosti z administrace.
+Nahradit stávající `src/assets/hero-bg-clean.jpg` novou verzí — cesta a název souboru zůstávají stejné, takže `HeroSection.tsx` neupravovat.
 
-5. Ověřit konkrétní produkt:
-   - po uložení v administraci ověřit databázový záznam,
-   - zkontrolovat detail produktu `/produkt/vs-maly-trojuhlenik-3kapsy-904673`,
-   - zkontrolovat `/produkty`, `/obchod` a B2B velkoobchod, že berou stejné uložené hodnoty.
+## Technické detaily
+- Použít `imagegen--generate_image` (model `standard` kvůli detailům materiálu — mech, beton, textilie), rozměr 1920×1080, uložit na `src/assets/hero-bg-clean.jpg`.
+- Ověřit rozměry přes `PIL` po vygenerování.
+- Ověřit vizuálně přes Playwright screenshot v šířce 1920 px, že mech je ostrý a stránka se zobrazuje bez blur artefaktů.
+
+## Co se **nemění**
+- HeroSection.tsx, layout, typografie, tlačítko, pozice textu — všechno zůstává 1:1.
+- Ostatní obrázky a stránky.
