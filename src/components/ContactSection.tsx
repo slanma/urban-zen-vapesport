@@ -1,4 +1,4 @@
-import { Building2, Phone, Mail, Globe, Download, MapPin, Send, MessageSquare } from "lucide-react";
+import { Building2, Phone, Mail, Globe, Download, MapPin, Send, MessageSquare, Facebook, Instagram, Youtube, Share2 } from "lucide-react";
 
 const ContactSection = () => {
   const vcfData = `BEGIN:VCARD
@@ -116,6 +116,37 @@ END:VCARD`;
                 www.vapesport.cz
               </span>
             </a>
+
+            {/* Social */}
+            <div className="mt-6 pt-6 border-t border-foreground/10">
+              <div className="flex items-center gap-2 mb-4">
+                <Share2 className="w-4 h-4 text-[hsl(var(--moss))]" strokeWidth={2} />
+                <h3 className="text-xs uppercase tracking-widest text-foreground/50 font-heading">
+                  Sledujte nás
+                </h3>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { label: "Facebook", href: "https://www.facebook.com/vapesport", Icon: Facebook },
+                  { label: "Instagram", href: "https://www.instagram.com/vapesport", Icon: Instagram },
+                  { label: "YouTube", href: "https://www.youtube.com/@vapesport", Icon: Youtube },
+                ].map(({ label, href, Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="group flex items-center justify-center gap-2 px-3 py-3 border border-foreground/10 hover:border-[hsl(var(--moss))] hover:bg-[hsl(var(--moss))]/5 transition-colors"
+                  >
+                    <Icon className="w-4 h-4 text-foreground/70 group-hover:text-[hsl(var(--moss))] transition-colors" strokeWidth={1.8} />
+                    <span className="text-xs uppercase tracking-widest font-heading text-foreground/70 group-hover:text-[hsl(var(--moss))] transition-colors">
+                      {label}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* RIGHT — Map + Form */}
