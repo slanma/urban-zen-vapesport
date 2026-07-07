@@ -20,7 +20,7 @@ const B2BSection = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
           {[
             { value: "30+", label: "let na trhu" },
-            { value: "0%", label: "reklamací" },
+            { value: "\n", label: "\n" },
             { value: "100%", label: "česká značka" },
           ].map((stat) => (
             <div key={stat.label} className="flex flex-col items-center">
