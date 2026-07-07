@@ -18,7 +18,7 @@ const Footer = () => {
                 { label: "Obchod", href: "/obchod" },
                 { label: "B2B Velkoobchod", href: "/b2b-login" },
                 { label: "Obchodní podmínky", href: "/obchodni-podminky" },
-                { label: "Kontakt", href: "#kontakt" },
+                { label: "Kontakt", href: "/kontakt" },
               ].map((item) => (
                 <li key={item.label}>
                   <a href={item.href} className="text-primary-foreground/60 hover:text-primary-foreground text-sm transition-colors">
