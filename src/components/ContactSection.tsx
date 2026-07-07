@@ -1,4 +1,4 @@
-import { Building2, Phone, Mail, Globe, Download, MapPin, Send, MessageSquare } from "lucide-react";
+import { Building2, Phone, Mail, Globe, Download, MapPin, Send, MessageSquare, Facebook, Instagram, Youtube, Share2 } from "lucide-react";
 
 const ContactSection = () => {
   const vcfData = `BEGIN:VCARD
