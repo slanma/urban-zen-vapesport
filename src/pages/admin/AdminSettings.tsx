@@ -94,8 +94,13 @@ const AdminBankAccounts = () => {
         <div className="text-sm text-muted-foreground flex items-center gap-2">
           <Loader2 className="w-4 h-4 animate-spin" /> Načítám…
         </div>
+      ) : loadError ? (
+        <div className="text-sm space-y-2">
+          <p className="text-muted-foreground">Načtení se nepodařilo.</p>
+          <Button size="sm" variant="outline" onClick={load}>Zkusit znovu</Button>
+        </div>
       ) : rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Zatím žádné účty.</p>
+        <p className="text-sm text-muted-foreground">Zatím žádné bankovní účty.</p>
       ) : (
         <ul className="divide-y divide-border border border-border rounded-md">
           {rows.map((r) => (
