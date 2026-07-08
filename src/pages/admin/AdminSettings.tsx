@@ -124,21 +124,30 @@ const AdminSettings = () => {
   const [gaId, setGaId] = useState("");
   const [initialGaId, setInitialGaId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase
+  const loadGa = async () => {
+    setLoading(true);
+    setLoadError(false);
+    try {
+      const { data, error } = await supabase
         .from("site_settings")
         .select("value")
         .eq("key", "ga4_measurement_id")
         .maybeSingle();
+      if (error) throw error;
       const v = data?.value ?? "";
       setGaId(v);
       setInitialGaId(v);
+    } catch {
+      setLoadError(true);
+    } finally {
       setLoading(false);
-    })();
-  }, []);
+    }
+  };
+
+  useEffect(() => { loadGa(); }, []);
 
   const handleSave = async () => {
     const trimmed = gaId.trim();
