@@ -180,33 +180,41 @@ const AdminSettings = () => {
           Vložte své GA4 Measurement ID. Po uložení bude skript automaticky načten na celém webu.
         </p>
 
-        <label htmlFor="ga4-id" className="block text-sm font-medium text-foreground mb-2">
-          Measurement ID
-        </label>
-        <Input
-          id="ga4-id"
-          placeholder="G-XXXXXXXXXX"
-          value={gaId}
-          onChange={(e) => setGaId(e.target.value)}
-          disabled={loading || saving}
-          className="font-mono"
-        />
-        <p className="text-xs text-muted-foreground mt-2">
-          Najdete v Google Analytics → Správce → Datové streamy.
-        </p>
+        {loadError ? (
+          <div className="text-sm space-y-2">
+            <p className="text-muted-foreground">Načtení se nepodařilo.</p>
+            <Button size="sm" variant="outline" onClick={loadGa}>Zkusit znovu</Button>
+          </div>
+        ) : (
+          <>
+            <label htmlFor="ga4-id" className="block text-sm font-medium text-foreground mb-2">
+              Measurement ID
+            </label>
+            <Input
+              id="ga4-id"
+              placeholder={loading ? "Načítám…" : "G-XXXXXXXXXX"}
+              value={gaId}
+              onChange={(e) => setGaId(e.target.value)}
+              disabled={loading || saving}
+              className="font-mono"
+            />
+            <p className="text-xs text-muted-foreground mt-2">
+              Najdete v Google Analytics → Správce → Datové streamy.
+            </p>
 
-        <div className="flex items-center gap-3 mt-5">
-          <Button onClick={handleSave} disabled={!dirty || loading || saving}>
-            {saving && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-            Uložit
-          </Button>
-          {initialGaId && (
-            <span className="text-xs text-muted-foreground">
-              Aktivní: <span className="font-mono text-foreground">{initialGaId}</span>
-            </span>
-          )}
-        </div>
-      </div>
+            <div className="flex items-center gap-3 mt-5">
+              <Button onClick={handleSave} disabled={!dirty || loading || saving}>
+                {saving && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                Uložit
+              </Button>
+              {initialGaId && (
+                <span className="text-xs text-muted-foreground">
+                  Aktivní: <span className="font-mono text-foreground">{initialGaId}</span>
+                </span>
+              )}
+            </div>
+          </>
+        )}
 
       <AdminBankAccounts />
     </section>
