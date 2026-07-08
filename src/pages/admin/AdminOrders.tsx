@@ -138,9 +138,19 @@ const AdminOrders = () => {
           <div className="p-12 flex items-center justify-center text-muted-foreground">
             <Loader2 className="w-5 h-5 animate-spin mr-2" /> Načítám…
           </div>
+        ) : loadError ? (
+          <div className="p-12 text-center space-y-3">
+            <p className="text-sm text-muted-foreground">Načtení se nepodařilo.</p>
+            <button
+              onClick={load}
+              className="inline-flex items-center px-3 py-1.5 rounded-md border border-border text-xs font-semibold hover:bg-muted transition-colors"
+            >
+              Zkusit znovu
+            </button>
+          </div>
         ) : paged.length === 0 ? (
           <div className="p-12 text-center text-sm text-muted-foreground">
-            Žádné objednávky neodpovídají filtru.
+            {orders.length === 0 ? "Zatím žádné objednávky." : "Žádné objednávky neodpovídají filtru."}
           </div>
         ) : (
           <table className="w-full text-sm">
