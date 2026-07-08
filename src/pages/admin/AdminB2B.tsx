@@ -12,16 +12,30 @@ import type { Tables } from "@/integrations/supabase/types";
 const AdminB2B = () => {
   const [registrations, setRegistrations] = useState<Tables<"b2b_profiles">[]>([]);
   const [approved, setApproved] = useState<Tables<"b2b_profiles">[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
 
-  const loadRegistrations = async () => {
-    const { data } = await supabase
-      .from("b2b_profiles")
-      .select("*")
-      .eq("status", "pending")
-      .order("created_at", { ascending: false });
-    if (data) setRegistrations(data);
+  const loadAll = async () => {
+    setLoading(true);
+    setLoadError(false);
+    try {
+      const [pending, ok] = await Promise.all([
+        supabase.from("b2b_profiles").select("*").eq("status", "pending").order("created_at", { ascending: false }),
+        supabase.from("b2b_profiles").select("*").eq("status", "approved").order("company_name", { ascending: true }),
+      ]);
+      if (pending.error) throw pending.error;
+      if (ok.error) throw ok.error;
+      setRegistrations(pending.data ?? []);
+      setApproved(ok.data ?? []);
+    } catch {
+      setLoadError(true);
+      setRegistrations([]);
+      setApproved([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const loadApproved = async () => {
@@ -34,7 +48,7 @@ const AdminB2B = () => {
   };
 
   useEffect(() => {
-    Promise.allSettled([loadRegistrations(), loadApproved()]);
+    loadAll();
   }, []);
 
   const handleApprove = async (id: string) => {
