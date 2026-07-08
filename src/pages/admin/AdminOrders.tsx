@@ -35,6 +35,7 @@ interface OrderItem { name: string; qty: number; unitGross: number }
 const AdminOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [selected, setSelected] = useState<Order | null>(null);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
@@ -44,13 +45,20 @@ const AdminOrders = () => {
 
   const load = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("orders")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (error) toast.error("Chyba při načítání objednávek");
-    setOrders(data ?? []);
-    setLoading(false);
+    setLoadError(false);
+    try {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      setOrders(data ?? []);
+    } catch {
+      setLoadError(true);
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
