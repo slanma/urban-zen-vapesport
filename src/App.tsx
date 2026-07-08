@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { CartProvider } from "@/hooks/useCart";
 import Index from "./pages/Index";
@@ -17,12 +17,14 @@ import B2BDashboard from "./pages/B2BDashboard";
 import B2BWholesale from "./pages/B2BWholesale";
 import B2BCheckout from "./pages/B2BCheckout";
 import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminOverview from "./pages/admin/AdminOverview";
 import { AdminProducts, AdminServices } from "./pages/admin/AdminProductTable";
 import AdminProductEdit from "./pages/admin/AdminProductEdit";
 import AdminOrders from "./pages/admin/AdminOrders";
+import AdminB2B from "./pages/admin/AdminB2B";
+import AdminPromoCodes from "./pages/admin/AdminPromoCodes";
+import AdminSettings from "./pages/admin/AdminSettings";
 import Withdrawal from "./pages/Withdrawal";
 import Account from "./pages/Account";
 import Terms from "./pages/Terms";
@@ -62,13 +64,16 @@ const App = () => (
             <Route path="/b2b-velkoobchod" element={<B2BWholesale />} />
             <Route path="/b2b-pokladna" element={<B2BCheckout />} />
             <Route path="/admin-login" element={<AdminLogin />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/admin-dashboard" element={<Navigate to="/admin/b2b" replace />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminOverview />} />
               <Route path="produkty" element={<AdminProducts />} />
               <Route path="produkty/:id" element={<AdminProductEdit />} />
               <Route path="sluzby" element={<AdminServices />} />
               <Route path="objednavky" element={<AdminOrders />} />
+              <Route path="b2b" element={<AdminB2B />} />
+              <Route path="slevy" element={<AdminPromoCodes />} />
+              <Route path="nastaveni" element={<AdminSettings />} />
             </Route>
             <Route path="/odstoupeni" element={<Withdrawal />} />
             <Route path="/ucet" element={<Account />} />
