@@ -152,8 +152,13 @@ const AdminPromoCodes = () => {
           <div className="p-8 text-center">
             <Loader2 className="w-6 h-6 animate-spin text-muted-foreground mx-auto" />
           </div>
+        ) : loadError ? (
+          <div className="p-8 text-center space-y-3">
+            <p className="text-muted-foreground">Načtení se nepodařilo.</p>
+            <Button size="sm" variant="outline" onClick={load}>Zkusit znovu</Button>
+          </div>
         ) : codes.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground">Zatím žádné kódy.</div>
+          <div className="p-8 text-center text-muted-foreground">Zatím žádné slevové kódy.</div>
         ) : (
           <table className="w-full text-sm">
             <thead>
