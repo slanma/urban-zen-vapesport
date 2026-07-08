@@ -18,6 +18,7 @@ type PromoRow = {
 const AdminPromoCodes = () => {
   const [codes, setCodes] = useState<PromoRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState<{ code: string; type: "percentage" | "fixed_amount"; value: string }>({
     code: "",
@@ -27,12 +28,20 @@ const AdminPromoCodes = () => {
 
   const load = async () => {
     setLoading(true);
-    const { data, error } = await (supabase as any)
-      .from("promo_codes")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (!error && data) setCodes(data as PromoRow[]);
-    setLoading(false);
+    setLoadError(false);
+    try {
+      const { data, error } = await (supabase as any)
+        .from("promo_codes")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      setCodes((data as PromoRow[]) ?? []);
+    } catch {
+      setLoadError(true);
+      setCodes([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -143,8 +152,13 @@ const AdminPromoCodes = () => {
           <div className="p-8 text-center">
             <Loader2 className="w-6 h-6 animate-spin text-muted-foreground mx-auto" />
           </div>
+        ) : loadError ? (
+          <div className="p-8 text-center space-y-3">
+            <p className="text-muted-foreground">Načtení se nepodařilo.</p>
+            <Button size="sm" variant="outline" onClick={load}>Zkusit znovu</Button>
+          </div>
         ) : codes.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground">Zatím žádné kódy.</div>
+          <div className="p-8 text-center text-muted-foreground">Zatím žádné slevové kódy.</div>
         ) : (
           <table className="w-full text-sm">
             <thead>

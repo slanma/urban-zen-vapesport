@@ -12,16 +12,30 @@ import type { Tables } from "@/integrations/supabase/types";
 const AdminB2B = () => {
   const [registrations, setRegistrations] = useState<Tables<"b2b_profiles">[]>([]);
   const [approved, setApproved] = useState<Tables<"b2b_profiles">[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
 
-  const loadRegistrations = async () => {
-    const { data } = await supabase
-      .from("b2b_profiles")
-      .select("*")
-      .eq("status", "pending")
-      .order("created_at", { ascending: false });
-    if (data) setRegistrations(data);
+  const loadAll = async () => {
+    setLoading(true);
+    setLoadError(false);
+    try {
+      const [pending, ok] = await Promise.all([
+        supabase.from("b2b_profiles").select("*").eq("status", "pending").order("created_at", { ascending: false }),
+        supabase.from("b2b_profiles").select("*").eq("status", "approved").order("company_name", { ascending: true }),
+      ]);
+      if (pending.error) throw pending.error;
+      if (ok.error) throw ok.error;
+      setRegistrations(pending.data ?? []);
+      setApproved(ok.data ?? []);
+    } catch {
+      setLoadError(true);
+      setRegistrations([]);
+      setApproved([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const loadApproved = async () => {
@@ -34,7 +48,7 @@ const AdminB2B = () => {
   };
 
   useEffect(() => {
-    Promise.allSettled([loadRegistrations(), loadApproved()]);
+    loadAll();
   }, []);
 
   const handleApprove = async (id: string) => {
@@ -87,7 +101,16 @@ const AdminB2B = () => {
         </TabsList>
 
         <TabsContent value="pending" className="mt-4">
-          {registrations.length === 0 ? (
+          {loading ? (
+            <div className="bg-background border border-border rounded-lg p-8 text-center flex items-center justify-center gap-2 text-muted-foreground">
+              <Loader2 className="w-5 h-5 animate-spin" /> Načítám…
+            </div>
+          ) : loadError ? (
+            <div className="bg-background border border-border rounded-lg p-8 text-center space-y-3">
+              <p className="text-muted-foreground">Načtení se nepodařilo.</p>
+              <Button size="sm" variant="outline" onClick={loadAll}>Zkusit znovu</Button>
+            </div>
+          ) : registrations.length === 0 ? (
             <div className="bg-background border border-border rounded-lg p-8 text-center">
               <p className="text-muted-foreground text-lg">Žádné čekající registrace.</p>
             </div>
@@ -138,7 +161,16 @@ const AdminB2B = () => {
         </TabsContent>
 
         <TabsContent value="approved" className="mt-4">
-          {approved.length === 0 ? (
+          {loading ? (
+            <div className="bg-background border border-border rounded-lg p-8 text-center flex items-center justify-center gap-2 text-muted-foreground">
+              <Loader2 className="w-5 h-5 animate-spin" /> Načítám…
+            </div>
+          ) : loadError ? (
+            <div className="bg-background border border-border rounded-lg p-8 text-center space-y-3">
+              <p className="text-muted-foreground">Načtení se nepodařilo.</p>
+              <Button size="sm" variant="outline" onClick={loadAll}>Zkusit znovu</Button>
+            </div>
+          ) : approved.length === 0 ? (
             <div className="bg-background border border-border rounded-lg p-8 text-center">
               <p className="text-muted-foreground text-lg">Zatím žádní schválení partneři.</p>
             </div>
