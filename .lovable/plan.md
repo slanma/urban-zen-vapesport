@@ -1,28 +1,28 @@
-# Oprava rozostřeného hero obrázku na hlavní stránce
+## Cíl
+Odstranit „věčné Načítám…" ve všech admin sekcích, kde se natahují data z backendu. Ke každému fetchi zajistit tři stavy: loading (spinner), prázdno (hláška), chyba (hláška + tlačítko „Zkusit znovu"). Loading vždy končí i při chybě.
 
-## Problém
-Hero obrázek (`src/assets/hero-bg-clean.jpg`) má rozlišení pouze **1344×768 px**. Na monitorech širších než ~1344 px (uživatel má 2137 px) prohlížeč obrázek zvětšuje přes `object-cover` na celou šířku i výšku viewportu, což způsobuje:
+## Změny (pouze frontend, žádné DB změny)
 
-- rozmazaný mech i beton pod brašnou,
-- pocit, že „celá stránka je rozostřená", protože hero zabírá celou první obrazovku.
+### 1. `src/pages/admin/AdminSettings.tsx` — sekce Bankovní účty
+- Přidat `loadError` state.
+- `load()` obalit `try/catch/finally`; `setLoading(false)` v `finally`.
+- Render: `loading` → spinner „Načítám…", `loadError` → „Načtení se nepodařilo." + tlačítko „Zkusit znovu" (volá `load()`), prázdno → „Zatím žádné bankovní účty.", jinak seznam.
+- Stejný pattern aplikovat i na načítání `site_settings` (GA4) — přidat error stav s retry.
 
-Není to problém CSS blur filtru — jde čistě o nedostatečné rozlišení zdrojového JPG.
+### 2. `src/pages/admin/AdminPromoCodes.tsx`
+- Přidat `loadError` state, `try/catch/finally` do `load()`.
+- Render: loading / error+retry / „Zatím žádné slevové kódy." / tabulka.
 
-## Řešení
-Vygenerovat nový hero obrázek ve vyšším rozlišení (**1920×1080**, případně větší) se stejnou kompozicí:
+### 3. `src/pages/admin/AdminB2B.tsx`
+- Aktuálně chybí loading/error state úplně (fetch bez indikátoru).
+- Přidat `loading` a `loadError` (samostatné pro obě záložky, nebo sdílené) a sjednotit načtení do jedné funkce s `try/catch/finally`.
+- V každé záložce (Čekající, Schválení): spinner při loadingu, „Načtení se nepodařilo." + „Zkusit znovu" při chybě, stávající prázdné hlášky ponechat.
 
-- brašna Morseovape na betonovém podstavci,
-- mech vpravo dole u podstavce,
-- světle šedé pozadí (studio),
-- žádný text (text je overlay v Reactu).
+### 4. `src/pages/admin/AdminOrders.tsx`
+- Přidat `loadError` state, `load()` do `try/catch/finally`.
+- Render uvnitř tabulky: loading (stávající) / error + „Zkusit znovu" / prázdno (stávající) / tabulka.
 
-Nahradit stávající `src/assets/hero-bg-clean.jpg` novou verzí — cesta a název souboru zůstávají stejné, takže `HeroSection.tsx` neupravovat.
-
-## Technické detaily
-- Použít `imagegen--generate_image` (model `standard` kvůli detailům materiálu — mech, beton, textilie), rozměr 1920×1080, uložit na `src/assets/hero-bg-clean.jpg`.
-- Ověřit rozměry přes `PIL` po vygenerování.
-- Ověřit vizuálně přes Playwright screenshot v šířce 1920 px, že mech je ostrý a stránka se zobrazuje bez blur artefaktů.
-
-## Co se **nemění**
-- HeroSection.tsx, layout, typografie, tlačítko, pozice textu — všechno zůstává 1:1.
-- Ostatní obrázky a stránky.
+## Mimo záběr
+- Vzhled, barvy, fonty, layout beze změny — jen textové hlášky + tlačítko retry ve stávajícím stylu (`Button variant="outline" size="sm"`).
+- Žádné změny DB, RLS ani API.
+- Fetche mimo admin (obchod, B2B portál) se nemění.

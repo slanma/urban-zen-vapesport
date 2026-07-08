@@ -12,19 +12,27 @@ type BankAccountRow = { id: string; bank_name: string; iban: string; sort_order:
 const AdminBankAccounts = () => {
   const [rows, setRows] = useState<BankAccountRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState<{ bank_name: string; iban: string }>({ bank_name: "", iban: "" });
 
   const load = async () => {
     setLoading(true);
-    const { data, error } = await (supabase as any)
-      .from("bank_accounts")
-      .select("*")
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: true });
-    if (error) toast.error("Chyba načítání bankovních účtů");
-    setRows((data as BankAccountRow[]) ?? []);
-    setLoading(false);
+    setLoadError(false);
+    try {
+      const { data, error } = await (supabase as any)
+        .from("bank_accounts")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      setRows((data as BankAccountRow[]) ?? []);
+    } catch {
+      setLoadError(true);
+      setRows([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { load(); }, []);
