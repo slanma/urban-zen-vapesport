@@ -161,7 +161,16 @@ const AdminB2B = () => {
         </TabsContent>
 
         <TabsContent value="approved" className="mt-4">
-          {approved.length === 0 ? (
+          {loading ? (
+            <div className="bg-background border border-border rounded-lg p-8 text-center flex items-center justify-center gap-2 text-muted-foreground">
+              <Loader2 className="w-5 h-5 animate-spin" /> Načítám…
+            </div>
+          ) : loadError ? (
+            <div className="bg-background border border-border rounded-lg p-8 text-center space-y-3">
+              <p className="text-muted-foreground">Načtení se nepodařilo.</p>
+              <Button size="sm" variant="outline" onClick={loadAll}>Zkusit znovu</Button>
+            </div>
+          ) : approved.length === 0 ? (
             <div className="bg-background border border-border rounded-lg p-8 text-center">
               <p className="text-muted-foreground text-lg">Zatím žádní schválení partneři.</p>
             </div>
