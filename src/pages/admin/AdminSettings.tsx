@@ -215,6 +215,7 @@ const AdminSettings = () => {
             </div>
           </>
         )}
+      </div>
 
       <AdminBankAccounts />
     </section>
