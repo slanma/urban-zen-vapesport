@@ -315,11 +315,11 @@ const Shop = () => {
                 to={`/produkt/${product.id}`}
                 className="group flex flex-col bg-card rounded-xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300"
               >
-                <div className="aspect-[4/3] bg-muted overflow-hidden">
+                <div className="aspect-[4/3] bg-white overflow-hidden flex items-center justify-center p-3">
                   <img
                     src={getPrimaryImage(product, get(product.id))}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
                 <div className="p-5 flex flex-col flex-1">
