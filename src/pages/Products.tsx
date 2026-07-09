@@ -304,11 +304,11 @@ const Products = () => {
               className="group flex flex-col bg-card rounded-xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300"
             >
               {/* Image */}
-              <div className="aspect-[4/3] bg-muted flex items-center justify-center overflow-hidden">
+              <div className="aspect-[4/3] bg-white flex items-center justify-center overflow-hidden p-3">
                 <img
                   src={getPrimaryImage(product, getOverride(product.id))}
                   alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
 
