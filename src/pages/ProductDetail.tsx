@@ -202,11 +202,11 @@ const ProductDetail = () => {
           {/* Image */}
           <div className="lg:col-span-7">
             <div className="sticky top-28 flex flex-col gap-4">
-              <div className="aspect-[4/3] bg-muted rounded-2xl overflow-hidden flex items-center justify-center">
+              <div className="aspect-[4/3] bg-white rounded-2xl overflow-hidden flex items-center justify-center p-4">
                 <img
                   src={gallery[activeImg]}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
               {gallery.length > 1 && (
@@ -217,11 +217,11 @@ const ProductDetail = () => {
                       type="button"
                       onClick={() => setActiveImg(i)}
                       aria-label={`Zobrazit obrázek ${i + 1}`}
-                      className={`aspect-square bg-muted rounded-lg overflow-hidden border-2 transition-colors ${
+                      className={`aspect-square bg-white rounded-lg overflow-hidden border-2 transition-colors flex items-center justify-center p-1 ${
                         i === activeImg ? "border-primary" : "border-transparent hover:border-border"
                       }`}
                     >
-                      <img src={src} alt="" className="w-full h-full object-cover" />
+                      <img src={src} alt="" className="w-full h-full object-contain" />
                     </button>
                   ))}
                 </div>
