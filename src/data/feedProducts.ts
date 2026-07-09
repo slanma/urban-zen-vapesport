@@ -1,4 +1,4 @@
-// AUTO-GENERATED from vapesport.cz XML feed
+// AUTO-GENERATED / upraveno: MORSEO data + lokální fotky, balast odstraněn
 import type { Product } from "./products";
 
 export const feedProducts: Product[] = [
@@ -702,70 +702,6 @@ export const feedProducts: Product[] = [
     ]
   },
   {
-    "id": "vs-rukavice-hirzl-control-leva-s-904840",
-    "name": "Rukavice HIRZL Control (levá) S",
-    "category": "vapesport",
-    "categoryLabel": "GOLFOVÉ DOPLŇKY",
-    "price": 890,
-    "shortDescription": "Golfová rukavice z klokaní kůže. Celoroční rukavice, která odvádí pot a neklouže v ní grip.",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Golfové doplňky"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "gpc-904840"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/571/control-2-840x640-1570535.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/571/control-2-840x640-1570535.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/571/control-2-840x640-1570535.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/571/g-e-sizing-chart-final-en-2017-1570536.png"
-    ]
-  },
-  {
-    "id": "vs-navlek-obycejny-se-zipem-m-905091",
-    "name": "Návlek obyčejný se zipem M",
-    "category": "vapesport",
-    "categoryLabel": "NÁVLEKY",
-    "price": 726,
-    "shortDescription": "Návlek obyčejný se zipem VAPE vyroben v ČR",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "NÁVLEKY"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "310114"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/987/59287-1986723.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/987/59287-1986723.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/987/59287-1986723.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/574/dc6a60d01b31a115bdc7019514b8f216-image-280x305-1573377.jpg"
-    ]
-  },
-  {
     "id": "vs-taska-na-kolo-905504",
     "name": "Taška na kolo",
     "category": "vapesport",
@@ -799,165 +735,6 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/a1091f1a-1659-4011-8bf6-2049da71516e-1578036.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/6e55f2e2-5bac-4b2e-8b9a-3519a6944385-1578037.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/7b9c50aa-25cf-41b5-80be-8d8aff8bdc35-1578038.jpeg"
-    ]
-  },
-  {
-    "id": "vs-rukavice-hirzl-control-prava-s-906126",
-    "name": "Rukavice HIRZL Control (pravá) S",
-    "category": "vapesport",
-    "categoryLabel": "TRUST CONTROL RUKAVICE",
-    "price": 890,
-    "shortDescription": "Golfová rukavice z klokaní kůže. Celoroční rukavice, která odvádí pot a neklouže v ní grip.",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Trust Control rukavice"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "gpc-906126"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/584/control-2-840x640-1-1583112.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/584/control-2-840x640-1-1583112.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/584/control-2-840x640-1-1583112.jpg"
-    ]
-  },
-  {
-    "id": "vs-navlek-surftex-m-907031",
-    "name": "Návlek Surftex M",
-    "category": "vapesport",
-    "categoryLabel": "NÁVLEKY NA BOTY",
-    "price": 973,
-    "shortDescription": "Voděodolný, prodyšný, větruvzdorný návlek ve 3 velikostech, vyroben v ČR",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Návleky na boty"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "510114"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/987/pozadi-obrazku-img-2852-1590002-bylo-odstraneno-1986728.png",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/987/pozadi-obrazku-img-2852-1590002-bylo-odstraneno-1986728.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/987/pozadi-obrazku-img-2852-1590002-bylo-odstraneno-1986728.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/987/pozadi-obrazku-img-2851-1590001-bylo-odstraneno-1986727.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/987/pozadi-obrazku-img-2856-1590003-bylo-odstraneno-1986729.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/987/pozadi-obrazku-img-2857-1590004-bylo-odstraneno-1986730.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/987/pozadi-obrazku-img-2858-1590005-bylo-odstraneno-1986731.png"
-    ]
-  },
-  {
-    "id": "vs-navlek-obycejny-xl-907032",
-    "name": "Návlek obyčejný XL",
-    "category": "vapesport",
-    "categoryLabel": "NÁVLEKY NA BOTY",
-    "price": 653,
-    "shortDescription": "návlek přetahovaný přes nohu na gumičku a háček, vyroben v ČR",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Návleky na boty"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "310112"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/987/59287-1986724.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/987/59287-1986724.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/987/59287-1986724.jpg"
-    ]
-  },
-  {
-    "id": "vs-navlek-obycejny-detsky-907033",
-    "name": "Návlek obyčejný dětský",
-    "category": "vapesport",
-    "categoryLabel": "NÁVLEKY NA BOTY",
-    "price": 523,
-    "shortDescription": "ČESKÝ VÝROBEK Lehký dětský návlek určený pro všechna roční období.  háček pro zachycení za tkaničky vrchní vstup pásek pro seřízení velikost…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Návleky na boty"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "311112"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/597/311112-1596983.png",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/597/311112-1596983.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/597/311112-1596983.png"
-    ]
-  },
-  {
-    "id": "vs-navlek-na-bezky-vape-907034",
-    "name": "Návlek na běžky VAPE",
-    "category": "vapesport",
-    "categoryLabel": "NÁVLEKY NA BOTY",
-    "price": 392,
-    "shortDescription": "návlek na běžky výška 20cm Háček na zachycení o botu, proti napadání sněhu do boty.",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Návleky na boty"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "211096"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/987/pozadi-obrazku-whatsapp-image-2017-10-23-at-13-10-36-1596986-bylo-odstraneno-1986725.png",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/987/pozadi-obrazku-whatsapp-image-2017-10-23-at-13-10-36-1596986-bylo-odstraneno-1986725.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/987/pozadi-obrazku-whatsapp-image-2017-10-23-at-13-10-36-1596986-bylo-odstraneno-1986725.png"
     ]
   },
   {
@@ -1063,33 +840,6 @@ export const feedProducts: Product[] = [
     ]
   },
   {
-    "id": "vs-voucher-918239",
-    "name": "Voucher",
-    "category": "vapesport",
-    "categoryLabel": "PING GOLFOVÉ VYBAVENÍ",
-    "price": 200,
-    "shortDescription": "Při objednání si zadejte v poznámkách hodnotu, ve které máme poukaz vystavit.  Pošleme Vám jej na e-mail nebo si jej můžete vyzvednout u nás…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "PING golfové vybavení"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "00001"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": ""
-  },
-  {
     "id": "vs-street-bag-922789",
     "name": "Street bag",
     "category": "vapesport",
@@ -1164,165 +914,6 @@ export const feedProducts: Product[] = [
     ]
   },
   {
-    "id": "vs-respirator-ffp2-balerina-mix-barev-933814",
-    "name": "Respirátor FFP2 Balerina mix barev",
-    "category": "vapesport",
-    "categoryLabel": "ZDRAVOTNÍ POMŮCKY",
-    "price": 51,
-    "shortDescription": "ČESKÝ VÝROBEK s unikátní filtrační membránou (minimum pro objednání je mix 10 kusů)",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Zdravotní pomůcky"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "411111"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/877/mix-1876942.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/877/mix-1876942.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/877/mix-1876942.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/821/img-7737-1820897.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/zelene-karo-101-i-1847245.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/tropical-90-i-1847246.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/trojuhelnicky-121-i-1847247.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/seda-bila-zluta-53-i-1847248.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/svetle-modre-105-i-1847249.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/srdickova-62-i-1847250.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/cervena-kravatova-57-i-1847251.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/cervena-kotvicky-36-i-1847252.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/blesky-96-i-1847253.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/bile-kyticky-55-i-1847254.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/modra-karo-119-i-1847255.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/maskac-zeleny-76-i-1847256.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/leopard-110-i-1847257.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/kvetinkova-49-1847258.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/kiss-37-i-1847259.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/gepard-108-i-1847260.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/divocina-51-i-1847261.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/ruzovo-modre-karo-5-i-1847267.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/retro-39-i-1847269.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/modre-listy-32-i-1847270.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/modra-neon-zluta-6-i-1847271.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/modra-kvetinkova-58-i-1847272.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/stribrna-314-i-1847273.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/prales-i-1847274.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/modry-maskac-zelena-neon-77-i-1847275.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/modra-kravatova-i-1847276.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/mini-kytky-i-1847277.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/maskac-temne-modry-i-1847278.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/louka-s-motylky-i-1847279.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/karbon-cerna-332-i-1847280.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/bilocerna-100-i-1847281.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/848/bila-999-i-1847282.jpeg"
-    ]
-  },
-  {
-    "id": "vs-respirator-ffp2-balerina-holcici-934329",
-    "name": "Respirátor FFP2 Balerina holčičí",
-    "category": "vapesport",
-    "categoryLabel": "ROUŠKY",
-    "price": 48,
-    "shortDescription": "ČESKÝ VÝROBEK s unikátní filtrační membránou",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Roušky"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "411112"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/828/img-8533-1827403.jpeg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/828/img-8533-1827403.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/828/img-8533-1827403.jpeg"
-    ]
-  },
-  {
-    "id": "vs-respirator-ffp2-balerina-935707",
-    "name": "Respirátor FFP2 Balerina",
-    "category": "vapesport",
-    "categoryLabel": "ZDRAVOTNICKÁ TECHNIKA",
-    "price": 510,
-    "shortDescription": "Důležité info: vzhledem k vytíženosti našeho dodavatele Respirátorů FFP2, bohužel nemůžeme zaručit, kdy dorazí jaká barva. Proto nyní nabízí…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Zdravotnická technika"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "421111"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/877/mix-1876941.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/877/mix-1876941.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/877/mix-1876941.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/zelene-karo-101-i-1848003.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/tropical-90-i-1848004.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/trojuhelnicky-121-i-1848005.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/seda-bila-zluta-53-i-1848006.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/svetle-modre-105-i-1848007.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/stribrna-314-i-1848008.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/srdickova-62-i-1848009.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/ruzovo-modre-karo-5-i-1848010.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/ruzova-s-koniky-14-i-1848011.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/retro-39-i-1848012.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/prales-i-1848013.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/modry-maskac-zelena-neon-77-i-1848014.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/modre-listy-32-i-1848015.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/modra-neon-zluta-6-i-1848016.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/modra-kvetinkova-58-i-1848017.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/modra-kravatova-i-1848018.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/modra-karo-119-i-1848019.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/mini-kytky-i-1848020.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/maskac-zeleny-76-i-1848021.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/maskac-temne-modry-i-1848022.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/louka-s-motylky-i-1848023.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/leopard-110-i-1848024.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/kvetinkova-49-1848025.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/kiss-37-i-1848026.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/karbon-cerna-332-i-1848027.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/gepard-108-i-1848028.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/divocina-51-i-1848029.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/cervena-kravatova-57-i-1848030.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/cervena-kotvicky-36-i-1848031.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/blesky-96-i-1848032.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/bilocerna-100-i-1848033.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/bile-kyticky-55-i-1848034.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/849/bila-999-i-1848035.jpeg"
-    ]
-  },
-  {
     "id": "vs-neoprenovy-obal-938229",
     "name": "Neoprenový obal",
     "category": "vapesport",
@@ -1361,39 +952,6 @@ export const feedProducts: Product[] = [
     ]
   },
   {
-    "id": "vs-travel-bag-940304",
-    "name": "Travel bag",
-    "category": "vapesport",
-    "categoryLabel": "GOLFOVÉ DOPLŇKY",
-    "price": 2500,
-    "shortDescription": "Plně vyztužená cestovní taška na 2 bagy plné holí včetně driveru.",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Golfové doplňky"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "511111"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/911/img-8248-1910371.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/911/img-8248-1910371.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/911/img-8248-1910371.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/911/img-8250-1910370.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/911/img-8247-1910372.jpg"
-    ]
-  },
-  {
     "id": "vs-klickfix-bottle-941236",
     "name": "Klickfix bottle",
     "category": "vapesport",
@@ -1423,140 +981,6 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/942/dat-1941238.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/942/dat-1941238.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/942/341650-1941237.jpeg"
-    ]
-  },
-  {
-    "id": "vs-hirzl-gripp-fit-men-s-ml-panske-941497",
-    "name": "HIRZL GRIPP FIT Men, S-ML-pánské",
-    "category": "vapesport",
-    "categoryLabel": "GOLFOVÉ DOPLŇKY",
-    "price": 690,
-    "shortDescription": "Hirzl GRIPP FIT",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Golfové doplňky"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "51112"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/954/image-2-1953436.png",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/954/image-2-1953436.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-2-1953436.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-3-1953446.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-4-1953447.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-1953448.png"
-    ]
-  },
-  {
-    "id": "vs-hirzl-gripp-fit-men-l-xl-panske-941498",
-    "name": "HIRZL GRIPP FIT Men, L-XL-pánské",
-    "category": "vapesport",
-    "categoryLabel": "GOLFOVÉ DOPLŇKY",
-    "price": 690,
-    "shortDescription": "Hirzl GRIPP FIT",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Golfové doplňky"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "51113"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/954/image-2-1953437.png",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/954/image-2-1953437.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-2-1953437.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-3-1953443.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-4-1953444.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-1953445.png"
-    ]
-  },
-  {
-    "id": "vs-hirzl-gripp-fit-leva-941499",
-    "name": "HIRZL GRIPP FIT Levá",
-    "category": "vapesport",
-    "categoryLabel": "GOLFOVÉ DOPLŇKY",
-    "price": 690,
-    "shortDescription": "Hirzl GRIPP FIT dětská rukavice o velikosti S-L",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Golfové doplňky"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "31113"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/954/image-2-1953438.png",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/954/image-2-1953438.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-2-1953438.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-2-1953439.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-4-1953440.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/954/image-1953441.png"
-    ]
-  },
-  {
-    "id": "vs-ping-klobouk-943380",
-    "name": "PING klobouk",
-    "category": "vapesport",
-    "categoryLabel": "KLOBOUKY",
-    "price": 1000,
-    "shortDescription": "PING Klobouk",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Klobouky"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "545445"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/013/boonie-hat-white-back-2012284.png",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/013/boonie-hat-white-back-2012284.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/013/boonie-hat-white-back-2012284.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/013/boonie-hat-white-front-2012285.png"
     ]
   },
   {
@@ -1624,38 +1048,6 @@ export const feedProducts: Product[] = [
     ]
   },
   {
-    "id": "vs-popruh-na-prevoz-kol-elektrokol-943569",
-    "name": "Popruh na převoz kol/elektrokol",
-    "category": "vapesport",
-    "categoryLabel": "TAŽNÁ LANA",
-    "price": 250,
-    "shortDescription": "Popruh na převoz kol na nosiči slouží k zajištění ještě pro větší bezpečnost převozu. 2metrový popruh se sponou. Využití je variabilní na co…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Tažná lana"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "410097"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/popruh-2039506.gif",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/popruh-2039506.gif",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/popruh-2039477.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/img-1445-2039478.png"
-    ]
-  },
-  {
     "id": "vs-neoprenova-sada-na-prevoz-elektrokola-943570",
     "name": "Neoprenová sada na převoz elektrokola",
     "category": "vapesport",
@@ -1689,38 +1081,6 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obrazku-img-1429-bylo-odstraneno-2039472.png",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obrazku-img-1434-bylo-odstraneno-2039470.png",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obrazku-img-1427-bylo-odstraneno-2039474.png"
-    ]
-  },
-  {
-    "id": "vs-mini-sportovni-ledvinka-944096",
-    "name": "MINI sportovní Ledvinka",
-    "category": "vapesport",
-    "categoryLabel": "REFLEXNÍ PÁSKY A KLIPY",
-    "price": 250,
-    "shortDescription": "Mini ledvinka s gumou na sponu vhodná na běh, brusle i na hory. Gumu Vám upravíme na míru, aby byla ledvinka držela na těle a nehýbala se. Ú…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Reflexní pásky a klipy"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "411111"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/036/pozadi-obrazku-img-0672-bylo-odstraneno-2035048.png",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/036/pozadi-obrazku-img-0672-bylo-odstraneno-2035048.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/036/pozadi-obrazku-img-0672-bylo-odstraneno-2035048.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/036/pozadi-obrazku-img-0674-bylo-odstraneno-2035049.png"
     ]
   },
   {
@@ -1764,95 +1124,159 @@ export const feedProducts: Product[] = [
   },
   {
     "id": "vs-ramova-brasna-nepromokavy-zip-945203",
-    "name": "Rámová brašna nepromokavý zip",
+    "name": "MORSEO Plochý trojúhelník 2-kapsý",
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
-    "price": 599,
-    "shortDescription": "Kompaktní brašna do klasických rámů i na celoodpružená elektrokola. Vejde se i do malých rámů (S/M). 2 kapsy.",
+    "price": 619,
+    "shortDescription": "Kompaktní rámová brašna s nízkým profilem a šířkou pouhých 6 cm – ideální na menší a dámské rámy, kde velká brašna nesedí. Silikonové pásky drží pevně a chrání lak.",
     "features": [
-      "Dostupné barvy: černá (black), červená (red), modrá (blue), růžová (neon pink), bílá, neon zelená (neon green)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "Plně vyztužená – kopíruje zadní roh rámu u sedlovky",
+      "Dvě kapsy: hluboká (nabíječka, nářadí) + plochá (mobil, klíče odděleně)",
+      "Lze otočit dopředu ke spodní trubce (fixní pásek stačí odstřihnout)",
+      "Silikonové suché zipy 12 cm/ks – šetrné k laku"
     ],
     "specs": [
       {
-        "label": "Kategorie",
-        "value": "Brašny na kolo"
-      },
-      {
         "label": "Kód produktu",
-        "value": "311055-M"
+        "value": "M311055"
       },
       {
         "label": "Výrobce",
-        "value": "VAPESPORT"
+        "value": "MORSEOVAPE"
       },
       {
-        "label": "Varianty",
-        "value": "8 barev"
+        "label": "Rozměry (D × Š × V)",
+        "value": "25 × 6 × 16 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Nosnost",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Doporučené rámy",
+        "value": "S, M"
+      },
+      {
+        "label": "Uchycení",
+        "value": "zadní i přední část rámu (oboustranné)"
+      },
+      {
+        "label": "Voděodolnost",
+        "value": "vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé)"
+      },
+      {
+        "label": "Úhel",
+        "value": "90°"
+      },
+      {
+        "label": "Pásky",
+        "value": "silikonové suché zipy 12 cm/ks + 2 navíc v balení"
+      },
+      {
+        "label": "Barvy (skladem)",
+        "value": "Blackout G. (šedá), Arctic White (bílá), Coral Code (červená), Flamingo Luxe (růžová), Dandelite Yellow (žlutá), Lime Spark (zelená), Lazurite Blue (modrá), Golden Wheat (zlatá)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Kolo i elektrokolo, menší a dámské rámy"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/3-2116001.png",
+    "image": "/images/produkty-morseo/plochy-2k-morseo/01-hlavni-seda.png",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/3-2116001.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/3-2116001.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/2-2116010.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/1-2116011.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/4-2116002.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/5-2116003.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/6-2116004.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/7-2116005.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/8-2116006.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/9-2116007.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/10-2116008.png"
+      "/images/produkty-morseo/plochy-2k-morseo/01-hlavni-seda.png",
+      "/images/produkty-morseo/plochy-2k-morseo/02-pohled.jpeg",
+      "/images/produkty-morseo/plochy-2k-morseo/03-pohled.jpeg",
+      "/images/produkty-morseo/plochy-2k-morseo/barva-arctic-white-bila.png",
+      "/images/produkty-morseo/plochy-2k-morseo/barva-blackout-g-seda.png",
+      "/images/produkty-morseo/plochy-2k-morseo/barva-coral-code-cervena.png",
+      "/images/produkty-morseo/plochy-2k-morseo/barva-dandelite-yellow-zluta.png",
+      "/images/produkty-morseo/plochy-2k-morseo/barva-flamingo-luxe-ruzova.png",
+      "/images/produkty-morseo/plochy-2k-morseo/barva-golden-wheat-zlata.png",
+      "/images/produkty-morseo/plochy-2k-morseo/barva-lazurite-blue-modra.png",
+      "/images/produkty-morseo/plochy-2k-morseo/barva-lime-spark-zelena.png"
     ]
   },
   {
     "id": "vs-ramova-brasna-stredni-se-2-zipy-a-sitkou-945204",
-    "name": "Rámová brašna střední se 2 zipy a síťkou",
+    "name": "MORSEO Střední trojúhelník 2-kapsý",
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
-    "price": 620,
-    "shortDescription": "Rámová brašna střední se 2 zipy a síťkou.",
+    "price": 640,
+    "shortDescription": "Největší rámovka do e-kola – pobere rychlonabíječku Fast Charger i bidon. Šířka 7,5 cm neodírá stehna, upne se dopředu i dozadu.",
     "features": [
-      "Dostupné barvy: černá (black), bílá, neon žlutá (neon yellow), neon zelená (neon green), růžová (neon pink), červená (red)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "Plně vyztužená konstrukce – drží tvar",
+      "Obří kapacita: pojme velkou rychlonabíječku (Fast Charger) i bidon",
+      "Šířka 7,5 cm – navzdory objemu neodírá stehna",
+      "Prodloužené silikonové pásky E-bike Safe",
+      "Oboustranné upínání – lze uchytit i dopředu ke spodní rámové trubce (k baterii), nejen vzadu k sedlovce",
+      "Suché zipy 12 cm na každé straně",
+      "Silikonové pásky šetrné k jakémukoli laku – lesklému, matnému i karbonu"
     ],
     "specs": [
       {
-        "label": "Kategorie",
-        "value": "Brašny na kolo"
-      },
-      {
         "label": "Kód produktu",
-        "value": "410102-M"
+        "value": "M410102"
       },
       {
         "label": "Výrobce",
-        "value": "VAPESPORT"
+        "value": "MORSEOVAPE"
       },
       {
-        "label": "Varianty",
-        "value": "8 barev"
+        "label": "Rozměry (D × Š × V)",
+        "value": "35 × 7,5 × 18,5 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Nosnost",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Doporučené rámy",
+        "value": "L, XL, XXL"
+      },
+      {
+        "label": "Uchycení",
+        "value": "zadní i přední část rámu (oboustranné)"
+      },
+      {
+        "label": "Voděodolnost",
+        "value": "vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé)"
+      },
+      {
+        "label": "Úhel",
+        "value": "90° (do pravoúhlého rohu rámu)"
+      },
+      {
+        "label": "Pásky",
+        "value": "silikonové suché zipy 12 cm/ks + 2 navíc v balení"
+      },
+      {
+        "label": "Barvy (skladem)",
+        "value": "Blackout G. (šedá), Arctic White (bílá), Flamingo Luxe (růžová), Lime Spark (zelená), Golden Wheat (zlatá)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Elektrokolo, velké rámy (kde chybí košík na láhev)"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/200b61b1-f6a6-4aae-b260-e00f4b37e7c8-1-105-c-2116933.jpeg",
+    "image": "/images/produkty-morseo/stredni-2k-morseo/01-hlavni-seda.png",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/200b61b1-f6a6-4aae-b260-e00f4b37e7c8-1-105-c-2116933.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/200b61b1-f6a6-4aae-b260-e00f4b37e7c8-1-105-c-2116933.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/stredni-morseo-005-2116922.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/stredni-morseo-004-2116923.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/stredni-morseo-003-2116924.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/1771f3e3-3ce9-4dc9-aff2-9ecb23ad9729-1-105-c-2116916.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/83d40489-e156-4c74-8261-e8594a3a5544-1-105-c-2116915.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/43-2116910.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/45-2116909.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/46-2116913.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/47-2116911.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/44-2116912.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/42-2116914.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/2-2116931.png"
+      "/images/produkty-morseo/stredni-2k-morseo/01-hlavni-seda.png",
+      "/images/produkty-morseo/stredni-2k-morseo/02-pohled-zezadu.png",
+      "/images/produkty-morseo/stredni-2k-morseo/03-pohled.jpeg",
+      "/images/produkty-morseo/stredni-2k-morseo/04-pohled.jpeg",
+      "/images/produkty-morseo/stredni-2k-morseo/barva-arctic-white-bila.png",
+      "/images/produkty-morseo/stredni-2k-morseo/barva-blackout-g-seda.png",
+      "/images/produkty-morseo/stredni-2k-morseo/barva-flamingo-luxe-ruzova.png",
+      "/images/produkty-morseo/stredni-2k-morseo/barva-golden-wheat-zlata.png",
+      "/images/produkty-morseo/stredni-2k-morseo/barva-lime-spark-zelena.jpeg"
     ]
   },
   {
@@ -1861,318 +1285,532 @@ export const feedProducts: Product[] = [
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 531,
-    "shortDescription": "Designová nepromokavá brašna na řídítka a představec s dotykovou slídou (16,5 × 9 cm) pro e-bike a koloběžky.",
+    "shortDescription": "Svislá brašna na řídítka a představec pro e-kola s ovládáním na horní trubce a bez displeje uprostřed. Dotyková fólie 16,5 × 9 cm – navigace za jízdy. Tenký profil nepřekáží.",
     "features": [
-      "Plně dotyková slída 16,5 × 9 cm pro ovládání navigace za jízdy",
-      "3× silikonový suchý zip (12 cm) na představec + 2× suchý zip na řídítka",
+      "Plně dotyková slída 16,5 × 9 cm – ovládání navigace za jízdy",
+      "Svislá orientace, profil na řídítkách jen 4,5 cm",
       "Nepromokavý vnější zip a materiál PE 600D",
-      "Dostupné barvy: Černá, Bílá, Neon zelená, Modrá, Růžová, Červená, Zlatá, Neon žlutá"
+      "Uchycení: 3 silikonové suché zipy na představec + 2 na řídítka",
+      "Uvnitř uzaviratelná kapsička na zip + přihrádky na drobnosti"
     ],
     "specs": [
-      { "label": "Kategorie", "value": "Brašny na kolo" },
-      { "label": "Kód produktu", "value": "M411104" },
-      { "label": "Výrobce", "value": "VAPESPORT" },
-      { "label": "Umístění", "value": "Řídítka / Představec" },
-      { "label": "Rozměry", "value": "18 × 10 × 4 cm" },
-      { "label": "Dotyková fólie", "value": "16,5 × 9 cm" },
-      { "label": "Materiál", "value": "PE 600D (voděodpudivý)" },
-      { "label": "Varianty", "value": "8 barev" }
+      {
+        "label": "Kód produktu",
+        "value": "M411104"
+      },
+      {
+        "label": "Výrobce",
+        "value": "MORSEOVAPE"
+      },
+      {
+        "label": "Rozměry (D × Š × V)",
+        "value": "18 × 10 × 4 cm"
+      },
+      {
+        "label": "Slída (průzor)",
+        "value": "16,5 × 9 cm"
+      },
+      {
+        "label": "Telefon",
+        "value": "do cca 6,7\""
+      },
+      {
+        "label": "Objem",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Nosnost",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Voděodolnost",
+        "value": "vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé)"
+      },
+      {
+        "label": "Uchycení",
+        "value": "3× na představec + 2× na řídítka"
+      },
+      {
+        "label": "Barvy (skladem)",
+        "value": "Blackout G. (šedá), Arctic White (bílá), Coral Code (červená), Flamingo Luxe (růžová), Dandelite Yellow (žlutá), Lime Spark (zelená), Lazurite Blue (modrá), Golden Wheat (zlatá)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Elektrokolo a koloběžka (atypické rámy)"
+      }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/transformer-5-5-morseo-013-2116957.jpeg",
+    "image": "/images/produkty-morseo/transformer-morseo/01-hlavni.jpeg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/transformer-5-5-morseo-013-2116957.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-013-2116957.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-001-2116955.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-005-2116951.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-002-2116954.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-004-2116952.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-003-2116953.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-010-2116946.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-009-2116947.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-008-2116948.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-007-2116949.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-014-2116956.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-012-2116958.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/transformer-5-5-morseo-011-2116959.jpeg"
+      "/images/produkty-morseo/transformer-morseo/01-hlavni.jpeg",
+      "/images/produkty-morseo/transformer-morseo/02-pohled-zezadu.jpeg",
+      "/images/produkty-morseo/transformer-morseo/03-nasazeny-na-kole.jpeg",
+      "/images/produkty-morseo/transformer-morseo/04-otevreny-slida.jpeg",
+      "/images/produkty-morseo/transformer-morseo/05-popruhy.jpeg",
+      "/images/produkty-morseo/transformer-morseo/06-detail.jpeg",
+      "/images/produkty-morseo/transformer-morseo/07-pohled.jpeg",
+      "/images/produkty-morseo/transformer-morseo/barva-arctic-white-bila.jpeg",
+      "/images/produkty-morseo/transformer-morseo/barva-blackout-g-seda.jpeg",
+      "/images/produkty-morseo/transformer-morseo/barva-coral-code-cervena.jpeg",
+      "/images/produkty-morseo/transformer-morseo/barva-dandelite-yellow-zluta.jpeg",
+      "/images/produkty-morseo/transformer-morseo/barva-flamingo-luxe-ruzova.png",
+      "/images/produkty-morseo/transformer-morseo/barva-golden-wheat-zlata.png",
+      "/images/produkty-morseo/transformer-morseo/barva-lazurite-blue-modra.jpeg",
+      "/images/produkty-morseo/transformer-morseo/barva-lime-spark-zelena.jpeg"
     ]
   },
   {
     "id": "vs-smb-morseo-945206",
-    "name": "SMB MORSEO",
+    "name": "MORSEO SMB 6,7\"",
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 599,
-    "shortDescription": "MORSEO SMB brašna na mobilní telefon do 7\"",
+    "shortDescription": "MORSEO SMB 6,7\" – brašna na mobil na horní rámovou trubku pro telefony do 6,7\". Dotyková fólie pro navigaci, prodloužené silikonové pásky E-bike Ready na široké trubky a šetrné k laku.",
     "features": [
-      "Dostupné barvy: červená (red), modrá (blue), růžová (neon pink), neon zelená (neon green), zlatá",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "3 silikonové suché zipy 12 cm/ks – popruh na širokou škálu představců",
+      "Vývod na kabel/sluchátka v zadní části",
+      "Dotyková slída + vypolstrovaný prostor pod ní – telefon drží pevně",
+      "Na vyžádání 2 suché zipy navíc ZDARMA"
     ],
     "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Brašny na kolo"
-      },
       {
         "label": "Kód produktu",
         "value": "M310073"
       },
       {
         "label": "Výrobce",
-        "value": "VAPESPORT"
+        "value": "MORSEOVAPE"
       },
       {
-        "label": "Varianty",
-        "value": "5 barev"
+        "label": "Rozměry (D × Š × V)",
+        "value": "19 × 7 × 8–5,5 cm"
+      },
+      {
+        "label": "Slída (průzor)",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Telefon",
+        "value": "do cca 6,7\""
+      },
+      {
+        "label": "Objem",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Nosnost",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Voděodolnost",
+        "value": "vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé)"
+      },
+      {
+        "label": "Pásky",
+        "value": "silikonové suché zipy 12 cm/ks"
+      },
+      {
+        "label": "Barvy (skladem)",
+        "value": "Coral Code (červená), Flamingo Luxe (růžová), Dandelite Yellow (žlutá), Lime Spark (zelená), Lazurite Blue (modrá), Golden Wheat (zlatá)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Kolo i elektrokolo"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/13-2116939.png",
+    "image": "/images/produkty-morseo/smb-6-7-morseo/01-hlavni-ruzova.png",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/13-2116939.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/13-2116939.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/18-2116934.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/cce771ca-7738-451e-b6b3-10bc043f99e9-1-105-c-2116943.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/90c3f4a5-3cfb-4dba-a2a7-4b3e4fae61e2-1-105-c-2116944.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/99e866ea-1c96-481d-a8d0-d95405161c8f-1-105-c-2116945.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/49bd4ca5-2724-47a7-a041-006583d7e5bb-1-105-c-2116942.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/17-2116935.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/16-2116936.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/15-2116937.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/14-2116938.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/12-2116940.png"
+      "/images/produkty-morseo/smb-6-7-morseo/01-hlavni-ruzova.png",
+      "/images/produkty-morseo/smb-6-7-morseo/02-pohled.jpeg",
+      "/images/produkty-morseo/smb-6-7-morseo/03-pohled.jpeg",
+      "/images/produkty-morseo/smb-6-7-morseo/04-pohled.jpeg",
+      "/images/produkty-morseo/smb-6-7-morseo/05-pohled.jpeg",
+      "/images/produkty-morseo/smb-6-7-morseo/barva-coral-code-cervena.png",
+      "/images/produkty-morseo/smb-6-7-morseo/barva-dandelite-yellow-zluta.png",
+      "/images/produkty-morseo/smb-6-7-morseo/barva-flamingo-luxe-ruzova.png",
+      "/images/produkty-morseo/smb-6-7-morseo/barva-golden-wheat-zlata.png",
+      "/images/produkty-morseo/smb-6-7-morseo/barva-lazurite-blue-modra.png",
+      "/images/produkty-morseo/smb-6-7-morseo/barva-lime-spark-zelena.png"
     ]
   },
   {
     "id": "vs-waterproof-bike-bag-bila-945208",
-    "name": "Waterproof bike bag bílá",
+    "name": "MORSEO WDB (voděodolná rámová)",
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 1055,
-    "shortDescription": "MORSEO WDB nepromokavá brašna na rám",
+    "shortDescription": "100% vodotěsná brašna na horní trubku – na e-bike, silničku i gravel. Nenateče ani kapka, aero tvar nepřekáží ve stoje. Telefon vložíš našikmo dovnitř.",
     "features": [
-      "Dostupné barvy: bílá, červená (red), modrá (blue), růžová (neon pink), neon zelená (neon green), neon žlutá (neon yellow)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "100% nepromokavá – vysokofrekvenčně svařované švy, bezešvé provedení",
+      "Aerodynamické zúžení z 6,5 na 3 cm – pohodlné šlapání ve stoje",
+      "3 silikonové pásky 24 cm/ks – šetrné k laku, drží na široké škále rámů",
+      "Univerzální – ladí ke každé značce kola díky nenápadnému logu",
+      "Telefon se vejde našikmo (velikostně např. iPhone 17 Pro); uvnitř jeden otevřený prostor bez kapsiček"
     ],
     "specs": [
       {
-        "label": "Kategorie",
-        "value": "Brašny na kolo"
-      },
-      {
         "label": "Kód produktu",
-        "value": "50001"
+        "value": "M50001"
       },
       {
         "label": "Výrobce",
-        "value": "VAPESPORT"
+        "value": "MORSEOVAPE"
       },
       {
-        "label": "Varianty",
-        "value": "7 barev"
+        "label": "Rozměry (D × Š × V)",
+        "value": "23 × 6,5 × 9–3 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Nosnost",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Doporučené rámy",
+        "value": "univerzální"
+      },
+      {
+        "label": "Voděodolnost",
+        "value": "100% nepromokavé"
+      },
+      {
+        "label": "Barvy (skladem)",
+        "value": "Blackout G. (šedá), Arctic White (bílá), Coral Code (červená), Flamingo Luxe (růžová), Dandelite Yellow (žlutá), Lime Spark (zelená), Lazurite Blue (modrá), Golden Wheat (zlatá)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Elektrokolo, gravel, silniční i klasické (univerzální)"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/27-2116026.png",
+    "image": "/images/produkty-morseo/wdb/01-hlavni-seda.png",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/27-2116026.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/27-2116026.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/26-2116025.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/3adc5cf1-304b-44de-a5a5-2dbd91a9c9c4-4-5005-c-2116033.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/076/wdb-morseo-vse-007-2075295.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/3f71d5d5-d77d-4e64-bd75-16f9806b3edf-4-5005-c-2116034.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/28-2116027.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/29-2116028.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/30-2116029.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/31-2116030.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/32-2116031.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/33-2116032.png"
+      "/images/produkty-morseo/wdb/01-hlavni-seda.png",
+      "/images/produkty-morseo/wdb/02-pohled.jpeg",
+      "/images/produkty-morseo/wdb/03-pohled.jpeg",
+      "/images/produkty-morseo/wdb/04-pohled.jpeg",
+      "/images/produkty-morseo/wdb/05-pohled.jpeg",
+      "/images/produkty-morseo/wdb/barva-arctic-white-bila.png",
+      "/images/produkty-morseo/wdb/barva-blackout-g-seda.png",
+      "/images/produkty-morseo/wdb/barva-coral-code-cervena.png",
+      "/images/produkty-morseo/wdb/barva-dandelite-yellow-zluta.png",
+      "/images/produkty-morseo/wdb/barva-flamingo-luxe-ruzova.png",
+      "/images/produkty-morseo/wdb/barva-golden-wheat-zlata.png",
+      "/images/produkty-morseo/wdb/barva-lazurite-blue-modra.png",
+      "/images/produkty-morseo/wdb/barva-lime-spark-zelena.png"
     ]
   },
   {
     "id": "vs-waterproof-saddle-bag-945209",
-    "name": "Waterproof saddle bag",
+    "name": "MORSEO WDS (voděodolná podsedlová)",
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 950,
-    "shortDescription": "MORSEO WDS nepromokavá brašna pod sedlo",
+    "shortDescription": "Ultralehká 100% vodotěsná podsedlová brašna se svařovanými švy. Boční suché zipy ji zachytí o sedlovku a spodní zip o její trubku; vnitřní síťka udrží drobnosti. Vaše nářadí zůstane v suchu i v největším blátě.",
     "features": [
-      "Dostupné barvy: černá (black), červená (red), růžová (neon pink), bílá, neon zelená (neon green), neon žlutá (neon yellow)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "100% waterproof – svařované švy",
+      "Teleskopka Friendly – drží jen za ližiny sedla, nevadí pístnici",
+      "Šířka 6,5 cm – neodírá vnitřní stranu stehen",
+      "Schová se do zákrytu sedla",
+      "Silikonové pásky šetrné k jakémukoli laku – lesklému, matnému i karbonu",
+      "Vnitřní síťka na drobnosti"
     ],
     "specs": [
       {
-        "label": "Kategorie",
-        "value": "Brašny na kolo"
-      },
-      {
         "label": "Kód produktu",
-        "value": "50002"
+        "value": "M50002"
       },
       {
         "label": "Výrobce",
-        "value": "VAPESPORT"
+        "value": "MORSEOVAPE"
       },
       {
-        "label": "Varianty",
-        "value": "7 barev"
+        "label": "Rozměry (D × Š × V)",
+        "value": "17 × 6,5–5,5 × 8 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Nosnost",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Doporučené rámy",
+        "value": "univerzální"
+      },
+      {
+        "label": "Voděodolnost",
+        "value": "100% nepromokavé (materiál + zip)"
+      },
+      {
+        "label": "Barvy (skladem)",
+        "value": "Blackout G. (šedá), Arctic White (bílá), Coral Code (červená), Flamingo Luxe (růžová), Dandelite Yellow (žlutá), Lime Spark (zelená), Golden Wheat (zlatá)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Elektrokolo, gravel, MTB i silniční (univerzální)"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/21-2116037.png",
+    "image": "/images/produkty-morseo/wds/01-hlavni-seda.png",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/21-2116037.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/21-2116037.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/076/wds-morseo-vse-008-2075312.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/29baa44d-fd3c-4f25-bf9f-dd5311f0e709-4-5005-c-2116042.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/f9fd00c4-9b8d-4804-842c-2808320296d4-4-5005-c-2116043.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/19-2116035.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/20-2116036.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/22-2116038.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/23-2116039.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/24-2116040.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/25-2116041.png"
+      "/images/produkty-morseo/wds/01-hlavni-seda.png",
+      "/images/produkty-morseo/wds/02-pohled.jpeg",
+      "/images/produkty-morseo/wds/03-pohled.jpeg",
+      "/images/produkty-morseo/wds/04-pohled.jpeg",
+      "/images/produkty-morseo/wds/05-pohled.jpeg",
+      "/images/produkty-morseo/wds/barva-arctic-white-bila.png",
+      "/images/produkty-morseo/wds/barva-blackout-g-seda.png",
+      "/images/produkty-morseo/wds/barva-coral-code-cervena.png",
+      "/images/produkty-morseo/wds/barva-dandelite-yellow-zluta.png",
+      "/images/produkty-morseo/wds/barva-flamingo-luxe-ruzova.png",
+      "/images/produkty-morseo/wds/barva-golden-wheat-zlata.png",
+      "/images/produkty-morseo/wds/barva-lime-spark-zelena.png"
     ]
   },
   {
     "id": "vs-ramova-brasna-nepromokavy-zip-947097",
-    "name": "Rámová brašna nepromokavý zip",
+    "name": "MORSEO Elektro II",
     "category": "vapesport",
     "categoryLabel": "RÁMOVÉ BRAŠNY",
-    "price": 600,
-    "shortDescription": "Rámová brašna s nepromokavým zipem se 2 kapsami.",
+    "price": 620,
+    "shortDescription": "Rámová brašna na elektrokolo, do které se pohodlně vejde i těžká nabíječka Bosch nebo Yamaha. Díky úzkému profilu (6–7 cm) se schová do prostoru nad integrovanou baterií a nepřekáží při šlapání. Prodloužené silikonové pásky drží pevně a chrání lak před podřením.",
     "features": [
-      "Dostupné barvy: černá (black), bílá, neon zelená (neon green), neon žlutá (neon yellow), růžová (neon pink), zlatá",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "Plně vyztužená konstrukce – drží tvar",
+      "Šířka jen 6–7 cm – schová se za baterii a nepřekáží při šlapání",
+      "Prodloužené silikonové pásky E-bike Safe (GekkoGrip™) chrání lak",
+      "Hluboká hlavní kapsa (nabíječka) + plochá boční kapsa",
+      "Oboustranné upínání – lze uchytit i dopředu ke spodní rámové trubce (k baterii), nejen vzadu k sedlovce",
+      "Suché zipy 12 cm na každé straně",
+      "Silikonové pásky šetrné k jakémukoli laku – lesklému, matnému i karbonu"
     ],
     "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Rámové brašny"
-      },
       {
         "label": "Kód produktu",
         "value": "M410006"
       },
       {
         "label": "Výrobce",
-        "value": "VAPESPORT"
+        "value": "MORSEOVAPE"
       },
       {
-        "label": "Varianty",
-        "value": "8 barev"
+        "label": "Rozměry (D × Š × V)",
+        "value": "24 × 6 × 20 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Nosnost",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Doporučené rámy",
+        "value": "M, L, XL"
+      },
+      {
+        "label": "Uchycení",
+        "value": "zadní i přední část rámu (oboustranné)"
+      },
+      {
+        "label": "Voděodolnost",
+        "value": "vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé)"
+      },
+      {
+        "label": "Úhel",
+        "value": "90° (do pravoúhlého rohu rámu)"
+      },
+      {
+        "label": "Pásky",
+        "value": "silikonové suché zipy 12 cm/ks + 2 navíc v balení"
+      },
+      {
+        "label": "Barvy (skladem)",
+        "value": "Coral Code (červená), Arctic White (bílá), Flamingo Luxe (růžová), Dandelite Yellow (žlutá), Lime Spark (zelená), Lazurite Blue (modrá), Golden Wheat (zlatá)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Elektrokolo (integrovaná baterie), střední a větší rámy"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/m410006-001-2116908.jpeg",
+    "image": "/images/produkty-morseo/elektro-ii-morseo/01-hlavni-bila.png",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/m410006-001-2116908.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m410006-001-2116908.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/12e48411-5a1e-4be5-ad99-53480d01f339-2116906.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/76b44026-8ac0-4067-ae10-9ac420b1f0d6-2116907.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/34-2116899.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/36-2116900.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/35-2116901.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/40-2116902.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/39-2116903.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/38-2116904.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/41-2116905.png"
+      "/images/produkty-morseo/elektro-ii-morseo/01-hlavni-bila.png",
+      "/images/produkty-morseo/elektro-ii-morseo/02-pohled.jpeg",
+      "/images/produkty-morseo/elektro-ii-morseo/03-pohled.jpeg",
+      "/images/produkty-morseo/elektro-ii-morseo/04-pohled.jpeg",
+      "/images/produkty-morseo/elektro-ii-morseo/barva-arctic-white-bila.png",
+      "/images/produkty-morseo/elektro-ii-morseo/barva-coral-code-cervena.png",
+      "/images/produkty-morseo/elektro-ii-morseo/barva-dandelite-yellow-zluta.png",
+      "/images/produkty-morseo/elektro-ii-morseo/barva-flamingo-luxe-ruzova.png",
+      "/images/produkty-morseo/elektro-ii-morseo/barva-golden-wheat-zlata.png",
+      "/images/produkty-morseo/elektro-ii-morseo/barva-lazurite-blue-modra.png",
+      "/images/produkty-morseo/elektro-ii-morseo/barva-lime-spark-zelena.png"
     ]
   },
   {
     "id": "vs-smb-morseo-zlata-947383",
-    "name": "SMB MORSEO zlatá",
+    "name": "MORSEO SMB XXL 8\"",
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
-    "price": 610,
-    "shortDescription": "E-bike speciál: XXL brašna na široké rámy. I pro iPhone Max/Ultra v odolném krytu. Dlouhé pásky v ceně. Drží na Crussis i Cube.",
+    "price": 640,
+    "shortDescription": "Velká brašna na horní trubku e-biku. Vejde se i ten největší telefon v krytu (iPhone Pro Max, Galaxy Ultra), powerbanka i svačina. Přes slídu 10 × 19 cm ovládáš telefon bez vyndávání. Pásky drží jako přibité a nepodřou lak.",
     "features": [
-      "Dostupné barvy: zlatá, neon zelená (neon green), neon žlutá (neon yellow), modrá (blue), růžová (neon pink), červená (red)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bike Ready – extra dlouhé silikonové pásky drží pevně a jsou šetrné i k lesklému laku",
+      "Průzor (slída) 10 × 19 cm – i největší telefony v odolném krytu (MaxiMobile™)",
+      "Geometrická stabilita – spodní úchyty kopírují horní trubku e-kol, minimum bočního pohybu",
+      "Telefon jištěný suchým zipem a gumou; vypolstrovaný, lehce izolační vnitřek"
     ],
     "specs": [
       {
-        "label": "Kategorie",
-        "value": "Brašny na kolo"
-      },
-      {
         "label": "Kód produktu",
-        "value": "M310073 XXL"
+        "value": "M310073-1"
       },
       {
         "label": "Výrobce",
-        "value": "VAPESPORT"
+        "value": "MORSEOVAPE"
       },
       {
-        "label": "Varianty",
-        "value": "6 barev"
+        "label": "Rozměry (D × Š × V)",
+        "value": "20 × 8 × 8–5 cm"
+      },
+      {
+        "label": "Slída (průzor)",
+        "value": "10 × 19 cm (3,9\" × 7,5\")"
+      },
+      {
+        "label": "Telefon",
+        "value": "největší vlajkové modely i v odolném krytu"
+      },
+      {
+        "label": "Objem",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Nosnost",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Materiál",
+        "value": "600D / PVC, voděodolný zip"
+      },
+      {
+        "label": "Voděodolnost",
+        "value": "vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé)"
+      },
+      {
+        "label": "Barvy",
+        "value": "8 trendových odstínů"
+      },
+      {
+        "label": "Barvy (skladem)",
+        "value": "Blackout G. (šedá), Arctic White (bílá), Coral Code (červená), Flamingo Luxe (růžová), Dandelite Yellow (žlutá), Lime Spark (zelená), Lazurite Blue (modrá), Golden Wheat (zlatá)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Elektrokolo (masivní rámy)"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/17-2116063.png",
+    "image": "/images/produkty-morseo/smb-xxl/01-hlavni-seda.png",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/17-2116063.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/17-2116063.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/116/1-2115986.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/116/4-2115989.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/116/2-2115987.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/116/3-2115988.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/49bd4ca5-2724-47a7-a041-006583d7e5bb-1-105-c-2116067.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/99e866ea-1c96-481d-a8d0-d95405161c8f-1-105-c-2116068.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/cce771ca-7738-451e-b6b3-10bc043f99e9-1-105-c-2116069.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/13-2116059.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/14-2116060.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/15-2116061.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/16-2116062.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/18-2116064.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/12-2116065.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/11-2116066.png"
+      "/images/produkty-morseo/smb-xxl/01-hlavni-seda.png",
+      "/images/produkty-morseo/smb-xxl/02-pohled.jpeg",
+      "/images/produkty-morseo/smb-xxl/03-pohled.jpeg",
+      "/images/produkty-morseo/smb-xxl/04-pohled.jpeg",
+      "/images/produkty-morseo/smb-xxl/05-pohled.jpeg",
+      "/images/produkty-morseo/smb-xxl/barva-arctic-white-bila.png",
+      "/images/produkty-morseo/smb-xxl/barva-blackout-g-seda.png",
+      "/images/produkty-morseo/smb-xxl/barva-coral-code-cervena.png",
+      "/images/produkty-morseo/smb-xxl/barva-dandelite-yellow-zluta.png",
+      "/images/produkty-morseo/smb-xxl/barva-flamingo-luxe-ruzova.png",
+      "/images/produkty-morseo/smb-xxl/barva-golden-wheat-zlata.png",
+      "/images/produkty-morseo/smb-xxl/barva-lazurite-blue-modra.png",
+      "/images/produkty-morseo/smb-xxl/barva-lime-spark-zelena.png"
     ]
   },
   {
     "id": "vs-ramova-brasna-nepromokavy-zip-bila-947404",
-    "name": "Rámová brašna nepromokavý zip bílá",
+    "name": "MORSEO Plochý trojúhelník 2-kapsý FLEXI",
     "category": "vapesport",
     "categoryLabel": "RÁMOVÉ BRAŠNY",
-    "price": 620,
-    "shortDescription": "Rámová brašna s nepromokavým zipem se 2 kapsami s flexibilním uchopením na popruhy.",
+    "price": 619,
+    "shortDescription": "Nízká rámovka (výška 16 cm), co obejde zadní tlumič u celopér. Uchytíš ji dopředu, dozadu i na horní trubku. Šířka 6 cm nepřekáží.",
     "features": [
-      "Dostupné barvy: bílá, červená (red), modrá (blue), neon zelená (neon green), neon žlutá (neon yellow), zlatá",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "Plně vyztužená konstrukce – drží tvar",
+      "Výška jen 16 cm – mine zadní tlumič u celopér",
+      "Systém FLEXI: tři místa uchycení (hlavová i sedlová trubka, horní trubka)",
+      "Šířka 6 cm – o brašně nevíte ani v technickém terénu",
+      "Silikonové pásky šetrné ke karbonu",
+      "Oboustranné upínání – lze uchytit i dopředu ke spodní rámové trubce (k baterii), nejen vzadu k sedlovce",
+      "Suché zipy 12 cm na každé straně",
+      "Silikonové pásky šetrné k jakémukoli laku – lesklému, matnému i karbonu",
+      "Oproti klasické verzi popruhy pro uchycení na 2 stranách brašny"
     ],
     "specs": [
       {
-        "label": "Kategorie",
-        "value": "Rámové brašny"
-      },
-      {
         "label": "Kód produktu",
-        "value": "M311055-F"
+        "value": "M311055-1"
       },
       {
         "label": "Výrobce",
-        "value": "VAPESPORT"
+        "value": "MORSEOVAPE"
       },
       {
-        "label": "Varianty",
-        "value": "7 barev"
+        "label": "Rozměry (D × Š × V)",
+        "value": "25 × 6 × 16 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Nosnost",
+        "value": "⚠ doplnit"
+      },
+      {
+        "label": "Doporučené rámy",
+        "value": "S, M"
+      },
+      {
+        "label": "Uchycení",
+        "value": "zadní i přední část rámu (oboustranné)"
+      },
+      {
+        "label": "Voděodolnost",
+        "value": "vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé)"
+      },
+      {
+        "label": "Úhel",
+        "value": "90° (do pravoúhlého rohu rámu)"
+      },
+      {
+        "label": "Pásky",
+        "value": "silikonové suché zipy 12 cm/ks + 2 navíc v balení"
+      },
+      {
+        "label": "Barvy (skladem)",
+        "value": "Arctic White (bílá), Coral Code (červená), Flamingo Luxe (růžová), Dandelite Yellow (žlutá), Lime Spark (zelená), Lazurite Blue (modrá), Golden Wheat (zlatá)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Elektrokolo (celoodpružené) i klasické kolo"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/3-2116892.png",
+    "image": "/images/produkty-morseo/plochy-2k-flexi-morseo/01-hlavni-bila.png",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/3-2116892.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/3-2116892.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/gemini-generated-image-1bovj01bovj01bov-2116898.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/c61f6a97-24fa-49dc-9e25-c3dea0de9dd7-1-105-c-2116895.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/4aa7ff59-eff8-4240-abac-c59ec42eaa4b-1-105-c-2116897.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/8a8f5439-e252-4d2a-84e5-03af6b4655b0-1-105-c-2116896.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/10-2116887.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/8-2116888.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/7-2116889.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/6-2116890.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/5-2116891.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/9-2116893.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/4-2116894.png"
+      "/images/produkty-morseo/plochy-2k-flexi-morseo/01-hlavni-bila.png",
+      "/images/produkty-morseo/plochy-2k-flexi-morseo/02-pohled.jpeg",
+      "/images/produkty-morseo/plochy-2k-flexi-morseo/03-pohled.jpeg",
+      "/images/produkty-morseo/plochy-2k-flexi-morseo/barva-arctic-white-bila.png",
+      "/images/produkty-morseo/plochy-2k-flexi-morseo/barva-coral-code-cervena.png",
+      "/images/produkty-morseo/plochy-2k-flexi-morseo/barva-dandelite-yellow-zluta.png",
+      "/images/produkty-morseo/plochy-2k-flexi-morseo/barva-flamingo-luxe-ruzova.png",
+      "/images/produkty-morseo/plochy-2k-flexi-morseo/barva-golden-wheat-zlata.png",
+      "/images/produkty-morseo/plochy-2k-flexi-morseo/barva-lazurite-blue-modra.png",
+      "/images/produkty-morseo/plochy-2k-flexi-morseo/barva-lime-spark-zelena.png"
     ]
   },
   {
@@ -2208,223 +1846,6 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/113/gemini-generated-image-95te7m95te7m95te-2112884.png",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/113/gemini-generated-image-eyzv1keyzv1keyzv-2112885.png",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/113/gemini-generated-image-tlfk1ptlfk1ptlfk-2112886.png"
-    ]
-  },
-  {
-    "id": "vs-golfove-rady-952047",
-    "name": "Golfové rady",
-    "category": "vapesport",
-    "categoryLabel": "GOLFOVÉ MÍČKY",
-    "price": 500,
-    "shortDescription": "Naše golfové rady jsou přesné, osobní a přímo k věci. Bez zbytečných omáček ti ukážeme, jak zlepšit švih, ušetřit čas a vyhnout se drahým ch…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Golfové míčky"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "00112200"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/115/untitled-project-20-2114027.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/115/untitled-project-20-2114027.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/115/untitled-project-20-2114027.jpg"
-    ]
-  },
-  {
-    "id": "vs-golfovy-fitting-952048",
-    "name": "Golfový fitting",
-    "category": "vapesport",
-    "categoryLabel": "GOLF",
-    "price": 1500,
-    "shortDescription": "Jako zkušený golfista vím, že správný fitting je víc než jen obláček na papíře. Vyčlením ti 2 hodiny, během nichž naprosto přesně nastavíme …",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "GOLF"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "0101021"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/115/untitled-project-21-2114028.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/115/untitled-project-21-2114028.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/115/untitled-project-21-2114028.jpg"
-    ]
-  },
-  {
-    "id": "vs-golfovy-voucher-952112",
-    "name": "Golfový voucher",
-    "category": "vapesport",
-    "categoryLabel": "GOLF",
-    "price": 200,
-    "shortDescription": "Při objednání si zadejte v poznámkách hodnotu, ve které máme poukaz vystavit.  Pošleme Vám jej na e-mail nebo si jej můžete vyzvednout u nás…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "GOLF"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "01234585"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/115/gemini-generated-image-ss6m0xss6m0xss6m-2114541.jpeg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/115/gemini-generated-image-ss6m0xss6m0xss6m-2114541.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/115/gemini-generated-image-ss6m0xss6m0xss6m-2114541.jpeg"
-    ]
-  },
-  {
-    "id": "vs-hloubkova-analyza-cykloservisu-a-lokalniho-trhu-952301",
-    "name": "Hloubková analýza cykloservisu a lokálního trhu",
-    "category": "vapesport",
-    "categoryLabel": "BALÍČKY SLUŽEB",
-    "price": 12000,
-    "shortDescription": "Máte kvalitní zboží a skvělý servis, ale návštěvnost prodejny stagnuje? Problém většinou nebývá v tom, co prodáváte, ale v překážkách, které…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Balíčky služeb"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "VAPE-SRV-01"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/4-2116116.jpeg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/4-2116116.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/4-2116116.jpeg"
-    ]
-  },
-  {
-    "id": "vs-vizualni-restart-ukazte-svou-odbornost-952302",
-    "name": "Vizuální restart: Ukažte svou odbornost",
-    "category": "vapesport",
-    "categoryLabel": "BALÍČKY SLUŽEB",
-    "price": 22000,
-    "shortDescription": "Máte pocit, že na internet patří jen naleštěná kola a sterilní showroomy? To je omyl, který vás stojí peníze. Lidé jsou přejedení dokonalých…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Balíčky služeb"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "VAPE-SRV-02"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/2-2116117.jpeg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/2-2116117.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/2-2116117.jpeg"
-    ]
-  },
-  {
-    "id": "vs-ai-akcelerator-nebudte-otrokem-administrativy-952303",
-    "name": "AI Akcelerátor: Nebuďte otrokem administrativy",
-    "category": "vapesport",
-    "categoryLabel": "BALÍČKY SLUŽEB",
-    "price": 10000,
-    "shortDescription": "Jste mechanik a obchodník, ne spisovatel. Přestaňte se trápit nad klávesnicí. Zatímco ve Vizuálním restartu jsme řešili, jak ukázat vaši pra…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Balíčky služeb"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "VAPE-SRV-03"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/1-2116118.jpeg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/1-2116118.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/1-2116118.jpeg"
-    ]
-  },
-  {
-    "id": "vs-strategie-1-3-od-testovani-k-funkcnimu-systemu-952304",
-    "name": "Strategie 1+3: Od testování k funkčnímu systému",
-    "category": "vapesport",
-    "categoryLabel": "BALÍČKY SLUŽEB",
-    "price": 49900,
-    "shortDescription": "Tohle není služba typu „nastavím a zmizím“. Spousta poradců vám dá návod a nechá vás být. Já ne. Zde platíte za to, že funkční prodejní syst…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Balíčky služeb"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "VAPE-SRV-MAX"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/3-2116119.jpeg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/3-2116119.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/3-2116119.jpeg"
     ]
   }
 ] as Product[];
