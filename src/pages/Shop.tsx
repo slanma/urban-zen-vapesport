@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ebikeSilhouette from "@/assets/bike-lineart.png";
+import InteractiveBikeGuide from "@/components/InteractiveBikeGuide";
 import { ArrowRight } from "lucide-react";
 import {
   HOTSPOT_LABELS,
