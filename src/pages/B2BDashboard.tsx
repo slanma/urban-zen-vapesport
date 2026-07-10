@@ -58,6 +58,7 @@ interface B2BProfileData {
 interface CartItem {
   productId: string;
   qty: number;
+  color?: string | null;
 }
 
 const skuMap: Record<string, string> = {
@@ -181,15 +182,19 @@ const B2BDashboard = () => {
     checkAccess();
   }, [navigate]);
 
-  const getQty = (id: string) => cart.find((c) => c.productId === id)?.qty ?? 0;
+  const sameItem = (c: CartItem, id: string, color: string | null) =>
+    c.productId === id && (c.color ?? null) === (color ?? null);
 
-  const setQty = (id: string, qty: number) => {
+  const getQty = (id: string, color: string | null = null) =>
+    cart.find((c) => sameItem(c, id, color))?.qty ?? 0;
+
+  const setQty = (id: string, qty: number, color: string | null = null) => {
     if (qty < 0) return;
     setCart((prev) => {
-      const exists = prev.find((c) => c.productId === id);
-      if (!exists && qty > 0) return [...prev, { productId: id, qty }];
-      if (qty === 0) return prev.filter((c) => c.productId !== id);
-      return prev.map((c) => (c.productId === id ? { ...c, qty } : c));
+      const exists = prev.find((c) => sameItem(c, id, color));
+      if (!exists && qty > 0) return [...prev, { productId: id, qty, color: color ?? null }];
+      if (qty === 0) return prev.filter((c) => !sameItem(c, id, color));
+      return prev.map((c) => (sameItem(c, id, color) ? { ...c, qty } : c));
     });
   };
 
@@ -221,10 +226,12 @@ const B2BDashboard = () => {
     const items = cart.map((c) => {
       const product = getProductById(c.productId);
       const unitPrice = getUnitNet(c.productId); // NET (VOC bez DPH)
+      const colorLabel = c.color ? resolveColor(c.color).label : null;
       return {
         productId: c.productId,
         sku: skuMap[c.productId] || c.productId,
-        name: product?.name ?? c.productId,
+        name: colorLabel ? `${product?.name ?? c.productId} – ${colorLabel}` : (product?.name ?? c.productId),
+        color: c.color ?? null,
         qty: c.qty,
         unitPrice,
       };
@@ -470,6 +477,7 @@ const B2BDashboard = () => {
                     const override = getOverride(product.id);
                     const colors = (override?.colors_override ?? product.available_colors ?? []) as readonly string[];
                     const detailHref = `/produkt/${product.id}`;
+                    const productTotal = colors.length ? colors.reduce((s, c) => s + getQty(product.id, c), 0) : qty;
 
                     return (
                       <TableRow key={product.id} className="hover:bg-muted/30">
@@ -483,17 +491,6 @@ const B2BDashboard = () => {
                           <div>
                             <a href={detailHref} target="_blank" rel="noopener noreferrer" className="text-base font-semibold text-foreground block hover:text-primary hover:underline">{product.name}</a>
                             <span className="text-sm text-muted-foreground">{product.categoryLabel}</span>
-                            {colors.length > 0 && (
-                              <a href={detailHref} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 mt-1.5 w-fit" title="Vybrat barvu v detailu">
-                                {colors.slice(0, 8).map((c) => {
-                                  const { label, hex } = resolveColor(c);
-                                  return (
-                                    <span key={c} title={label} aria-label={label} className="inline-block w-3.5 h-3.5 rounded-full border border-border" style={{ backgroundColor: hex }} />
-                                  );
-                                })}
-                                <span className="text-[11px] text-primary ml-0.5 hover:underline">{colors.length} barev →</span>
-                              </a>
-                            )}
                           </div>
                         </TableCell>
                         <TableCell>
@@ -506,21 +503,52 @@ const B2BDashboard = () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center justify-center gap-2">
-                            <Button variant="outline" size="icon" className="h-12 w-12 text-xl font-bold" onClick={() => setQty(product.id, Math.max(0, qty - 1))} aria-label={`Odebrat 1 kus ${product.name}`}>
-                              <Minus className="w-5 h-5" />
-                            </Button>
-                            <input type="number" min={0} value={qty} onChange={(e) => setQty(product.id, Math.max(0, parseInt(e.target.value) || 0))} className="w-16 h-12 text-center text-lg font-bold bg-secondary border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary" aria-label={`Počet kusů ${product.name}`} />
-                            <Button variant="outline" size="icon" className="h-12 w-12 text-xl font-bold" onClick={() => setQty(product.id, qty + 1)} aria-label={`Přidat 1 kus ${product.name}`}>
-                              <Plus className="w-5 h-5" />
-                            </Button>
-                          </div>
+                          {colors.length > 0 ? (
+                            <div className="space-y-1.5 min-w-[220px]">
+                              {colors.map((c) => {
+                                const { label, hex } = resolveColor(c);
+                                const cq = getQty(product.id, c);
+                                return (
+                                  <div key={c} className="flex items-center gap-2">
+                                    <span className="w-4 h-4 rounded-full border border-border shrink-0" style={{ backgroundColor: hex }} title={label} />
+                                    <span className="text-sm text-foreground flex-1 truncate">{label}</span>
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      value={cq || ""}
+                                      placeholder="0"
+                                      onChange={(e) => setQty(product.id, Math.max(0, parseInt(e.target.value) || 0), c)}
+                                      className="w-16 h-9 text-center text-base font-bold bg-secondary border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                                      aria-label={`${product.name} – ${label}`}
+                                    />
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-center gap-2">
+                              <Button variant="outline" size="icon" className="h-12 w-12 text-xl font-bold" onClick={() => setQty(product.id, Math.max(0, qty - 1))} aria-label={`Odebrat 1 kus ${product.name}`}>
+                                <Minus className="w-5 h-5" />
+                              </Button>
+                              <input type="number" min={0} value={qty} onChange={(e) => setQty(product.id, Math.max(0, parseInt(e.target.value) || 0))} className="w-16 h-12 text-center text-lg font-bold bg-secondary border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary" aria-label={`Počet kusů ${product.name}`} />
+                              <Button variant="outline" size="icon" className="h-12 w-12 text-xl font-bold" onClick={() => setQty(product.id, qty + 1)} aria-label={`Přidat 1 kus ${product.name}`}>
+                                <Plus className="w-5 h-5" />
+                              </Button>
+                            </div>
+                          )}
                         </TableCell>
                         <TableCell>
-                          <Button variant={qty > 0 ? "default" : "secondary"} className="h-12 text-base font-semibold w-full gap-2" onClick={() => addToCart(product.id)}>
-                            <ShoppingCart className="w-4 h-4" />
-                            Přidat
-                          </Button>
+                          {colors.length > 0 ? (
+                            <div className="text-center">
+                              <div className={`text-lg font-bold ${productTotal > 0 ? "text-primary" : "text-muted-foreground"}`}>{productTotal} ks</div>
+                              <div className="text-[11px] text-muted-foreground">v objednávce</div>
+                            </div>
+                          ) : (
+                            <Button variant={qty > 0 ? "default" : "secondary"} className="h-12 text-base font-semibold w-full gap-2" onClick={() => addToCart(product.id)}>
+                              <ShoppingCart className="w-4 h-4" />
+                              Přidat
+                            </Button>
+                          )}
                         </TableCell>
                       </TableRow>
                     );

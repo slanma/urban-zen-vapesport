@@ -18,6 +18,7 @@ interface B2BCheckoutItem {
   name: string;
   qty: number;
   unitPrice: number; // NET (VOC bez DPH)
+  color?: string | null;
 }
 
 interface B2BCheckoutPayload {
@@ -173,6 +174,7 @@ const B2BCheckout = () => {
         product_id: i.productId,
         sku: i.sku,
         name: i.name,
+        color: i.color ?? null,
         qty: i.qty,
         unit_price: i.unitPrice,
         line_total: i.unitPrice * i.qty,
@@ -279,10 +281,10 @@ const B2BCheckout = () => {
                     : "Zkontrolujte zboží před pokračováním."}
                 </p>
                 <ul className="divide-y divide-border">
-                  {payload.items.map((item) => {
+                  {payload.items.map((item, idx) => {
                     const product = getProductById(item.productId);
                     return (
-                      <li key={item.productId} className="py-4 flex items-center gap-4">
+                      <li key={`${item.productId}::${item.color ?? ""}::${idx}`} className="py-4 flex items-center gap-4">
                         <div className="w-16 h-16 bg-muted rounded overflow-hidden flex-shrink-0">
                           {product?.image && (
                             <img src={product.image} alt={item.name} className="w-full h-full object-cover" loading="lazy" />

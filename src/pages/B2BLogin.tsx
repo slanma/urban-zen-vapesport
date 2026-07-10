@@ -206,9 +206,14 @@ const B2BLogin = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="b2b-password" className="text-base font-semibold text-foreground block">
-                Heslo
-              </Label>
+              <div className="flex items-center justify-between gap-2">
+                <Label htmlFor="b2b-password" className="text-base font-semibold text-foreground block">
+                  Heslo
+                </Label>
+                <a href="/b2b-heslo" className="text-sm font-medium text-primary hover:underline">
+                  Nastavit / zapomenuté heslo
+                </a>
+              </div>
               <div className="relative">
                 <Input
                   id="b2b-password"
