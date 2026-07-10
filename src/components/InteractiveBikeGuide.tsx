@@ -117,23 +117,25 @@ const InteractiveBikeGuide = ({
         />
 
         {/* Connector line to label (SVG overlay) */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <line
-            x1={activeDot.x}
-            y1={activeDot.y}
-            x2={activeDot.labelX}
-            y2={activeDot.labelY}
-            stroke="hsl(var(--primary))"
-            strokeWidth={0.25}
-            strokeDasharray="0.8 0.6"
-            vectorEffect="non-scaling-stroke"
-          />
-        </svg>
+        {activeDot && (
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <line
+              x1={activeDot.x}
+              y1={activeDot.y}
+              x2={activeDot.labelX}
+              y2={activeDot.labelY}
+              stroke="hsl(var(--primary))"
+              strokeWidth={0.25}
+              strokeDasharray="0.8 0.6"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+        )}
 
         {/* Hotspots */}
         {DOTS.map((d) => {
