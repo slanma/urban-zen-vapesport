@@ -16,6 +16,7 @@ import { fmtCZK, grossFromNet } from "@/lib/vat";
 import { productHotspotEntries, type Hotspot } from "@/data/productHotspots";
 import { supabase } from "@/integrations/supabase/client";
 import FeatureBadges from "@/components/FeatureBadges";
+import InteractiveBikeGuide from "@/components/InteractiveBikeGuide";
 
 const HOTSPOT_POSITIONS: { id: Hotspot; label: string; x: number; y: number }[] = [
   { id: "Frame",        label: "Přední trojúhelník rámu", x: 54, y: 42 },
