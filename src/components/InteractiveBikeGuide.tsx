@@ -101,6 +101,9 @@ const InteractiveBikeGuide = ({
           <p className="font-body text-muted-foreground max-w-xl mx-auto mt-3 text-sm md:text-base leading-relaxed">
             Klikněte na konkrétní místo na kole a zobrazte brašny určené přesně pro danou pozici.
           </p>
+          <p className="font-body text-xs text-muted-foreground/80 mt-2">
+            Tip pro klávesnici: klávesou <kbd className="px-1.5 py-0.5 rounded border border-border bg-muted font-mono text-[10px]">Tab</kbd> přesunete fokus na tečky, <kbd className="px-1.5 py-0.5 rounded border border-border bg-muted font-mono text-[10px]">Enter</kbd> potvrdí výběr.
+          </p>
         </div>
       )}
 
