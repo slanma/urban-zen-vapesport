@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Plus, Minus } from "lucide-react";
-import bikeImg from "@/assets/bike-ebike-hardtail.jpg";
+import bikeImg from "@/assets/bike-ebike-hardtail.png";
 import {
   HOTSPOT_LABELS,
   getProductsByHotspot,
@@ -31,11 +31,11 @@ interface BikeDot {
 
 /** Positions calibrated for src/assets/bike-ebike-hardtail.jpg (1920×1088). */
 const DOTS: BikeDot[] = [
-  { id: "Handlebar",   label: "Řídítka",      x: 82, y: 21, labelX: 88, labelY: 21 },
-  { id: "UnderSaddle", label: "Pod sedlo",    x: 38, y: 23, labelX: 46, labelY: 18 },
-  { id: "TopTube",     label: "Horní trubka", x: 60, y: 34, labelX: 68, labelY: 33 },
-  { id: "Frame",       label: "Rám",          x: 56, y: 58, labelX: 62, labelY: 66 },
-  { id: "RearRack",    label: "Nosič",        x: 21, y: 34, labelX: 12, labelY: 30 },
+  { id: "Handlebar",   label: "Řídítka",      x: 71, y: 18, labelX: 78, labelY: 10 },
+  { id: "UnderSaddle", label: "Pod sedlo",    x: 36, y: 21, labelX: 30, labelY: 10 },
+  { id: "TopTube",     label: "Horní trubka", x: 53, y: 28, labelX: 58, labelY: 20 },
+  { id: "Frame",       label: "Rám",          x: 50, y: 52, labelX: 60, labelY: 60 },
+  { id: "RearRack",    label: "Nosič",        x: 18, y: 30, labelX: 10, labelY: 22 },
 ];
 
 interface Props {
