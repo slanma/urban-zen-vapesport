@@ -1,5 +1,5 @@
 // AUTO-GENERATED / MORSEO data + lokální fotky, balast + Wasabi odstraněny
-// Řady, názvy a duplicita display aktualizovány dle zařazení od Lucie.
+// Řady, názvy, duplicita display + MORSEO barvy (available_colors) dle Lucie.
 import type { Product } from "./products";
 
 export const feedProducts: Product[] = [
@@ -1129,6 +1129,16 @@ export const feedProducts: Product[] = [
       "/images/produkty-morseo/plochy-2k-morseo/barva-golden-wheat-zlata.png",
       "/images/produkty-morseo/plochy-2k-morseo/barva-lazurite-blue-modra.png",
       "/images/produkty-morseo/plochy-2k-morseo/barva-lime-spark-zelena.png"
+    ],
+    "available_colors": [
+      "blackout-g",
+      "arctic-white",
+      "coral-code",
+      "flamingo-luxe",
+      "dandelite-yellow",
+      "lime-spark",
+      "lazurite-blue",
+      "golden-wheat"
     ]
   },
   {
@@ -1208,6 +1218,13 @@ export const feedProducts: Product[] = [
       "/images/produkty-morseo/stredni-2k-morseo/barva-flamingo-luxe-ruzova.png",
       "/images/produkty-morseo/stredni-2k-morseo/barva-golden-wheat-zlata.png",
       "/images/produkty-morseo/stredni-2k-morseo/barva-lime-spark-zelena.jpeg"
+    ],
+    "available_colors": [
+      "blackout-g",
+      "arctic-white",
+      "flamingo-luxe",
+      "lime-spark",
+      "golden-wheat"
     ]
   },
   {
@@ -1287,6 +1304,16 @@ export const feedProducts: Product[] = [
       "/images/produkty-morseo/transformer-morseo/barva-golden-wheat-zlata.png",
       "/images/produkty-morseo/transformer-morseo/barva-lazurite-blue-modra.jpeg",
       "/images/produkty-morseo/transformer-morseo/barva-lime-spark-zelena.jpeg"
+    ],
+    "available_colors": [
+      "blackout-g",
+      "arctic-white",
+      "coral-code",
+      "flamingo-luxe",
+      "dandelite-yellow",
+      "lime-spark",
+      "lazurite-blue",
+      "golden-wheat"
     ]
   },
   {
@@ -1361,6 +1388,14 @@ export const feedProducts: Product[] = [
       "/images/produkty-morseo/smb-6-7-morseo/barva-golden-wheat-zlata.png",
       "/images/produkty-morseo/smb-6-7-morseo/barva-lazurite-blue-modra.png",
       "/images/produkty-morseo/smb-6-7-morseo/barva-lime-spark-zelena.png"
+    ],
+    "available_colors": [
+      "coral-code",
+      "flamingo-luxe",
+      "dandelite-yellow",
+      "lime-spark",
+      "lazurite-blue",
+      "golden-wheat"
     ]
   },
   {
@@ -1430,6 +1465,16 @@ export const feedProducts: Product[] = [
       "/images/produkty-morseo/wdb/barva-golden-wheat-zlata.png",
       "/images/produkty-morseo/wdb/barva-lazurite-blue-modra.png",
       "/images/produkty-morseo/wdb/barva-lime-spark-zelena.png"
+    ],
+    "available_colors": [
+      "blackout-g",
+      "arctic-white",
+      "coral-code",
+      "flamingo-luxe",
+      "dandelite-yellow",
+      "lime-spark",
+      "lazurite-blue",
+      "golden-wheat"
     ]
   },
   {
@@ -1499,6 +1544,15 @@ export const feedProducts: Product[] = [
       "/images/produkty-morseo/wds/barva-flamingo-luxe-ruzova.png",
       "/images/produkty-morseo/wds/barva-golden-wheat-zlata.png",
       "/images/produkty-morseo/wds/barva-lime-spark-zelena.png"
+    ],
+    "available_colors": [
+      "blackout-g",
+      "arctic-white",
+      "coral-code",
+      "flamingo-luxe",
+      "dandelite-yellow",
+      "lime-spark",
+      "golden-wheat"
     ]
   },
   {
@@ -1580,6 +1634,15 @@ export const feedProducts: Product[] = [
       "/images/produkty-morseo/elektro-ii-morseo/barva-golden-wheat-zlata.png",
       "/images/produkty-morseo/elektro-ii-morseo/barva-lazurite-blue-modra.png",
       "/images/produkty-morseo/elektro-ii-morseo/barva-lime-spark-zelena.png"
+    ],
+    "available_colors": [
+      "arctic-white",
+      "coral-code",
+      "flamingo-luxe",
+      "dandelite-yellow",
+      "lime-spark",
+      "lazurite-blue",
+      "golden-wheat"
     ]
   },
   {
@@ -1660,6 +1723,16 @@ export const feedProducts: Product[] = [
       "/images/produkty-morseo/smb-xxl/barva-golden-wheat-zlata.png",
       "/images/produkty-morseo/smb-xxl/barva-lazurite-blue-modra.png",
       "/images/produkty-morseo/smb-xxl/barva-lime-spark-zelena.png"
+    ],
+    "available_colors": [
+      "blackout-g",
+      "arctic-white",
+      "coral-code",
+      "flamingo-luxe",
+      "dandelite-yellow",
+      "lime-spark",
+      "lazurite-blue",
+      "golden-wheat"
     ]
   },
   {
@@ -1742,6 +1815,15 @@ export const feedProducts: Product[] = [
       "/images/produkty-morseo/plochy-2k-flexi-morseo/barva-golden-wheat-zlata.png",
       "/images/produkty-morseo/plochy-2k-flexi-morseo/barva-lazurite-blue-modra.png",
       "/images/produkty-morseo/plochy-2k-flexi-morseo/barva-lime-spark-zelena.png"
+    ],
+    "available_colors": [
+      "arctic-white",
+      "coral-code",
+      "flamingo-luxe",
+      "dandelite-yellow",
+      "lime-spark",
+      "lazurite-blue",
+      "golden-wheat"
     ]
   },
   {

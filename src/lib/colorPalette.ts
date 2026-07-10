@@ -29,6 +29,15 @@ export const COLOR_PALETTE: ReadonlyArray<ColorOption> = [
   { slug: "blue",           label: "Modrá",             hex: "#1E66FF" },
   { slug: "turquoise",      label: "Tyrkysová",         hex: "#1ED6C2" },
   { slug: "dark-turquoise", label: "Tmavě tyrkysová",   hex: "#0E8C82" },
+  // ── MORSEO (marketingové názvy) – hexy doladit z produktových fotek ──
+  { slug: "coral-code",       label: "Coral Code",       hex: "#E35C40" },
+  { slug: "arctic-white",     label: "Arctic White",     hex: "#E0E4E4" },
+  { slug: "flamingo-luxe",    label: "Flamingo Luxe",    hex: "#FD2ED3" },
+  { slug: "dandelite-yellow", label: "Dandelite Yellow", hex: "#EEF80E" },
+  { slug: "lime-spark",       label: "Lime Spark",       hex: "#A3F34A" },
+  { slug: "lazurite-blue",    label: "Lazurite Blue",    hex: "#3A8AE1" },
+  { slug: "golden-wheat",     label: "Golden Wheat",     hex: "#FDCE5C" },
+  { slug: "blackout-g",       label: "Blackout G.",      hex: "#858A8A" },
 ] as const;
 
 const BY_SLUG = new Map(COLOR_PALETTE.map((c) => [c.slug.toLowerCase(), c]));

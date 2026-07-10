@@ -41,14 +41,14 @@ export const MORSEO_PRODUCT_IDS = new Set(MORSEO_BASE_ONLY_IDS);
 
 /** Exact 8 color variants generated for every MORSEO base product. */
 export const MORSEO_COLORS = [
-  "Černá",
-  "Bílá",
-  "Neon zelená",
-  "Modrá",
-  "Růžová",
-  "Červená",
-  "Zlatá",
-  "Neon žlutá",
+  "Coral Code",
+  "Arctic White",
+  "Flamingo Luxe",
+  "Dandelite Yellow",
+  "Lime Spark",
+  "Lazurite Blue",
+  "Golden Wheat",
+  "Blackout G.",
 ] as const;
 export type MorseoColor = (typeof MORSEO_COLORS)[number];
 

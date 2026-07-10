@@ -148,7 +148,7 @@ const Shop = () => {
                     size="sm"
                   />
                   <ColorSwatchRow
-                    colors={get(product.id).colors_override}
+                    colors={get(product.id).colors_override ?? product.available_colors}
                     className="mb-4"
                   />
                   <div className="flex items-center justify-between mt-auto">

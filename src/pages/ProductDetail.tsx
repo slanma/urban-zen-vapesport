@@ -61,8 +61,10 @@ const ProductDetail = () => {
   const gallery = product ? getEffectiveGallery(product, override) : [];
   const [activeImg, setActiveImg] = useState(0);
   const availableColors = useMemo(
-    () => override?.colors_override?.filter(Boolean) ?? null,
-    [override?.colors_override],
+    () =>
+      (override?.colors_override ?? baseProduct?.available_colors)?.filter(Boolean) ??
+      null,
+    [override?.colors_override, baseProduct?.available_colors],
   );
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);

@@ -61,6 +61,6 @@ export const applyProductOverride = (
     specs,
     available_colors: Array.isArray(override.colors_override)
       ? override.colors_override
-      : undefined,
+      : product.available_colors,
   };
 };
