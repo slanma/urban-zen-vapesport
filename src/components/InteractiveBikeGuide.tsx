@@ -59,11 +59,11 @@ const InteractiveBikeGuide = ({
   hideFilterBar,
   compact,
 }: Props) => {
-  const [internalActive, setInternalActive] = useState<Hotspot>("Handlebar");
+  const [internalActive, setInternalActive] = useState<Hotspot | null>(null);
   const active = activeHotspot ?? internalActive;
   const setActive = (h: Hotspot) => {
     if (onActiveChange) onActiveChange(h);
-    else setInternalActive(h);
+    else setInternalActive((prev) => (prev === h ? null : h));
   };
 
   const { get } = useProductOverrides();
@@ -72,16 +72,17 @@ const InteractiveBikeGuide = ({
 
   const productsForActive = useMemo(
     () =>
-      getProductsByHotspot(active)
-        .filter((p) => get(p.id).visible)
-        .map((p) => applyProductOverride(p, get(p.id)))
-        // De-duplicate by baseId so a MORSEO base only shows once
-        .filter((p, i, arr) => arr.findIndex((x) => (x.baseId ?? x.id) === (p.baseId ?? p.id)) === i)
-        .slice(0, 6),
+      active
+        ? getProductsByHotspot(active)
+            .filter((p) => get(p.id).visible)
+            .map((p) => applyProductOverride(p, get(p.id)))
+            .filter((p, i, arr) => arr.findIndex((x) => (x.baseId ?? x.id) === (p.baseId ?? p.id)) === i)
+            .slice(0, 6)
+        : [],
     [active, get],
   );
 
-  const activeDot = DOTS.find((d) => d.id === active)!;
+  const activeDot = active ? DOTS.find((d) => d.id === active) ?? null : null;
 
   const setQty = (id: string, q: number) =>
     setQtyByProduct((p) => ({ ...p, [id]: Math.max(0, q | 0) }));
