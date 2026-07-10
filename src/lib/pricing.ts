@@ -18,6 +18,7 @@ import { VAT_RATE, netFromGross, grossFromNet } from "@/lib/vat";
 
 export interface MinimalProduct {
   price: number; // retail gross
+  b2b_price?: number | null; // wholesale NET fallback (from feed)
 }
 
 export interface MinimalOverride {
@@ -54,8 +55,16 @@ export const getEffectiveUnitPricing = (
   const discount = isPartner ? Math.max(0, Math.min(100, discountPercent || 0)) : 0;
   const factor = 1 - discount / 100;
 
-  if (isPartner && override?.b2b_price != null && override.b2b_price > 0) {
-    const baseNet = override.b2b_price;
+  // Wholesale NET: admin override wins, otherwise the feed's b2b_price.
+  const wholesaleNet =
+    override?.b2b_price != null && override.b2b_price > 0
+      ? override.b2b_price
+      : product.b2b_price != null && product.b2b_price > 0
+        ? product.b2b_price
+        : null;
+
+  if (isPartner && wholesaleNet != null) {
+    const baseNet = wholesaleNet;
     const net = Math.round(baseNet * factor);
     return {
       unitNet: net,

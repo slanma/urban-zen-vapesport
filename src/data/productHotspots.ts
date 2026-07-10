@@ -31,6 +31,11 @@ export interface HotspotEntry {
 
 export const productHotspotEntries: HotspotEntry[] = [
 
+  // ── NOVÉ produkty z podkladu FINAL ─────────────────
+  { productId: "vs-velky-trojuhelnik-3kapsy-410002", hotspot: "Frame", categories: ["Rámové brašny"] }, // Velký trojúhelník tříkapsý
+  { productId: "vs-podsedlo-twist-zralok-led-410121", hotspot: "UnderSaddle", categories: ["Podsedlové brašny"] }, // Podsedlo Twist žralok LED
+  { productId: "vs-obal-na-display-na-miru-210604", hotspot: "Handlebar", categories: ["Brašny pro ELEKTROKOLO"] }, // Obal na display na míru
+
   // ── Handlebar ──────────────────────────────────────
   { productId: "vs-brasna-mala-na-riditka-pe-904688", hotspot: "Handlebar", categories: ["Brašny pro ELEKTROKOLO", "Brašny na řídítka", "Brašny na KOLOBĚŽKY"] }, // Brašna malá na řidítka PE
   { productId: "vs-klickfix-904710", hotspot: "Handlebar", categories: ["Brašny pro ELEKTROKOLO", "Brašny na KOLOBĚŽKY"] }, // Klickfix

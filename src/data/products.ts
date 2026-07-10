@@ -7,6 +7,9 @@ export interface Product {
   category: "morseo-evo" | "vape-legends" | "vapesport";
   categoryLabel: string;
   price: number;
+  /** Wholesale NET price (VOC bez DPH). Used for B2B partners; admin
+   *  override (product_overrides.b2b_price) still takes precedence. */
+  b2b_price?: number;
   shortDescription: string;
   features: string[];
   specs: { label: string; value: string }[];
