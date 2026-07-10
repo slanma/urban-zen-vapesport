@@ -228,14 +228,6 @@ const InteractiveBikeGuide = ({
                   Celý katalog <ArrowRight className="w-3 h-3" />
                 </Link>
               )}
-              <button
-                type="button"
-                onClick={() => (onActiveChange ? undefined : setInternalActive(null))}
-                className="text-[11px] font-body font-semibold text-muted-foreground hover:text-primary"
-                aria-label="Zavřít"
-              >
-                Zavřít ✕
-              </button>
             </div>
           </div>
 
