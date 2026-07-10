@@ -17,6 +17,7 @@ import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { fmtCZK, netFromGross } from "@/lib/vat";
+import { resolveColor } from "@/lib/colorPalette";
 
 type HotspotFilter = Hotspot | "All";
 
@@ -281,8 +282,8 @@ const B2BDashboard = () => {
             Vapesport <span className="text-primary font-medium text-sm ml-1">B2B</span>
           </a>
           <div className="flex items-center gap-4">
-            <a href="/b2b-velkoobchod" className="text-sm font-semibold text-primary hover:underline hidden sm:inline">
-              Velkoobchodní matrix →
+            <a href="/b2b-velkoobchod" className="text-sm text-muted-foreground hover:text-primary hover:underline hidden sm:inline">
+              Podrobná matice →
             </a>
             <span className="text-base text-muted-foreground hidden sm:inline">
               {accountLabel}
@@ -466,19 +467,33 @@ const B2BDashboard = () => {
                   {visibleProducts.map((product) => {
                     const qty = getQty(product.id);
                     const sku = skuMap[product.id] || product.id;
+                    const override = getOverride(product.id);
+                    const colors = (override?.colors_override ?? product.available_colors ?? []) as readonly string[];
+                    const detailHref = `/produkt/${product.id}`;
 
                     return (
                       <TableRow key={product.id} className="hover:bg-muted/30">
                         <TableCell className="text-base font-mono text-muted-foreground">{sku}</TableCell>
                         <TableCell>
-                          <div className="w-14 h-14 bg-muted rounded flex items-center justify-center overflow-hidden">
+                          <a href={detailHref} target="_blank" rel="noopener noreferrer" className="block w-14 h-14 bg-muted rounded overflow-hidden" title="Otevřít detail (barvy, popis)">
                             <img src={product.image} alt={`Fotografie ${product.name}`} className="w-full h-full object-cover" loading="lazy" />
-                          </div>
+                          </a>
                         </TableCell>
                         <TableCell>
                           <div>
-                            <span className="text-base font-semibold text-foreground block">{product.name}</span>
+                            <a href={detailHref} target="_blank" rel="noopener noreferrer" className="text-base font-semibold text-foreground block hover:text-primary hover:underline">{product.name}</a>
                             <span className="text-sm text-muted-foreground">{product.categoryLabel}</span>
+                            {colors.length > 0 && (
+                              <a href={detailHref} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 mt-1.5 w-fit" title="Vybrat barvu v detailu">
+                                {colors.slice(0, 8).map((c) => {
+                                  const { label, hex } = resolveColor(c);
+                                  return (
+                                    <span key={c} title={label} aria-label={label} className="inline-block w-3.5 h-3.5 rounded-full border border-border" style={{ backgroundColor: hex }} />
+                                  );
+                                })}
+                                <span className="text-[11px] text-primary ml-0.5 hover:underline">{colors.length} barev →</span>
+                              </a>
+                            )}
                           </div>
                         </TableCell>
                         <TableCell>
