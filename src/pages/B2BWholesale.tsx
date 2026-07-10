@@ -199,62 +199,34 @@ const B2BWholesale = () => {
         </div>
       </header>
 
-      <div className="max-w-[1600px] mx-auto px-4 md:px-6 py-6 grid grid-cols-1 lg:grid-cols-[35%_65%] gap-6">
-        {/* ── Left fixed cockpit ─────────────────────────── */}
-        <aside className="lg:sticky lg:top-20 self-start h-fit">
-          <div className="bg-background border border-border rounded-xl p-5">
-            <h2 className="font-heading text-lg font-bold mb-1">Kam s ní?</h2>
-            <p className="text-xs text-muted-foreground mb-4">Klikněte na bod a filtrujte matrix vpravo.</p>
-            <div className="relative">
-              <img src={bikeSilhouette} alt="Silueta e-kola" className="w-full h-auto opacity-80" />
-              {HOTSPOT_POSITIONS.map((h) => {
-                const isActive = activeHotspot === h.id;
-                return (
-                  <button
-                    key={h.id}
-                    onClick={() => handleHotspotClick(h.id)}
-                    onMouseEnter={() => setHoverHotspot(h.id)}
-                    onMouseLeave={() => setHoverHotspot(null)}
-                    className={`absolute w-5 h-5 rounded-full border-2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ${
-                      isActive ? "bg-primary border-primary scale-150 shadow-lg" : "bg-primary/70 border-primary-foreground hover:scale-125 animate-pulse"
-                    }`}
-                    style={{ left: `${h.x}%`, top: `${h.y}%` }}
-                    aria-label={h.label}
-                  />
-                );
-              })}
-              {hoverHotspot && (() => {
-                const h = HOTSPOT_POSITIONS.find((x) => x.id === hoverHotspot)!;
-                const ids = hotspotIdsByHotspot[hoverHotspot] ?? new Set<string>();
-                const thumbs = baseRows.filter((r) => ids.has(r.baseId)).slice(0, 4);
-                return (
-                  <div className="absolute z-20 bg-background border border-border rounded-lg p-2 shadow-lg" style={{ left: `${Math.min(h.x + 5, 60)}%`, top: `${h.y + 6}%` }}>
-                    <p className="text-xs font-semibold mb-1">{h.label}</p>
-                    <div className="flex gap-1">
-                      {thumbs.map((t) => (
-                        <img key={t.baseId} src={t.base.image} alt="" className="w-10 h-10 object-cover rounded" />
-                      ))}
-                    </div>
-                  </div>
-                );
-              })()}
+      <div className="max-w-[1600px] mx-auto px-4 md:px-6 py-6 space-y-6">
+        {/* Shared interactive bike guide (B2B mode) */}
+        <section className="bg-background border border-border rounded-xl p-5">
+          <InteractiveBikeGuide
+            mode="b2b"
+            activeHotspot={activeHotspot ?? "Handlebar"}
+            onActiveChange={(h) => {
+              setActiveHotspot(h);
+              document.getElementById("b2b-matrix-top")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            onB2BAdd={(productId, qty) => {
+              cart.addItem(productId, qty, null);
+              cart.openDrawer();
+            }}
+          />
+          {activeHotspot && (
+            <div className="text-center mt-4">
+              <button
+                onClick={() => setActiveHotspot(null)}
+                className="text-xs text-muted-foreground underline"
+              >
+                Zrušit filtr
+              </button>
             </div>
-            <div className="mt-4 space-y-1">
-              {HOTSPOT_POSITIONS.map((h) => (
-                <button
-                  key={h.id}
-                  onClick={() => handleHotspotClick(h.id)}
-                  className={`w-full text-left text-sm px-3 py-2 rounded-md transition-colors ${activeHotspot === h.id ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-                >
-                  {h.label}
-                </button>
-              ))}
-              {activeHotspot && (
-                <button onClick={() => setActiveHotspot(null)} className="w-full text-xs text-muted-foreground underline mt-2">Zrušit filtr</button>
-              )}
-            </div>
-          </div>
-        </aside>
+          )}
+        </section>
+
+
 
         {/* ── Right scrollable matrix ─────────────────────── */}
         <main>
