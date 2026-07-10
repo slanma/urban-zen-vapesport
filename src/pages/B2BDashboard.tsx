@@ -7,7 +7,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Plus, Minus, ShoppingCart, Send, LogOut, Loader2 } from "lucide-react";
-import ebikeSilhouette from "@/assets/bike-lineart.png";
+import bikeImg from "@/assets/bike-ebike-hardtail.png";
 import {
   HOTSPOT_LABELS,
   getProductsByHotspot,
@@ -23,16 +23,19 @@ type HotspotFilter = Hotspot | "All";
 interface BikeDot {
   id: Hotspot;
   label: string;
-  top: string;
-  left: string;
+  x: number;
+  y: number;
+  labelX: number;
+  labelY: number;
 }
 
 const BIKE_DOTS: BikeDot[] = [
-  { id: "Handlebar",   label: "Řídítka",       top: "20%", left: "62%" },
-  { id: "TopTube",     label: "Horní trubka",  top: "34%", left: "50%" },
-  { id: "Frame",       label: "Rám",           top: "48%", left: "44%" },
-  { id: "UnderSaddle", label: "Pod sedlo",     top: "23%", left: "43%" },
-  { id: "RearRack",    label: "Nosič",         top: "33%", left: "32%" },
+  { id: "Handlebar",    label: "Řídítka",       x: 65, y: 10, labelX: 79, labelY: 6 },
+  { id: "TopTube",      label: "Horní trubka",  x: 59, y: 19, labelX: 52, labelY: 10 },
+  { id: "UnderSaddle",  label: "Pod sedlo",     x: 32, y: 18, labelX: 22, labelY: 13 },
+  { id: "RearRack",     label: "Nosič",         x: 18, y: 31, labelX: 13, labelY: 28 },
+  { id: "Frame",        label: "Rám",           x: 43, y: 43, labelX: 41, labelY: 54 },
+  { id: "BatteryCover", label: "Kryty baterie", x: 53, y: 47, labelX: 60, labelY: 55 },
 ];
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
@@ -310,52 +313,88 @@ const B2BDashboard = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_280px] gap-6 items-center">
               <div
-                className="relative w-full aspect-[16/9] mx-auto select-none max-w-[640px]"
+                className="relative inline-block w-full max-w-[640px] mx-auto select-none"
                 role="group"
                 aria-label="Body na elektrokole představující umístění brašen"
               >
                 <img
-                  src={ebikeSilhouette}
+                  src={bikeImg}
                   alt="Boční profil elektrokola s vyznačenými místy pro brašny"
-                  className="w-full h-full object-contain pointer-events-none"
+                  className="w-full h-auto block object-contain pointer-events-none"
                   draggable={false}
                 />
+
+                <svg
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  {BIKE_DOTS.map((d) => (
+                    <line
+                      key={d.id}
+                      x1={d.x}
+                      y1={d.y}
+                      x2={d.labelX}
+                      y2={d.labelY}
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={0.2}
+                      strokeDasharray="0.8 0.6"
+                      vectorEffect="non-scaling-stroke"
+                      opacity={activeHotspot === d.id ? 0.9 : 0.45}
+                    />
+                  ))}
+                </svg>
+
                 {BIKE_DOTS.map((d) => {
                   const isActive = activeHotspot === d.id;
                   return (
-                    <div key={d.id} className="absolute" style={{ top: d.top, left: d.left }}>
-                      <button
-                        type="button"
-                        aria-label={`Zobrazit brašny: ${d.label}`}
-                        aria-pressed={isActive}
-                        onClick={() => setActiveHotspot(isActive ? "All" : d.id)}
-                        className="relative w-10 h-10 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer group rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                      >
-                        {!isActive && (
-                          <span aria-hidden="true" className="absolute inset-2 rounded-full border-2 border-primary animate-ping opacity-40" />
-                        )}
-                        <span
-                          aria-hidden="true"
-                          className={`absolute inset-2.5 rounded-full border-2 transition-colors ${
-                            isActive ? "border-primary bg-primary" : "border-primary bg-background/80 group-hover:bg-primary/20"
-                          }`}
-                        />
-                        <span
-                          aria-hidden="true"
-                          className={`relative w-2 h-2 rounded-full transition-colors ${
-                            isActive ? "bg-primary-foreground" : "bg-primary"
-                          }`}
-                        />
-                      </button>
+                    <button
+                      key={d.id}
+                      type="button"
+                      aria-label={`Zobrazit brašny: ${d.label}`}
+                      aria-pressed={isActive}
+                      onClick={() => setActiveHotspot(isActive ? "All" : d.id)}
+                      className="absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer group rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      style={{ left: `${d.x}%`, top: `${d.y}%` }}
+                    >
+                      {!isActive && (
+                        <span aria-hidden="true" className="absolute inset-2 rounded-full border-2 border-primary animate-ping opacity-40" />
+                      )}
                       <span
                         aria-hidden="true"
-                        className={`hidden sm:block absolute left-1/2 top-1/2 -translate-x-1/2 mt-4 whitespace-nowrap text-[11px] font-body font-semibold px-2 py-0.5 rounded shadow-sm pointer-events-none ${
-                          isActive ? "bg-primary text-primary-foreground" : "bg-background/90 text-foreground"
+                        className={`absolute inset-2.5 rounded-full border-2 transition-colors ${
+                          isActive ? "border-primary bg-primary" : "border-primary bg-background/80 group-hover:bg-primary/20"
                         }`}
-                      >
-                        {d.label}
-                      </span>
-                    </div>
+                      />
+                      <span
+                        aria-hidden="true"
+                        className={`relative w-2 h-2 rounded-full transition-colors ${
+                          isActive ? "bg-primary-foreground" : "bg-primary"
+                        }`}
+                      />
+                    </button>
+                  );
+                })}
+
+                {BIKE_DOTS.map((d) => {
+                  const isLabelActive = activeHotspot === d.id;
+                  return (
+                    <button
+                      key={`lbl-${d.id}`}
+                      type="button"
+                      aria-label={`${d.label}: zobrazit brašny`}
+                      aria-pressed={isLabelActive}
+                      onClick={() => setActiveHotspot(isLabelActive ? "All" : d.id)}
+                      className={`absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[11px] font-body font-semibold px-2.5 py-1 rounded-md shadow-sm cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                        isLabelActive
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-background/90 text-foreground border border-border hover:bg-primary/15"
+                      }`}
+                      style={{ left: `${d.labelX}%`, top: `${d.labelY}%` }}
+                    >
+                      {d.label}
+                    </button>
                   );
                 })}
               </div>
