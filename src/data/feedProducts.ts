@@ -1,4 +1,5 @@
 // AUTO-GENERATED / MORSEO data + lokální fotky, balast + Wasabi odstraněny
+// Řady, názvy a duplicita display aktualizovány dle zařazení od Lucie.
 import type { Product } from "./products";
 
 export const feedProducts: Product[] = [
@@ -185,7 +186,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-trojuhelnik-elektro-i-904682",
     "name": "Trojúhelník Elektro I",
-    "category": "vapesport",
+    "category": "vape-legends",
     "categoryLabel": "RÁMOVÉ BRAŠNY",
     "price": 361,
     "shortDescription": "Elektro trojúhelník specialně vytvarovaný pro HAIBIKE  a LECTRON elektrokola.",
@@ -266,7 +267,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-uni-maxi-twist-904687",
     "name": "UNI MAXI TWIST",
-    "category": "vapesport",
+    "category": "vape-legends",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 695,
     "shortDescription": "Malá brašna na řídítka na uchycení KLICKFIX adaptér i suchý zip. Vhodnost na kolo, koloběžku, elektrokola i dětská kola.",
@@ -385,7 +386,7 @@ export const feedProducts: Product[] = [
   },
   {
     "id": "vs-vapesport-904698",
-    "name": "Vapesport",
+    "name": "Brašna na nosič",
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA NOSIČ",
     "price": 1000,
@@ -419,7 +420,7 @@ export const feedProducts: Product[] = [
   },
   {
     "id": "vs-vapesport-904699",
-    "name": "Vapesport",
+    "name": "Brašna na nosič LUX",
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA NOSIČ",
     "price": 1466,
@@ -454,7 +455,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-brasna-pod-sedlo-zralok-twist-904706",
     "name": "Brašna pod sedlo žralok TWIST",
-    "category": "vapesport",
+    "category": "vape-legends",
     "categoryLabel": "BRAŠNY POD SEDLO",
     "price": 393,
     "shortDescription": "Podsedlová brašna s rozšířením. 2 zipy pro zvětšení objemu brašny.",
@@ -838,7 +839,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-m2-podsedlo-925467",
     "name": "M2 podsedlo",
-    "category": "vapesport",
+    "category": "vape-legends",
     "categoryLabel": "BRAŠNY POD SEDLO",
     "price": 354,
     "shortDescription": "Malá podsedlo s uchopením na klip",
@@ -1053,48 +1054,9 @@ export const feedProducts: Product[] = [
     ]
   },
   {
-    "id": "vs-obal-na-display-prevoz-elektrokola-944231",
-    "name": "Obal na display - převoz elektrokola",
-    "category": "vapesport",
-    "categoryLabel": "NEOPRENOVÉ OBALY ELEKTROKOLA",
-    "price": 400,
-    "shortDescription": "Neoprenový obal na display je vytvořen na Váš typ elektrokola. Po zadání rozměrů do poznámky Vám vytvoříme obal přesně na Váš typ displaye e…",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Neoprenové obaly ELEKTROKOLA"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "gpc-944231"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/navod-na-display-2039503.gif",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/navod-na-display-2039503.gif",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/044/slida-2043338.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/navod-na-display-008-2039495.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/navod-na-display-007-2039496.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/navod-na-display-006-2039497.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/navod-na-display-005-2039498.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/navod-na-display-004-2039499.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/navod-na-display-003-2039500.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/navod-na-display-002-2039501.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/navod-na-display-001-2039502.jpeg"
-    ]
-  },
-  {
     "id": "vs-ramova-brasna-nepromokavy-zip-945203",
     "name": "MORSEO Plochý trojúhelník 2-kapsý",
-    "category": "vapesport",
+    "category": "morseo-evo",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 619,
     "shortDescription": "Kompaktní rámová brašna s nízkým profilem a šířkou pouhých 6 cm – ideální na menší a dámské rámy, kde velká brašna nesedí. Silikonové pásky drží pevně a chrání lak.",
@@ -1172,7 +1134,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-ramova-brasna-stredni-se-2-zipy-a-sitkou-945204",
     "name": "MORSEO Střední trojúhelník 2-kapsý",
-    "category": "vapesport",
+    "category": "morseo-evo",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 640,
     "shortDescription": "Největší rámovka do e-kola – pobere rychlonabíječku Fast Charger i bidon. Šířka 7,5 cm neodírá stehna, upne se dopředu i dozadu.",
@@ -1251,7 +1213,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-brasna-na-mobil-5-5-945205",
     "name": "MORSEO Transformer 5,5\"",
-    "category": "vapesport",
+    "category": "morseo-evo",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 531,
     "shortDescription": "Svislá brašna na řídítka a představec pro e-kola s ovládáním na horní trubce a bez displeje uprostřed. Dotyková fólie 16,5 × 9 cm – navigace za jízdy. Tenký profil nepřekáží.",
@@ -1330,7 +1292,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-smb-morseo-945206",
     "name": "MORSEO SMB 6,7\"",
-    "category": "vapesport",
+    "category": "morseo-evo",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 599,
     "shortDescription": "MORSEO SMB 6,7\" – brašna na mobil na horní rámovou trubku pro telefony do 6,7\". Dotyková fólie pro navigaci, prodloužené silikonové pásky E-bike Ready na široké trubky a šetrné k laku.",
@@ -1404,7 +1366,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-waterproof-bike-bag-bila-945208",
     "name": "MORSEO WDB (voděodolná rámová)",
-    "category": "vapesport",
+    "category": "morseo-evo",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 1055,
     "shortDescription": "100% vodotěsná brašna na horní trubku – na e-bike, silničku i gravel. Nenateče ani kapka, aero tvar nepřekáží ve stoje. Telefon vložíš našikmo dovnitř.",
@@ -1473,7 +1435,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-waterproof-saddle-bag-945209",
     "name": "MORSEO WDS (voděodolná podsedlová)",
-    "category": "vapesport",
+    "category": "morseo-evo",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 950,
     "shortDescription": "Ultralehká 100% vodotěsná podsedlová brašna se svařovanými švy. Boční suché zipy ji zachytí o sedlovku a spodní zip o její trubku; vnitřní síťka udrží drobnosti. Vaše nářadí zůstane v suchu i v největším blátě.",
@@ -1542,7 +1504,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-ramova-brasna-nepromokavy-zip-947097",
     "name": "MORSEO Elektro II",
-    "category": "vapesport",
+    "category": "morseo-evo",
     "categoryLabel": "RÁMOVÉ BRAŠNY",
     "price": 620,
     "shortDescription": "Rámová brašna na elektrokolo, do které se pohodlně vejde i těžká nabíječka Bosch nebo Yamaha. Díky úzkému profilu (6–7 cm) se schová do prostoru nad integrovanou baterií a nepřekáží při šlapání. Prodloužené silikonové pásky drží pevně a chrání lak před podřením.",
@@ -1623,7 +1585,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-smb-morseo-zlata-947383",
     "name": "MORSEO SMB XXL 8\"",
-    "category": "vapesport",
+    "category": "morseo-evo",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 640,
     "shortDescription": "Velká brašna na horní trubku e-biku. Vejde se i ten největší telefon v krytu (iPhone Pro Max, Galaxy Ultra), powerbanka i svačina. Přes slídu 10 × 19 cm ovládáš telefon bez vyndávání. Pásky drží jako přibité a nepodřou lak.",
@@ -1703,7 +1665,7 @@ export const feedProducts: Product[] = [
   {
     "id": "vs-ramova-brasna-nepromokavy-zip-bila-947404",
     "name": "MORSEO Plochý trojúhelník 2-kapsý FLEXI",
-    "category": "vapesport",
+    "category": "morseo-evo",
     "categoryLabel": "RÁMOVÉ BRAŠNY",
     "price": 619,
     "shortDescription": "Nízká rámovka (výška 16 cm), co obejde zadní tlumič u celopér. Uchytíš ji dopředu, dozadu i na horní trubku. Šířka 6 cm nepřekáží.",

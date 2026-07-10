@@ -35,12 +35,12 @@ interface BikeDot {
  * stay locked to the bike at every screen size.
  */
 const DOTS: BikeDot[] = [
-  { id: "Handlebar",    label: "Řídítka",       x: 62, y: 29, labelX: 70, labelY: 26 },
-  { id: "TopTube",      label: "Horní trubka",  x: 51, y: 38, labelX: 58, labelY: 35 },
-  { id: "UnderSaddle",  label: "Pod sedlo",     x: 38, y: 36, labelX: 30, labelY: 33 },
-  { id: "RearRack",     label: "Nosič",         x: 23, y: 43, labelX: 16, labelY: 40 },
-  { id: "Frame",        label: "Rám",           x: 48, y: 48, labelX: 42, labelY: 55 },
-  { id: "BatteryCover", label: "Kryty baterie", x: 55, y: 54, labelX: 62, labelY: 60 },
+  { id: "Handlebar",    label: "Řídítka",       x: 65, y: 10, labelX: 79, labelY: 6 },
+  { id: "TopTube",      label: "Horní trubka",  x: 59, y: 19, labelX: 52, labelY: 10 },
+  { id: "UnderSaddle",  label: "Pod sedlo",     x: 32, y: 18, labelX: 22, labelY: 13 },
+  { id: "RearRack",     label: "Nosič",         x: 18, y: 31, labelX: 13, labelY: 28 },
+  { id: "Frame",        label: "Rám",           x: 43, y: 43, labelX: 41, labelY: 54 },
+  { id: "BatteryCover", label: "Kryty baterie", x: 53, y: 47, labelX: 60, labelY: 55 },
 ];
 
 interface Props {
@@ -87,8 +87,6 @@ const InteractiveBikeGuide = ({
     [active, get],
   );
 
-  const activeDot = active ? DOTS.find((d) => d.id === active) ?? null : null;
-
   const setQty = (id: string, q: number) =>
     setQtyByProduct((p) => ({ ...p, [id]: Math.max(0, q | 0) }));
 
@@ -132,18 +130,20 @@ const InteractiveBikeGuide = ({
             preserveAspectRatio="none"
             aria-hidden="true"
           >
-            {activeDot && (
+            {DOTS.map((d) => (
               <line
-                x1={activeDot.x}
-                y1={activeDot.y}
-                x2={activeDot.labelX}
-                y2={activeDot.labelY}
+                key={d.id}
+                x1={d.x}
+                y1={d.y}
+                x2={d.labelX}
+                y2={d.labelY}
                 stroke="hsl(var(--primary))"
-                strokeWidth={0.25}
+                strokeWidth={0.2}
                 strokeDasharray="0.8 0.6"
                 vectorEffect="non-scaling-stroke"
+                opacity={active === d.id ? 0.9 : 0.45}
               />
-            )}
+            ))}
           </svg>
 
           {/* Hotspots layer — same size as the rendered image. */}
@@ -184,15 +184,23 @@ const InteractiveBikeGuide = ({
           })}
 
           {/* Active label pill — anchored to the same percentage coordinate system. */}
-          {activeDot && (
-            <span
-              aria-hidden="true"
-              className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[11px] md:text-xs font-body font-semibold px-2.5 py-1 rounded-md shadow-sm pointer-events-none bg-primary text-primary-foreground"
-              style={{ left: `${activeDot.labelX}%`, top: `${activeDot.labelY}%` }}
-            >
-              {activeDot.label}
-            </span>
-          )}
+          {DOTS.map((d) => {
+            const isLabelActive = active === d.id;
+            return (
+              <span
+                key={d.id}
+                aria-hidden="true"
+                className={`absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[11px] md:text-xs font-body font-semibold px-2.5 py-1 rounded-md shadow-sm pointer-events-none transition-colors ${
+                  isLabelActive
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-background/90 text-foreground border border-border"
+                }`}
+                style={{ left: `${d.labelX}%`, top: `${d.labelY}%` }}
+              >
+                {d.label}
+              </span>
+            );
+          })}
         </div>
       </div>
 
