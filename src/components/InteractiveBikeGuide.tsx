@@ -147,7 +147,6 @@ const InteractiveBikeGuide = ({
               aria-label={`${d.label}: zobrazit produkty`}
               aria-pressed={isActive}
               onClick={() => setActive(d.id)}
-              onMouseEnter={() => setActive(d.id)}
               className="absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               style={{ left: `${d.x}%`, top: `${d.y}%` }}
             >
