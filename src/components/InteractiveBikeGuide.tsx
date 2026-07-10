@@ -21,22 +21,26 @@ export type BikeGuideMode = "b2c" | "b2b";
 interface BikeDot {
   id: Hotspot;
   label: string;
-  /** dot center in % of container */
+  /** dot center in % of image container */
   x: number;
   y: number;
-  /** label pill anchor in % of container */
+  /** label pill anchor in % of image container */
   labelX: number;
   labelY: number;
 }
 
-/** Positions calibrated for src/assets/bike-ebike-hardtail.png (transparent). */
+/**
+ * Hotspot coordinates are percentages of the image wrapper.
+ * The wrapper is a responsive inline-block that scales with the image, so dots
+ * stay locked to the bike at every screen size.
+ */
 const DOTS: BikeDot[] = [
-  { id: "Handlebar",    label: "Řídítka",       x: 63, y: 48, labelX: 70, labelY: 45 },
-  { id: "TopTube",      label: "Horní trubka",  x: 57, y: 55, labelX: 64, labelY: 52 },
-  { id: "Frame",        label: "Rám",           x: 49, y: 63, labelX: 40, labelY: 60 },
-  { id: "BatteryCover", label: "Kryty baterie", x: 57, y: 65, labelX: 65, labelY: 70 },
-  { id: "UnderSaddle",  label: "Pod sedlo",     x: 46, y: 52, labelX: 36, labelY: 48 },
-  { id: "RearRack",     label: "Nosič",         x: 38, y: 58, labelX: 28, labelY: 55 },
+  { id: "Handlebar",    label: "Řídítka",       x: 61, y: 31, labelX: 70, labelY: 28 },
+  { id: "TopTube",      label: "Horní trubka",  x: 51, y: 40, labelX: 60, labelY: 37 },
+  { id: "UnderSaddle",  label: "Pod sedlo",     x: 34, y: 36, labelX: 24, labelY: 33 },
+  { id: "RearRack",     label: "Nosič",         x: 19, y: 47, labelX: 10, labelY: 44 },
+  { id: "Frame",        label: "Rám",           x: 42, y: 56, labelX: 34, labelY: 62 },
+  { id: "BatteryCover", label: "Kryty baterie", x: 52, y: 52, labelX: 62, labelY: 58 },
 ];
 
 interface Props {
@@ -107,93 +111,95 @@ const InteractiveBikeGuide = ({
         </div>
       )}
 
-      {/* Stage */}
-      <div
-        className="relative w-full max-w-[1200px] mx-auto aspect-[16/9] select-none"
-        role="group"
-        aria-label="Interaktivní e-kolo s body pro brašny"
-      >
-        <img
-          src={bikeImg}
-          alt="Boční profil elektrokola s vyznačenými místy pro brašny"
-          className="absolute inset-0 w-full h-full object-contain pointer-events-none"
-          draggable={false}
-        />
+      {/* Responsive image wrapper: hotspots are anchored to this element, not the viewport. */}
+      <div className="text-center">
+        <div
+          className="relative inline-block w-full max-w-[1000px] mx-auto select-none"
+          role="group"
+          aria-label="Interaktivní e-kolo s body pro brašny"
+        >
+          <img
+            src={bikeImg}
+            alt="Boční profil elektrokola s vyznačenými místy pro brašny"
+            className="w-full h-auto block object-contain"
+            draggable={false}
+          />
 
-        {/* Connector line to label (SVG overlay) */}
-        {activeDot && (
+          {/* SVG overlay matches the image box exactly via absolute fill. */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none"
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
             aria-hidden="true"
           >
-            <line
-              x1={activeDot.x}
-              y1={activeDot.y}
-              x2={activeDot.labelX}
-              y2={activeDot.labelY}
-              stroke="hsl(var(--primary))"
-              strokeWidth={0.25}
-              strokeDasharray="0.8 0.6"
-              vectorEffect="non-scaling-stroke"
-            />
+            {activeDot && (
+              <line
+                x1={activeDot.x}
+                y1={activeDot.y}
+                x2={activeDot.labelX}
+                y2={activeDot.labelY}
+                stroke="hsl(var(--primary))"
+                strokeWidth={0.25}
+                strokeDasharray="0.8 0.6"
+                vectorEffect="non-scaling-stroke"
+              />
+            )}
           </svg>
-        )}
 
-        {/* Hotspots */}
-        {DOTS.map((d) => {
-          const isActive = active === d.id;
-          return (
-            <button
-              key={d.id}
-              type="button"
-              aria-label={`${d.label}: zobrazit produkty`}
-              aria-pressed={isActive}
-              onClick={() => setActive(d.id)}
-              className="absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              style={{ left: `${d.x}%`, top: `${d.y}%` }}
-            >
-              {!isActive && (
+          {/* Hotspots layer — same size as the rendered image. */}
+          {DOTS.map((d) => {
+            const isActive = active === d.id;
+            return (
+              <button
+                key={d.id}
+                type="button"
+                aria-label={`${d.label}: zobrazit produkty`}
+                aria-pressed={isActive}
+                onClick={() => setActive(d.id)}
+                className="absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                style={{ left: `${d.x}%`, top: `${d.y}%` }}
+              >
+                {!isActive && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-full bg-primary/25 animate-ping"
+                  />
+                )}
                 <span
                   aria-hidden="true"
-                  className="absolute inset-0 rounded-full bg-primary/25 animate-ping"
+                  className={`absolute inset-1.5 rounded-full border-2 transition-colors ${
+                    isActive
+                      ? "border-primary bg-primary"
+                      : "border-primary bg-background/90 group-hover:bg-primary/20"
+                  }`}
                 />
-              )}
-              <span
-                aria-hidden="true"
-                className={`absolute inset-1.5 rounded-full border-2 transition-colors ${
-                  isActive
-                    ? "border-primary bg-primary"
-                    : "border-primary bg-background/90 group-hover:bg-primary/20"
-                }`}
-              />
-              <span
-                aria-hidden="true"
-                className={`relative w-2 h-2 rounded-full transition-colors ${
-                  isActive ? "bg-primary-foreground" : "bg-primary"
-                }`}
-              />
-            </button>
-          );
-        })}
+                <span
+                  aria-hidden="true"
+                  className={`relative w-2 h-2 rounded-full transition-colors ${
+                    isActive ? "bg-primary-foreground" : "bg-primary"
+                  }`}
+                />
+              </button>
+            );
+          })}
 
-        {/* Active label only */}
-        {activeDot && (
-          <span
-            aria-hidden="true"
-            className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[11px] md:text-xs font-body font-semibold px-2.5 py-1 rounded-md shadow-sm pointer-events-none bg-primary text-primary-foreground"
-            style={{ left: `${activeDot.labelX}%`, top: `${activeDot.labelY}%` }}
-          >
-            {activeDot.label}
-          </span>
-        )}
+          {/* Active label pill — anchored to the same percentage coordinate system. */}
+          {activeDot && (
+            <span
+              aria-hidden="true"
+              className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[11px] md:text-xs font-body font-semibold px-2.5 py-1 rounded-md shadow-sm pointer-events-none bg-primary text-primary-foreground"
+              style={{ left: `${activeDot.labelX}%`, top: `${activeDot.labelY}%` }}
+            >
+              {activeDot.label}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Product popup carousel — appears BELOW the bike after clicking a hotspot */}
       {active && (
         <div
-          className="w-full max-w-[1200px] mx-auto mt-4 bg-background border border-border rounded-xl shadow-lg p-3 animate-in fade-in slide-in-from-top-2 duration-200"
+          className="w-full max-w-[1000px] mx-auto mt-4 bg-background border border-border rounded-xl shadow-lg p-3 animate-in fade-in slide-in-from-top-2 duration-200"
           role="region"
           aria-label={`Produkty pro pozici ${HOTSPOT_LABELS[active]}`}
         >
