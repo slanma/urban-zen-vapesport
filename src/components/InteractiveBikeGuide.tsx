@@ -187,18 +187,21 @@ const InteractiveBikeGuide = ({
           {DOTS.map((d) => {
             const isLabelActive = active === d.id;
             return (
-              <span
+              <button
                 key={d.id}
-                aria-hidden="true"
-                className={`absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[11px] md:text-xs font-body font-semibold px-2.5 py-1 rounded-md shadow-sm pointer-events-none transition-colors ${
+                type="button"
+                aria-label={`${d.label}: zobrazit produkty`}
+                aria-pressed={isLabelActive}
+                onClick={() => setActive(d.id)}
+                className={`absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[11px] md:text-xs font-body font-semibold px-2.5 py-1 rounded-md shadow-sm cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   isLabelActive
                     ? "bg-primary text-primary-foreground"
-                    : "bg-background/90 text-foreground border border-border"
+                    : "bg-background/90 text-foreground border border-border hover:bg-primary/15"
                 }`}
                 style={{ left: `${d.labelX}%`, top: `${d.labelY}%` }}
               >
                 {d.label}
-              </span>
+              </button>
             );
           })}
         </div>
