@@ -29,13 +29,14 @@ interface BikeDot {
   labelY: number;
 }
 
-/** Positions calibrated for src/assets/bike-ebike-hardtail.jpg (1920×1088). */
+/** Positions calibrated for src/assets/bike-ebike-hardtail.png (transparent). */
 const DOTS: BikeDot[] = [
-  { id: "Handlebar",   label: "Řídítka",      x: 71, y: 18, labelX: 78, labelY: 10 },
-  { id: "UnderSaddle", label: "Pod sedlo",    x: 36, y: 21, labelX: 30, labelY: 10 },
-  { id: "TopTube",     label: "Horní trubka", x: 53, y: 28, labelX: 58, labelY: 20 },
-  { id: "Frame",       label: "Rám",          x: 50, y: 52, labelX: 60, labelY: 60 },
-  { id: "RearRack",    label: "Nosič",        x: 18, y: 30, labelX: 10, labelY: 22 },
+  { id: "Handlebar",    label: "Řídítka",      x: 72, y: 22, labelX: 80, labelY: 12 },
+  { id: "TopTube",      label: "Horní trubka", x: 52, y: 30, labelX: 58, labelY: 18 },
+  { id: "Frame",        label: "Rám",          x: 48, y: 42, labelX: 62, labelY: 46 },
+  { id: "BatteryCover", label: "Kryt",         x: 42, y: 52, labelX: 30, labelY: 62 },
+  { id: "UnderSaddle",  label: "Pod sedlo",    x: 36, y: 22, labelX: 30, labelY: 12 },
+  { id: "RearRack",     label: "Nosič",        x: 18, y: 32, labelX: 10, labelY: 22 },
 ];
 
 interface Props {
