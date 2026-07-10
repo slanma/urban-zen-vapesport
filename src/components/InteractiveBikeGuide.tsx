@@ -35,12 +35,12 @@ interface BikeDot {
  * stay locked to the bike at every screen size.
  */
 const DOTS: BikeDot[] = [
-  { id: "Handlebar",    label: "Řídítka",       x: 61, y: 31, labelX: 70, labelY: 28 },
-  { id: "TopTube",      label: "Horní trubka",  x: 51, y: 40, labelX: 60, labelY: 37 },
-  { id: "UnderSaddle",  label: "Pod sedlo",     x: 34, y: 36, labelX: 24, labelY: 33 },
-  { id: "RearRack",     label: "Nosič",         x: 19, y: 47, labelX: 10, labelY: 44 },
-  { id: "Frame",        label: "Rám",           x: 42, y: 56, labelX: 34, labelY: 62 },
-  { id: "BatteryCover", label: "Kryty baterie", x: 52, y: 52, labelX: 62, labelY: 58 },
+  { id: "Handlebar",    label: "Řídítka",       x: 62, y: 29, labelX: 70, labelY: 26 },
+  { id: "TopTube",      label: "Horní trubka",  x: 51, y: 38, labelX: 58, labelY: 35 },
+  { id: "UnderSaddle",  label: "Pod sedlo",     x: 38, y: 36, labelX: 30, labelY: 33 },
+  { id: "RearRack",     label: "Nosič",         x: 23, y: 43, labelX: 16, labelY: 40 },
+  { id: "Frame",        label: "Rám",           x: 48, y: 48, labelX: 42, labelY: 55 },
+  { id: "BatteryCover", label: "Kryty baterie", x: 55, y: 54, labelX: 62, labelY: 60 },
 ];
 
 interface Props {
