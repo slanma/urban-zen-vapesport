@@ -7,6 +7,7 @@ export type Hotspot =
   | "Handlebar"
   | "TopTube"
   | "Frame"
+  | "BatteryCover"
   | "UnderSaddle"
   | "RearRack"
   | "None";
@@ -15,6 +16,7 @@ export const HOTSPOT_LABELS: Record<Hotspot, string> = {
   Handlebar: "Řídítka",
   TopTube: "Horní rámová trubka",
   Frame: "Rámový trojúhelník",
+  BatteryCover: "Kryt baterie",
   UnderSaddle: "Pod sedlo",
   RearRack: "Zadní nosič",
   None: "Ostatní kategorie",
