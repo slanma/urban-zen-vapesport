@@ -86,140 +86,19 @@ const Shop = () => {
     <main className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero heading */}
-      <section className="pt-32 pb-8 px-6 lg:px-12 max-w-[1400px] mx-auto text-center">
-        <span className="text-xs font-body font-semibold tracking-[0.25em] uppercase text-muted-foreground">
-          Interaktivní průvodce
-        </span>
-        <h1 className="font-heading text-4xl md:text-6xl font-bold tracking-tight mt-3 text-foreground">
-          Kam ji umístíte?
-        </h1>
-        <p className="font-body text-muted-foreground max-w-xl mx-auto mt-4 text-base leading-relaxed">
-          Klikněte na konkrétní místo na kole a zobrazte brašny určené přesně pro
-          danou pozici.
-        </p>
-        <p className="font-body text-xs text-muted-foreground/80 max-w-xl mx-auto mt-3">
-          <span className="sr-only">Klávesové ovládání: </span>
-          Tip pro klávesnici: <kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">Tab</kbd> přesune fokus na tečky,
-          <kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">←</kbd>
-          <kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">→</kbd> přepínají mezi místy,
-          <kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">Enter</kbd> potvrdí výběr,
-          <kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">Home</kbd>/<kbd className="px-1.5 py-0.5 mx-0.5 rounded border border-border bg-secondary text-foreground font-mono text-[10px]">End</kbd> skočí na první/poslední.
-        </p>
-      </section>
-
-      {/* Bike with hotspots */}
-      <section
-        className="px-6 lg:px-12 max-w-[1100px] mx-auto pb-10"
-        aria-label="Interaktivní výběr brašen podle umístění na elektrokole"
-      >
-        <div
-          className="relative w-full aspect-[16/9] mx-auto select-none"
-          role="group"
-          aria-label="Body na elektrokole představující umístění brašen"
-        >
-          <img
-            src={ebikeSilhouette}
-            alt="Boční profil elektrokola s vyznačenými místy pro brašny"
-            className="w-full h-full object-contain pointer-events-none"
-            draggable={false}
-          />
-
-          {dots.map((d, idx) => {
-            const isActive = active === d.id;
-            return (
-              <div
-                key={d.id}
-                className="absolute"
-                style={{ top: d.top, left: d.left }}
-              >
-                <button
-                  type="button"
-                  aria-label={`${d.label}: ${d.ariaDescription}`}
-                  aria-pressed={isActive}
-                  onClick={() => setActive(d.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-                      e.preventDefault();
-                      setActive(dots[(idx + 1) % dots.length].id);
-                    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-                      e.preventDefault();
-                      setActive(dots[(idx - 1 + dots.length) % dots.length].id);
-                    } else if (e.key === "Home") {
-                      e.preventDefault();
-                      setActive(dots[0].id);
-                    } else if (e.key === "End") {
-                      e.preventDefault();
-                      setActive(dots[dots.length - 1].id);
-                    }
-                  }}
-                  className="relative w-11 h-11 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer group rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                >
-                  {!isActive && (
-                    <span aria-hidden="true" className="absolute inset-2 rounded-full border-2 border-primary animate-ping opacity-40" />
-                  )}
-                  <span
-                    aria-hidden="true"
-                    className={`absolute inset-3 rounded-full border-2 transition-colors ${
-                      isActive
-                        ? "border-primary bg-primary"
-                        : "border-primary bg-background/80 group-hover:bg-primary/20"
-                    }`}
-                  />
-                  <span
-                    aria-hidden="true"
-                    className={`relative w-2.5 h-2.5 rounded-full transition-colors ${
-                      isActive ? "bg-primary-foreground" : "bg-primary"
-                    }`}
-                  />
-                </button>
-                <span
-                  aria-hidden="true"
-                  className={`hidden sm:block absolute left-1/2 top-1/2 -translate-x-1/2 mt-5 whitespace-nowrap text-[11px] font-body font-semibold px-2 py-0.5 rounded shadow-sm pointer-events-none ${
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-background/90 text-foreground"
-                  }`}
-                >
-                  {d.label}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Quick selector */}
-        <div
-          className="flex flex-wrap justify-center gap-2 mt-8"
-          role="tablist"
-          aria-label="Vyberte umístění brašny na kole"
-        >
-          {dots.map((d) => {
-            const isActive = active === d.id;
-            return (
-              <button
-                key={d.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-label={d.ariaDescription}
-                onClick={() => setActive(d.id)}
-                className={`min-h-11 px-4 py-2 rounded-full text-sm font-body font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "bg-secondary text-foreground hover:bg-accent"
-                }`}
-              >
-                {d.label}
-              </button>
-            );
-          })}
-        </div>
+      {/* Interactive bike guide (shared with B2B) */}
+      <section className="pt-28 pb-10 px-6 lg:px-12 max-w-[1400px] mx-auto">
+        <InteractiveBikeGuide
+          mode="b2c"
+          activeHotspot={active}
+          onActiveChange={setActive}
+        />
         <p id="hotspot-status" className="sr-only" aria-live="polite" aria-atomic="true">
           Vybraná kategorie: {HOTSPOT_LABELS[active]}. {filtered.length}{" "}
           {filtered.length === 1 ? "produkt" : filtered.length < 5 ? "produkty" : "produktů"}.
         </p>
       </section>
+
 
       {/* Filtered products for active hotspot */}
       <section className="px-6 lg:px-12 max-w-[1400px] mx-auto pb-16">
