@@ -105,7 +105,7 @@ const InteractiveBikeGuide = ({
 
       {/* Stage */}
       <div
-        className="relative w-full max-w-[1200px] mx-auto aspect-[16/9] bg-white rounded-2xl overflow-hidden border border-border select-none"
+        className="relative w-full max-w-[1200px] mx-auto aspect-[16/9] select-none"
         role="group"
         aria-label="Interaktivní e-kolo s body pro brašny"
       >

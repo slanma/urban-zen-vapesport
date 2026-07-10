@@ -100,78 +100,7 @@ const Shop = () => {
       </section>
 
 
-      {/* Filtered products for active hotspot */}
-      <section className="px-6 lg:px-12 max-w-[1400px] mx-auto pb-16">
-        <div className="flex items-baseline justify-between mb-6">
-          <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground">
-            {HOTSPOT_LABELS[active]}
-          </h2>
-          <span className="text-xs font-body text-muted-foreground">
-            {filtered.length}{" "}
-            {filtered.length === 1
-              ? "produkt"
-              : filtered.length < 5
-                ? "produkty"
-                : "produktů"}
-          </span>
-        </div>
 
-        {filtered.length === 0 ? (
-          <p className="text-sm font-body text-muted-foreground">
-            Pro tuto pozici aktuálně nemáme v nabídce žádný produkt.
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filtered.map((product) => (
-              <Link
-                key={product.id}
-                to={`/produkt/${product.id}`}
-                className="group flex flex-col bg-card rounded-xl overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300"
-              >
-                <div className="aspect-[4/3] bg-white overflow-hidden flex items-center justify-center p-3">
-                  <img
-                    src={getPrimaryImage(product, get(product.id))}
-                    alt={product.name}
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-5 flex flex-col flex-1">
-                  <span className="text-[10px] font-body font-bold tracking-[0.2em] uppercase text-primary mb-2">
-                    {product.categoryLabel}
-                  </span>
-                  <h3 className="font-heading text-lg font-bold text-foreground leading-snug mb-1">
-                    {product.name}
-                  </h3>
-                  <RichText
-                    as="p"
-                    className="text-sm font-body text-muted-foreground leading-relaxed mb-3 flex-1"
-                    text={product.shortDescription}
-                  />
-                  <FeatureBadges
-                    features={get(product.id).features_override ?? product.features}
-                    className="mb-3"
-                    size="sm"
-                  />
-                  <ColorSwatchRow
-                    colors={get(product.id).colors_override}
-                    className="mb-4"
-                  />
-                  <div className="flex items-center justify-between mt-auto gap-3">
-                    <PriceTag
-                      retailGross={get(product.id).price_override ?? product.price}
-                      b2bNet={get(product.id).b2b_price ?? null}
-                      size="md"
-                    />
-                    <span className="text-primary flex items-center gap-1 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                      Detail <ArrowRight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
 
       {/* Independent categories (Hotspot: None) */}
       {independent.length > 0 && (
