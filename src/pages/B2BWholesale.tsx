@@ -11,6 +11,7 @@ import { useProductOverrides, type ProductOverride } from "@/hooks/useProductOve
 import { useCart } from "@/hooks/useCart";
 import { products, type Product } from "@/data/products";
 import { applyProductOverride } from "@/lib/effectiveProduct";
+import { resolveColor } from "@/lib/colorPalette";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { fmtCZK, grossFromNet } from "@/lib/vat";
 import { productHotspotEntries, type Hotspot } from "@/data/productHotspots";
@@ -115,7 +116,7 @@ const B2BWholesale = () => {
     [baseRows, qtyState],
   );
 
-  const toggleExpand = (baseId: string) => setExpanded((p) => ({ ...p, [baseId]: !p[baseId] }));
+  const toggleExpand = (baseId: string) => setExpanded((p) => ({ ...p, [baseId]: !(p[baseId] ?? true) }));
   const collapse = (baseId: string) => setExpanded((p) => ({ ...p, [baseId]: false }));
 
   const stockFor = (row: BaseRow, color: string): number => {
@@ -245,7 +246,7 @@ const B2BWholesale = () => {
               {filteredRows.map((row) => {
                 const colors = row.override.colors_override ?? row.base.available_colors ?? [];
                 const totalQty = modelTotalQty(row);
-                const isOpen = !!expanded[row.baseId];
+                const isOpen = expanded[row.baseId] ?? true;
                 const showDesc = !!showDescription[row.baseId];
                 const unit = unitNet(row);
                 const base = baseUnitNet(row);
@@ -278,6 +279,23 @@ const B2BWholesale = () => {
                           className="mt-1.5"
                           size="sm"
                         />
+                        {colors.length > 0 && (
+                          <div className="flex items-center gap-1.5 mt-1.5" aria-label="Dostupné barvy">
+                            {colors.slice(0, 8).map((c) => {
+                              const { label, hex } = resolveColor(c);
+                              return (
+                                <span
+                                  key={c}
+                                  title={label}
+                                  aria-label={label}
+                                  className="inline-block w-3.5 h-3.5 rounded-full border border-border"
+                                  style={{ backgroundColor: hex }}
+                                />
+                              );
+                            })}
+                            <span className="text-[11px] text-muted-foreground ml-0.5">{colors.length} barev</span>
+                          </div>
+                        )}
                       </div>
                       <div className="text-right text-sm">
                         <div className="font-bold">{fmtCZK(base)}</div>
@@ -287,7 +305,7 @@ const B2BWholesale = () => {
                         <div className="font-bold text-base">{fmtCZK(modelTotalGross(row))}</div>
                         <div className="text-xs text-muted-foreground">{fmtCZK(modelTotalNet(row))} bez DPH</div>
                       </div>
-                      <button onClick={() => toggleExpand(row.baseId)} className="justify-self-end p-2 hover:bg-muted rounded" aria-label="Rozbalit varianty">
+                      <button onClick={() => toggleExpand(row.baseId)} className="justify-self-end p-2 hover:bg-muted rounded" aria-label="Sbalit / rozbalit barvy">
                         {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                       </button>
                     </div>
@@ -325,8 +343,8 @@ const B2BWholesale = () => {
                             const isLast = idx === colorInputKeys.length - 1;
                             return (
                               <div key={color} className="grid grid-cols-[20px_1fr_140px_120px] gap-3 items-center">
-                                <span className="w-4 h-4 rounded-full border border-border" style={{ background: colorHex(color) }} />
-                                <span className="text-sm font-medium">{color === "__single__" ? "Jediná varianta" : color}</span>
+                                <span className="w-4 h-4 rounded-full border border-border" style={{ background: color === "__single__" ? "#CCCCCC" : resolveColor(color).hex }} />
+                                <span className="text-sm font-medium">{color === "__single__" ? "Jediná varianta" : resolveColor(color).label}</span>
                                 <span className={`text-xs ${stock > 0 ? "text-emerald-600" : "text-muted-foreground"}`}>
                                   {stock > 0 ? `🟢 ${stock} ks skladem` : "Na dotaz"}
                                 </span>
@@ -396,24 +414,6 @@ const B2BWholesale = () => {
       </div>
     </div>
   );
-};
-
-// Loose color → CSS color map for the dot indicator.
-const colorHex = (name: string): string => {
-  const map: Record<string, string> = {
-    "Černá": "#111111",
-    "Bílá": "#f5f5f5",
-    "Šedá": "#9ca3af",
-    "Neon zelená": "#39ff14",
-    "Neon žlutá": "#f7ff00",
-    "Modrá": "#1d4ed8",
-    "Růžová": "#ec4899",
-    "Červená": "#dc2626",
-    "Zlatá": "#d4af37",
-    "Tyrkysová světlá": "#5eead4",
-    "Tyrkysová tmavá": "#0d9488",
-  };
-  return map[name] ?? "#94a3b8";
 };
 
 export default B2BWholesale;
