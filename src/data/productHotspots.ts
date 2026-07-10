@@ -7,6 +7,7 @@ export type Hotspot =
   | "Handlebar"
   | "TopTube"
   | "Frame"
+  | "BatteryCover"
   | "UnderSaddle"
   | "RearRack"
   | "None";
@@ -15,6 +16,7 @@ export const HOTSPOT_LABELS: Record<Hotspot, string> = {
   Handlebar: "Řídítka",
   TopTube: "Horní rámová trubka",
   Frame: "Rámový trojúhelník",
+  BatteryCover: "Kryt baterie",
   UnderSaddle: "Pod sedlo",
   RearRack: "Zadní nosič",
   None: "Ostatní kategorie",
@@ -132,9 +134,9 @@ export const productHotspotEntries: HotspotEntry[] = [
     categories: ["Rámové brašny"],
   },
   {
-    productId: "vs-neoprenovy-obal-938229", // Neopren na míru
-    hotspot: "Frame",
-    categories: ["Brašny pro ELEKTROKOLO"],
+    productId: "vs-neoprenovy-obal-938229", // Neopren na míru — kryt baterie
+    hotspot: "BatteryCover",
+    categories: ["Brašny pro ELEKTROKOLO", "Kryty baterií"],
   },
   {
     productId: "vs-obal-na-tlumic-908656",
