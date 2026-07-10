@@ -1,4 +1,4 @@
-// AUTO-GENERATED / upraveno: MORSEO data + lokální fotky, balast odstraněn
+// AUTO-GENERATED / MORSEO data + lokální fotky, balast + Wasabi odstraněny
 import type { Product } from "./products";
 
 export const feedProducts: Product[] = [
@@ -449,37 +449,6 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-lux-004-2116842.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-lux-003-2116843.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-lux-002-2116844.jpeg"
-    ]
-  },
-  {
-    "id": "vs-wasabi-podsedlo-velka-904700",
-    "name": "Wasabi Podsedlo velká",
-    "category": "vapesport",
-    "categoryLabel": "BRAŠNY POD SEDLO",
-    "price": 333,
-    "shortDescription": "Kolekce Wasabi podsedlovka se zalitými zipy proti vodě a uchycením na suché zipy.",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Brašny pod sedlo"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "510059"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/570/8ee595ca750261f76f383b72d335e13d-image-280x233-1569404.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/570/8ee595ca750261f76f383b72d335e13d-image-280x233-1569404.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/8ee595ca750261f76f383b72d335e13d-image-280x233-1569404.jpg"
     ]
   },
   {
@@ -1150,11 +1119,11 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Objem",
-        "value": "⚠ doplnit"
+        "value": "0,8 l"
       },
       {
         "label": "Nosnost",
-        "value": "⚠ doplnit"
+        "value": "0,8 kg"
       },
       {
         "label": "Doporučené rámy",
@@ -1231,11 +1200,11 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Objem",
-        "value": "⚠ doplnit"
+        "value": "2 l"
       },
       {
         "label": "Nosnost",
-        "value": "⚠ doplnit"
+        "value": "1,4 kg"
       },
       {
         "label": "Doporučené rámy",
@@ -1316,11 +1285,11 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Objem",
-        "value": "⚠ doplnit"
+        "value": "0,8 l"
       },
       {
         "label": "Nosnost",
-        "value": "⚠ doplnit"
+        "value": "0,8 kg"
       },
       {
         "label": "Voděodolnost",
@@ -1386,7 +1355,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Slída (průzor)",
-        "value": "⚠ doplnit"
+        "value": "18 × 9 cm"
       },
       {
         "label": "Telefon",
@@ -1394,11 +1363,11 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Objem",
-        "value": "⚠ doplnit"
+        "value": "1,2 l"
       },
       {
         "label": "Nosnost",
-        "value": "⚠ doplnit"
+        "value": "0,5 kg"
       },
       {
         "label": "Voděodolnost",
@@ -1461,11 +1430,11 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Objem",
-        "value": "⚠ doplnit"
+        "value": "0,65 l"
       },
       {
         "label": "Nosnost",
-        "value": "⚠ doplnit"
+        "value": "0,5 kg"
       },
       {
         "label": "Doporučené rámy",
@@ -1531,11 +1500,11 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Objem",
-        "value": "⚠ doplnit"
+        "value": "0,85 l"
       },
       {
         "label": "Nosnost",
-        "value": "⚠ doplnit"
+        "value": "0,5 kg"
       },
       {
         "label": "Doporučené rámy",
@@ -1601,11 +1570,11 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Objem",
-        "value": "⚠ doplnit"
+        "value": "2,5 l"
       },
       {
         "label": "Nosnost",
-        "value": "⚠ doplnit"
+        "value": "2 kg"
       },
       {
         "label": "Doporučené rámy",
@@ -1687,11 +1656,11 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Objem",
-        "value": "⚠ doplnit"
+        "value": "1,2 l"
       },
       {
         "label": "Nosnost",
-        "value": "⚠ doplnit"
+        "value": "0,5 kg"
       },
       {
         "label": "Materiál",
@@ -1764,11 +1733,11 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Objem",
-        "value": "⚠ doplnit"
+        "value": "0,8 l"
       },
       {
         "label": "Nosnost",
-        "value": "⚠ doplnit"
+        "value": "0,8 kg"
       },
       {
         "label": "Doporučené rámy",
