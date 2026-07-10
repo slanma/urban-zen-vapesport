@@ -174,28 +174,22 @@ const InteractiveBikeGuide = ({
           );
         })}
 
-        {/* Labels */}
-        {DOTS.map((d) => {
-          const isActive = active === d.id;
-          return (
-            <span
-              key={`lbl-${d.id}`}
-              aria-hidden="true"
-              className={`absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[11px] md:text-xs font-body font-semibold px-2.5 py-1 rounded-md shadow-sm pointer-events-none transition-colors ${
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-background/95 text-foreground border border-border"
-              }`}
-              style={{ left: `${d.labelX}%`, top: `${d.labelY}%` }}
-            >
-              {d.label}
-            </span>
-          );
-        })}
+        {/* Active label only */}
+        {activeDot && (
+          <span
+            aria-hidden="true"
+            className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[11px] md:text-xs font-body font-semibold px-2.5 py-1 rounded-md shadow-sm pointer-events-none bg-primary text-primary-foreground"
+            style={{ left: `${activeDot.labelX}%`, top: `${activeDot.labelY}%` }}
+          >
+            {activeDot.label}
+          </span>
+        )}
+      </div>
 
-        {/* Product popup carousel */}
+      {/* Product popup carousel — appears BELOW the bike after clicking a hotspot */}
+      {active && (
         <div
-          className="absolute left-1/2 -translate-x-1/2 bottom-3 w-[95%] max-w-[880px] bg-background/95 backdrop-blur border border-border rounded-xl shadow-lg p-3 animate-in fade-in slide-in-from-bottom-2 duration-200"
+          className="w-full max-w-[1200px] mx-auto mt-4 bg-background border border-border rounded-xl shadow-lg p-3 animate-in fade-in slide-in-from-top-2 duration-200"
           role="region"
           aria-label={`Produkty pro pozici ${HOTSPOT_LABELS[active]}`}
         >
@@ -204,14 +198,24 @@ const InteractiveBikeGuide = ({
               {HOTSPOT_LABELS[active]} · {productsForActive.length}{" "}
               {productsForActive.length === 1 ? "produkt" : productsForActive.length < 5 ? "produkty" : "produktů"}
             </p>
-            {mode === "b2c" && (
-              <Link
-                to="/obchod"
-                className="text-[11px] font-body font-semibold text-muted-foreground hover:text-primary inline-flex items-center gap-1"
+            <div className="flex items-center gap-3">
+              {mode === "b2c" && (
+                <Link
+                  to="/obchod"
+                  className="text-[11px] font-body font-semibold text-muted-foreground hover:text-primary inline-flex items-center gap-1"
+                >
+                  Celý katalog <ArrowRight className="w-3 h-3" />
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={() => (onActiveChange ? undefined : setInternalActive(null))}
+                className="text-[11px] font-body font-semibold text-muted-foreground hover:text-primary"
+                aria-label="Zavřít"
               >
-                Celý katalog <ArrowRight className="w-3 h-3" />
-              </Link>
-            )}
+                Zavřít ✕
+              </button>
+            </div>
           </div>
 
           {productsForActive.length === 0 ? (
@@ -314,7 +318,7 @@ const InteractiveBikeGuide = ({
             </div>
           )}
         </div>
-      </div>
+      )}
 
       {/* Bottom pill filter bar */}
       {!hideFilterBar && (
