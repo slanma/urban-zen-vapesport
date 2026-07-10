@@ -46,7 +46,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/maly-troj-006-2116769.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/maly-troj-011-2116776.jpeg"
     ],
-    "b2b_price": 217,
+    "b2b_price": 179,
     "available_colors": [
       "neon-yellow",
       "neon-green",
@@ -99,7 +99,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/plochy4k-011-2116786.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/plochy4k-010-2116787.jpeg"
     ],
-    "b2b_price": 236,
+    "b2b_price": 195,
     "available_colors": [
       "neon-orange",
       "red",
@@ -199,7 +199,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-012-2116970.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-011-2116971.jpeg"
     ],
-    "b2b_price": 280,
+    "b2b_price": 231,
     "available_colors": [
       "neon-yellow",
       "neon-green",
@@ -249,7 +249,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/elektro-i-003-2116835.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/elektro-i-002-2116836.jpeg"
     ],
-    "b2b_price": 206
+    "b2b_price": 170
   },
   {
     "id": "vs-elektro-ii-vapesport-904683",
@@ -291,7 +291,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/729/img-6755-1728794.jpg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/tlustoch-005-2116856.jpeg"
     ],
-    "b2b_price": 224,
+    "b2b_price": 185,
     "available_colors": [
       "neon-green",
       "neon-red",
@@ -346,7 +346,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-001-2116833.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-011-2116834.jpeg"
     ],
-    "b2b_price": 412
+    "b2b_price": 340
   },
   {
     "id": "vs-brasna-mala-na-riditka-pe-904688",
@@ -385,7 +385,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/3-2116015.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-010-1991958.jpeg"
     ],
-    "b2b_price": 423
+    "b2b_price": 350
   },
   {
     "id": "vs-mobil-5-5-pe-904696",
@@ -420,7 +420,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/5-5-pe-002-2116868.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-015-1991960.jpeg"
     ],
-    "b2b_price": 208
+    "b2b_price": 172
   },
   {
     "id": "vs-vapesport-904698",
@@ -455,7 +455,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-003-2116839.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-002-2116840.jpeg"
     ],
-    "b2b_price": 573
+    "b2b_price": 474
   },
   {
     "id": "vs-vapesport-904699",
@@ -490,7 +490,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-lux-003-2116843.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-lux-002-2116844.jpeg"
     ],
-    "b2b_price": 841
+    "b2b_price": 695
   },
   {
     "id": "vs-brasna-pod-sedlo-zralok-twist-904706",
@@ -532,7 +532,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/zralok-005-2116876.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/zralok-003-2116877.jpeg"
     ],
-    "b2b_price": 225
+    "b2b_price": 186
   },
   {
     "id": "vs-podsedlo-mala-spe-904708",
@@ -569,7 +569,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/spe-004-2116847.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/spe-002-2116849.jpeg"
     ],
-    "b2b_price": 236
+    "b2b_price": 195
   },
   {
     "id": "vs-klickfix-904710",
@@ -603,7 +603,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/18052606-10208648085426029-1193298647-n-1569425.jpg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/img-8220-1569426.jpg"
     ],
-    "b2b_price": 183
+    "b2b_price": 151
   },
   {
     "id": "vs-plastenka-na-trojbrasnu-904712",
@@ -679,7 +679,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/571/img-8234-kopie-1570616.jpg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/571/4f0bf62d-7a90-477b-8fd7-047b8f2c96e3-2-1570618.jpg"
     ],
-    "b2b_price": 563
+    "b2b_price": 465
   },
   {
     "id": "vs-tablet-7-8-pe-904716",
@@ -714,7 +714,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/tablet-002-2116871.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-brasen-web-016-1991957.jpeg"
     ],
-    "b2b_price": 211
+    "b2b_price": 174
   },
   {
     "id": "vs-taska-na-kolo-905504",
@@ -751,7 +751,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/6e55f2e2-5bac-4b2e-8b9a-3519a6944385-1578037.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/7b9c50aa-25cf-41b5-80be-8d8aff8bdc35-1578038.jpeg"
     ],
-    "b2b_price": 1274
+    "b2b_price": 1053
   },
   {
     "id": "vs-obal-na-tlumic-908656",
@@ -783,7 +783,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/604/obalnatlumic-1603631.jpg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/604/obalnatlumic-1603631.jpg"
     ],
-    "b2b_price": 191
+    "b2b_price": 158
   },
   {
     "id": "vs-vrch-3-brasny-912317",
@@ -855,7 +855,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/sw-004-2116851.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/sw-003-2116852.jpeg"
     ],
-    "b2b_price": 191,
+    "b2b_price": 158,
     "available_colors": [
       "orange",
       "yellow"
@@ -887,7 +887,7 @@ export const feedProducts: Product[] = [
       }
     ],
     "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/747/img-0956-1746883.jpg",
-    "b2b_price": 522
+    "b2b_price": 431
   },
   {
     "id": "vs-m2-podsedlo-925467",
@@ -935,7 +935,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-002-2116799.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-001-2116800.jpeg"
     ],
-    "b2b_price": 204,
+    "b2b_price": 169,
     "available_colors": [
       "black",
       "neon-yellow",
@@ -983,7 +983,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/4-2116021.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/3-2116022.jpeg"
     ],
-    "b2b_price": 332
+    "b2b_price": 274
   },
   {
     "id": "vs-klickfix-bottle-941236",
@@ -1016,7 +1016,7 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/942/dat-1941238.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/942/341650-1941237.jpeg"
     ],
-    "b2b_price": 219
+    "b2b_price": 181
   },
   {
     "id": "vs-obal-na-prevoz-elektrokola-943567",
@@ -1205,7 +1205,7 @@ export const feedProducts: Product[] = [
       "lazurite-blue",
       "golden-wheat"
     ],
-    "b2b_price": 313
+    "b2b_price": 259
   },
   {
     "id": "vs-ramova-brasna-stredni-se-2-zipy-a-sitkou-945204",
@@ -1292,7 +1292,7 @@ export const feedProducts: Product[] = [
       "lime-spark",
       "golden-wheat"
     ],
-    "b2b_price": 330
+    "b2b_price": 273
   },
   {
     "id": "vs-brasna-na-mobil-5-5-945205",
@@ -1382,7 +1382,7 @@ export const feedProducts: Product[] = [
       "lazurite-blue",
       "golden-wheat"
     ],
-    "b2b_price": 293
+    "b2b_price": 242
   },
   {
     "id": "vs-smb-morseo-945206",
@@ -1465,7 +1465,7 @@ export const feedProducts: Product[] = [
       "lazurite-blue",
       "golden-wheat"
     ],
-    "b2b_price": 299
+    "b2b_price": 247
   },
   {
     "id": "vs-waterproof-bike-bag-bila-945208",
@@ -1545,7 +1545,7 @@ export const feedProducts: Product[] = [
       "lazurite-blue",
       "golden-wheat"
     ],
-    "b2b_price": 605
+    "b2b_price": 500
   },
   {
     "id": "vs-waterproof-saddle-bag-945209",
@@ -1624,7 +1624,7 @@ export const feedProducts: Product[] = [
       "lime-spark",
       "golden-wheat"
     ],
-    "b2b_price": 544
+    "b2b_price": 450
   },
   {
     "id": "vs-ramova-brasna-nepromokavy-zip-947097",
@@ -1715,7 +1715,7 @@ export const feedProducts: Product[] = [
       "lazurite-blue",
       "golden-wheat"
     ],
-    "b2b_price": 318
+    "b2b_price": 263
   },
   {
     "id": "vs-smb-morseo-zlata-947383",
@@ -1806,7 +1806,7 @@ export const feedProducts: Product[] = [
       "lazurite-blue",
       "golden-wheat"
     ],
-    "b2b_price": 327
+    "b2b_price": 270
   },
   {
     "id": "vs-ramova-brasna-nepromokavy-zip-bila-947404",
@@ -1898,7 +1898,7 @@ export const feedProducts: Product[] = [
       "lazurite-blue",
       "golden-wheat"
     ],
-    "b2b_price": 313
+    "b2b_price": 259
   },
   {
     "id": "vs-brasna-na-miru-951815",
@@ -1941,7 +1941,7 @@ export const feedProducts: Product[] = [
     "category": "vapesport",
     "categoryLabel": "RÁMOVÉ BRAŠNY",
     "price": 490,
-    "b2b_price": 281,
+    "b2b_price": 232,
     "shortDescription": "Prostorná tříkapsá rámová brašna do rámů s velkým vnitřním prostorem. Tři oddělené kapsy na zip udrží pořádek, pojme i masivní nabíječku na e-kolo a šířka 6 cm nepřekáží při šlapání.",
     "features": [
       "Plně vyztužená konstrukce – drží tvar",
@@ -1999,7 +1999,7 @@ export const feedProducts: Product[] = [
     "category": "vape-legends",
     "categoryLabel": "PODSEDLOVÉ BRAŠNY",
     "price": 555,
-    "b2b_price": 318,
+    "b2b_price": 263,
     "shortDescription": "Bezpečnostní podsedlovka s integrovaným LED světlem a rozšiřitelným objemem (Active Safety). ŽRALOK expandér zvětší objem až na 1 L, mechanický TWIST úchyt je součástí balení.",
     "features": [
       "Integrovaný aktivní LED pásek (svítí/bliká) – bez externí blikačky",
@@ -2062,7 +2062,7 @@ export const feedProducts: Product[] = [
     "category": "vapesport",
     "categoryLabel": "NEOPRENOVÉ OBALY",
     "price": 445,
-    "b2b_price": 255,
+    "b2b_price": 211,
     "shortDescription": "Neoprenová ochrana displeje elektrokola při převozu. Chrání display před tlakovou vodou a solí – ideální při převozu kola na nosiči auta.",
     "features": [
       "Chrání display před tlakovou vodou a solí",

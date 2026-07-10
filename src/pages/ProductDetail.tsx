@@ -56,7 +56,7 @@ const ProductDetail = () => {
   const product = baseProduct && override ? applyProductOverride(baseProduct, override) : null;
 
   const effectivePrice = override?.price_override ?? product?.price ?? 0;
-  const b2bPrice = override?.b2b_price ?? null;
+  const b2bPrice = override?.b2b_price ?? baseProduct?.b2b_price ?? null;
   const inStock = override?.in_stock ?? true;
   const gallery = product ? getEffectiveGallery(product, override) : [];
   const [activeImg, setActiveImg] = useState(0);

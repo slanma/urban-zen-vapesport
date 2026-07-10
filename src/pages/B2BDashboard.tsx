@@ -18,6 +18,7 @@ import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { fmtCZK, netFromGross } from "@/lib/vat";
 import { resolveColor } from "@/lib/colorPalette";
+import { supabase } from "@/integrations/supabase/client";
 
 type HotspotFilter = Hotspot | "All";
 
@@ -211,6 +212,7 @@ const B2BDashboard = () => {
 
   const handleLogout = async () => {
     clearStoredSession();
+    try { await supabase.auth.signOut(); } catch { /* ignore */ }
     navigate("/b2b-login", { replace: true });
   };
 

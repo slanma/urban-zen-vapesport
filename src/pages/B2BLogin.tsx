@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const LOGIN_TIMEOUT_MS = 15000;
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
@@ -130,6 +131,16 @@ const B2BLogin = () => {
       }
 
       persistAuthSession(authData);
+      // Nastav i standardní session klienta, aby partnera poznaly i B2C stránky
+      // (detail produktu → velkoobchodní cena místo maloobchodní).
+      try {
+        await supabase.auth.setSession({
+          access_token: authData.access_token,
+          refresh_token: authData.refresh_token,
+        });
+      } catch (e) {
+        console.warn("[B2BLogin] setSession selhalo:", e);
+      }
       window.location.assign("/b2b-dashboard");
     } catch (err) {
       console.error("[B2BLogin] unexpected error:", err);
