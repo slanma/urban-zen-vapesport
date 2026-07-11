@@ -137,7 +137,7 @@ const Withdrawal = () => {
               {loading ? "Odesílám…" : "Odeslat žádost"}
             </Button>
             <p className="text-xs text-muted-foreground pt-2">
-              Pozn.: U služeb (např. golfový trénink, AI konzultace), které již byly splněny, nárok na odstoupení zaniká.
+              Pozn.: Právo na odstoupení nelze uplatnit u zboží upraveného podle vašeho přání nebo vyrobeného na míru (§ 1837 obč. zák.) ani u jednorázových služeb (např. tréninky, konzultace), které již byly s vaším souhlasem poskytnuty. Náklady na vrácení zboží nese kupující. Peníze vám vrátíme do 14 dnů od odstoupení, stejným způsobem, jakým jsme je přijali.
             </p>
           </form>
         )}

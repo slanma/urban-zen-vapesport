@@ -9,7 +9,7 @@ import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { useAuth } from "@/hooks/useAuth";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
-import { ShieldCheck, Lock, ChevronLeft, MapPin, Building2, Loader2 } from "lucide-react";
+import { ShieldCheck, Lock, ChevronLeft, MapPin, Building2, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import OrderSummaryTable from "@/components/OrderSummaryTable";
 import { fmtCZK } from "@/lib/vat";
@@ -84,6 +84,7 @@ const Checkout = () => {
   const [packetaPoint, setPacketaPoint] = useState<{ id: string; name: string } | null>(null);
   const [packetaReady, setPacketaReady] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [placedOrder, setPlacedOrder] = useState<{ number: string; total: number; email: string } | null>(null);
 
   // Promo code – shared with Cart / B2B Checkout
   const { appliedPromo, computeDiscountGross } = usePromoCode();
@@ -203,8 +204,8 @@ const Checkout = () => {
       toast.error("Widget Zásilkovny se ještě nenačetl, zkuste to za chvíli.");
       return;
     }
-    // TODO: replace dummy API key with the merchant key from admin settings.
-    const apiKey = "123456789";
+    // Packeta widget API key (Klíč API z Packeta portálu).
+    const apiKey = "fa4c6404b93578af";
     Packeta.Widget.pick(
       apiKey,
       (point: { id: string | number; name: string } | null) => {
@@ -266,9 +267,9 @@ const Checkout = () => {
         discount_gross: discountGross,
       } as never);
       if (error) throw error;
-      toast.success("Objednávka odeslána", { description: `Číslo: ${orderNumber}` });
+      setPlacedOrder({ number: orderNumber, total: grandGross, email: form.email });
       clearCart();
-      navigate("/");
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       console.error(err);
       toast.error("Objednávku se nepodařilo odeslat", { description: "Zkuste to prosím znovu." });
@@ -284,6 +285,48 @@ const Checkout = () => {
 
   // B2B-required validation: company + IČO
   const b2bFieldsOk = !isPartner || (form.company.trim() && form.ico.trim());
+
+  if (placedOrder) {
+    return (
+      <main className="min-h-screen bg-background">
+        <Navbar isLoggedIn={isPartner} />
+        <section className="pt-32 pb-32 px-6 max-w-xl mx-auto text-center">
+          <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="w-9 h-9" />
+          </div>
+          <h1 className="font-heading text-3xl font-bold text-foreground mb-3">Děkujeme za objednávku!</h1>
+          <p className="text-muted-foreground mb-6">
+            Objednávka{" "}
+            <span className="font-mono font-semibold text-foreground">{placedOrder.number}</span>{" "}
+            byla přijata.
+          </p>
+          <div className="bg-card border border-border rounded-xl p-6 text-left space-y-3 mb-8">
+            <p className="font-semibold text-foreground">Co bude dál?</p>
+            <ol className="list-decimal list-inside text-sm text-muted-foreground space-y-1.5">
+              <li>
+                Na e-mail <span className="text-foreground">{placedOrder.email}</span> jsme poslali
+                potvrzení o přijetí objednávky.
+              </li>
+              <li>
+                Připravíme vám platební údaje (QR platba) a zašleme je e-mailem —{" "}
+                <span className="text-foreground font-medium">prosíme vyčkejte na platbu</span>.
+              </li>
+              <li>Po připsání platby objednávku odešleme.</li>
+            </ol>
+            <p className="text-sm pt-3 border-t border-border">
+              <span className="text-muted-foreground">K úhradě:</span>{" "}
+              <span className="font-heading font-bold text-foreground">{fmtCZK(placedOrder.total)}</span>{" "}
+              <span className="text-muted-foreground text-xs">
+                (objednávka je závazná, s povinností platby)
+              </span>
+            </p>
+          </div>
+          <Button onClick={() => navigate("/")}>Zpět na úvod</Button>
+        </section>
+        <Footer />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-background">

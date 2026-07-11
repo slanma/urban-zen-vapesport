@@ -82,6 +82,15 @@ const ProductDetail = () => {
     setSelectedColor(firstAvailable);
   }, [product?.id, availableColors, override?.color_stock]);
 
+  // Klik na barvu přepne hlavní fotku na barevnou verzi (u MORSEO), pokud pro barvu fotka existuje.
+  const handleSelectColor = (color: string) => {
+    setSelectedColor(color);
+    const idx = gallery.findIndex((src) =>
+      src.toLowerCase().includes(`barva-${color.toLowerCase()}-`),
+    );
+    if (idx >= 0) setActiveImg(idx);
+  };
+
   useEffect(() => {
     if (!product || !override) return;
     const sku = getEffectiveProductCode(baseProduct!, override);
@@ -289,7 +298,7 @@ const ProductDetail = () => {
                   colors={[...availableColors]}
                   stock={override.color_stock}
                   selected={selectedColor}
-                  onSelect={setSelectedColor}
+                  onSelect={handleSelectColor}
                 />
               </div>
             )}

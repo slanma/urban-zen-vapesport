@@ -16,35 +16,54 @@ const Privacy = () => {
 
           <div>
             <h2 className="font-heading text-xl font-bold mt-8 mb-3">I. Správce osobních údajů</h2>
-            <p>Správcem osobních údajů je společnost Vapesport Vlach s.r.o., IČ: 05819369, se sídlem Paskovská 636/275, Ostrava-Hrabová, 720 00.</p>
+            <p>Správcem osobních údajů je společnost Vapesport Vlach s.r.o., IČ: 05819369, DIČ: CZ05819369, se sídlem Paskovská 636/275, Ostrava-Hrabová, 720 00, zapsaná u Krajského soudu v Ostravě, sp. zn. C 69479 (dále jen „správce").</p>
           </div>
 
           <div>
-            <h2 className="font-heading text-xl font-bold mt-8 mb-3">II. Účel a právní základ zpracování</h2>
-            <p>Osobní údaje jsou zpracovávány pro:</p>
-            <p>1. <strong>Plnění smlouvy:</strong> Vyřízení objednávek brašen a realizace objednaných služeb (golf, AI).</p>
-            <p>2. <strong>Plnění zákonných povinností:</strong> Uchovávání daňových a účetních dokladů.</p>
-            <p>3. <strong>Oprávněný zájem a marketing:</strong> Zasílání newsletterů stávajícím zákazníkům. Odhlášení je možné jedním kliknutím v patičce e-mailu.</p>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">II. Účel a právní základ zpracování osobních údajů</h2>
+            <p>Osobní údaje kupujícího (jméno, příjmení, adresa, e-mail, telefonní číslo, případně IČ/DIČ) jsou zpracovávány pro následující účely:</p>
+            <p className="mt-2"><strong>Plnění smlouvy:</strong> Vyřízení a doručení objednávky zboží, zajištění a realizace objednaných služeb, komunikace se zákazníkem.</p>
+            <p><strong>Plnění zákonných povinností:</strong> Vystavování a uchovávání daňových a účetních dokladů podle platných zákonů ČR.</p>
+            <p><strong>Oprávněný zájem a marketing:</strong> Zasílání obchodních sdělení (newsletterů) stávajícím zákazníkům s nabídkou obdobných produktů a služeb. Zákazník má možnost se z odběru kdykoli jednoduše odhlásit (jedním kliknutím v patičce e-mailu). Pokud nejde o stávajícího zákazníka, dochází k marketingu pouze na základě předchozího výslovného souhlasu.</p>
           </div>
 
           <div>
             <h2 className="font-heading text-xl font-bold mt-8 mb-3">III. Práva subjektu údajů</h2>
-            <p>Kupující má právo na přístup, opravu, výmaz („právo být zapomenut"), omezení zpracování, přenositelnost údajů, vznesení námitky a podání stížnosti u ÚOOÚ.</p>
+            <p>Kupující má jako subjekt údajů podle nařízení GDPR následující práva:</p>
+            <p>Právo na přístup k osobním údajům a informacím o jejich zpracování.</p>
+            <p>Právo na opravu nepřesných nebo neúplných údajů.</p>
+            <p>Právo na výmaz údajů („právo být zapomenut"), pokud již pominul účel nebo právní důvod jejich zpracování.</p>
+            <p>Právo na omezení zpracování údajů.</p>
+            <p>Právo na přenositelnost údajů jinému správci.</p>
+            <p>Právo vznést námitku proti zpracování na základě oprávněného zájmu správce.</p>
+            <p>Právo podat stížnost u Úřadu pro ochranu osobních údajů (ÚOOÚ), se sídlem Pplk. Sochora 27, 170 00 Praha 7, www.uoou.cz.</p>
           </div>
 
           <div>
             <h2 className="font-heading text-xl font-bold mt-8 mb-3">IV. Doba uchovávání údajů</h2>
-            <p>Účetní doklady uchováváme po dobu 10 let. Pro marketingové účely uchováváme údaje po dobu 5 let nebo do odvolání souhlasu.</p>
+            <p>Údaje nezbytné pro plnění smlouvy a zákonných povinností uchováváme po dobu stanovenou příslušnými právními předpisy (např. účetní a daňové doklady po dobu 10 let).</p>
+            <p>Pro marketingové účely a zasílání obchodních sdělení uchováváme údaje po dobu 5 let, nebo do momentu, kdy zákazník vznese námitku proti zpracování či odvolá svůj souhlas.</p>
           </div>
 
           <div>
             <h2 className="font-heading text-xl font-bold mt-8 mb-3">V. Zabezpečení údajů a příjemci</h2>
-            <p>Údaje jsou chráněny moderními technickými opatřeními. V nezbytném rozsahu mohou být předány dopravcům, platební bráně nebo e-mailové platformě Brevo pro účely plnění smlouvy.</p>
+            <p>Osobní údaje jsou bezpečně uloženy a chráněny proti zneužití pomocí moderních technických a organizačních opatření.</p>
+            <p className="mt-2">Osobní údaje mohou být v nezbytném rozsahu předávány třetím stranám, pokud je to nutné pro splnění smlouvy: přepravní společnosti a výdejní místa (Zásilkovna / Packeta) pro doručení brašen, poskytovatel platební brány, poskytovatel technického provozu (hosting a databáze) a poskytovatel e-mailové platformy Brevo pro rozesílání systémových a schválených marketingových zpráv. Se zpracovateli má správce uzavřeny smlouvy o zpracování osobních údajů.</p>
           </div>
 
           <div>
-            <h2 className="font-heading text-xl font-bold mt-8 mb-3">VI. Kontaktní údaje</h2>
-            <p>E-mail: info@vapesport.cz</p>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">VI. Cookies</h2>
+            <p>Web používá nezbytné cookies zajišťující jeho základní funkce (např. obsah košíku), které nevyžadují souhlas. Volitelné analytické a marketingové cookies používáme pouze s vaším souhlasem. Nastavení cookies lze kdykoli změnit v prohlížeči.</p>
+          </div>
+
+          <div>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">VII. Kontaktní údaje</h2>
+            <p>Pro uplatnění jakýchkoli práv nebo v případě dotazů ohledně ochrany osobních údajů nás kontaktujte na e-mailové adrese: info@vapesport.cz.</p>
+          </div>
+
+          <div>
+            <h2 className="font-heading text-xl font-bold mt-8 mb-3">VIII. Závěrečná ustanovení</h2>
+            <p>Tyto zásady jsou platné od 22. 5. 2026.</p>
           </div>
         </article>
       </section>
