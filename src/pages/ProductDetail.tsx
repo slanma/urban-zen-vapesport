@@ -6,6 +6,7 @@ import { getProductById } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
+import PriceTag from "@/components/PriceTag";
 import { getEffectiveGallery } from "@/lib/productImages";
 import { RichText, stripRichMarkers } from "@/lib/richText";
 import { applyProductOverride, getEffectiveProductCode } from "@/lib/effectiveProduct";
@@ -235,31 +236,7 @@ const ProductDetail = () => {
           <div className="lg:col-span-5 flex flex-col">
             {/* Price — partner sees wholesale dominant */}
             <div className="border-b border-border pb-6">
-              {isPartner && b2bPrice ? (
-                <>
-                  <div className="font-heading text-4xl font-bold text-foreground">
-                    {fmtCZK(b2bPrice)}{" "}
-                    <span className="text-base font-body font-semibold text-muted-foreground">
-                      bez DPH (VOC)
-                    </span>
-                  </div>
-                  <div className="text-sm text-muted-foreground mt-1 font-body">
-                    MOC s DPH: {fmtCZK(grossPrice)}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="font-heading text-4xl font-bold text-foreground">
-                    {fmtCZK(grossPrice)}{" "}
-                    <span className="text-base font-body font-semibold text-muted-foreground">
-                      s DPH
-                    </span>
-                  </div>
-                  <div className="text-sm text-muted-foreground mt-1 font-body">
-                    Bez DPH: {fmtCZK(netPrice)}
-                  </div>
-                </>
-              )}
+              <PriceTag retailGross={grossPrice} b2bNet={b2bPrice} size="lg" />
               <div className="mt-3 flex items-center gap-4 text-xs font-body text-muted-foreground">
                 <span>
                   Kód: <span className="font-mono text-foreground">{sku}</span>

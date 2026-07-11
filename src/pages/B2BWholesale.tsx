@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, KeyboardEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronDown, ChevronUp, Eye, ExternalLink, LogOut, Loader2, ShoppingCart, Send } from "lucide-react";
 import bikeSilhouette from "@/assets/bike-lineart.png";
+import ImageZoom from "@/components/ImageZoom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -258,9 +259,7 @@ const B2BWholesale = () => {
                   <div key={row.baseId} ref={(el) => (rowRefs.current[row.baseId] = el)}>
                     {/* Parent row */}
                     <div className="grid grid-cols-[60px_1fr_140px_90px_160px_50px] gap-3 px-4 py-3 items-center hover:bg-muted/20">
-                      <a href={detailHref} target="_blank" rel="noopener noreferrer" className="block">
-                        <img src={row.base.image} alt={row.base.name} className="w-12 h-12 rounded object-cover shadow-sm" />
-                      </a>
+                      <ImageZoom src={row.base.image} alt={row.base.name} className="w-12 h-12 rounded shadow-sm" />
                       <div className="min-w-0">
                         <a href={detailHref} target="_blank" rel="noopener noreferrer" className="font-mono text-xs text-muted-foreground hover:text-primary inline-flex items-center gap-1">
                           {code} <ExternalLink className="w-3 h-3" />

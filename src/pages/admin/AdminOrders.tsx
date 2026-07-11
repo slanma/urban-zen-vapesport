@@ -269,12 +269,22 @@ const AdminOrders = () => {
                 </div>
               )}
 
-              <PaymentQrPanel
-                orderId={selected.id}
-                orderNumber={selected.order_number}
-                totalGross={selected.total_gross}
-                customerEmail={selected.email}
-              />
+              {selected.is_b2b ? (
+                <div className="mt-6 border-t border-border pt-4 text-sm">
+                  <h3 className="font-semibold mb-1 text-foreground">Platba (B2B)</h3>
+                  <p className="text-muted-foreground">
+                    Faktura se splatností — daňový doklad se vystavuje v systému Premier.
+                    QR platba se u B2B objednávek nepoužívá.
+                  </p>
+                </div>
+              ) : (
+                <PaymentQrPanel
+                  orderId={selected.id}
+                  orderNumber={selected.order_number}
+                  totalGross={selected.total_gross}
+                  customerEmail={selected.email}
+                />
+              )}
 
               <div className="mt-6 border-t border-border pt-4">
                 <h3 className="font-semibold mb-2 text-foreground text-sm">Změnit stav</h3>

@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getProductById, products } from "@/data/products";
+import ImageZoom from "@/components/ImageZoom";
 import { Button } from "@/components/ui/button";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -485,9 +486,7 @@ const B2BDashboard = () => {
                       <TableRow key={product.id} className="hover:bg-muted/30">
                         <TableCell className="text-base font-mono text-muted-foreground">{sku}</TableCell>
                         <TableCell>
-                          <a href={detailHref} target="_blank" rel="noopener noreferrer" className="block w-14 h-14 bg-muted rounded overflow-hidden" title="Otevřít detail (barvy, popis)">
-                            <img src={product.image} alt={`Fotografie ${product.name}`} className="w-full h-full object-cover" loading="lazy" />
-                          </a>
+                          <ImageZoom src={product.image} alt={`Fotografie ${product.name}`} className="w-14 h-14 bg-muted rounded" />
                         </TableCell>
                         <TableCell>
                           <div>
