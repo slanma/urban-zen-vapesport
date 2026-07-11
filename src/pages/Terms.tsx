@@ -53,6 +53,7 @@ const Terms = () => {
           <div>
             <h2 className="font-heading text-xl font-bold mt-8 mb-3">IV. Dodání fyzického zboží a realizace služeb</h2>
             <p><strong>Fyzické zboží:</strong> Prodávající dodá zboží na adresu uvedenou kupujícím při objednávce, případně na výdejní místo zvolené kupujícím. Náklady na dopravu jsou specifikovány v procesu objednávky. Nebezpečí škody na zboží přechází na kupujícího převzetím zboží.</p>
+            <p>Nepřevzetím řádně objednané zásilky kupní smlouva nezaniká. Nepřevezme-li kupující zásilku (např. při platbě na dobírku), vzniká prodávajícímu nárok na náhradu skutečně vynaložených nákladů spojených s dodáním (poštovné k zákazníkovi i zpět). Prodávající je oprávněn vyzvat kupujícího k jejich úhradě.</p>
             <p className="mt-2"><strong>Služby:</strong> V případě jednorázových služeb objednaných přes e-shop se konkrétní realizace, termín a podmínky plnění řeší s kupujícím následně (osobně, telefonicky nebo e-mailem), případně dle potvrzené specifikace v objednávce. U digitálního plnění nebo konzultací se podmínky dodání řídí individuální dohodou.</p>
           </div>
 
@@ -61,7 +62,9 @@ const Terms = () => {
             <p><strong>A. Prodej zboží koncovým spotřebitelům (B2C):</strong></p>
             <p>Kupující (spotřebitel) má právo odstoupit od smlouvy do 14 dnů od převzetí zboží bez udání důvodu.</p>
             <p>Zboží musí být vráceno nepoškozené, nepoužité, kompletní a v původním obalu. Náklady spojené s vrácením zboží prodávajícímu hradí v plné výši kupující.</p>
+            <p>Kupující bere na vědomí, že v případě odstoupení od smlouvy nese náklady spojené s vrácením zboží prodávajícímu, a to i v případě, vrací-li se zboží, které nemůže být pro svou povahu vráceno obvyklou poštovní cestou.</p>
             <p>Prodávající vrátí přijaté peněžní prostředky (včetně nákladů na dodání ve výši nejlevnějšího nabízeného způsobu) do 14 dnů od odstoupení, a to stejným způsobem, jakým je přijal. Prodávající není povinen vrátit peníze dříve, než mu kupující zboží předá nebo prokáže jeho odeslání.</p>
+            <p>Spotřebitel odpovídá prodávajícímu za snížení hodnoty zboží, které vzniklo v důsledku nakládání s tímto zbožím jinak, než je nutné s ním nakládat s ohledem na jeho povahu a vlastnosti. Pokud je vrácené zboží poškozené, opotřebené či částečně spotřebované, vzniká prodávajícímu vůči kupujícímu nárok na náhradu škody. Nárok na úhradu škody je prodávající oprávněn jednostranně započíst proti nároku kupujícího na vrácení kupní ceny.</p>
             <p>Výjimky z práva na odstoupení: Kupující nemůže odstoupit od smlouvy u zboží, které bylo vyrobeno nebo upraveno na zakázku podle přání kupujícího (§ 1837 občanského zákoníku).</p>
             <p className="mt-2"><strong>B. Poskytování služeb koncovým spotřebitelům (B2C):</strong></p>
             <p>V případě objednávky jednorázových služeb (např. tréninky, konzultace a obdobné služby), které jsou splněny nebo započaty s výslovným souhlasem kupujícího před uplynutím lhůty 14 dnů od objednání, právo kupujícího na odstoupení od smlouvy zaniká okamžikem splnění/poskytnutí služby.</p>
