@@ -188,31 +188,25 @@ export const feedProducts: Product[] = [
         "value": "8 barev"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/lady-009-2116961.jpeg",
+    "image": "/images/produkty-vapesport/lady/barva-neon-yellow-vs.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/lady-009-2116961.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-009-2116961.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/2-2116972.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-004-2116966.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-003-2116967.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-002-2116968.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-010-2116960.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-008-2116962.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-007-2116963.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-006-2116964.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-005-2116965.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-012-2116970.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/lady-011-2116971.jpeg"
+      "/images/produkty-vapesport/lady/barva-neon-yellow-vs.jpg",
+      "/images/produkty-vapesport/lady/barva-neon-green-vs.jpg",
+      "/images/produkty-vapesport/lady/barva-neon-orange-vs.jpg",
+      "/images/produkty-vapesport/lady/barva-pink-vs.jpg",
+      "/images/produkty-vapesport/lady/barva-turquoise-vs.jpg",
+      "/images/produkty-vapesport/lady/barva-blue-vs.jpg",
+      "/images/produkty-vapesport/lady/barva-red-vs.jpg"
     ],
     "b2b_price": 231,
     "available_colors": [
       "neon-yellow",
       "neon-green",
       "neon-orange",
-      "grey",
+      "pink",
+      "turquoise",
       "blue",
-      "red",
-      "turquoise"
+      "red"
     ]
   },
   {
@@ -863,19 +857,17 @@ export const feedProducts: Product[] = [
         "value": "3 barev"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/sw-001-2116854.jpeg",
+    "image": "/images/produkty-vapesport/sw/barva-orange-vs.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/sw-001-2116854.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/sw-001-2116854.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/sw-002-2116853.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-012-1991940.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/sw-004-2116851.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/sw-003-2116852.jpeg"
+      "/images/produkty-vapesport/sw/barva-orange-vs.jpg",
+      "/images/produkty-vapesport/sw/barva-yellow-vs.jpg",
+      "/images/produkty-vapesport/sw/barva-neon-green-vs.jpg"
     ],
     "b2b_price": 158,
     "available_colors": [
       "orange",
-      "yellow"
+      "yellow",
+      "neon-green"
     ]
   },
   {
@@ -936,29 +928,29 @@ export const feedProducts: Product[] = [
         "value": "9 barev"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/987/pozadi-obrazku-img-7357-1729140-bylo-odstraneno-1986588.png",
+    "image": "/images/produkty-vapesport/m2/barva-black-vs.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/987/pozadi-obrazku-img-7357-1729140-bylo-odstraneno-1986588.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/987/pozadi-obrazku-img-7357-1729140-bylo-odstraneno-1986588.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-022-1991951.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-010-2116791.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-009-2116792.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-008-2116793.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-007-2116794.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-006-2116795.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-005-2116796.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-004-2116797.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-003-2116798.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-002-2116799.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/m2-001-2116800.jpeg"
+      "/images/produkty-vapesport/m2/barva-black-vs.jpg",
+      "/images/produkty-vapesport/m2/barva-grey-vs.jpg",
+      "/images/produkty-vapesport/m2/barva-neon-yellow-vs.jpg",
+      "/images/produkty-vapesport/m2/barva-yellow-vs.jpg",
+      "/images/produkty-vapesport/m2/barva-neon-green-vs.jpg",
+      "/images/produkty-vapesport/m2/barva-neon-orange-vs.jpg",
+      "/images/produkty-vapesport/m2/barva-pink-vs.jpg",
+      "/images/produkty-vapesport/m2/barva-turquoise-vs.jpg",
+      "/images/produkty-vapesport/m2/barva-blue-vs.jpg",
+      "/images/produkty-vapesport/m2/barva-red-vs.jpg"
     ],
     "b2b_price": 169,
     "available_colors": [
       "black",
+      "grey",
       "neon-yellow",
+      "yellow",
       "neon-green",
       "neon-orange",
-      "grey",
+      "pink",
+      "turquoise",
       "blue",
       "red"
     ]
@@ -2096,19 +2088,28 @@ export const feedProducts: Product[] = [
         "value": "8 barev"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/zralok-004-2116878.jpeg",
+    "image": "/images/produkty-vapesport/zralok-led/barva-black-vs.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/zralok-004-2116878.jpeg"
+      "/images/produkty-vapesport/zralok-led/barva-black-vs.jpg",
+      "/images/produkty-vapesport/zralok-led/barva-grey-vs.jpg",
+      "/images/produkty-vapesport/zralok-led/barva-neon-yellow-vs.jpg",
+      "/images/produkty-vapesport/zralok-led/barva-neon-green-vs.jpg",
+      "/images/produkty-vapesport/zralok-led/barva-neon-orange-vs.jpg",
+      "/images/produkty-vapesport/zralok-led/barva-pink-vs.jpg",
+      "/images/produkty-vapesport/zralok-led/barva-turquoise-vs.jpg",
+      "/images/produkty-vapesport/zralok-led/barva-blue-vs.jpg",
+      "/images/produkty-vapesport/zralok-led/barva-red-vs.jpg"
     ],
     "available_colors": [
       "black",
+      "grey",
       "neon-yellow",
       "neon-green",
       "neon-orange",
-      "blue",
-      "red",
       "pink",
-      "turquoise"
+      "turquoise",
+      "blue",
+      "red"
     ]
   },
   {
