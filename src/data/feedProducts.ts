@@ -11,9 +11,9 @@ export const feedProducts: Product[] = [
     "price": 378,
     "shortDescription": "Hledáte lehkou, spolehlivou a skvěle organizovanou brašnu do rámu kola, kam schováte peněženku, klíče, nářadí i záložní duši? Malý trojúhelník tříkapsý Vapesport nabízí optimální šířku 4,5 cm, která zaručuje, že brašna stoprocentně lícuje s profilem kola a nikdy vám nebude překážet nebo dřít o kolena při šlapání.",
     "features": [
-      "Ochrana před počasím: Odolný materiál PE 600D a kvalitně zpracované zipy chrání celou výbavu před deštěm a nečistotami z trati.",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "LongStrap™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -65,9 +65,9 @@ export const feedProducts: Product[] = [
     "price": 411,
     "shortDescription": "4kapsý trojúhelník do rámu kola. Je vhodný i na určité rámy elektrokol.",
     "features": [
-      "Dostupné barvy: žlutá (yellow_apache), neon oranžová (neon orange), růžová (neon pink), tyrkysová sv. (surf blue), ktm oranžová (ktm orange)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "LongStrap™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -102,9 +102,9 @@ export const feedProducts: Product[] = [
     "b2b_price": 195,
     "available_colors": [
       "neon-orange",
-      "red",
-      "orange",
-      "yellow"
+      "pink",
+      "turquoise",
+      "orange"
     ]
   },
   {
@@ -115,9 +115,10 @@ export const feedProducts: Product[] = [
     "price": 400,
     "shortDescription": "Brašna na rám za představec kola s uchopením na suché zipy. Slída 6,7\" je dotyková.",
     "features": [
-      "Dostupné barvy: neon oranžová (neon orange), tyrkysová sv. (surf blue)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "LongStrap™",
+      "UltraTouch™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -151,6 +152,10 @@ export const feedProducts: Product[] = [
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/smb-001-2039651.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/770/img-2561-1769334.jpeg",
       "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/933/prislusenstvi-1932333.jpg"
+    ],
+    "available_colors": [
+      "turquoise",
+      "orange"
     ]
   },
   {
@@ -161,9 +166,9 @@ export const feedProducts: Product[] = [
     "price": 490,
     "shortDescription": "2kapsá brašna přes rámovou trubku na kola, elektrokola i koloběžky.",
     "features": [
-      "Dostupné barvy: šedá (grey), nová modrá (blue_2019), neon žlutá (neon yellow), neon oranžová (neon orange), neon zelená (neon green), růžová (neon pink)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "UltraTouch™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -218,9 +223,9 @@ export const feedProducts: Product[] = [
     "price": 360,
     "shortDescription": "Elektro trojúhelník specialně vytvarovaný pro HAIBIKE  a LECTRON elektrokola.",
     "features": [
-      "Dostupné barvy: černá (black)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "LongStrap™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -259,9 +264,9 @@ export const feedProducts: Product[] = [
     "price": 391,
     "shortDescription": "Trojúhelník do rámu na nabíječku z elektrokol. HAIBIKE a LECTRON",
     "features": [
-      "Dostupné barvy: černá (black), šedá (grey)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "LongStrap™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -307,9 +312,9 @@ export const feedProducts: Product[] = [
     "price": 550,
     "shortDescription": "Malá brašna na řídítka na uchycení KLICKFIX adaptér i suchý zip. Vhodnost na kolo, koloběžku, elektrokola i dětská kola.",
     "features": [
-      "Dostupné barvy: černá (black), šedá (grey), modrá (blue), neon oranžová (neon orange), neon žlutá (neon yellow), neon zelená (neon green)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "QuickMount™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -356,8 +361,11 @@ export const feedProducts: Product[] = [
     "price": 737,
     "shortDescription": "Brašna je na uchycení KLICKFIX adaptér. KLICKFIX adaptér je součástí a pláštěnka také. Díky adaptéru má brašna různé možnosti uchycení jak n…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "UltraTouch™",
+      "QuickMount™",
+      "E-bikeReady™",
+      "NightGlow™",
+      "RainShield™"
     ],
     "specs": [
       {
@@ -395,8 +403,10 @@ export const feedProducts: Product[] = [
     "price": 362,
     "shortDescription": "Obal na mobilní telefon o velikosti 5,5\" s dotykovou folii. Brašna je uchycena na systém KLICKFIX Adaptér, který JE součástí balení.  Díky s…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "UltraTouch™",
+      "QuickMount™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -430,8 +440,10 @@ export const feedProducts: Product[] = [
     "price": 999,
     "shortDescription": "Součástí brašny je pláštěnka, uchopení na suchý zip. Objem - 10L Nosnost - 8Kg Rozměry: 28cm x 16cm x 17cm x  Boční kapsa: 23cm x 12cm  x 4c…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™",
+      "NightGlow™",
+      "RainShield™",
+      "BottleDock™"
     ],
     "specs": [
       {
@@ -465,8 +477,11 @@ export const feedProducts: Product[] = [
     "price": 1466,
     "shortDescription": "Brašna s bočními plnohodnotnými výklopnými kapsami ze stejného materiálu, jako je celá brašna.  boční uchopení na suchý zip a uchopení boční…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™",
+      "NightGlow™",
+      "RainShield™",
+      "FlexVolume™",
+      "BottleDock™"
     ],
     "specs": [
       {
@@ -500,9 +515,9 @@ export const feedProducts: Product[] = [
     "price": 393,
     "shortDescription": "Podsedlová brašna s rozšířením. 2 zipy pro zvětšení objemu brašny.",
     "features": [
-      "Dostupné barvy: černá (black)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™",
+      "NightGlow™",
+      "FlexVolume™"
     ],
     "specs": [
       {
@@ -542,8 +557,10 @@ export const feedProducts: Product[] = [
     "price": 411,
     "shortDescription": "Podsedlová brašna Vapesport s rychlým uchycením na suchý zip Kompaktní a elegantní podsedlovka navržená pro cyklisty, kteří preferují rychlo…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "LongStrap™",
+      "E-bikeReady™",
+      "NightGlow™",
+      "RainShield™"
     ],
     "specs": [
       {
@@ -579,8 +596,7 @@ export const feedProducts: Product[] = [
     "price": 320,
     "shortDescription": "Malý, skladný, nezabere hodně místa na řídítkách, představci či jinde na kole. Má dostatečně dlouhé plíšky, které obejmou i tu nejširší trub…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™"
     ],
     "specs": [
       {
@@ -644,9 +660,9 @@ export const feedProducts: Product[] = [
     "price": 982,
     "shortDescription": "Malý batoh o velikosti 9L. Součástí batohu je pláštěnka. Určen na cyklistiku, horskou turistiku nebo i do města.",
     "features": [
-      "Dostupné barvy: černá (black), šedá (grey), modrá (blue)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™",
+      "NightGlow™",
+      "RainShield™"
     ],
     "specs": [
       {
@@ -689,8 +705,10 @@ export const feedProducts: Product[] = [
     "price": 367,
     "shortDescription": "Obal na Ipad o velikosti 7-8\". Uchopen na kolo za pomocí KLICKFIX adaptéru, který je součástí balení. Ochranný obal na tablet je lehce voděv…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "UltraTouch™",
+      "QuickMount™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -724,8 +742,7 @@ export const feedProducts: Product[] = [
     "price": 2222,
     "shortDescription": "Taška na kolo VAPE",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™"
     ],
     "specs": [
       {
@@ -761,8 +778,8 @@ export const feedProducts: Product[] = [
     "price": 333,
     "shortDescription": "Ochrana před vnějšími vlivy.",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™",
+      "HydroGuard™"
     ],
     "specs": [
       {
@@ -824,9 +841,9 @@ export const feedProducts: Product[] = [
     "price": 333,
     "shortDescription": "Dámský trojúhelník i dětský trojúhelník",
     "features": [
-      "Dostupné barvy: neon zelená (neon green), ktm oranžová (ktm orange), žlutá (yellow_apache)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "LongStrap™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -869,8 +886,8 @@ export const feedProducts: Product[] = [
     "price": 911,
     "shortDescription": "Velká taška na kolo nebo jako velká kabela s možností využití na nosič z boční části.   Objem: 15l   Nosnost: 8kg   Rozměry: 33cm x 14cm x 3…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -897,9 +914,9 @@ export const feedProducts: Product[] = [
     "price": 355,
     "shortDescription": "Malá podsedlo s uchopením na klip",
     "features": [
-      "Dostupné barvy: černá (black), neon zelená (neon green), neon oranžová (neon orange), červená (atom red), nová modrá (blue_2019), žlutá (yellow_apache)",
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "QuickClip™",
+      "E-bikeReady™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -943,7 +960,7 @@ export const feedProducts: Product[] = [
       "neon-orange",
       "grey",
       "blue",
-      "pink"
+      "red"
     ]
   },
   {
@@ -954,8 +971,8 @@ export const feedProducts: Product[] = [
     "price": 578,
     "shortDescription": "Neopren na míru je vytvořen na základě Vašich požadavků. Budeme však potřebovat základní údaje, které napište do poznámky: -značka elektroko…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™",
+      "HydroGuard™"
     ],
     "specs": [
       {
@@ -993,8 +1010,7 @@ export const feedProducts: Product[] = [
     "price": 382,
     "shortDescription": "Držák na lahev, který můžete díky variabilině upevnit na širokou škálu kulatých rámů a řídítek i pokud nemáte teleskopickou sedlovku a je vy…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™"
     ],
     "specs": [
       {
@@ -1908,8 +1924,7 @@ export const feedProducts: Product[] = [
     "price": 2500,
     "shortDescription": "Brašna na míru pro váš rám. Společně projdeme krátkou konzultaci a dodáte přesné rozměry – my připravíme návrh a výrobu. Cena od 2 500 Kč. O…",
     "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
+      "E-bikeReady™"
     ],
     "specs": [
       {
@@ -1944,11 +1959,8 @@ export const feedProducts: Product[] = [
     "b2b_price": 232,
     "shortDescription": "Prostorná tříkapsá rámová brašna do rámů s velkým vnitřním prostorem. Tři oddělené kapsy na zip udrží pořádek, pojme i masivní nabíječku na e-kolo a šířka 6 cm nepřekáží při šlapání.",
     "features": [
-      "Plně vyztužená konstrukce – drží tvar",
-      "3 oddělené kapsy na zip pro dokonalý pořádek",
-      "Pojme i masivní nabíječku na e-kolo",
-      "Šířka 6 cm nepřekáží při šlapání",
-      "Suché zipy 12 cm na každé straně"
+      "LongStrap™",
+      "NightGlow™"
     ],
     "specs": [
       {
@@ -2002,10 +2014,10 @@ export const feedProducts: Product[] = [
     "b2b_price": 263,
     "shortDescription": "Bezpečnostní podsedlovka s integrovaným LED světlem a rozšiřitelným objemem (Active Safety). ŽRALOK expandér zvětší objem až na 1 L, mechanický TWIST úchyt je součástí balení.",
     "features": [
-      "Integrovaný aktivní LED pásek (svítí/bliká) – bez externí blikačky",
-      "ŽRALOK expandér: rozepnutím zvětšíte objem až na 1 L",
-      "Barevné zipy + reflexní prvky",
-      "Mechanický TWIST úchyt v balení"
+      "E-bikeReady™",
+      "ActiveLED™",
+      "NightGlow™",
+      "FlexVolume™"
     ],
     "specs": [
       {
@@ -2053,7 +2065,7 @@ export const feedProducts: Product[] = [
       "blue",
       "red",
       "pink",
-      "orange"
+      "turquoise"
     ]
   },
   {
@@ -2065,9 +2077,8 @@ export const feedProducts: Product[] = [
     "b2b_price": 211,
     "shortDescription": "Neoprenová ochrana displeje elektrokola při převozu. Chrání display před tlakovou vodou a solí – ideální při převozu kola na nosiči auta.",
     "features": [
-      "Chrání display před tlakovou vodou a solí",
-      "Vhodné pro převoz kola na nosiči auta",
-      "Neopren – tepelná i mechanická ochrana"
+      "E-bikeReady™",
+      "HydroGuard™"
     ],
     "specs": [
       {

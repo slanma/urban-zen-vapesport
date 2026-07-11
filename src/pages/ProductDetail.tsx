@@ -124,7 +124,7 @@ const ProductDetail = () => {
         <div className="flex-1 flex items-center justify-center flex-col gap-4 pt-20">
           <p className="font-heading text-2xl font-bold text-foreground">Produkt nenalezen</p>
           <Link
-            to="/produkty"
+            to="/obchod"
             className="text-primary font-semibold underline underline-offset-4"
           >
             Zpět na katalog
@@ -171,7 +171,7 @@ const ProductDetail = () => {
 
       <section className="pt-28 pb-16 px-6 lg:px-12 max-w-[1400px] mx-auto">
         <Link
-          to="/produkty"
+          to="/obchod"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 font-body"
         >
           <ArrowLeft className="w-4 h-4" />

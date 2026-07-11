@@ -110,7 +110,7 @@ const Shop = () => {
               Další kategorie
             </h2>
             <Link
-              to="/produkty"
+              to="/obchod"
               className="text-sm font-body font-semibold text-primary hover:underline"
             >
               Celý katalog →

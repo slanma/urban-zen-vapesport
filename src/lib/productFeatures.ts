@@ -6,7 +6,9 @@
  */
 import {
   Hand, Lock, ShieldCheck, Smartphone, Wind, Percent, Pointer,
-  Zap, Fingerprint, Wrench, Palette, type LucideIcon,
+  Zap, Fingerprint, Wrench, Palette,
+  Cable, Anchor, Paperclip, Lightbulb, Sparkles, Umbrella, Maximize2, GlassWater,
+  type LucideIcon,
 } from "lucide-react";
 
 import gekkoGripIcon from "@/assets/icon-gekkogrip.jpeg";
@@ -20,6 +22,15 @@ import voltFitIcon from "@/assets/icon-voltfit.jpeg";
 import idLockIcon from "@/assets/icon-idlock.jpeg";
 import quickMountIcon from "@/assets/icon-quickmount.jpeg";
 import chromaPickIcon from "@/assets/icon-chromapick.jpeg";
+
+import vsLongStrapIcon from "@/assets/icon-vs-longstrap.png";
+import vsQuickMountIcon from "@/assets/icon-vs-quickmount.png";
+import vsQuickClipIcon from "@/assets/icon-vs-quickclip.jpg";
+import vsActiveLedIcon from "@/assets/icon-vs-activeled.png";
+import vsNightGlowIcon from "@/assets/icon-vs-nightglow.png";
+import vsRainShieldIcon from "@/assets/icon-vs-rainshield.png";
+import vsFlexVolumeIcon from "@/assets/icon-vs-flexvolume.png";
+import vsBottleDockIcon from "@/assets/icon-vs-bottledock.png";
 
 export interface ProductFeature {
   label: string;
@@ -51,6 +62,24 @@ export const PRODUCT_FEATURES: ReadonlyArray<ProductFeature> = [
     tooltip: "Možnost montáže na bolt on systém." },
   { label: "MorseoColors™", icon: Palette, image: chromaPickIcon,
     tooltip: "8 barev pro dokonalý match s elektrokolem/gravelem." },
+
+  // ── VAPESPORT klasika ──────────────────────────────
+  { label: "LongStrap™", icon: Cable, image: vsLongStrapIcon,
+    tooltip: "Dlouhé pásky obepnou i široké rámy elektrokol." },
+  { label: "QuickMount™", icon: Anchor, image: vsQuickMountIcon,
+    tooltip: "Rychloupínací KLICKFIX adaptér v balení." },
+  { label: "QuickClip™", icon: Paperclip, image: vsQuickClipIcon,
+    tooltip: "Rychloupínací T-klip — nacvaknutí jednou rukou." },
+  { label: "ActiveLED™", icon: Lightbulb, image: vsActiveLedIcon,
+    tooltip: "Integrované LED světlo pro bezpečnost." },
+  { label: "NightGlow™", icon: Sparkles, image: vsNightGlowIcon,
+    tooltip: "Reflexní prvky pro viditelnost za tmy." },
+  { label: "RainShield™", icon: Umbrella, image: vsRainShieldIcon,
+    tooltip: "Pláštěnka v balení — obsah zůstane suchý." },
+  { label: "FlexVolume™", icon: Maximize2, image: vsFlexVolumeIcon,
+    tooltip: "Rozšiřitelný objem, když potřebuješ naložit víc." },
+  { label: "BottleDock™", icon: GlassWater, image: vsBottleDockIcon,
+    tooltip: "Kapsa na láhev (bidon) po ruce." },
 ];
 
 const FEATURE_BY_LABEL = new Map(
