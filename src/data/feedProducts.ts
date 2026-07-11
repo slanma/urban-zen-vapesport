@@ -1145,7 +1145,11 @@ export const feedProducts: Product[] = [
       "Plně vyztužená – kopíruje zadní roh rámu u sedlovky",
       "Dvě kapsy: hluboká (nabíječka, nářadí) + plochá (mobil, klíče odděleně)",
       "Lze otočit dopředu ke spodní trubce (fixní pásek stačí odstřihnout)",
-      "Silikonové suché zipy 12 cm/ks – šetrné k laku"
+      "Silikonové suché zipy 12 cm/ks – šetrné k laku",
+      "GekkoGrip™",
+      "HydroGuard™",
+      "AquaLock™",
+      "E-bikeReady™"
     ],
     "specs": [
       {
@@ -1237,7 +1241,11 @@ export const feedProducts: Product[] = [
       "Prodloužené silikonové pásky E-bike Safe",
       "Oboustranné upínání – lze uchytit i dopředu ke spodní rámové trubce (k baterii), nejen vzadu k sedlovce",
       "Suché zipy 12 cm na každé straně",
-      "Silikonové pásky šetrné k jakémukoli laku – lesklému, matnému i karbonu"
+      "Silikonové pásky šetrné k jakémukoli laku – lesklému, matnému i karbonu",
+      "GekkoGrip™",
+      "HydroGuard™",
+      "AquaLock™",
+      "E-bikeReady™"
     ],
     "specs": [
       {
@@ -1322,7 +1330,14 @@ export const feedProducts: Product[] = [
       "Svislá orientace, profil na řídítkách jen 4,5 cm",
       "Nepromokavý vnější zip a materiál PE 600D",
       "Uchycení: 3 silikonové suché zipy na představec + 2 na řídítka",
-      "Uvnitř uzaviratelná kapsička na zip + přihrádky na drobnosti"
+      "Uvnitř uzaviratelná kapsička na zip + přihrádky na drobnosti",
+      "GekkoGrip™",
+      "HydroGuard™",
+      "AquaLock™",
+      "E-bikeReady™",
+      "MaxiMobile™",
+      "AeroFlow™",
+      "UltraTouch™"
     ],
     "specs": [
       {
@@ -1411,7 +1426,13 @@ export const feedProducts: Product[] = [
       "3 silikonové suché zipy 12 cm/ks – popruh na širokou škálu představců",
       "Vývod na kabel/sluchátka v zadní části",
       "Dotyková slída + vypolstrovaný prostor pod ní – telefon drží pevně",
-      "Na vyžádání 2 suché zipy navíc ZDARMA"
+      "Na vyžádání 2 suché zipy navíc ZDARMA",
+      "GekkoGrip™",
+      "HydroGuard™",
+      "AquaLock™",
+      "E-bikeReady™",
+      "MaxiMobile™",
+      "UltraTouch™"
     ],
     "specs": [
       {
@@ -1495,7 +1516,12 @@ export const feedProducts: Product[] = [
       "Aerodynamické zúžení z 6,5 na 3 cm – pohodlné šlapání ve stoje",
       "3 silikonové pásky 24 cm/ks – šetrné k laku, drží na široké škále rámů",
       "Univerzální – ladí ke každé značce kola díky nenápadnému logu",
-      "Telefon se vejde našikmo (velikostně např. iPhone 17 Pro); uvnitř jeden otevřený prostor bez kapsiček"
+      "Telefon se vejde našikmo (velikostně např. iPhone 17 Pro); uvnitř jeden otevřený prostor bez kapsiček",
+      "100%HydroGuard™",
+      "AquaLock™",
+      "E-bikeReady™",
+      "Flexible Touch™",
+      "AeroFlow™"
     ],
     "specs": [
       {
@@ -1576,7 +1602,10 @@ export const feedProducts: Product[] = [
       "Šířka 6,5 cm – neodírá vnitřní stranu stehen",
       "Schová se do zákrytu sedla",
       "Silikonové pásky šetrné k jakémukoli laku – lesklému, matnému i karbonu",
-      "Vnitřní síťka na drobnosti"
+      "Vnitřní síťka na drobnosti",
+      "100%HydroGuard™",
+      "AquaLock™",
+      "AeroFlow™"
     ],
     "specs": [
       {
@@ -1656,7 +1685,11 @@ export const feedProducts: Product[] = [
       "Hluboká hlavní kapsa (nabíječka) + plochá boční kapsa",
       "Oboustranné upínání – lze uchytit i dopředu ke spodní rámové trubce (k baterii), nejen vzadu k sedlovce",
       "Suché zipy 12 cm na každé straně",
-      "Silikonové pásky šetrné k jakémukoli laku – lesklému, matnému i karbonu"
+      "Silikonové pásky šetrné k jakémukoli laku – lesklému, matnému i karbonu",
+      "GekkoGrip™",
+      "HydroGuard™",
+      "AquaLock™",
+      "E-bikeReady™"
     ],
     "specs": [
       {
@@ -1744,7 +1777,13 @@ export const feedProducts: Product[] = [
       "E-bike Ready – extra dlouhé silikonové pásky drží pevně a jsou šetrné i k lesklému laku",
       "Průzor (slída) 10 × 19 cm – i největší telefony v odolném krytu (MaxiMobile™)",
       "Geometrická stabilita – spodní úchyty kopírují horní trubku e-kol, minimum bočního pohybu",
-      "Telefon jištěný suchým zipem a gumou; vypolstrovaný, lehce izolační vnitřek"
+      "Telefon jištěný suchým zipem a gumou; vypolstrovaný, lehce izolační vnitřek",
+      "GekkoGrip™",
+      "HydroGuard™",
+      "AquaLock™",
+      "E-bikeReady™",
+      "MaxiMobile™",
+      "UltraTouch™"
     ],
     "specs": [
       {
@@ -1840,7 +1879,11 @@ export const feedProducts: Product[] = [
       "Oboustranné upínání – lze uchytit i dopředu ke spodní rámové trubce (k baterii), nejen vzadu k sedlovce",
       "Suché zipy 12 cm na každé straně",
       "Silikonové pásky šetrné k jakémukoli laku – lesklému, matnému i karbonu",
-      "Oproti klasické verzi popruhy pro uchycení na 2 stranách brašny"
+      "Oproti klasické verzi popruhy pro uchycení na 2 stranách brašny",
+      "GekkoGrip™",
+      "HydroGuard™",
+      "AquaLock™",
+      "E-bikeReady™"
     ],
     "specs": [
       {
