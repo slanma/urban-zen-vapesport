@@ -5,7 +5,7 @@ import { useB2BPartner } from "@/hooks/useB2BPartner";
 
 const navItems = [
   { label: "DOMŮ", href: "/" },
-  { label: "KOLEKCE MORSEOVAPE", href: "/produkty?kategorie=morseo" },
+  { label: "KOLEKCE MORSEO", href: "/kolekce-morseo" },
   { label: "OBCHOD", href: "/obchod" },
   { label: "O NÁS", href: "#onas" },
   { label: "BLOG", href: "#blog" },
@@ -46,7 +46,7 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
 
         {/* Right icons */}
         <div className="flex items-center gap-5">
-          <a href="/produkty" className="hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors" aria-label="AI vyhledávání produktů">
+          <a href="/obchod" className="hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors" aria-label="AI vyhledávání produktů">
             <Search className="w-4 h-4" />
             <span>Hledat</span>
           </a>

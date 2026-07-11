@@ -6,12 +6,14 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { CartProvider } from "@/hooks/useCart";
 import Index from "./pages/Index";
-import Products from "./pages/Products";
+
 import Shop from "./pages/Shop";
+import KolekceMorseo from "./pages/KolekceMorseo";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import B2BLogin from "./pages/B2BLogin";
+import B2BSetPassword from "./pages/B2BSetPassword";
 import B2BRegister from "./pages/B2BRegister";
 import B2BDashboard from "./pages/B2BDashboard";
 import B2BWholesale from "./pages/B2BWholesale";
@@ -53,12 +55,14 @@ const App = () => (
           <AnalyticsTracker />
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/produkty" element={<Products />} />
+            <Route path="/produkty" element={<Navigate to="/obchod" replace />} />
             <Route path="/obchod" element={<Shop />} />
+            <Route path="/kolekce-morseo" element={<KolekceMorseo />} />
             <Route path="/produkt/:id" element={<ProductDetail />} />
             <Route path="/kosik" element={<Cart />} />
             <Route path="/pokladna" element={<Checkout />} />
             <Route path="/b2b-login" element={<B2BLogin />} />
+            <Route path="/b2b-heslo" element={<B2BSetPassword />} />
             <Route path="/b2b-register" element={<B2BRegister />} />
             <Route path="/b2b-dashboard" element={<B2BDashboard />} />
             <Route path="/b2b-velkoobchod" element={<B2BWholesale />} />
