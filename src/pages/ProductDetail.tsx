@@ -317,7 +317,9 @@ const ProductDetail = () => {
               </div>
             )}
 
-            {/* Frame circumference */}
+            {/* Frame circumference — jen trojúhelníky, SMB a produkty s dlouhými pásky */}
+            {(/troj[uúûù]h|smb/i.test(`${product.name} ${product.id}`) ||
+              (product.features ?? []).includes("LongStrap™")) && (
             <div className="mt-6">
               <Label
                 htmlFor="frame-circ"
@@ -340,6 +342,7 @@ const ProductDetail = () => {
                 Pokud je váš obvod větší než {maxCircCm} cm, automaticky přidáme prodloužené suché zipy.
               </p>
             </div>
+            )}
 
             {/* Quantity + Add to cart */}
             <div className="mt-8 flex items-center gap-3">
