@@ -1,6 +1,7 @@
 // AUTO-GENERATED / MORSEO data + lokální fotky, balast + Wasabi odstraněny
 // Řady, názvy, duplicita display + MORSEO barvy (available_colors) dle Lucie.
 // Popis produktů sjednocen: pole problem / funkce / pouziti (Problém / Funkce / Použití).
+// Obrázky přepnuty z CDN na lokální /images/produkty-vapesport/. Produkty bez fotek odebrány.
 import type { Product } from "./products";
 
 export const feedProducts: Product[] = [
@@ -37,28 +38,21 @@ export const feedProducts: Product[] = [
         "value": "6 barev"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/maly-troj-012-2116775.jpeg",
+    "image": "/images/produkty-vapesport/maly-trojuhlenik-3kapsy/barva-neon-yellow-vs.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/maly-troj-012-2116775.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/maly-troj-012-2116775.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/maly-troj-008-2116767.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/684/img-0005-1683980.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/maly-troj-002-2116773.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-011-1991939.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/maly-troj-010-2116765.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/maly-troj-007-2116768.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/maly-troj-006-2116769.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/maly-troj-011-2116776.jpeg"
+      "/images/produkty-vapesport/maly-trojuhlenik-3kapsy/barva-neon-yellow-vs.jpg",
+      "/images/produkty-vapesport/maly-trojuhlenik-3kapsy/barva-neon-green-vs.jpg",
+      "/images/produkty-vapesport/maly-trojuhlenik-3kapsy/barva-orange-vs.jpg",
+      "/images/produkty-vapesport/maly-trojuhlenik-3kapsy/barva-red-vs.jpg",
+      "/images/produkty-vapesport/maly-trojuhlenik-3kapsy/barva-pink-vs.jpg"
     ],
     "b2b_price": 179,
     "available_colors": [
       "neon-yellow",
       "neon-green",
-      "neon-orange",
-      "red",
-      "pink",
       "orange",
-      "yellow"
+      "red",
+      "pink"
     ]
   },
   {
@@ -94,78 +88,21 @@ export const feedProducts: Product[] = [
         "value": "5 barev"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/plochy4k-007-2116779.jpeg",
+    "image": "/images/produkty-vapesport/plochy-trojuhelnik-4kapsy-vape/barva-neon-yellow-vs.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/plochy4k-007-2116779.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/plochy4k-007-2116779.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/752/img-0057-1683983-1751247.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/752/img-0059-1683982-1751248.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-007-1991938.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/plochy4k-003-2116783.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/plochy4k-005-2116781.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/plochy4k-011-2116786.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/plochy4k-010-2116787.jpeg"
+      "/images/produkty-vapesport/plochy-trojuhelnik-4kapsy-vape/barva-neon-yellow-vs.jpg",
+      "/images/produkty-vapesport/plochy-trojuhelnik-4kapsy-vape/barva-orange-vs.jpg",
+      "/images/produkty-vapesport/plochy-trojuhelnik-4kapsy-vape/barva-pink-vs.jpg",
+      "/images/produkty-vapesport/plochy-trojuhelnik-4kapsy-vape/barva-turquoise-vs.jpg",
+      "/images/produkty-vapesport/plochy-trojuhelnik-4kapsy-vape/pohled-shora.jpg",
+      "/images/produkty-vapesport/plochy-trojuhelnik-4kapsy-vape/na-kole.jpg"
     ],
     "b2b_price": 195,
     "available_colors": [
-      "neon-orange",
+      "neon-yellow",
+      "orange",
       "pink",
-      "turquoise",
-      "orange"
-    ]
-  },
-  {
-    "id": "vs-smb-vapesport-904678",
-    "name": "SMB Vapesport",
-    "category": "vapesport",
-    "categoryLabel": "BRAŠNY NA KOLO",
-    "price": 400,
-    "shortDescription": "Brašna na rám za představec kola s uchopením na suché zipy. Slída 6,7\" je dotyková.",
-    "problem": "Chcete mít telefon po ruce pro navigaci, ale klasické držáky ho nechrání a nejde přes ně pořádně ovládat displej.",
-    "funkce": "Brašna na rám za představec s uchycením na suché zipy a dotykovou slídou 6,7\", přes kterou telefon plně ovládáte.",
-    "pouziti": "Pro navigaci za jízdy a bezpečné uložení telefonu na horní trubce rámu.",
-    "features": [
-      "LongStrap™",
-      "UltraTouch™",
-      "E-bikeReady™",
-      "NightGlow™"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Brašny na kolo"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "310073"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      },
-      {
-        "label": "Varianty",
-        "value": "2 barev"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/smb-004-2039648.jpeg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/smb-004-2039648.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/smb-004-2039648.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-008-1991937.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/smb-008-2039644.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/smb-007-2039645.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/smb-006-2039646.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/smb-005-2039647.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/smb-003-2039649.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/smb-002-2039650.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/smb-001-2039651.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/770/img-2561-1769334.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/933/prislusenstvi-1932333.jpg"
-    ],
-    "available_colors": [
-      "turquoise",
-      "orange"
+      "turquoise"
     ]
   },
   {
@@ -206,20 +143,21 @@ export const feedProducts: Product[] = [
       "/images/produkty-vapesport/lady/barva-neon-yellow-vs.jpg",
       "/images/produkty-vapesport/lady/barva-neon-green-vs.jpg",
       "/images/produkty-vapesport/lady/barva-neon-orange-vs.jpg",
+      "/images/produkty-vapesport/lady/barva-red-vs.jpg",
       "/images/produkty-vapesport/lady/barva-pink-vs.jpg",
       "/images/produkty-vapesport/lady/barva-turquoise-vs.jpg",
       "/images/produkty-vapesport/lady/barva-blue-vs.jpg",
-      "/images/produkty-vapesport/lady/barva-red-vs.jpg"
+      "/images/produkty-vapesport/lady/na-kole.jpg"
     ],
     "b2b_price": 231,
     "available_colors": [
       "neon-yellow",
       "neon-green",
       "neon-orange",
+      "red",
       "pink",
       "turquoise",
-      "blue",
-      "red"
+      "blue"
     ]
   },
   {
@@ -255,67 +193,14 @@ export const feedProducts: Product[] = [
         "value": "1 barev"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/elektro-i-001-2116837.jpeg",
+    "image": "/images/produkty-vapesport/trojuhelnik-elektro-i/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/elektro-i-001-2116837.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/elektro-i-001-2116837.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-003-1991952.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/729/img-6755-1728797.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/elektro-i-003-2116835.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/elektro-i-002-2116836.jpeg"
+      "/images/produkty-vapesport/trojuhelnik-elektro-i/hlavni.jpg",
+      "/images/produkty-vapesport/trojuhelnik-elektro-i/pohled-2.jpg",
+      "/images/produkty-vapesport/trojuhelnik-elektro-i/pohled-3.jpg",
+      "/images/produkty-vapesport/trojuhelnik-elektro-i/na-kole.jpg"
     ],
     "b2b_price": 170
-  },
-  {
-    "id": "vs-elektro-ii-vapesport-904683",
-    "name": "Elektro II VAPESPORT",
-    "category": "vapesport",
-    "categoryLabel": "RÁMOVÉ BRAŠNY",
-    "price": 391,
-    "shortDescription": "Trojúhelník do rámu na nabíječku z elektrokol. HAIBIKE a LECTRON",
-    "problem": "Nabíječku z elektrokola HAIBIKE nebo LECTRON potřebujete vozit s sebou, ale nemáte ji kam bezpečně uložit.",
-    "funkce": "Trojúhelník do rámu navržený na převoz nabíječky elektrokol HAIBIKE a LECTRON.",
-    "pouziti": "Pro delší trasy s elektrokolem, kdy chcete mít nabíječku po ruce a chráněnou přímo v rámu.",
-    "features": [
-      "LongStrap™",
-      "E-bikeReady™",
-      "NightGlow™"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Rámové brašny"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "410006"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      },
-      {
-        "label": "Varianty",
-        "value": "2 barev"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/tlustoch-001-2116855.jpeg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/tlustoch-001-2116855.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/tlustoch-001-2116855.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/13308587-1215327541824432-2637036126679989605-o-1569290.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/13330914-1215327468491106-3128574960037113432-n-1569291.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-002-1991953.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/729/img-6755-1728794.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/tlustoch-005-2116856.jpeg"
-    ],
-    "b2b_price": 185,
-    "available_colors": [
-      "neon-green",
-      "neon-red",
-      "blue",
-      "red"
-    ]
   },
   {
     "id": "vs-uni-maxi-twist-904687",
@@ -350,22 +235,14 @@ export const feedProducts: Product[] = [
         "value": "7 barev"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/uni-maxi-twist-010-2116824.jpeg",
+    "image": "/images/produkty-vapesport/uni-maxi-twist/barva-grey-vs.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/uni-maxi-twist-010-2116824.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-010-2116824.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-004-2116830.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/18110588-10208648085506031-1890634777-n-1569306.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-002-2116832.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-005-2116829.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-003-2116831.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-020-1991956.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-009-2116825.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-008-2116826.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-007-2116827.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-006-2116828.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-001-2116833.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/uni-maxi-twist-011-2116834.jpeg"
+      "/images/produkty-vapesport/uni-maxi-twist/barva-grey-vs.jpg",
+      "/images/produkty-vapesport/uni-maxi-twist/barva-neon-green-vs.jpg",
+      "/images/produkty-vapesport/uni-maxi-twist/barva-orange-vs.jpg",
+      "/images/produkty-vapesport/uni-maxi-twist/barva-red-vs.jpg",
+      "/images/produkty-vapesport/uni-maxi-twist/barva-blue-vs.jpg",
+      "/images/produkty-vapesport/uni-maxi-twist/pohled-drzak.jpg"
     ],
     "b2b_price": 340
   },
@@ -400,17 +277,16 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/riditkovka-pe-001-2116860.jpeg",
+    "image": "/images/produkty-vapesport/brasna-mala-na-riditka-pe/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/riditkovka-pe-001-2116860.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/riditkovka-pe-001-2116860.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/1-2116012.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/riditkovka-pe-002-2116859.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/riditkovka-pe-003-2116858.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/18110588-10208648085506031-1890634777-n-1569424-2116017.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/riditkovka-pe-004-2116857.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/3-2116015.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-010-1991958.jpeg"
+      "/images/produkty-vapesport/brasna-mala-na-riditka-pe/hlavni.jpg",
+      "/images/produkty-vapesport/brasna-mala-na-riditka-pe/pohled-2.jpg",
+      "/images/produkty-vapesport/brasna-mala-na-riditka-pe/pohled-3.jpg",
+      "/images/produkty-vapesport/brasna-mala-na-riditka-pe/pohled-4.jpg",
+      "/images/produkty-vapesport/brasna-mala-na-riditka-pe/pohled-5.jpg",
+      "/images/produkty-vapesport/brasna-mala-na-riditka-pe/pohled-6.jpg",
+      "/images/produkty-vapesport/brasna-mala-na-riditka-pe/pohled-7-vnitrek.jpg",
+      "/images/produkty-vapesport/brasna-mala-na-riditka-pe/na-kole.jpg"
     ],
     "b2b_price": 350
   },
@@ -444,13 +320,11 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/5-5-pe-001-2116869.jpeg",
+    "image": "/images/produkty-vapesport/mobil-5-5-pe/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/5-5-pe-001-2116869.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/5-5-pe-001-2116869.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/5-5-pe-003-2116867.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/5-5-pe-002-2116868.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-015-1991960.jpeg"
+      "/images/produkty-vapesport/mobil-5-5-pe/hlavni.jpg",
+      "/images/produkty-vapesport/mobil-5-5-pe/pohled-2.jpg",
+      "/images/produkty-vapesport/mobil-5-5-pe/pohled-3.jpg"
     ],
     "b2b_price": 172
   },
@@ -484,13 +358,12 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/nosic-br-004-2116838.jpeg",
+    "image": "/images/produkty-vapesport/brasna-na-nosic/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/nosic-br-004-2116838.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-004-2116838.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-001-2116841.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-003-2116839.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-002-2116840.jpeg"
+      "/images/produkty-vapesport/brasna-na-nosic/hlavni.jpg",
+      "/images/produkty-vapesport/brasna-na-nosic/pohled-2.jpg",
+      "/images/produkty-vapesport/brasna-na-nosic/pohled-3.jpg",
+      "/images/produkty-vapesport/brasna-na-nosic/na-kole.jpg"
     ],
     "b2b_price": 474
   },
@@ -525,13 +398,13 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/nosic-br-lux-001-2116845.jpeg",
+    "image": "/images/produkty-vapesport/brasna-na-nosic-lux/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/nosic-br-lux-001-2116845.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-lux-001-2116845.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-lux-004-2116842.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-lux-003-2116843.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/nosic-br-lux-002-2116844.jpeg"
+      "/images/produkty-vapesport/brasna-na-nosic-lux/hlavni.jpg",
+      "/images/produkty-vapesport/brasna-na-nosic-lux/pohled-2.jpg",
+      "/images/produkty-vapesport/brasna-na-nosic-lux/pohled-3.jpg",
+      "/images/produkty-vapesport/brasna-na-nosic-lux/na-kole-2.jpg",
+      "/images/produkty-vapesport/brasna-na-nosic-lux/na-kole.jpg"
     ],
     "b2b_price": 695
   },
@@ -568,15 +441,14 @@ export const feedProducts: Product[] = [
         "value": "1 barev"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/zralok-004-2116878.jpeg",
+    "image": "/images/produkty-vapesport/brasna-pod-sedlo-zralok-twist/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/zralok-004-2116878.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/zralok-004-2116878.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/zralok-001-2116873.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/zralok-006-2116874.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/zralok-002-2116875.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/zralok-005-2116876.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/zralok-003-2116877.jpeg"
+      "/images/produkty-vapesport/brasna-pod-sedlo-zralok-twist/hlavni.jpg",
+      "/images/produkty-vapesport/brasna-pod-sedlo-zralok-twist/pohled-2.jpg",
+      "/images/produkty-vapesport/brasna-pod-sedlo-zralok-twist/pohled-3.jpg",
+      "/images/produkty-vapesport/brasna-pod-sedlo-zralok-twist/pohled-4.jpg",
+      "/images/produkty-vapesport/brasna-pod-sedlo-zralok-twist/pohled-5.jpg",
+      "/images/produkty-vapesport/brasna-pod-sedlo-zralok-twist/pohled-6.jpg"
     ],
     "b2b_price": 186
   },
@@ -610,15 +482,13 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/spe-001-2116850.jpeg",
+    "image": "/images/produkty-vapesport/podsedlo-mala-spe/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/spe-001-2116850.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/spe-001-2116850.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/untitled-project-5-2116978.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/spe-005-2116846.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-bras-en-web-024-1991950.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/spe-004-2116847.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/spe-002-2116849.jpeg"
+      "/images/produkty-vapesport/podsedlo-mala-spe/hlavni.jpg",
+      "/images/produkty-vapesport/podsedlo-mala-spe/pohled-2.jpg",
+      "/images/produkty-vapesport/podsedlo-mala-spe/pohled-3.jpg",
+      "/images/produkty-vapesport/podsedlo-mala-spe/pohled-4-plastenka.jpg",
+      "/images/produkty-vapesport/podsedlo-mala-spe/na-kole.jpg"
     ],
     "b2b_price": 195
   },
@@ -671,48 +541,14 @@ export const feedProducts: Product[] = [
         "value": "řídítka, sedlovka, rám, představec"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/570/18110588-10208648085506031-1890634777-n-1569424.jpg",
+    "image": "/images/produkty-vapesport/klickfix/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/570/18110588-10208648085506031-1890634777-n-1569424.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/18110588-10208648085506031-1890634777-n-1569424.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/18052606-10208648085426029-1193298647-n-1569425.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/img-8220-1569426.jpg"
+      "/images/produkty-vapesport/klickfix/hlavni.jpg",
+      "/images/produkty-vapesport/klickfix/pohled-2.jpg",
+      "/images/produkty-vapesport/klickfix/pohled-3.jpg",
+      "/images/produkty-vapesport/klickfix/pohled-4.jpg"
     ],
     "b2b_price": 151
-  },
-  {
-    "id": "vs-plastenka-na-trojbrasnu-904712",
-    "name": "Pláštěnka na trojbrašnu",
-    "category": "vapesport",
-    "categoryLabel": "DOPLŇKY K BRAŠNÁM",
-    "price": 300,
-    "shortDescription": "Voděodolná pláštěnka na 3-dílnou nebo 2-dílnou brašnu na nosič.",
-    "problem": "Za deště potřebujete rychle ochránit trojbrašnu i její obsah před promáčením.",
-    "funkce": "Voděodolná pláštěnka přesně na 3-dílnou i 2-dílnou brašnu na nosič.",
-    "pouziti": "Nasadíte při dešti nebo jízdě v mokru; když ji nepotřebujete, snadno ji složíte.",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Doplňky k brašnám"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "310007"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/570/plastenka-1569428.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/570/plastenka-1569428.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/plastenka-1569428.jpg"
-    ]
   },
   {
     "id": "vs-cyklo-batoh-9l-904713",
@@ -747,18 +583,12 @@ export const feedProducts: Product[] = [
         "value": "3 barev"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/570/img-8241-1569429.jpg",
+    "image": "/images/produkty-vapesport/cyklo-batoh-9l/barva-cerna.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/570/img-8241-1569429.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/img-8241-1569429.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/img-8228-1569430.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/img-8224-1569431.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/570/img-8229-1569432.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/571/img-8239-1570613.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/571/img-8231-kopie-1570614.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/571/img-8222-1570615.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/571/img-8234-kopie-1570616.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/571/4f0bf62d-7a90-477b-8fd7-047b8f2c96e3-2-1570618.jpg"
+      "/images/produkty-vapesport/cyklo-batoh-9l/barva-cerna.jpg",
+      "/images/produkty-vapesport/cyklo-batoh-9l/barva-bila.jpg",
+      "/images/produkty-vapesport/cyklo-batoh-9l/barva-modra.jpg",
+      "/images/produkty-vapesport/cyklo-batoh-9l/barva-cervena.jpg"
     ],
     "b2b_price": 465
   },
@@ -792,54 +622,15 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/tablet-001-2116872.jpeg",
+    "image": "/images/produkty-vapesport/tablet-7-8-pe/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/tablet-001-2116872.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/tablet-001-2116872.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/tablet-003-2116870.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/tablet-002-2116871.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/992/souhrn-brasen-web-016-1991957.jpeg"
+      "/images/produkty-vapesport/tablet-7-8-pe/hlavni.jpg",
+      "/images/produkty-vapesport/tablet-7-8-pe/pohled-2.jpg",
+      "/images/produkty-vapesport/tablet-7-8-pe/pohled-3.jpg",
+      "/images/produkty-vapesport/tablet-7-8-pe/pohled-4-mapa.jpg",
+      "/images/produkty-vapesport/tablet-7-8-pe/na-kole.jpg"
     ],
     "b2b_price": 174
-  },
-  {
-    "id": "vs-taska-na-kolo-905504",
-    "name": "Taška na kolo",
-    "category": "vapesport",
-    "categoryLabel": "DOPLŇKY K BRAŠNÁM",
-    "price": 2222,
-    "shortDescription": "Taška na kolo VAPE",
-    "problem": "Chcete jednoduchou, univerzální tašku na kolo pro běžné věci.",
-    "funkce": "Praktická taška na kolo VAPE pro každodenní použití.",
-    "pouziti": "Na běžné jízdy, když potřebujete jen základní úložný prostor.",
-    "features": [
-      "E-bikeReady™"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Doplňky k brašnám"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "210023"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/579/d190567d-b97f-418c-9fb9-9d7b6ded9b49-1578033.jpeg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/579/d190567d-b97f-418c-9fb9-9d7b6ded9b49-1578033.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/d190567d-b97f-418c-9fb9-9d7b6ded9b49-1578033.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/bfb71ab5-6d25-4df8-a3c3-f4f620f09a9c-1578034.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/19950e61-c70d-4b1c-90e9-0118ab9ea8b2-1578035.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/a1091f1a-1659-4011-8bf6-2049da71516e-1578036.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/6e55f2e2-5bac-4b2e-8b9a-3519a6944385-1578037.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/579/7b9c50aa-25cf-41b5-80be-8d8aff8bdc35-1578038.jpeg"
-    ],
-    "b2b_price": 1053
   },
   {
     "id": "vs-obal-na-tlumic-908656",
@@ -869,46 +660,11 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/604/obalnatlumic-1603631.jpg",
+    "image": "/images/produkty-vapesport/obal-na-tlumic/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/604/obalnatlumic-1603631.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/604/obalnatlumic-1603631.jpg"
+      "/images/produkty-vapesport/obal-na-tlumic/hlavni.jpg"
     ],
     "b2b_price": 158
-  },
-  {
-    "id": "vs-vrch-3-brasny-912317",
-    "name": "Vrch 3-brašny",
-    "category": "vapesport",
-    "categoryLabel": "BRAŠNY NA NOSIČ",
-    "price": 426,
-    "shortDescription": "Vrch 3-brašny s možností vytvoření příručního batohu s nosnými popruhy.  Uchycení na trojbrašnu je pomocí spon. Výhoda uchopení na spony je …",
-    "problem": "Z trojbrašny chcete občas oddělit vrchní díl a vzít si ho s sebou jako příruční batoh.",
-    "funkce": "Vrchní díl trojbrašny s nosnými popruhy pro vytvoření příručního batohu; uchycení na trojbrašnu pomocí spon pro rychlé oddělení.",
-    "pouziti": "Když necháte kolo a potřebujete si vzít věci s sebou — vrch sundáte a nesete jako batůžek.",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Brašny na nosič"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "411004"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/635/3-bras-na-1634564.jpg",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/635/3-bras-na-1634564.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/635/3-bras-na-1634564.jpg"
-    ]
   },
   {
     "id": "vs-trojuhelnik-sw-914131",
@@ -946,14 +702,12 @@ export const feedProducts: Product[] = [
     "image": "/images/produkty-vapesport/sw/barva-orange-vs.jpg",
     "images": [
       "/images/produkty-vapesport/sw/barva-orange-vs.jpg",
-      "/images/produkty-vapesport/sw/barva-yellow-vs.jpg",
-      "/images/produkty-vapesport/sw/barva-neon-green-vs.jpg"
+      "/images/produkty-vapesport/sw/barva-yellow-vs.jpg"
     ],
     "b2b_price": 158,
     "available_colors": [
       "orange",
-      "yellow",
-      "neon-green"
+      "yellow"
     ]
   },
   {
@@ -984,8 +738,15 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/747/img-0956-1746883.jpg",
-    "b2b_price": 431
+    "image": "/images/produkty-vapesport/street-bag/hlavni.jpg",
+    "b2b_price": 431,
+    "images": [
+      "/images/produkty-vapesport/street-bag/hlavni.jpg",
+      "/images/produkty-vapesport/street-bag/pohled-2.jpg",
+      "/images/produkty-vapesport/street-bag/pohled-3.jpg",
+      "/images/produkty-vapesport/street-bag/na-kole-2.jpg",
+      "/images/produkty-vapesport/street-bag/na-kole.jpg"
+    ]
   },
   {
     "id": "vs-m2-podsedlo-925467",
@@ -1028,10 +789,12 @@ export const feedProducts: Product[] = [
       "/images/produkty-vapesport/m2/barva-yellow-vs.jpg",
       "/images/produkty-vapesport/m2/barva-neon-green-vs.jpg",
       "/images/produkty-vapesport/m2/barva-neon-orange-vs.jpg",
+      "/images/produkty-vapesport/m2/barva-red-vs.jpg",
       "/images/produkty-vapesport/m2/barva-pink-vs.jpg",
       "/images/produkty-vapesport/m2/barva-turquoise-vs.jpg",
       "/images/produkty-vapesport/m2/barva-blue-vs.jpg",
-      "/images/produkty-vapesport/m2/barva-red-vs.jpg"
+      "/images/produkty-vapesport/m2/na-kole-2.jpg",
+      "/images/produkty-vapesport/m2/na-kole.jpg"
     ],
     "b2b_price": 169,
     "available_colors": [
@@ -1041,10 +804,10 @@ export const feedProducts: Product[] = [
       "yellow",
       "neon-green",
       "neon-orange",
+      "red",
       "pink",
       "turquoise",
-      "blue",
-      "red"
+      "blue"
     ]
   },
   {
@@ -1075,17 +838,16 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/1-2116024.jpeg",
+    "image": "/images/produkty-vapesport/neoprenovy-obal/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/1-2116024.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/1-2116024.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/1-2116019.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/obal-na-baterii-ebike-014-2039511.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/2-2116023.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/5-2116018.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/2-2116020.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/4-2116021.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/117/3-2116022.jpeg"
+      "/images/produkty-vapesport/neoprenovy-obal/hlavni.jpg",
+      "/images/produkty-vapesport/neoprenovy-obal/pohled-2.jpg",
+      "/images/produkty-vapesport/neoprenovy-obal/pohled-3.jpg",
+      "/images/produkty-vapesport/neoprenovy-obal/pohled-4.jpg",
+      "/images/produkty-vapesport/neoprenovy-obal/pohled-5.jpg",
+      "/images/produkty-vapesport/neoprenovy-obal/schema-mereni.jpg",
+      "/images/produkty-vapesport/neoprenovy-obal/na-kole-2.jpg",
+      "/images/produkty-vapesport/neoprenovy-obal/na-kole.jpg"
     ],
     "b2b_price": 274
   },
@@ -1134,11 +896,14 @@ export const feedProducts: Product[] = [
         "value": "řídítka, sedlovka, rám, představec"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/942/dat-1941238.jpeg",
+    "image": "/images/produkty-vapesport/klickfix-bottle/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/942/dat-1941238.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/942/dat-1941238.jpeg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/001/942/341650-1941237.jpeg"
+      "/images/produkty-vapesport/klickfix-bottle/hlavni.jpg",
+      "/images/produkty-vapesport/klickfix-bottle/pohled-2.jpg",
+      "/images/produkty-vapesport/klickfix-bottle/pohled-3.jpg",
+      "/images/produkty-vapesport/klickfix-bottle/pohled-4.jpg",
+      "/images/produkty-vapesport/klickfix-bottle/pohled-5.jpg",
+      "/images/produkty-vapesport/klickfix-bottle/pohled-6-baleni.jpg"
     ],
     "b2b_price": 181
   },
@@ -1170,46 +935,10 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/univerzalni-neopren-na-prevoz-2039510.gif",
+    "image": "/images/produkty-vapesport/obal-na-prevoz-elektrokola/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/univerzalni-neopren-na-prevoz-2039510.gif",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obrazku-img-1427-bylo-odstraneno-2039487.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obrazku-img-1434-bylo-odstraneno-2039488.png"
-    ]
-  },
-  {
-    "id": "vs-obal-na-display-prevoz-elektrokola-943568",
-    "name": "Obal na display - převoz elektrokola",
-    "category": "vapesport",
-    "categoryLabel": "ELEKTROKOLA",
-    "price": 400,
-    "shortDescription": "Neoprenový obal na display je vytvořen na Váš typ elektrokola. Po zadání rozměrů do poznámky Vám vytvoříme obal přesně na Váš typ displaye e…",
-    "problem": "Displej elektrokola je při převozu citlivý na náraz, vodu a sůl.",
-    "funkce": "Neoprenový obal na displej vyrobený na míru vašemu typu elektrokola (rozměry uveďte do poznámky).",
-    "pouziti": "Na ochranu displeje při převozu kola na nosiči, zejména za deště a v zimě.",
-    "features": [
-      "Originální produkt VAPESPORT",
-      "Odolný materiál pro každodenní použití"
-    ],
-    "specs": [
-      {
-        "label": "Kategorie",
-        "value": "Elektrokola"
-      },
-      {
-        "label": "Kód produktu",
-        "value": "410098"
-      },
-      {
-        "label": "Výrobce",
-        "value": "VAPESPORT"
-      }
-    ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/display-2039508.gif",
-    "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/display-2039508.gif",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obra-zku-img-1428-bylo-odstrane-no-2039483.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obra-zku-img-1429-bylo-odstrane-no-2039484.png"
+      "/images/produkty-vapesport/obal-na-prevoz-elektrokola/hlavni.jpg",
+      "/images/produkty-vapesport/obal-na-prevoz-elektrokola/pohled-2.jpg"
     ]
   },
   {
@@ -1240,15 +969,12 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/balicek-na-prevoz-2039504.gif",
+    "image": "/images/produkty-vapesport/neoprenova-sada-na-prevoz-elektrokola/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/balicek-na-prevoz-2039504.gif",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/popruh-2039468.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/img-1445-2039469.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obrazku-img-1428-bylo-odstraneno-2039471.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obrazku-img-1429-bylo-odstraneno-2039472.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obrazku-img-1434-bylo-odstraneno-2039470.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/040/pozadi-obrazku-img-1427-bylo-odstraneno-2039474.png"
+      "/images/produkty-vapesport/neoprenova-sada-na-prevoz-elektrokola/hlavni.jpg",
+      "/images/produkty-vapesport/neoprenova-sada-na-prevoz-elektrokola/pohled-2.jpg",
+      "/images/produkty-vapesport/neoprenova-sada-na-prevoz-elektrokola/pohled-3.jpg",
+      "/images/produkty-vapesport/neoprenova-sada-na-prevoz-elektrokola/pohled-4-popruh.jpg"
     ]
   },
   {
@@ -2130,14 +1856,13 @@ export const feedProducts: Product[] = [
         "value": "VAPESPORT"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/113/untitled-project-17-2112837.jpg",
+    "image": "/images/produkty-vapesport/brasna-na-miru/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/113/untitled-project-17-2112837.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/113/untitled-project-17-2112837.jpg",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/113/gemini-generated-image-d6hdpqd6hdpqd6hd-2112883.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/113/gemini-generated-image-95te7m95te7m95te-2112884.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/113/gemini-generated-image-eyzv1keyzv1keyzv-2112885.png",
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/1280x960x0/000/002/113/gemini-generated-image-tlfk1ptlfk1ptlfk-2112886.png"
+      "/images/produkty-vapesport/brasna-na-miru/hlavni.jpg",
+      "/images/produkty-vapesport/brasna-na-miru/pohled-2.jpg",
+      "/images/produkty-vapesport/brasna-na-miru/pohled-3.jpg",
+      "/images/produkty-vapesport/brasna-na-miru/pohled-4.jpg",
+      "/images/produkty-vapesport/brasna-na-miru/vyroba-na-miru.jpg"
     ]
   },
   {
@@ -2193,9 +1918,10 @@ export const feedProducts: Product[] = [
         "value": "šedá"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/maly-troj-012-2116775.jpeg",
+    "image": "/images/produkty-vapesport/velky-trojuhelnik-trikapsy/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/117/maly-troj-012-2116775.jpeg"
+      "/images/produkty-vapesport/velky-trojuhelnik-trikapsy/hlavni.jpg",
+      "/images/produkty-vapesport/velky-trojuhelnik-trikapsy/pohled-2.jpg"
     ]
   },
   {
@@ -2256,10 +1982,10 @@ export const feedProducts: Product[] = [
       "/images/produkty-vapesport/zralok-led/barva-neon-yellow-vs.jpg",
       "/images/produkty-vapesport/zralok-led/barva-neon-green-vs.jpg",
       "/images/produkty-vapesport/zralok-led/barva-neon-orange-vs.jpg",
+      "/images/produkty-vapesport/zralok-led/barva-red-vs.jpg",
       "/images/produkty-vapesport/zralok-led/barva-pink-vs.jpg",
       "/images/produkty-vapesport/zralok-led/barva-turquoise-vs.jpg",
-      "/images/produkty-vapesport/zralok-led/barva-blue-vs.jpg",
-      "/images/produkty-vapesport/zralok-led/barva-red-vs.jpg"
+      "/images/produkty-vapesport/zralok-led/barva-blue-vs.jpg"
     ],
     "available_colors": [
       "black",
@@ -2267,10 +1993,10 @@ export const feedProducts: Product[] = [
       "neon-yellow",
       "neon-green",
       "neon-orange",
+      "red",
       "pink",
       "turquoise",
-      "blue",
-      "red"
+      "blue"
     ]
   },
   {
@@ -2310,9 +2036,10 @@ export const feedProducts: Product[] = [
         "value": "Elektrokolo"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/display-2039508.gif",
+    "image": "/images/produkty-vapesport/obal-na-display-na-miru/hlavni.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/display-2039508.gif"
+      "/images/produkty-vapesport/obal-na-display-na-miru/hlavni.jpg",
+      "/images/produkty-vapesport/obal-na-display-na-miru/na-kole.jpg"
     ]
   }
 ] as Product[];
