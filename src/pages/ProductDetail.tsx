@@ -460,7 +460,7 @@ const ProductDetail = () => {
               name: product.name,
               sku,
               mpn: sku,
-              brand: { "@type": "Brand", name: override.manufacturer ?? "Vapesport Handmade CR" },
+              brand: { "@type": "Brand", name: override.manufacturer ?? "Vapesport" },
               description: stripRichMarkers(
                 override.subtitle_override ?? product.shortDescription,
               ),

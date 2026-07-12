@@ -870,7 +870,7 @@ const AdminProductEdit = () => {
           <div>
             <Label htmlFor="mfr">Výrobce</Label>
             <Input id="mfr" value={manufacturer} onChange={(e) => setManufacturer(e.target.value)}
-              placeholder="Vapesport Handmade CR" className="mt-1" />
+              placeholder="Vapesport" className="mt-1" />
           </div>
         </div>
 

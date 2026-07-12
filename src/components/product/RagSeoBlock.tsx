@@ -48,7 +48,7 @@ const RagSeoBlock = ({ product, override, sku }: Props) => {
       {override.material && <p>Použitý materiál: {override.material}.</p>}
       {override.touch_film && <p>Dotyková fólie: {override.touch_film}.</p>}
       <p>
-        Výrobce: {override.manufacturer ?? "Vapesport Handmade CR"}. Kategorie produktu:{" "}
+        Výrobce: {override.manufacturer ?? "Vapesport"}. Kategorie produktu:{" "}
         {product.categoryLabel}.
       </p>
     </section>

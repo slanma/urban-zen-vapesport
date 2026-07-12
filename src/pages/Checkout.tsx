@@ -656,19 +656,6 @@ const Checkout = () => {
                     {submitting ? "Odesílám…" : "Závazně objednat a zaplatit"}
                   </span>
                 </Button>
-
-
-                <div className="flex flex-col items-center gap-2 pt-1">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground font-body">
-                    <ShieldCheck className="w-4 h-4 text-primary" />
-                    <span className="font-bold uppercase tracking-wider">
-                      {isPartner ? "Daňový doklad — faktura" : "3 roky · 0 reklamací"}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-muted-foreground font-body text-center">
-                    Bezpečná platba · Šifrované spojení · Česká značka
-                  </p>
-                </div>
               </div>
             </div>
           </div>
