@@ -584,14 +584,12 @@ export const feedProducts: Product[] = [
   },
   {
     "id": "vs-klickfix-904710",
-    "name": "Klickfix",
+    "name": "KLICKfix Mini Adapter",
     "category": "vapesport",
     "categoryLabel": "DOPLŇKY K BRAŠNÁM",
     "price": 320,
-    "shortDescription": "Malý, skladný, nezabere hodně místa na řídítkách, představci či jinde na kole. Má dostatečně dlouhé plíšky, které obejmou i tu nejširší trub…",
-    "features": [
-      "E-bikeReady™"
-    ],
+    "shortDescription": "Malý, kulatý a všestranný adaptér KLICKfix. Hlavu lze otáčet po 90°, takže příslušenství připevníte ze čtyř směrů. Snadná montáž nerezovým páskem (Unifit) na rám, řídítka, představec či sedlovku o průměru 15–60 mm. Nedoporučuje se na karbonové a lehké díly – řiďte se pokyny výrobce kola.",
+    "features": [],
     "specs": [
       {
         "label": "Kategorie",
@@ -603,7 +601,31 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "VAPESPORT"
+        "value": "KLICKfix (Rixen & Kaul)"
+      },
+      {
+        "label": "Kód (KLICKfix)",
+        "value": "0000MA"
+      },
+      {
+        "label": "EAN",
+        "value": "4030572000074"
+      },
+      {
+        "label": "Hmotnost",
+        "value": "35 g"
+      },
+      {
+        "label": "Max. zatížení",
+        "value": "1 kg"
+      },
+      {
+        "label": "Průměr uchycení",
+        "value": "15–60 mm"
+      },
+      {
+        "label": "Uchycení",
+        "value": "řídítka, sedlovka, rám, představec"
       }
     ],
     "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/570/18110588-10208648085506031-1890634777-n-1569424.jpg",
@@ -996,18 +1018,16 @@ export const feedProducts: Product[] = [
   },
   {
     "id": "vs-klickfix-bottle-941236",
-    "name": "Klickfix bottle",
+    "name": "KLICKfix Bottleklick",
     "category": "vapesport",
-    "categoryLabel": "VAPESPORT BRAŠNY",
+    "categoryLabel": "DOPLŇKY K BRAŠNÁM",
     "price": 382,
-    "shortDescription": "Držák na lahev, který můžete díky variabilině upevnit na širokou škálu kulatých rámů a řídítek i pokud nemáte teleskopickou sedlovku a je vy…",
-    "features": [
-      "E-bikeReady™"
-    ],
+    "shortDescription": "Odnímatelný držák pro košíky na láhev. S adaptérem Bottleklick nasadíte a sundáte jakýkoli košík na láhev jediným stiskem – košík se jednou spojí s můstkem adaptéru. Montáž nerezovým páskem (Unifit) na kulaté rámy i řídítka. Nedoporučuje se na karbonové a lehké díly.",
+    "features": [],
     "specs": [
       {
         "label": "Kategorie",
-        "value": "VAPESPORT Brašny"
+        "value": "Doplňky k brašnám"
       },
       {
         "label": "Kód produktu",
@@ -1015,7 +1035,27 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "VAPESPORT"
+        "value": "KLICKfix (Rixen & Kaul)"
+      },
+      {
+        "label": "Kód (KLICKfix)",
+        "value": "1650"
+      },
+      {
+        "label": "EAN",
+        "value": "4030572002184"
+      },
+      {
+        "label": "Hmotnost",
+        "value": "60 g"
+      },
+      {
+        "label": "Max. zatížení",
+        "value": "1 kg"
+      },
+      {
+        "label": "Uchycení",
+        "value": "řídítka, sedlovka, rám, představec"
       }
     ],
     "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/001/942/dat-1941238.jpeg",
