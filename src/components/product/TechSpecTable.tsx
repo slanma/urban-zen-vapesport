@@ -15,7 +15,7 @@ const TechSpecTable = ({ sku, categoryLabel, override }: Props) => {
   const rows: Array<[string, string | null]> = [
     ["Kód výrobku", sku],
     ["Kategorie", categoryLabel],
-    ["Výrobce", override.manufacturer ?? "Vapesport"],
+    ["Výrobce", override.manufacturer ?? "VAPESPORT"],
     ["Rozměry (D × V × Š)", dims],
     ["Dotyková fólie", override.touch_film],
     ["Materiál", override.material],
