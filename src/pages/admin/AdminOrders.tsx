@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import OrderSummaryTable from "@/components/OrderSummaryTable";
 import { fmtCZK } from "@/lib/vat";
+import { resolveColor } from "@/lib/colorPalette";
 import { DataTableToolbar, type ChipFilter } from "@/components/admin/DataTableToolbar";
 import { DataTablePagination } from "@/components/admin/DataTablePagination";
 import { toast } from "sonner";
@@ -31,6 +32,15 @@ type OrderStatus = Exclude<StatusFilter, "all">;
 const STATUS_FLOW: OrderStatus[] = ["nova", "zpracovava_se", "odeslano", "dorucena", "zrusena"];
 
 interface OrderItem { name: string; qty: number; unitGross: number }
+
+/** Tvar položky tak, jak je uložená v objednávce (Checkout ji ukládá snake_case). */
+interface StoredOrderItem {
+  name: string;
+  qty: number | string;
+  unit_gross?: number | string;
+  unitGross?: number | string;
+  color?: string | null;
+}
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -114,7 +124,15 @@ const AdminOrders = () => {
 
   const selectedItems: OrderItem[] = useMemo(() => {
     if (!selected) return [];
-    return (selected.items as unknown as OrderItem[]) ?? [];
+    const raw = (selected.items as unknown as StoredOrderItem[]) ?? [];
+    return raw.map((it) => {
+      const colorLabel = it.color ? resolveColor(it.color)?.label ?? it.color : "";
+      return {
+        name: colorLabel ? `${it.name} — ${colorLabel}` : it.name,
+        qty: Number(it.qty) || 0,
+        unitGross: Number(it.unit_gross ?? it.unitGross ?? 0),
+      };
+    });
   }, [selected]);
 
   return (
