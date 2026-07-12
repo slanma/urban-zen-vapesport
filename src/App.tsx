@@ -33,6 +33,7 @@ import Account from "./pages/Account";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
+import AppServices from "./pages/AppServices";
 import CookieBanner from "./components/CookieBanner";
 import CartDrawer from "./components/CartDrawer";
 import NotFound from "./pages/NotFound";
@@ -86,6 +87,7 @@ const App = () => (
             <Route path="/obchodni-podminky" element={<Terms />} />
             <Route path="/ochrana-udaju" element={<Privacy />} />
             <Route path="/kontakt" element={<Contact />} />
+            <Route path="/aplikace-a-sluzby" element={<AppServices />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
