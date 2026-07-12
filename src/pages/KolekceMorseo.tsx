@@ -10,16 +10,16 @@ import { getProductCutout } from "@/data/productCutouts";
 import { matchFeatureBadges } from "@/lib/productFeatures";
 import { fmtCZK } from "@/lib/vat";
 
-const HERO_TEXT = "#ece8e1";
-const HERO_MOSS = "#a8b795";
+const HERO_TEXT = "#1b1f1c";
+const HERO_MOSS = "#6d7a5b";
+const HERO_BTN_TEXT = "#f4f1ea";
 
-/* Mechové pozadí hero – „Concrete Nature": brašna posazená na mech. */
+/* Světlá „editoriální" hlavička hero – prémiový vzhled, černá brašna vynikne. */
 const MOSS_BG: React.CSSProperties = {
-  backgroundColor: "hsl(135 16% 17%)",
+  backgroundColor: "#f1eee7",
   backgroundImage: [
-    "radial-gradient(115% 82% at 72% 120%, hsl(135 15% 42% / 0.55), transparent 58%)",
-    "radial-gradient(90% 70% at 12% -12%, hsl(135 17% 25% / 0.9), transparent 55%)",
-    "linear-gradient(158deg, hsl(135 17% 14%), hsl(135 15% 22%) 58%, hsl(135 14% 28%))",
+    "radial-gradient(100% 80% at 80% 120%, rgba(0,0,0,0.04), transparent 55%)",
+    "linear-gradient(158deg, #f4f1ea, #eceae2 60%, #e6e3db)",
   ].join(", "),
 };
 
@@ -81,7 +81,7 @@ const KolekceMorseo = () => {
               <a
                 href="#kolekce"
                 className="inline-flex items-center gap-2 text-[13px] font-bold uppercase tracking-widest px-6 py-3 rounded-md hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: HERO_TEXT, color: "hsl(135 17% 15%)" }}
+                style={{ backgroundColor: HERO_TEXT, color: HERO_BTN_TEXT }}
               >
                 Prohlédnout kolekci <ArrowRight className="w-4 h-4" />
               </a>
@@ -97,13 +97,13 @@ const KolekceMorseo = () => {
 
           {hero && (
             <div className="relative flex items-end justify-center min-h-[300px] md:min-h-[360px]">
-              {/* mechový podklad pod brašnou */}
+              {/* jemný podklad pod brašnou */}
               <div
                 aria-hidden
                 className="absolute bottom-10 w-[80%] h-28 rounded-[50%]"
                 style={{
                   background:
-                    "radial-gradient(ellipse at center, hsl(135 15% 45% / 0.85), hsl(135 16% 20% / 0) 70%)",
+                    "radial-gradient(ellipse at center, rgba(0,0,0,0.06), transparent 70%)",
                   filter: "blur(12px)",
                 }}
               />
