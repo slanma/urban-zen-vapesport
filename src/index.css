@@ -92,6 +92,11 @@
     @apply border-border;
   }
 
+  html {
+    /* Větší základní písmo pro lepší čitelnost (16px -> 18px). */
+    font-size: 112.5%;
+  }
+
   body {
     @apply bg-background text-foreground font-body antialiased;
   }
