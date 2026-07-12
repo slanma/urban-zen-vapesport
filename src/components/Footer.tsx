@@ -29,12 +29,34 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-heading font-semibold text-primary-foreground mb-4 text-sm uppercase tracking-widest">Kontakt</h4>
+            <h4 className="font-heading font-semibold text-primary-foreground mb-4 text-sm uppercase tracking-widest">Rychlý kontakt</h4>
+            <p className="text-sm text-primary-foreground/60 mb-3">
+              Máte dotaz? Napište nebo zavolejte, rádi poradíme.
+            </p>
             <ul className="space-y-2 text-sm text-primary-foreground/60">
-              <li>info@vapesport.cz</li>
-              <li>+420 606 080 922</li>
+              <li>
+                <a href="mailto:info@vapesport.cz" className="hover:text-primary-foreground transition-colors">
+                  info@vapesport.cz
+                </a>
+              </li>
+              <li>
+                <a href="tel:+420606080922" className="hover:text-primary-foreground transition-colors">
+                  +420 606 080 922
+                </a>
+              </li>
               <li>Ostrava, Česká republika</li>
             </ul>
+            <p className="mt-4 text-sm text-primary-foreground/60">
+              <span className="text-primary-foreground/40 uppercase tracking-widest text-xs">Otevírací doba</span>
+              <br />
+              Po–Pá 9:00–14:00
+            </p>
+            <a
+              href="/kontakt"
+              className="inline-block mt-4 text-sm text-primary-foreground/80 hover:text-primary-foreground underline underline-offset-4"
+            >
+              Celý kontakt →
+            </a>
           </div>
         </div>
         <div className="border-t border-primary-foreground/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
