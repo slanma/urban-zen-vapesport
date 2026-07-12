@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InteractiveBikeGuide from "@/components/InteractiveBikeGuide";
+import ProductSearch from "@/components/ProductSearch";
 import { ArrowRight } from "lucide-react";
 import {
   HOTSPOT_LABELS,
@@ -86,8 +87,11 @@ const Shop = () => {
     <main className="min-h-screen bg-background">
       <Navbar />
 
+      {/* Vyhledávání (nad kolem) */}
+      <ProductSearch />
+
       {/* Interactive bike guide (shared with B2B) */}
-      <section className="pt-28 pb-10 px-6 lg:px-12 max-w-[1400px] mx-auto">
+      <section className="pt-6 pb-10 px-6 lg:px-12 max-w-[1400px] mx-auto">
         <InteractiveBikeGuide
           mode="b2c"
           activeHotspot={active}
