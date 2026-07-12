@@ -4,6 +4,14 @@ import { ArrowRight } from "lucide-react";
 import { products } from "@/data/products";
 import { PILLARS, pickPillarImage } from "@/lib/productPillars";
 
+// Kam každá dlaždice vede: pozice v obchodě, Gravel na prémiové MORSEO.
+const TARGET: Record<string, string> = {
+  ridi: "/obchod?pozice=Handlebar",
+  ram: "/obchod?pozice=Frame",
+  sedlo: "/obchod?pozice=UnderSaddle",
+  gravel: "/kolekce-morseo",
+};
+
 /**
  * Rozcestník „Vyberte si podle stylu jízdy" pro úvodní stránku.
  * Dlaždice vedou do obchodu (interaktivní kolo).
@@ -26,7 +34,7 @@ const CategoryRozcestnik = () => {
           return (
             <Link
               key={pillar.key}
-              to="/obchod"
+              to={TARGET[pillar.key] ?? "/obchod"}
               className="group relative flex flex-col text-left overflow-hidden rounded-2xl border border-border bg-secondary/40 transition-all duration-300 hover:shadow-xl hover:border-foreground/30"
             >
               <div className="aspect-[4/3] bg-muted overflow-hidden">

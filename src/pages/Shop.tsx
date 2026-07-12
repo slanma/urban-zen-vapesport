@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InteractiveBikeGuide from "@/components/InteractiveBikeGuide";
@@ -65,8 +65,21 @@ const dots: HotspotDot[] = [
 ];
 
 const Shop = () => {
-  const [active, setActive] = useState<Hotspot>("Handlebar");
+  const [params] = useSearchParams();
+  const validHotspots: Hotspot[] = ["Handlebar", "TopTube", "Frame", "UnderSaddle", "RearRack"];
+  const requested = params.get("pozice") as Hotspot | null;
+  const initialHotspot: Hotspot =
+    requested && validHotspots.includes(requested) ? requested : "Handlebar";
+  const [active, setActive] = useState<Hotspot>(initialHotspot);
   const { get } = useProductOverrides();
+
+  // Když přijdeme z rozcestníku (?pozice=…), sroluj rovnou ke kolu.
+  useEffect(() => {
+    if (requested && validHotspots.includes(requested)) {
+      document.getElementById("kolo")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filtered = useMemo(
     () =>
@@ -91,7 +104,7 @@ const Shop = () => {
       <ProductSearch />
 
       {/* Interactive bike guide (shared with B2B) */}
-      <section className="pt-6 pb-10 px-6 lg:px-12 max-w-[1400px] mx-auto">
+      <section id="kolo" className="pt-6 pb-10 px-6 lg:px-12 max-w-[1400px] mx-auto">
         <InteractiveBikeGuide
           mode="b2c"
           activeHotspot={active}
