@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Loader2, Check, X, Pencil } from "lucide-react";
+import { Loader2, Check, X, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { Tables } from "@/integrations/supabase/types";
@@ -104,6 +104,20 @@ const AdminB2B = () => {
     await supabase.from("b2b_profiles").update({ status: "rejected" }).eq("id", id);
     setRegistrations((r) => r.filter((x) => x.id !== id));
     setLoadingAction(null);
+  };
+
+  const handleDelete = async (p: Partner) => {
+    if (!window.confirm(`Opravdu smazat partnera „${p.company_name}"? Tuto akci nelze vzít zpět.`)) return;
+    setLoadingAction(p.id);
+    const { error } = await supabase.from("b2b_profiles").delete().eq("id", p.id);
+    setLoadingAction(null);
+    if (error) {
+      toast.error("Smazání selhalo", { description: error.message });
+      return;
+    }
+    setRegistrations((r) => r.filter((x) => x.id !== p.id));
+    setApproved((a) => a.filter((x) => x.id !== p.id));
+    toast.success("Partner smazán");
   };
 
   const openEdit = (p: Partner) => {
@@ -237,6 +251,9 @@ const AdminB2B = () => {
                               <X className="w-4 h-4" />
                               ZAMÍTNOUT
                             </Button>
+                            <Button size="sm" variant="ghost" className="gap-1.5 text-xs font-bold text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDelete(r)} disabled={loadingAction === r.id}>
+                              <Trash2 className="w-3.5 h-3.5" /> SMAZAT
+                            </Button>
                           </div>
                         </td>
                       </tr>
@@ -322,9 +339,14 @@ const AdminB2B = () => {
                           </div>
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <Button size="sm" variant="outline" className="gap-1.5 text-xs font-bold" onClick={() => openEdit(p)}>
-                            <Pencil className="w-3.5 h-3.5" /> UPRAVIT
-                          </Button>
+                          <div className="flex items-center justify-end gap-2">
+                            <Button size="sm" variant="outline" className="gap-1.5 text-xs font-bold" onClick={() => openEdit(p)}>
+                              <Pencil className="w-3.5 h-3.5" /> UPRAVIT
+                            </Button>
+                            <Button size="sm" variant="ghost" className="gap-1.5 text-xs font-bold text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDelete(p)} disabled={loadingAction === p.id}>
+                              <Trash2 className="w-3.5 h-3.5" /> SMAZAT
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}
