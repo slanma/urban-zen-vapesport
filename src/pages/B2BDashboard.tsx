@@ -459,6 +459,26 @@ const B2BDashboard = () => {
                       </button>
                     );
                   })}
+                  {(() => {
+                    const count = getProductsByHotspot("None").length;
+                    if (count === 0) return null;
+                    const isActive = activeHotspot === "None";
+                    return (
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => setActiveHotspot(isActive ? "All" : "None")}
+                        className={`min-h-10 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                          isActive
+                            ? "bg-primary text-primary-foreground shadow-md"
+                            : "bg-secondary text-foreground hover:bg-accent"
+                        }`}
+                      >
+                        Ostatní ({count})
+                      </button>
+                    );
+                  })()}
                 </div>
                 <p className="sr-only" aria-live="polite">
                   {activeHotspot === "All"

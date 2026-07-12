@@ -711,6 +711,45 @@ export const feedProducts: Product[] = [
     ]
   },
   {
+    "id": "vs-smb-vapesport-904678",
+    "name": "SMB Vapesport",
+    "category": "vapesport",
+    "categoryLabel": "BRAŠNY NA KOLO",
+    "price": 400,
+    "shortDescription": "Brašna na rám za představec kola s uchopením na suché zipy. Slída 6,7\" je dotyková.",
+    "problem": "Telefon i doklady je potřeba mít na rámu po ruce, chráněné a s možností ovládat displej bez vyndávání.",
+    "funkce": "Brašna na rám za představec s uchycením na suché zipy a dotykovou slídou 6,7\".",
+    "pouziti": "Na rám za představec — telefon po ruce a ovládání přes fólii.",
+    "features": [
+      "Dlouhé suché zipy",
+      "Dotyková slída 6,7\"",
+      "Reflexní prvky",
+      "Vhodné na e-bike"
+    ],
+    "specs": [
+      {
+        "label": "Kategorie",
+        "value": "Brašny na kolo"
+      },
+      {
+        "label": "Kód produktu",
+        "value": "310073"
+      },
+      {
+        "label": "Výrobce",
+        "value": "VAPESPORT"
+      },
+      {
+        "label": "Varianty",
+        "value": "2 barev"
+      }
+    ],
+    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/smb-004-2039648.jpeg",
+    "images": [
+      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/smb-004-2039648.jpeg"
+    ]
+  },
+  {
     "id": "vs-street-bag-922789",
     "name": "Street bag",
     "category": "vapesport",
