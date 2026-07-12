@@ -2,14 +2,29 @@ import { useEffect, useMemo, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
-import OrderSummaryTable from "@/components/OrderSummaryTable";
+import OrderSummaryTable, { type OrderLine } from "@/components/OrderSummaryTable";
 import { fmtCZK } from "@/lib/vat";
 import { resolveColor } from "@/lib/colorPalette";
+import { feedProducts } from "@/data/feedProducts";
+import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { DataTableToolbar, type ChipFilter } from "@/components/admin/DataTableToolbar";
 import { DataTablePagination } from "@/components/admin/DataTablePagination";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import PaymentQrPanel from "@/components/admin/PaymentQrPanel";
+
+/** Normalizace názvu produktu pro spárování (sjednotí uvozovky a mezery). */
+const normName = (s: string): string =>
+  (s ?? "")
+    .toLowerCase()
+    .replace(/[""„"”]/g, '"')
+    .replace(/\s+/g, " ")
+    .trim();
+
+/** Mapa feed produktů podle názvu — pro dopočet ceny u starých objednávek s 0. */
+const productByName = new Map(feedProducts.map((p) => [normName(p.name), p]));
+
+const escapeRegExp = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 type Order = Tables<"orders">;
 type StatusFilter = "all" | "nova" | "zpracovava_se" | "odeslano" | "dorucena" | "zrusena";
@@ -122,15 +137,31 @@ const AdminOrders = () => {
     setUpdatingId(null);
   };
 
-  const selectedItems: OrderItem[] = useMemo(() => {
+  const selectedItems: OrderLine[] = useMemo(() => {
     if (!selected) return [];
     const raw = (selected.items as unknown as StoredOrderItem[]) ?? [];
+    const isB2B = selected.is_b2b === true;
     return raw.map((it) => {
       const colorLabel = it.color ? resolveColor(it.color)?.label ?? it.color : "";
+      // Odstraň barvu z názvu, pokud už tam je (ať se název nezdvojuje).
+      let baseName = it.name ?? "";
+      if (colorLabel) {
+        baseName = baseName
+          .replace(new RegExp(`\\s*[–—-]\\s*${escapeRegExp(colorLabel)}\\s*$`, "i"), "")
+          .trim();
+      }
+      // Cena: použij uloženou; když je 0 (staré testovací objednávky), dopočítej z produktu.
+      let unitGross = Number(it.unit_gross ?? it.unitGross ?? 0);
+      if (!unitGross) {
+        const prod = productByName.get(normName(baseName));
+        if (prod) unitGross = getEffectiveUnitPricing(prod, null, isB2B, 0).unitGross;
+      }
       return {
-        name: colorLabel ? `${it.name} — ${colorLabel}` : it.name,
+        name: baseName,
         qty: Number(it.qty) || 0,
-        unitGross: Number(it.unit_gross ?? it.unitGross ?? 0),
+        unitGross,
+        color: it.color ?? undefined,
+        colorLabel: colorLabel || undefined,
       };
     });
   }, [selected]);

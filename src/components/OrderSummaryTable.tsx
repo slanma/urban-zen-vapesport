@@ -1,11 +1,16 @@
 import { fmtCZK, netFromGross, vatOfGross, VAT_RATE } from "@/lib/vat";
+import { resolveColor } from "@/lib/colorPalette";
 
 export interface OrderLine {
-  /** Display label, e.g. "MORSEO Transformer 5,5\" – Neon zelená". */
+  /** Display label, e.g. "MORSEO Transformer 5,5\"". */
   name: string;
   qty: number;
   /** Unit price WITH VAT (gross), in CZK. */
   unitGross: number;
+  /** Optional color slug (e.g. "coral-code") — renders a colored dot + label. */
+  color?: string;
+  /** Optional color label override (else resolved from the slug). */
+  colorLabel?: string;
 }
 
 interface OrderSummaryTableProps {
@@ -71,7 +76,23 @@ const OrderSummaryTable = ({
             const lineNet = unitNet * it.qty;
             return (
               <tr key={i} className="border-t border-border">
-                <td className="px-3 py-2.5 text-foreground">{it.name}</td>
+                <td className="px-3 py-2.5 text-foreground">
+                  <span className="inline-flex items-center gap-2 flex-wrap">
+                    <span>{it.name}</span>
+                    {it.color && (
+                      <span className="inline-flex items-center gap-1.5">
+                        <span
+                          aria-hidden
+                          className="w-3 h-3 rounded-full border border-border shrink-0"
+                          style={{ backgroundColor: resolveColor(it.color).hex }}
+                        />
+                        <span className="text-muted-foreground">
+                          {it.colorLabel ?? resolveColor(it.color).label}
+                        </span>
+                      </span>
+                    )}
+                  </span>
+                </td>
                 <td className="px-3 py-2.5 text-center">{it.qty}</td>
                 <td className="px-3 py-2.5 text-right tabular-nums">{fmtCZK(unitNet)}</td>
                 <td className="px-3 py-2.5 text-right tabular-nums text-muted-foreground">

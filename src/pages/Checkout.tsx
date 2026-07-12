@@ -573,9 +573,10 @@ const Checkout = () => {
 
                 <OrderSummaryTable
                   items={orderLines.map((l) => ({
-                    name: l.color ? `[${l.code}] ${l.name} – ${l.color}` : `[${l.code}] ${l.name}`,
+                    name: `[${l.code}] ${l.name}`,
                     qty: l.qty,
                     unitGross: l.unitGross,
+                    color: l.color ?? undefined,
                   }))}
                   shippingGross={shippingPrice}
                   paymentGross={paymentPrice}
