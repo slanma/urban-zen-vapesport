@@ -149,9 +149,20 @@ const B2BDashboard = () => {
   };
 
   const visibleProducts = useMemo(() => {
-    if (activeHotspot === "All") return products;
-    const ids = new Set(getProductsByHotspot(activeHotspot).map((p) => p.id));
-    return products.filter((p) => ids.has(p.id));
+    const base =
+      activeHotspot === "All"
+        ? products
+        : (() => {
+            const ids = new Set(getProductsByHotspot(activeHotspot).map((p) => p.id));
+            return products.filter((p) => ids.has(p.id));
+          })();
+    // MORSEO kolekci nabízíme vždy jako první (kde pro danou pozici existuje).
+    // Řazení je stabilní, takže pořadí uvnitř skupin zůstává zachované.
+    return [...base].sort((a, b) => {
+      const am = a.category === "morseo-evo" ? 0 : 1;
+      const bm = b.category === "morseo-evo" ? 0 : 1;
+      return am - bm;
+    });
   }, [activeHotspot]);
 
   useEffect(() => {
