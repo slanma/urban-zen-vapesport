@@ -364,6 +364,31 @@ const ProductDetail = () => {
               />
             )}
 
+            {/* Sjednocený popis: Problém / Funkce / Použití */}
+            {(product.problem || product.funkce || product.pouziti) && (
+              <div className="mt-8 space-y-6">
+                {[
+                  { label: "Problém", text: product.problem },
+                  { label: "Funkce", text: product.funkce },
+                  { label: "Použití", text: product.pouziti },
+                ].map(
+                  (section) =>
+                    section.text && (
+                      <div key={section.label}>
+                        <h3 className="font-heading text-sm font-bold uppercase tracking-wider text-primary mb-2">
+                          {section.label}
+                        </h3>
+                        <RichText
+                          as="p"
+                          className="font-body text-muted-foreground text-base leading-relaxed"
+                          text={section.text}
+                        />
+                      </div>
+                    ),
+                )}
+              </div>
+            )}
+
             <Accordion
               type="multiple"
               defaultValue={["features"]}

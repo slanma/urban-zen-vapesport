@@ -11,6 +11,10 @@ export interface Product {
    *  override (product_overrides.b2b_price) still takes precedence. */
   b2b_price?: number;
   shortDescription: string;
+  /** Sjednocený popis produktu – sekce Problém / Funkce / Použití. */
+  problem?: string;
+  funkce?: string;
+  pouziti?: string;
   features: string[];
   specs: { label: string; value: string }[];
   image: string;

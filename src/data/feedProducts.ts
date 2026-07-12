@@ -1,5 +1,6 @@
 // AUTO-GENERATED / MORSEO data + lokální fotky, balast + Wasabi odstraněny
 // Řady, názvy, duplicita display + MORSEO barvy (available_colors) dle Lucie.
+// Popis produktů sjednocen: pole problem / funkce / pouziti (Problém / Funkce / Použití).
 import type { Product } from "./products";
 
 export const feedProducts: Product[] = [
@@ -10,6 +11,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 378,
     "shortDescription": "Hledáte lehkou, spolehlivou a skvěle organizovanou brašnu do rámu kola, kam schováte peněženku, klíče, nářadí i záložní duši? Malý trojúhelník tříkapsý Vapesport nabízí optimální šířku 4,5 cm, která zaručuje, že brašna stoprocentně lícuje s profilem kola a nikdy vám nebude překážet nebo dřít o kolena při šlapání.",
+    "problem": "Na kole chcete mít po ruce peněženku, klíče, nářadí i náhradní duši — jenže běžné brašny překážejí, dřou o kolena při šlapání nebo nedrží tvar.",
+    "funkce": "Tříkapsová rámová brašna s optimální šířkou 4,5 cm, která přesně lícuje s profilem kola. Lehká, odolná a přehledně organizovaná do tří oddělených kapes.",
+    "pouziti": "Pro každodenní ježdění i delší vyjížďky, kdy chcete věci uspořádané a hned po ruce, aniž by cokoli překáželo v pohybu.",
     "features": [
       "LongStrap™",
       "E-bikeReady™",
@@ -64,6 +68,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 411,
     "shortDescription": "4kapsý trojúhelník do rámu kola. Je vhodný i na určité rámy elektrokol.",
+    "problem": "Potřebujete do rámu víc oddělených kapes, ale u elektrokol bývá málo místa a plná brašna překáží.",
+    "funkce": "Plochý čtyřkapsový trojúhelník do rámu s nízkým profilem. Čtyři oddělené kapsy udrží pořádek a tenký tvar sedne i na vybrané rámy elektrokol.",
+    "pouziti": "Na běžná kola i vhodné elektrokolo, když chcete hodně přehledného úložného prostoru bez překážení při šlapání.",
     "features": [
       "LongStrap™",
       "E-bikeReady™",
@@ -114,6 +121,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 400,
     "shortDescription": "Brašna na rám za představec kola s uchopením na suché zipy. Slída 6,7\" je dotyková.",
+    "problem": "Chcete mít telefon po ruce pro navigaci, ale klasické držáky ho nechrání a nejde přes ně pořádně ovládat displej.",
+    "funkce": "Brašna na rám za představec s uchycením na suché zipy a dotykovou slídou 6,7\", přes kterou telefon plně ovládáte.",
+    "pouziti": "Pro navigaci za jízdy a bezpečné uložení telefonu na horní trubce rámu.",
     "features": [
       "LongStrap™",
       "UltraTouch™",
@@ -165,6 +175,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA MOBILNÍ TELEFONY",
     "price": 490,
     "shortDescription": "2kapsá brašna přes rámovou trubku na kola, elektrokola i koloběžky.",
+    "problem": "Na kolo, elektrokolo i koloběžku potřebujete kompaktní úložení na telefon a drobnosti, které nepřekáží.",
+    "funkce": "Dvoukapsová brašna přes rámovou trubku — jedna kapsa na mobil, druhá na drobnosti. Univerzální uchycení.",
+    "pouziti": "Na kolo, elektrokolo i koloběžku pro každodenní jízdu s telefonem a nezbytnostmi po ruce.",
     "features": [
       "UltraTouch™",
       "E-bikeReady™",
@@ -216,6 +229,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "RÁMOVÉ BRAŠNY",
     "price": 360,
     "shortDescription": "Elektro trojúhelník specialně vytvarovaný pro HAIBIKE  a LECTRON elektrokola.",
+    "problem": "Standardní rámové brašny nesednou na specifické tvary rámů elektrokol HAIBIKE a LECTRON.",
+    "funkce": "Trojúhelník speciálně vytvarovaný přesně pro rámy HAIBIKE a LECTRON, takže lícuje bez překážení.",
+    "pouziti": "Pro majitele elektrokol HAIBIKE a LECTRON, kteří chtějí brašnu šitou na míru jejich rámu.",
     "features": [
       "LongStrap™",
       "E-bikeReady™",
@@ -257,6 +273,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "RÁMOVÉ BRAŠNY",
     "price": 391,
     "shortDescription": "Trojúhelník do rámu na nabíječku z elektrokol. HAIBIKE a LECTRON",
+    "problem": "Nabíječku z elektrokola HAIBIKE nebo LECTRON potřebujete vozit s sebou, ale nemáte ji kam bezpečně uložit.",
+    "funkce": "Trojúhelník do rámu navržený na převoz nabíječky elektrokol HAIBIKE a LECTRON.",
+    "pouziti": "Pro delší trasy s elektrokolem, kdy chcete mít nabíječku po ruce a chráněnou přímo v rámu.",
     "features": [
       "LongStrap™",
       "E-bikeReady™",
@@ -305,6 +324,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 550,
     "shortDescription": "Malá brašna na řídítka na uchycení KLICKFIX adaptér i suchý zip. Vhodnost na kolo, koloběžku, elektrokola i dětská kola.",
+    "problem": "Malou brašnu na řídítka chcete mít univerzální — aby seděla na kolo, koloběžku i dětské kolo, ať s adaptérem, nebo bez něj.",
+    "funkce": "Brašna na řídítka s dvojím uchycením — KLICKfix adaptér i suchý zip. Univerzální rozměr pro různé typy kol.",
+    "pouziti": "Na kolo, elektrokolo, koloběžku i dětské kolo, kdykoli potřebujete rychle sundat a nasadit.",
     "features": [
       "QuickMount™",
       "E-bikeReady™",
@@ -354,6 +376,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 737,
     "shortDescription": "Brašna je na uchycení KLICKFIX adaptér. KLICKFIX adaptér je součástí a pláštěnka také. Díky adaptéru má brašna různé možnosti uchycení jak n…",
+    "problem": "Chcete brašnu na řídítka, kterou jednoduše sundáte i s obsahem a různě uchytíte podle typu kola.",
+    "funkce": "Malá brašna na řídítka s KLICKfix adaptérem (součást balení) — díky němu má víc možností uchycení. Součástí je i pláštěnka.",
+    "pouziti": "Na běžné jízdy do města i do terénu; adaptér umožní rychlé sundání a přenášení.",
     "features": [
       "UltraTouch™",
       "QuickMount™",
@@ -396,6 +421,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 362,
     "shortDescription": "Obal na mobilní telefon o velikosti 5,5\" s dotykovou folii. Brašna je uchycena na systém KLICKFIX Adaptér, který JE součástí balení.  Díky s…",
+    "problem": "Telefon do 5,5\" chcete používat za jízdy na navigaci a zároveň ho chránit před počasím.",
+    "funkce": "Obal na telefon do 5,5\" s dotykovou fólií, uchycený na KLICKfix adaptér (součást balení) pro rychlé sundání.",
+    "pouziti": "Navigace za jízdy a ochrana telefonu; adaptér umožní přendat obal mezi koly.",
     "features": [
       "UltraTouch™",
       "QuickMount™",
@@ -433,6 +461,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA NOSIČ",
     "price": 999,
     "shortDescription": "Součástí brašny je pláštěnka, uchopení na suchý zip. Objem - 10L Nosnost - 8Kg Rozměry: 28cm x 16cm x 17cm x  Boční kapsa: 23cm x 12cm  x 4c…",
+    "problem": "Na delší trasy potřebujete solidní úložný prostor na nosič, který zvládne zátěž a ochrání obsah před deštěm.",
+    "funkce": "Brašna na nosič o objemu 10 l a nosnosti 8 kg s boční kapsou, uchycení na suchý zip. Součástí je pláštěnka.",
+    "pouziti": "Na cykloturistiku a delší výlety, kdy vezete víc věcí a chcete je mít v suchu.",
     "features": [
       "E-bikeReady™",
       "NightGlow™",
@@ -470,6 +501,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA NOSIČ",
     "price": 1466,
     "shortDescription": "Brašna s bočními plnohodnotnými výklopnými kapsami ze stejného materiálu, jako je celá brašna.  boční uchopení na suchý zip a uchopení boční…",
+    "problem": "Chcete kapacitu brašny na nosič, ale s ještě lepší organizací a přístupem k obsahu z boku.",
+    "funkce": "Verze LUX s plnohodnotnými výklopnými bočními kapsami ze stejného materiálu a bočním uchycením na suchý zip.",
+    "pouziti": "Na náročnější cesty, kde oceníte víc oddělených prostorů a snadný přístup ze strany.",
     "features": [
       "E-bikeReady™",
       "NightGlow™",
@@ -508,6 +542,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY POD SEDLO",
     "price": 393,
     "shortDescription": "Podsedlová brašna s rozšířením. 2 zipy pro zvětšení objemu brašny.",
+    "problem": "Podsedlová brašna má často pevný objem — buď je moc malá, nebo zbytečně velká.",
+    "funkce": "Podsedlovka s rozšířením: dva zipy zvětší objem podle potřeby.",
+    "pouziti": "Na krátké i delší vyjížďky, kdy chcete jednu brašnu, která se přizpůsobí množství věcí.",
     "features": [
       "E-bikeReady™",
       "NightGlow™",
@@ -550,6 +587,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY POD SEDLO",
     "price": 411,
     "shortDescription": "Podsedlová brašna Vapesport s rychlým uchycením na suchý zip Kompaktní a elegantní podsedlovka navržená pro cyklisty, kteří preferují rychlo…",
+    "problem": "Chcete kompaktní podsedlovku, kterou rychle nasadíte a sundáte, aniž byste se párali s upínáním.",
+    "funkce": "Malá elegantní podsedlová brašna s rychlým uchycením na suchý zip.",
+    "pouziti": "Pro cyklisty, kteří preferují rychlé sundání a minimalistické řešení na to nejnutnější.",
     "features": [
       "LongStrap™",
       "E-bikeReady™",
@@ -589,6 +629,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "DOPLŇKY K BRAŠNÁM",
     "price": 320,
     "shortDescription": "Malý, kulatý a všestranný adaptér KLICKfix. Hlavu lze otáčet po 90°, takže příslušenství připevníte ze čtyř směrů. Snadná montáž nerezovým páskem (Unifit) na rám, řídítka, představec či sedlovku o průměru 15–60 mm. Nedoporučuje se na karbonové a lehké díly – řiďte se pokyny výrobce kola.",
+    "problem": "Potřebujete na kolo rychle a bezpečně připevnit příslušenství, ale ne každý držák sedne na váš rám, řídítka nebo sedlovku.",
+    "funkce": "Malý univerzální adaptér s hlavou otočnou po 90° (uchycení ze čtyř směrů). Montáž nerezovým páskem Unifit na průměry 15–60 mm.",
+    "pouziti": "Na rám, řídítka, představec i sedlovku. Nedoporučuje se na karbonové a lehké díly — řiďte se pokyny výrobce kola.",
     "features": [],
     "specs": [
       {
@@ -644,6 +687,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "DOPLŇKY K BRAŠNÁM",
     "price": 300,
     "shortDescription": "Voděodolná pláštěnka na 3-dílnou nebo 2-dílnou brašnu na nosič.",
+    "problem": "Za deště potřebujete rychle ochránit trojbrašnu i její obsah před promáčením.",
+    "funkce": "Voděodolná pláštěnka přesně na 3-dílnou i 2-dílnou brašnu na nosič.",
+    "pouziti": "Nasadíte při dešti nebo jízdě v mokru; když ji nepotřebujete, snadno ji složíte.",
     "features": [
       "Originální produkt VAPESPORT",
       "Odolný materiál pro každodenní použití"
@@ -675,6 +721,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BATOHY",
     "price": 982,
     "shortDescription": "Malý batoh o velikosti 9L. Součástí batohu je pláštěnka. Určen na cyklistiku, horskou turistiku nebo i do města.",
+    "problem": "Na kolo, do hor i do města potřebujete lehký batoh, který pobere nezbytnosti a zvládne i déšť.",
+    "funkce": "Kompaktní batoh o objemu 9 l s přiloženou pláštěnkou.",
+    "pouziti": "Na cyklistiku, horskou turistiku i běžné nošení ve městě.",
     "features": [
       "E-bikeReady™",
       "NightGlow™",
@@ -720,6 +769,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA MOBILNÍ TELEFONY",
     "price": 367,
     "shortDescription": "Obal na Ipad o velikosti 7-8\". Uchopen na kolo za pomocí KLICKFIX adaptéru, který je součástí balení. Ochranný obal na tablet je lehce voděv…",
+    "problem": "Tablet nebo iPad 7–8\" chcete vzít na kolo pro navigaci a ochránit ho před počasím.",
+    "funkce": "Obal na tablet 7–8\" s ochranou proti vodě, uchycený na KLICKfix adaptér (součást balení).",
+    "pouziti": "Navigace na větším displeji za jízdy a bezpečný převoz tabletu.",
     "features": [
       "UltraTouch™",
       "QuickMount™",
@@ -757,6 +809,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "DOPLŇKY K BRAŠNÁM",
     "price": 2222,
     "shortDescription": "Taška na kolo VAPE",
+    "problem": "Chcete jednoduchou, univerzální tašku na kolo pro běžné věci.",
+    "funkce": "Praktická taška na kolo VAPE pro každodenní použití.",
+    "pouziti": "Na běžné jízdy, když potřebujete jen základní úložný prostor.",
     "features": [
       "E-bikeReady™"
     ],
@@ -793,6 +848,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "ELEKTROKOLA",
     "price": 333,
     "shortDescription": "Ochrana před vnějšími vlivy.",
+    "problem": "Zadní tlumič kola je vystavený blátu, prachu a vlhkosti, které zkracují jeho životnost.",
+    "funkce": "Ochranný obal na tlumič, který ho chrání před vnějšími vlivy.",
+    "pouziti": "V terénu a za nepříznivého počasí, kdy chcete tlumič udržet čistý a chráněný.",
     "features": [
       "E-bikeReady™",
       "HydroGuard™"
@@ -825,6 +883,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA NOSIČ",
     "price": 426,
     "shortDescription": "Vrch 3-brašny s možností vytvoření příručního batohu s nosnými popruhy.  Uchycení na trojbrašnu je pomocí spon. Výhoda uchopení na spony je …",
+    "problem": "Z trojbrašny chcete občas oddělit vrchní díl a vzít si ho s sebou jako příruční batoh.",
+    "funkce": "Vrchní díl trojbrašny s nosnými popruhy pro vytvoření příručního batohu; uchycení na trojbrašnu pomocí spon pro rychlé oddělení.",
+    "pouziti": "Když necháte kolo a potřebujete si vzít věci s sebou — vrch sundáte a nesete jako batůžek.",
     "features": [
       "Originální produkt VAPESPORT",
       "Odolný materiál pro každodenní použití"
@@ -856,6 +917,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 333,
     "shortDescription": "Dámský trojúhelník i dětský trojúhelník",
+    "problem": "Menší rámy — dámské i dětské — potřebují trojúhelník ve správné velikosti, který sedne.",
+    "funkce": "Trojúhelník ve variantě pro dámská i dětská kola.",
+    "pouziti": "Na menší rámy, kde standardní velikost nesedí.",
     "features": [
       "LongStrap™",
       "E-bikeReady™",
@@ -899,6 +963,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 911,
     "shortDescription": "Velká taška na kolo nebo jako velká kabela s možností využití na nosič z boční části.   Objem: 15l   Nosnost: 8kg   Rozměry: 33cm x 14cm x 3…",
+    "problem": "Chcete jednu tašku, která poslouží na kole i mimo něj jako kabela.",
+    "funkce": "Velká taška (objem 15 l, nosnost 8 kg) s možností bočního uchycení na nosič.",
+    "pouziti": "Na kole i jako městská kabela; z kola sundáte a vezmete s sebou.",
     "features": [
       "E-bikeReady™",
       "NightGlow™"
@@ -927,6 +994,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY POD SEDLO",
     "price": 355,
     "shortDescription": "Malá podsedlo s uchopením na klip",
+    "problem": "Chcete minimalistickou podsedlovku, kterou nacvaknete a sundáte jedním pohybem.",
+    "funkce": "Malá podsedlová brašna s uchycením na klip.",
+    "pouziti": "Na to nejnutnější (duše, nářadí) při rychlých vyjížďkách.",
     "features": [
       "QuickClip™",
       "E-bikeReady™",
@@ -984,6 +1054,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY PRO ELEKTROKOLO",
     "price": 578,
     "shortDescription": "Neopren na míru je vytvořen na základě Vašich požadavků. Budeme však potřebovat základní údaje, které napište do poznámky: -značka elektroko…",
+    "problem": "Standardní obaly nesednou na každé elektrokolo — potřebujete ochranu přesně na vaše rozměry.",
+    "funkce": "Neoprenový obal vyrobený na míru podle vašich údajů (značka a rozměry elektrokola uveďte do poznámky).",
+    "pouziti": "Na ochranu konkrétního elektrokola; rozměry a typ upřesníte při objednávce.",
     "features": [
       "E-bikeReady™",
       "HydroGuard™"
@@ -1023,6 +1096,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "DOPLŇKY K BRAŠNÁM",
     "price": 382,
     "shortDescription": "Odnímatelný držák pro košíky na láhev. S adaptérem Bottleklick nasadíte a sundáte jakýkoli košík na láhev jediným stiskem – košík se jednou spojí s můstkem adaptéru. Montáž nerezovým páskem (Unifit) na kulaté rámy i řídítka. Nedoporučuje se na karbonové a lehké díly.",
+    "problem": "Košík na láhev bývá napevno; chcete ho snadno sundat a nasadit podle potřeby.",
+    "funkce": "Odnímatelný držák Bottleklick — košík jednou spojíte s můstkem adaptéru a pak sundáte jediným stiskem. Montáž nerezovým páskem Unifit na kulaté rámy i řídítka.",
+    "pouziti": "Na kulaté rámy a řídítka. Nedoporučuje se na karbonové a lehké díly.",
     "features": [],
     "specs": [
       {
@@ -1073,6 +1149,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "ELEKTROKOLA",
     "price": 620,
     "shortDescription": "Neoprenový obal na suché zipy, které jsou variabilní pro uchopení od nejširšího po nejtenčí rámy. Délka neoprenu je 50cm.",
+    "problem": "Při převozu elektrokola na nosiči je rám vystavený odření a nečistotám.",
+    "funkce": "Neoprenový obal se třemi suchými zipy, variabilní od nejtenčích po nejširší rámy. Délka neoprenu 50 cm.",
+    "pouziti": "Na ochranu rámu při převozu kola na nosiči auta.",
     "features": [
       "Originální produkt VAPESPORT",
       "Odolný materiál pro každodenní použití"
@@ -1105,6 +1184,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "ELEKTROKOLA",
     "price": 400,
     "shortDescription": "Neoprenový obal na display je vytvořen na Váš typ elektrokola. Po zadání rozměrů do poznámky Vám vytvoříme obal přesně na Váš typ displaye e…",
+    "problem": "Displej elektrokola je při převozu citlivý na náraz, vodu a sůl.",
+    "funkce": "Neoprenový obal na displej vyrobený na míru vašemu typu elektrokola (rozměry uveďte do poznámky).",
+    "pouziti": "Na ochranu displeje při převozu kola na nosiči, zejména za deště a v zimě.",
     "features": [
       "Originální produkt VAPESPORT",
       "Odolný materiál pro každodenní použití"
@@ -1137,6 +1219,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "ELEKTROKOLA",
     "price": 1100,
     "shortDescription": "BALÍČEK na převoz elektrokol zahrnuje obal na rám elektrokola se 3 suchými zipy pro různé obvody rámů, obal na display a popruh na zajištění…",
+    "problem": "Při převozu elektrokola potřebujete chránit víc míst najednou — rám, displej i zajištění.",
+    "funkce": "Balíček: obal na rám se 3 suchými zipy pro různé obvody rámů, obal na displej a zajišťovací popruh.",
+    "pouziti": "Kompletní ochrana elektrokola při převozu na nosiči auta.",
     "features": [
       "Originální produkt VAPESPORT",
       "Odolný materiál pro každodenní použití"
@@ -1173,6 +1258,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 619,
     "shortDescription": "Kompaktní rámová brašna s nízkým profilem a šířkou pouhých 6 cm – ideální na menší a dámské rámy, kde velká brašna nesedí. Silikonové pásky drží pevně a chrání lak.",
+    "problem": "Na menší a dámské rámy se velká rámovka nevejde a překáží.",
+    "funkce": "Kompaktní rámová brašna s nízkým profilem a šířkou pouhých 6 cm. Silikonové pásky drží pevně a chrání lak.",
+    "pouziti": "Na menší a dámské rámy, kde potřebujete úložný prostor bez překážení.",
     "features": [
       "Plně vyztužená – kopíruje zadní roh rámu u sedlovky",
       "Dvě kapsy: hluboká (nabíječka, nářadí) + plochá (mobil, klíče odděleně)",
@@ -1266,6 +1354,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 640,
     "shortDescription": "Největší rámovka do e-kola – pobere rychlonabíječku Fast Charger i bidon. Šířka 7,5 cm neodírá stehna, upne se dopředu i dozadu.",
+    "problem": "Do e-kola potřebujete pobrat i rychlonabíječku a bidon, ale běžná brašna odírá stehna.",
+    "funkce": "Největší MORSEO rámovka — pobere Fast Charger i bidon; šířka 7,5 cm neodírá stehna, upne se dopředu i dozadu.",
+    "pouziti": "Na elektrokolo pro delší trasy, kde vezete nabíječku a víc vybavení.",
     "features": [
       "Plně vyztužená konstrukce – drží tvar",
       "Obří kapacita: pojme velkou rychlonabíječku (Fast Charger) i bidon",
@@ -1357,6 +1448,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 531,
     "shortDescription": "Svislá brašna na řídítka a představec pro e-kola s ovládáním na horní trubce a bez displeje uprostřed. Dotyková fólie 16,5 × 9 cm – navigace za jízdy. Tenký profil nepřekáží.",
+    "problem": "U e-kol s ovládáním na horní trubce a bez středového displeje chybí místo na telefon pro navigaci.",
+    "funkce": "Svislá brašna na řídítka a představec s dotykovou fólií 16,5 × 9 cm; tenký profil nepřekáží.",
+    "pouziti": "Navigace za jízdy na e-kolech s ovládáním na horní trubce.",
     "features": [
       "Plně dotyková slída 16,5 × 9 cm – ovládání navigace za jízdy",
       "Svislá orientace, profil na řídítkách jen 4,5 cm",
@@ -1454,6 +1548,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 599,
     "shortDescription": "MORSEO SMB 6,7\" – brašna na mobil na horní rámovou trubku pro telefony do 6,7\". Dotyková fólie pro navigaci, prodloužené silikonové pásky E-bike Ready na široké trubky a šetrné k laku.",
+    "problem": "Telefon do 6,7\" chcete mít na horní trubce pro navigaci, ale pásky musí sednout i na široké e-bike trubky a nepodřít lak.",
+    "funkce": "Brašna na mobil do 6,7\" s dotykovou fólií a prodlouženými silikonovými pásky E-bike Ready, šetrnými k laku.",
+    "pouziti": "Navigace za jízdy na kolech i elektrokolech se širokou horní trubkou.",
     "features": [
       "3 silikonové suché zipy 12 cm/ks – popruh na širokou škálu představců",
       "Vývod na kabel/sluchátka v zadní části",
@@ -1543,6 +1640,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 1055,
     "shortDescription": "100% vodotěsná brašna na horní trubku – na e-bike, silničku i gravel. Nenateče ani kapka, aero tvar nepřekáží ve stoje. Telefon vložíš našikmo dovnitř.",
+    "problem": "V dešti nebo blátě potřebujete mít obsah rámové brašny naprosto v suchu.",
+    "funkce": "100% vodotěsná brašna na horní trubku s aero tvarem, který nepřekáží ve stoje; telefon vložíte našikmo dovnitř.",
+    "pouziti": "Na e-bike, silničku i gravel za každého počasí.",
     "features": [
       "100% nepromokavá – vysokofrekvenčně svařované švy, bezešvé provedení",
       "Aerodynamické zúžení z 6,5 na 3 cm – pohodlné šlapání ve stoje",
@@ -1628,6 +1728,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 950,
     "shortDescription": "Ultralehká 100% vodotěsná podsedlová brašna se svařovanými švy. Boční suché zipy ji zachytí o sedlovku a spodní zip o její trubku; vnitřní síťka udrží drobnosti. Vaše nářadí zůstane v suchu i v největším blátě.",
+    "problem": "Nářadí a drobnosti pod sedlem promoknou v blátě a dešti.",
+    "funkce": "Ultralehká 100% vodotěsná podsedlovka se svařovanými švy; boční suché zipy k sedlovce, spodní zip na trubku, vnitřní síťka na drobnosti.",
+    "pouziti": "Do terénu a za deště, kdy chcete nářadí a duši udržet v suchu.",
     "features": [
       "100% waterproof – svařované švy",
       "Teleskopka Friendly – drží jen za ližiny sedla, nevadí pístnici",
@@ -1710,6 +1813,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "RÁMOVÉ BRAŠNY",
     "price": 620,
     "shortDescription": "Rámová brašna na elektrokolo, do které se pohodlně vejde i těžká nabíječka Bosch nebo Yamaha. Díky úzkému profilu (6–7 cm) se schová do prostoru nad integrovanou baterií a nepřekáží při šlapání. Prodloužené silikonové pásky drží pevně a chrání lak před podřením.",
+    "problem": "Těžká nabíječka Bosch nebo Yamaha potřebuje místo v rámu, aniž by překážela nad integrovanou baterií.",
+    "funkce": "Rámová brašna s úzkým profilem (6–7 cm), která se schová nad baterii; prodloužené silikonové pásky drží pevně a chrání lak.",
+    "pouziti": "Na elektrokola s integrovanou baterií pro převoz těžké nabíječky.",
     "features": [
       "Plně vyztužená konstrukce – drží tvar",
       "Šířka jen 6–7 cm – schová se za baterii a nepřekáží při šlapání",
@@ -1805,6 +1911,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 640,
     "shortDescription": "Velká brašna na horní trubku e-biku. Vejde se i ten největší telefon v krytu (iPhone Pro Max, Galaxy Ultra), powerbanka i svačina. Přes slídu 10 × 19 cm ovládáš telefon bez vyndávání. Pásky drží jako přibité a nepodřou lak.",
+    "problem": "Největší telefony v krytu se do běžné brašny na mobil nevejdou a chybí místo na powerbanku či svačinu.",
+    "funkce": "Velká brašna na horní trubku se slídou 10 × 19 cm; pobere iPhone Pro Max i Galaxy Ultra v krytu, powerbanku i svačinu. Pásky drží pevně a nepodřou lak.",
+    "pouziti": "Na e-bike pro delší trasy, kdy vezete velký telefon a víc drobností.",
     "features": [
       "E-bike Ready – extra dlouhé silikonové pásky drží pevně a jsou šetrné i k lesklému laku",
       "Průzor (slída) 10 × 19 cm – i největší telefony v odolném krytu (MaxiMobile™)",
@@ -1902,6 +2011,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "RÁMOVÉ BRAŠNY",
     "price": 619,
     "shortDescription": "Nízká rámovka (výška 16 cm), co obejde zadní tlumič u celopér. Uchytíš ji dopředu, dozadu i na horní trubku. Šířka 6 cm nepřekáží.",
+    "problem": "U celoodpružených kol zadní tlumič překáží běžné rámovce.",
+    "funkce": "Nízká rámovka (výška 16 cm) obejde zadní tlumič; uchytíte ji dopředu, dozadu i na horní trubku. Šířka 6 cm nepřekáží.",
+    "pouziti": "Na celopéra a rámy s omezeným prostorem kolem tlumiče.",
     "features": [
       "Plně vyztužená konstrukce – drží tvar",
       "Výška jen 16 cm – mine zadní tlumič u celopér",
@@ -1998,6 +2110,9 @@ export const feedProducts: Product[] = [
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 2500,
     "shortDescription": "Brašna na míru pro váš rám. Společně projdeme krátkou konzultaci a dodáte přesné rozměry – my připravíme návrh a výrobu. Cena od 2 500 Kč. O…",
+    "problem": "Váš rám má atypický tvar a žádná sériová brašna na něj přesně nesedne.",
+    "funkce": "Brašna vyrobená na míru vašemu rámu — po krátké konzultaci a zaslání rozměrů připravíme návrh a výrobu. Cena od 2 500 Kč.",
+    "pouziti": "Pro atypické rámy a specifické požadavky, kde potřebujete přesné padnutí.",
     "features": [
       "E-bikeReady™"
     ],
@@ -2033,6 +2148,9 @@ export const feedProducts: Product[] = [
     "price": 490,
     "b2b_price": 232,
     "shortDescription": "Prostorná tříkapsá rámová brašna do rámů s velkým vnitřním prostorem. Tři oddělené kapsy na zip udrží pořádek, pojme i masivní nabíječku na e-kolo a šířka 6 cm nepřekáží při šlapání.",
+    "problem": "Do velkého rámu chcete pobrat hodně věcí přehledně a s dostatkem místa i na nabíječku e-kola.",
+    "funkce": "Prostorná tříkapsová rámovka; tři oddělené kapsy na zip udrží pořádek, pojme i masivní nabíječku. Šířka 6 cm nepřekáží při šlapání.",
+    "pouziti": "Na rámy s velkým vnitřním prostorem a delší trasy s víc vybavením.",
     "features": [
       "LongStrap™",
       "NightGlow™"
@@ -2088,6 +2206,9 @@ export const feedProducts: Product[] = [
     "price": 555,
     "b2b_price": 263,
     "shortDescription": "Bezpečnostní podsedlovka s integrovaným LED světlem a rozšiřitelným objemem (Active Safety). ŽRALOK expandér zvětší objem až na 1 L, mechanický TWIST úchyt je součástí balení.",
+    "problem": "Za šera chcete být vidět a zároveň mít podsedlovku, která se přizpůsobí objemu nákladu.",
+    "funkce": "Bezpečnostní podsedlovka s integrovaným LED světlem a rozšířením ŽRALOK až na 1 l; mechanický TWIST úchyt je součástí balení.",
+    "pouziti": "Na jízdy za snížené viditelnosti a situace, kdy potřebujete zvětšit objem.",
     "features": [
       "E-bikeReady™",
       "ActiveLED™",
@@ -2160,6 +2281,9 @@ export const feedProducts: Product[] = [
     "price": 445,
     "b2b_price": 211,
     "shortDescription": "Neoprenová ochrana displeje elektrokola při převozu. Chrání display před tlakovou vodou a solí – ideální při převozu kola na nosiči auta.",
+    "problem": "Displej elektrokola je při převozu ohrožený tlakovou vodou a solí.",
+    "funkce": "Neoprenová ochrana displeje na míru vašemu elektrokolu; chrání před tlakovou vodou i solí.",
+    "pouziti": "Ideální při převozu kola na nosiči auta, hlavně za deště a v zimě.",
     "features": [
       "E-bikeReady™",
       "HydroGuard™"
