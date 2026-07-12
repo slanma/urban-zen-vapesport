@@ -110,7 +110,7 @@ const ProductSearch = () => {
         {query.trim() && (
           <p className="mt-3 text-xs font-body text-muted-foreground">
             {filtered.length === 0
-              ? "Nic jsme nenašli — zkuste jiný popis (např. „nepromokavá brašna na rám") nebo kód produktu."
+              ? "Nic jsme nenašli — zkuste jiný popis (např. „nepromokavá brašna na rám“) nebo kód produktu."
               : `Nalezeno ${filtered.length} ${filtered.length === 1 ? "produkt" : filtered.length < 5 ? "produkty" : "produktů"}.`}
           </p>
         )}

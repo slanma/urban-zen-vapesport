@@ -644,7 +644,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "KLICKfix (Rixen & Kaul)"
+        "value": "VAPESPORT"
       },
       {
         "label": "Kód (KLICKfix)",
@@ -1111,7 +1111,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "KLICKfix (Rixen & Kaul)"
+        "value": "VAPESPORT"
       },
       {
         "label": "Kód (KLICKfix)",
@@ -1278,7 +1278,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "MORSEOVAPE"
+        "value": "VAPESPORT"
       },
       {
         "label": "Rozměry (D × Š × V)",
@@ -1377,7 +1377,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "MORSEOVAPE"
+        "value": "VAPESPORT"
       },
       {
         "label": "Rozměry (D × Š × V)",
@@ -1472,7 +1472,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "MORSEOVAPE"
+        "value": "VAPESPORT"
       },
       {
         "label": "Rozměry (D × Š × V)",
@@ -1570,7 +1570,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "MORSEOVAPE"
+        "value": "VAPESPORT"
       },
       {
         "label": "Rozměry (D × Š × V)",
@@ -1662,7 +1662,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "MORSEOVAPE"
+        "value": "VAPESPORT"
       },
       {
         "label": "Rozměry (D × Š × V)",
@@ -1749,7 +1749,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "MORSEOVAPE"
+        "value": "VAPESPORT"
       },
       {
         "label": "Rozměry (D × Š × V)",
@@ -1836,7 +1836,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "MORSEOVAPE"
+        "value": "VAPESPORT"
       },
       {
         "label": "Rozměry (D × Š × V)",
@@ -1933,7 +1933,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "MORSEOVAPE"
+        "value": "VAPESPORT"
       },
       {
         "label": "Rozměry (D × Š × V)",
@@ -2036,7 +2036,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Výrobce",
-        "value": "MORSEOVAPE"
+        "value": "VAPESPORT"
       },
       {
         "label": "Rozměry (D × Š × V)",
