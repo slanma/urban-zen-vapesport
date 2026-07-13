@@ -54,6 +54,8 @@ interface Props {
   hideFilterBar?: boolean;
   /** Hide intro heading (for embedding). */
   compact?: boolean;
+  /** Nezobrazovat vnitřní popup s produkty (B2C katalog má vlastní sekce). */
+  suppressPopup?: boolean;
 }
 
 const InteractiveBikeGuide = ({
@@ -63,6 +65,7 @@ const InteractiveBikeGuide = ({
   onB2BAdd,
   hideFilterBar,
   compact,
+  suppressPopup,
 }: Props) => {
   const [internalActive, setInternalActive] = useState<Hotspot | null>(null);
   const active = activeHotspot ?? internalActive;
@@ -109,7 +112,9 @@ const InteractiveBikeGuide = ({
       {/* Responsive image wrapper: hotspots are anchored to this element, not the viewport. */}
       <div className="text-center">
         <div
-          className="relative inline-block w-full max-w-[1000px] mx-auto select-none"
+          className={`relative inline-block w-full mx-auto select-none ${
+            mode === "b2b" ? "max-w-[1000px]" : "max-w-[600px]"
+          }`}
           role="group"
           aria-label="Interaktivní e-kolo s body pro brašny"
         >
@@ -205,7 +210,7 @@ const InteractiveBikeGuide = ({
       </div>
 
       {/* Product popup carousel — appears BELOW the bike after clicking a hotspot */}
-      {active && (
+      {active && !suppressPopup && (
         <div
           className="w-full max-w-[1000px] mx-auto mt-4 bg-background border border-border rounded-xl shadow-lg p-3 animate-in fade-in slide-in-from-top-2 duration-200"
           role="region"

@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -47,6 +47,14 @@ const setMeta = (name: string, content: string, attr: "name" | "property" = "nam
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  // Zpět na katalog = skutečný návrat v historii (obnoví scroll + předchozí
+  // stránku, ať už to byl obchod, MORSEO kolekce nebo výsledky hledání).
+  // Fallback na /obchod, když uživatel přišel přímo (žádná historie).
+  const goBackToCatalog = () => {
+    if (window.history.length > 1) navigate(-1);
+    else navigate("/obchod");
+  };
   const baseProduct = getProductById(id);
   const { addItem, openDrawer } = useCart();
   const { get } = useProductOverrides();
@@ -133,12 +141,13 @@ const ProductDetail = () => {
         <Navbar />
         <div className="flex-1 flex items-center justify-center flex-col gap-4 pt-20">
           <p className="font-heading text-2xl font-bold text-foreground">Produkt nenalezen</p>
-          <Link
-            to="/obchod"
+          <button
+            type="button"
+            onClick={goBackToCatalog}
             className="text-primary font-semibold underline underline-offset-4"
           >
             Zpět na katalog
-          </Link>
+          </button>
         </div>
         <Footer />
       </main>
@@ -180,13 +189,14 @@ const ProductDetail = () => {
       <Navbar />
 
       <section className="pt-28 pb-16 px-6 lg:px-12 max-w-[1400px] mx-auto">
-        <Link
-          to="/obchod"
+        <button
+          type="button"
+          onClick={goBackToCatalog}
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 font-body"
         >
           <ArrowLeft className="w-4 h-4" />
           Zpět na katalog
-        </Link>
+        </button>
 
         {/* BLOCK A — header */}
         <header className="mb-8">
