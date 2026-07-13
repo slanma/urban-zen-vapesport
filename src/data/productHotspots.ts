@@ -54,7 +54,7 @@ export const productHotspotEntries: HotspotEntry[] = [
   { productId: "vs-smb-vapesport-904678", hotspot: "TopTube", categories: ["Brašny na mobilní telefony", "Brašny na KOLOBĚŽKY"] }, // SMB Vapesport
 
   // ── Frame ──────────────────────────────────────
-  { productId: "vs-brasna-na-miru-951815", hotspot: "Frame", categories: [] }, // Brašna na míru
+  { productId: "vs-brasna-na-miru-951815", hotspot: "Frame", categories: ["Rámové brašny"] }, // Brašna na míru
   { productId: "vs-elektro-ii-vapesport-904683", hotspot: "Frame", categories: ["Brašny pro ELEKTROKOLO"] }, // Elektro II VAPESPORT
   { productId: "vs-ramova-brasna-nepromokavy-zip-947097", hotspot: "Frame", categories: ["MORSEOVAPE"] }, // MORSEO Elektro II
   { productId: "vs-ramova-brasna-nepromokavy-zip-945203", hotspot: "Frame", categories: ["MORSEOVAPE"] }, // MORSEO Plochý trojúhelník 2-kapsý
@@ -113,4 +113,30 @@ export const getHotspotForProduct = (productId: string): Hotspot => {
 export const getCategoriesForProduct = (productId: string): string[] => {
   const e = productHotspotEntries.find((x) => x.productId === productId);
   return e?.categories ?? [];
+};
+
+/**
+ * Katalog seskupený podle KATEGORIÍ brašen (ne podle pozice na kole).
+ * MORSEOVAPE se jako kategorie nepoužívá – MORSEO má vlastní stránku.
+ */
+const CATEGORY_ALIASES: Record<string, string> = {
+  "Podsedlové brašny": "Brašny pod sedlo", // sjednocení duplicitního názvu
+};
+const normalizeCategory = (c: string) => CATEGORY_ALIASES[c] ?? c;
+
+/** Vrátí všechny produkty spadající do dané kategorie brašen (MORSEO varianty
+ *  se rozbalí; deduplikace na jednu kartu řeší až UI podle baseId). */
+export const getProductsByCategory = (category: string): Product[] => {
+  const ids = productHotspotEntries
+    .filter((e) =>
+      e.categories.some((c) => normalizeCategory(c) === category),
+    )
+    .map((e) => e.productId);
+
+  return ids.flatMap((id) => {
+    const variants = productsByBaseId.get(id);
+    if (variants && variants.length > 0) return variants;
+    const single = byId.get(id);
+    return single ? [single] : [];
+  });
 };
