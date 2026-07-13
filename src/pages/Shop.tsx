@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import InteractiveBikeGuide from "@/components/InteractiveBikeGuide";
 import ProductSearch from "@/components/ProductSearch";
 import { getProductsByCategory, type Hotspot } from "@/data/productHotspots";
+import { getBikeType, productMatchesBikeType } from "@/data/bikeTypes";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { getPrimaryImage } from "@/lib/productImages";
 import { RichText } from "@/lib/richText";
@@ -57,6 +58,8 @@ const scrollToBike = () =>
 const Shop = () => {
   const [params] = useSearchParams();
   const requested = params.get("pozice") as Hotspot | null;
+  const kolo = params.get("kolo");
+  const bikeType = getBikeType(kolo);
   const { get } = useProductOverrides();
 
   // Plovoucí tlačítko „Zpět na kolo" se ukáže, až se uživatel odroluje
@@ -75,6 +78,9 @@ const Shop = () => {
     return CATALOG.map((cat) => {
       const products = getProductsByCategory(cat.label)
         .filter((p) => get(p.id).visible)
+        .filter((p) =>
+          bikeType ? productMatchesBikeType(p.baseId ?? p.id, bikeType.id) : true,
+        )
         .map((p) => applyProductOverride(p, get(p.id)))
         .filter(
           (p, i, arr) =>
@@ -82,7 +88,7 @@ const Shop = () => {
         );
       return { ...cat, products };
     }).filter((s) => s.products.length > 0);
-  }, [get]);
+  }, [get, bikeType]);
 
   const totalCount = useMemo(
     () => catalog.reduce((sum, s) => sum + s.products.length, 0),
@@ -119,6 +125,24 @@ const Shop = () => {
           Katalog obsahuje {totalCount} produktů.
         </p>
       </section>
+
+      {/* Aktivní filtr podle typu kola */}
+      {bikeType && (
+        <div className="px-6 lg:px-12 max-w-[1400px] mx-auto mb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-secondary/50 px-5 py-3">
+            <p className="font-body text-sm text-foreground">
+              Brašny pro:{" "}
+              <span className="font-heading font-bold">{bikeType.label}</span>
+            </p>
+            <Link
+              to="/obchod"
+              className="text-sm font-body font-semibold text-primary underline underline-offset-4 hover:opacity-80"
+            >
+              Zobrazit všechny brašny
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Rychlá lišta kategorií — přehled + skok na sekci */}
       {catalog.length > 0 && (
