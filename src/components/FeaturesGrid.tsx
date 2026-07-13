@@ -125,10 +125,10 @@ const FeaturesGrid = () => {
     <section id="kolekce" className="py-20 md:py-32 bg-background">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-center text-foreground mb-4">
-          Technologie, které definují standard
+          Technologie, které dělají rozdíl
         </h2>
         <p className="text-muted-foreground text-center text-lg mb-16 max-w-2xl mx-auto">
-          Každý detail je navržen s precizností švýcarského hodinářství.
+          Chytré detaily našich brašen prověřené v terénu.
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
