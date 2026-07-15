@@ -21,6 +21,7 @@ const CategoryRozcestnik = () => {
   const [selected, setSelected] = useState<string | null>(null);
   const { get } = useProductOverrides();
   const panelRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const bikeType = BIKE_TYPES.find((b) => b.id === selected) ?? null;
 
@@ -37,10 +38,19 @@ const CategoryRozcestnik = () => {
   }, [bikeType, get]);
 
   const handleSelect = (id: string) => {
-    setSelected((prev) => (prev === id ? null : id));
-    // po rozbalení sjede na panel s produkty
+    const next = selected === id ? null : id;
+    setSelected(next);
     setTimeout(() => {
-      panelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      // otevření → sjede na produkty; sbalení → zpět na rozcestník kol
+      const target = next ? panelRef.current : gridRef.current;
+      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
+  };
+
+  const handleClose = () => {
+    setSelected(null);
+    setTimeout(() => {
+      gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 60);
   };
 
@@ -55,7 +65,7 @@ const CategoryRozcestnik = () => {
         </h2>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div ref={gridRef} className="scroll-mt-24 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {BIKE_TYPES.map((bt) => {
           const active = selected === bt.id;
           return (
@@ -111,7 +121,7 @@ const CategoryRozcestnik = () => {
             </h3>
             <button
               type="button"
-              onClick={() => setSelected(null)}
+              onClick={handleClose}
               className="inline-flex items-center gap-1.5 text-sm font-body font-semibold text-muted-foreground hover:text-primary transition-colors"
             >
               <X className="w-4 h-4" />
