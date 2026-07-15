@@ -19,6 +19,13 @@ import vsFlexVolumeIcon from "@/assets/icon-vs-flexvolume.png";
 import vsBottleDockIcon from "@/assets/icon-vs-bottledock.png";
 import vsQuickClipIcon from "@/assets/icon-vs-quickclip.jpg";
 
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { products, type Product } from "@/data/products";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { getPrimaryImage } from "@/lib/productImages";
+
 const features = [
   {
     image: gekkoGripIcon,
@@ -121,6 +128,7 @@ const vapesportFeatures = [
 ];
 
 const FeaturesGrid = () => {
+  const { get } = useProductOverrides();
   return (
     <section id="kolekce" className="py-20 md:py-32 bg-background">
       <div className="container mx-auto px-4">
@@ -132,22 +140,14 @@ const FeaturesGrid = () => {
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
-          {features.map((feature, index) => (
-            <article
+          {features.map((feature) => (
+            <FeatureCard
               key={feature.title}
-              className="group flex flex-col items-center text-center p-6 rounded-2xl bg-card hover:bg-secondary transition-colors duration-300"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="w-20 h-20 rounded-full overflow-hidden mb-5">
-                <img src={feature.image} alt={feature.title} className="w-full h-full object-cover" />
-              </div>
-              <h3 className="font-heading font-semibold text-base text-foreground mb-1">
-                {feature.title}
-              </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {feature.description}
-              </p>
-            </article>
+              title={feature.title}
+              image={feature.image}
+              description={feature.description}
+              get={get}
+            />
           ))}
         </div>
 
@@ -159,27 +159,108 @@ const FeaturesGrid = () => {
             Osvědčené vlastnosti prověřené v terénu.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            {vapesportFeatures.map((feature, index) => (
-              <article
+            {vapesportFeatures.map((feature) => (
+              <FeatureCard
                 key={feature.title}
-                className="group flex flex-col items-center text-center p-6 rounded-2xl bg-card hover:bg-secondary transition-colors duration-300"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="w-20 h-20 rounded-full overflow-hidden mb-5">
-                  <img src={feature.image} alt={feature.title} className="w-full h-full object-cover" />
-                </div>
-                <h3 className="font-heading font-semibold text-base text-foreground mb-1">
-                  {feature.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-              </article>
+                title={feature.title}
+                image={feature.image}
+                description={feature.description}
+                get={get}
+              />
             ))}
           </div>
         </div>
       </div>
     </section>
+  );
+};
+
+/**
+ * Klikací technologická karta. Po kliknutí se otevře bublina (popover)
+ * se seznamem brašen, které danou technologii mají.
+ */
+const FeatureCard = ({
+  title,
+  image,
+  description,
+  get,
+}: {
+  title: string;
+  image: string;
+  description: string;
+  get: ReturnType<typeof useProductOverrides>["get"];
+}) => {
+  const matched = useMemo(() => {
+    const needle = title.trim().toLowerCase();
+    return products
+      .filter((p) => get(p.id).visible)
+      .filter((p) => {
+        const ov = get(p.id);
+        const feats = ov.features_override ?? p.features ?? [];
+        return feats.some((f) => f.trim().toLowerCase() === needle);
+      })
+      .filter(
+        (p, i, arr) =>
+          arr.findIndex((x) => (x.baseId ?? x.id) === (p.baseId ?? p.id)) === i,
+      );
+  }, [title, get]);
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="group flex flex-col items-center text-center p-6 rounded-2xl bg-card hover:bg-secondary transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        >
+          <div className="w-20 h-20 rounded-full overflow-hidden mb-5">
+            <img src={image} alt={title} className="w-full h-full object-cover" />
+          </div>
+          <h3 className="font-heading font-semibold text-base text-foreground mb-1">
+            {title}
+          </h3>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            {description}
+          </p>
+          <span className="mt-3 text-xs font-body font-semibold uppercase tracking-wide text-primary">
+            {matched.length} brašen →
+          </span>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent side="top" className="w-80 max-h-96 overflow-y-auto p-3 z-50">
+        <p className="font-heading font-bold text-foreground mb-2">
+          {title}{" "}
+          <span className="text-muted-foreground font-body font-normal text-sm">
+            ({matched.length})
+          </span>
+        </p>
+        {matched.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            Zatím žádné brašny s touto technologií.
+          </p>
+        ) : (
+          <ul className="space-y-1">
+            {matched.map((p: Product) => (
+              <li key={p.id}>
+                <Link
+                  to={`/produkt/${p.id}`}
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary transition-colors"
+                >
+                  <img
+                    src={getPrimaryImage(p, get(p.id))}
+                    alt={p.name}
+                    loading="lazy"
+                    className="w-12 h-12 object-contain bg-white rounded shrink-0"
+                  />
+                  <span className="flex-1 text-sm font-body text-foreground leading-snug">
+                    {p.name}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </PopoverContent>
+    </Popover>
   );
 };
 
