@@ -9,7 +9,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
-import { Download, RotateCcw, Package, Truck, Award, ShoppingBag } from "lucide-react";
+import { Download, RotateCcw, Package, Award, ShoppingBag } from "lucide-react";
 
 /** Věrnostní slevový systém (útrata bez DPH → sleva). */
 const TIERY = [
@@ -66,18 +66,18 @@ const B2BNastenka = () => {
     };
   }, [profile]);
 
-  const spend = useMemo(
-    () => orders.reduce((s, o) => s + (o.total_gross ?? 0), 0),
-    [orders],
-  );
+  const obrat2025 = profile?.obrat_2025 ?? 0;
+  const obrat2026 = profile?.obrat_2026 ?? 0;
+  // Věrnostní úroveň se počítá z letošního obratu (2026), který zadáváš v adminu.
+  const zaklad = obrat2026;
   const currentTier = useMemo(
-    () => [...TIERY].reverse().find((t) => spend >= t.od) ?? TIERY[0],
-    [spend],
+    () => [...TIERY].reverse().find((t) => zaklad >= t.od) ?? TIERY[0],
+    [zaklad],
   );
-  const nextTier = useMemo(() => TIERY.find((t) => t.od > spend) ?? null, [spend]);
-  const remaining = nextTier ? nextTier.od - spend : 0;
+  const nextTier = useMemo(() => TIERY.find((t) => t.od > zaklad) ?? null, [zaklad]);
+  const remaining = nextTier ? nextTier.od - zaklad : 0;
   const progress = nextTier
-    ? Math.min(100, Math.round(((spend - currentTier.od) / (nextTier.od - currentTier.od)) * 100))
+    ? Math.min(100, Math.round(((zaklad - currentTier.od) / (nextTier.od - currentTier.od)) * 100))
     : 100;
 
   // ---- Feed ----
@@ -222,49 +222,61 @@ const B2BNastenka = () => {
         </div>
 
         {/* Přehledové dlaždice */}
-        <div className="grid sm:grid-cols-3 gap-5 mb-6">
-          <div className="rounded-2xl border border-border bg-card p-6">
-            <ShoppingBag className="w-5 h-5 text-primary mb-3" />
-            <div className="font-heading text-2xl font-bold text-foreground">{fmtCZK(spend)}</div>
-            <div className="text-sm text-muted-foreground mt-1">celkem objednáno (bez DPH)</div>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-5 mb-6">
+          {obrat2026 > 0 && (
+            <div className="rounded-2xl border border-primary/40 bg-primary/[0.04] p-6">
+              <ShoppingBag className="w-5 h-5 text-primary mb-3" />
+              <div className="font-heading text-2xl font-bold text-foreground">{fmtCZK(obrat2026)}</div>
+              <div className="text-sm text-muted-foreground mt-1">obrat 2026 (bez DPH)</div>
+            </div>
+          )}
+          {obrat2025 > 0 && (
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <ShoppingBag className="w-5 h-5 text-muted-foreground mb-3" />
+              <div className="font-heading text-2xl font-bold text-foreground">{fmtCZK(obrat2025)}</div>
+              <div className="text-sm text-muted-foreground mt-1">obrat 2025 (bez DPH)</div>
+            </div>
+          )}
           <div className="rounded-2xl border border-border bg-card p-6">
             <Award className="w-5 h-5 text-primary mb-3" />
             <div className="font-heading text-2xl font-bold text-foreground">{profile.discount_percent} %</div>
-            <div className="text-sm text-muted-foreground mt-1">vaše aktuální sleva</div>
-          </div>
-          <div className="rounded-2xl border border-border bg-card p-6">
-            <Truck className="w-5 h-5 text-primary mb-3" />
-            <div className="font-heading text-2xl font-bold text-foreground">
-              {profile.free_shipping ? "Zdarma" : "Dle sazby"}
+            <div className="text-sm text-muted-foreground mt-1">
+              vaše aktuální sleva{profile.free_shipping ? " · doprava zdarma" : ""}
             </div>
-            <div className="text-sm text-muted-foreground mt-1">doprava</div>
           </div>
         </div>
 
         {/* Věrnostní program */}
         <section className="rounded-2xl border border-border bg-card p-6 mb-10">
           <h2 className="font-heading text-lg font-bold text-foreground mb-1">Věrnostní sleva</h2>
-          <p className="text-sm text-muted-foreground mb-5">
-            Při útratě <strong className="text-foreground">{fmtCZK(spend)}</strong> (bez DPH) máte
-            nárok na slevu <strong className="text-primary">{currentTier.sleva} %</strong>.
-            {nextTier ? (
-              <>
-                {" "}Do slevy <strong className="text-foreground">{nextTier.sleva} %</strong> zbývá{" "}
-                <strong className="text-primary">{fmtCZK(remaining)}</strong>.
-              </>
-            ) : (
-              <> Máte nejvyšší úroveň slevy. 🎉</>
-            )}
-          </p>
-          <div className="h-3 rounded-full bg-secondary overflow-hidden">
-            <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
-          </div>
+          {obrat2026 > 0 ? (
+            <>
+              <p className="text-sm text-muted-foreground mb-5">
+                Váš letošní obrat <strong className="text-foreground">{fmtCZK(obrat2026)}</strong> (bez DPH)
+                odpovídá slevě <strong className="text-primary">{currentTier.sleva} %</strong>.
+                {nextTier ? (
+                  <>
+                    {" "}Do slevy <strong className="text-foreground">{nextTier.sleva} %</strong> zbývá{" "}
+                    <strong className="text-primary">{fmtCZK(remaining)}</strong>.
+                  </>
+                ) : (
+                  <> Máte nejvyšší úroveň slevy. 🎉</>
+                )}
+              </p>
+              <div className="h-3 rounded-full bg-secondary overflow-hidden">
+                <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
+              </div>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground mb-5">
+              Sleva roste s vaším ročním obratem (bez DPH). Přehled úrovní:
+            </p>
+          )}
           <div className="flex flex-wrap gap-x-5 gap-y-1 mt-4">
             {TIERY.filter((t) => t.sleva > 0).map((t) => (
               <span
                 key={t.od}
-                className={`text-xs font-mono ${spend >= t.od ? "text-primary font-bold" : "text-muted-foreground"}`}
+                className={`text-xs font-mono ${zaklad >= t.od ? "text-primary font-bold" : "text-muted-foreground"}`}
               >
                 od {fmtCZK(t.od)} → {t.sleva} %
               </span>

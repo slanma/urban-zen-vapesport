@@ -24,6 +24,8 @@ export type Database = {
           dic: string | null
           discount_percent: number
           free_shipping: boolean
+          obrat_2025: number
+          obrat_2026: number
           ico: string
           id: string
           notes: string | null
@@ -42,6 +44,8 @@ export type Database = {
           dic?: string | null
           discount_percent?: number
           free_shipping?: boolean
+          obrat_2025?: number
+          obrat_2026?: number
           ico: string
           id?: string
           notes?: string | null
@@ -60,6 +64,8 @@ export type Database = {
           dic?: string | null
           discount_percent?: number
           free_shipping?: boolean
+          obrat_2025?: number
+          obrat_2026?: number
           ico?: string
           id?: string
           notes?: string | null
