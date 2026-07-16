@@ -56,6 +56,7 @@ const PAYMENT_MATRIX: Record<ShippingId, PaymentOption[]> = {
   ],
   ppl: [
     { id: "transfer", label: "Převodem na účet", price: 0 },
+    { id: "cod", label: "Dobírka (+50 Kč)", price: 50 },
     { id: "invoice", label: "Platba na fakturu", price: 0 },
   ],
 };
