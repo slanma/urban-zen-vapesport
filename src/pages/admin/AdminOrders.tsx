@@ -10,7 +10,7 @@ import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { DataTableToolbar, type ChipFilter } from "@/components/admin/DataTableToolbar";
 import { DataTablePagination } from "@/components/admin/DataTablePagination";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import PaymentQrPanel from "@/components/admin/PaymentQrPanel";
 
 /** Normalizace názvu produktu pro spárování (sjednotí uvozovky a mezery). */
@@ -133,6 +133,20 @@ const AdminOrders = () => {
     else {
       toast.success(`Stav změněn: ${statusLabel[newStatus]}`);
       if (selected?.id === id) setSelected({ ...selected, status: newStatus });
+    }
+    setUpdatingId(null);
+  };
+
+  const deleteOrder = async (id: string) => {
+    if (!window.confirm("Opravdu smazat tuto objednávku? Akci nelze vrátit zpět.")) return;
+    setUpdatingId(id);
+    const { error } = await supabase.from("orders").delete().eq("id", id);
+    if (error) {
+      toast.error("Objednávku se nepodařilo smazat", { description: error.message });
+    } else {
+      toast.success("Objednávka smazána");
+      setOrders((prev) => prev.filter((o) => o.id !== id));
+      setSelected(null);
     }
     setUpdatingId(null);
   };
@@ -318,6 +332,40 @@ const AdminOrders = () => {
                 </div>
               )}
 
+              {(() => {
+                const raw =
+                  (selected.items as unknown as Array<{ image_url?: string | null }>) ?? [];
+                const itemImgs = raw
+                  .map((it) => it.image_url)
+                  .filter((u): u is string => !!u);
+                const imgs = [selected.attachment_url, ...itemImgs].filter(
+                  (u): u is string => !!u,
+                );
+                if (imgs.length === 0) return null;
+                return (
+                  <div className="mt-4 text-sm">
+                    <h3 className="font-semibold mb-2 text-foreground">Přílohy (obrázky)</h3>
+                    <div className="flex flex-wrap gap-3">
+                      {imgs.map((url, i) => (
+                        <a
+                          key={i}
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block"
+                        >
+                          <img
+                            src={url}
+                            alt={`Příloha ${i + 1}`}
+                            className="w-24 h-24 rounded-lg object-cover border border-border hover:opacity-90 transition-opacity"
+                          />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
               {selected.is_b2b ? (
                 <div className="mt-6 border-t border-border pt-4 text-sm">
                   <h3 className="font-semibold mb-1 text-foreground">Platba (B2B)</h3>
@@ -353,6 +401,16 @@ const AdminOrders = () => {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              <div className="mt-6 border-t border-border pt-4">
+                <button
+                  onClick={() => deleteOrder(selected.id)}
+                  disabled={updatingId === selected.id}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold text-destructive border border-destructive/40 hover:bg-destructive/10 transition-colors disabled:opacity-60"
+                >
+                  <Trash2 className="w-4 h-4" /> Smazat objednávku
+                </button>
               </div>
             </>
           )}

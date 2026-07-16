@@ -15,8 +15,9 @@ import { netFromGross, fmtCZK } from "@/lib/vat";
 
 import { ArrowLeft, ShoppingCart, Check, PackageCheck, PackageX } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import ImageUpload from "@/components/ImageUpload";
 import { useCart } from "@/hooks/useCart";
 import { toast } from "@/hooks/use-toast";
 import QuantitySelector from "@/components/product/QuantitySelector";
@@ -44,6 +45,9 @@ const setMeta = (name: string, content: string, attr: "name" | "property" = "nam
   }
   el.setAttribute("content", content);
 };
+
+/** Produkty, u kterých chceme nabízet přiložení obrázku i bez slova „na míru“ v názvu. */
+const CUSTOM_UPLOAD_IDS = ["vs-neoprenovy-obal-938229"];
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,7 +81,8 @@ const ProductDetail = () => {
   );
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [frameCirc, setFrameCirc] = useState<string>("");
+  const [needStraps, setNeedStraps] = useState(false);
+  const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
 
   // Pick first in-stock color when product loads.
   useEffect(() => {
@@ -114,13 +119,6 @@ const ProductDetail = () => {
       document.title = prevTitle;
     };
   }, [product, override, baseProduct]);
-
-  const maxCircCm = useMemo(() => {
-    const productMax = override?.max_frame_circumference_cm;
-    if (productMax && productMax > 0) return productMax;
-    const globalMax = parseFloat(getSetting("default_max_frame_circumference_cm", "7.5"));
-    return Number.isFinite(globalMax) && globalMax > 0 ? globalMax : 7.5;
-  }, [override?.max_frame_circumference_cm, getSetting]);
 
   const selectedColorLabel = selectedColor ? resolveColor(selectedColor).label : "Vyberte";
   const visibleFeatures = useMemo(() => {
@@ -161,18 +159,22 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
-    addItem(product.id, quantity, selectedColor);
+    addItem(
+      product.id,
+      quantity,
+      selectedColor,
+      customImageUrl ? { imageUrl: customImageUrl } : null,
+    );
 
-    // Auto-inject longer straps if user reported larger frame circumference.
-    const circ = parseFloat(frameCirc.replace(",", "."));
+    // Prodloužené pásky – jen když si je zákazník vyžádá zaškrtnutím.
     const strapsId = getSetting("longer_straps_product_id", "").trim();
-    if (Number.isFinite(circ) && circ > maxCircCm && strapsId) {
+    if (needStraps && strapsId) {
       const strapsProduct = getProductById(strapsId);
       if (strapsProduct) {
         addItem(strapsId, 1, null, { auto: true, autoFor: product.id });
         toast({
           title: "Přidány prodloužené pásky",
-          description: `Váš obvod rámu (${circ.toFixed(1)} cm) přesahuje standard ${maxCircCm} cm.`,
+          description: "Přidali jsme prodloužené suché zipy pro širší rámovou trubku.",
         });
       } else {
         console.warn(
@@ -313,31 +315,43 @@ const ProductDetail = () => {
               </div>
             )}
 
-            {/* Frame circumference — jen trojúhelníky, SMB a produkty s dlouhými pásky */}
+            {/* Prodloužené pásky — jen trojúhelníky, SMB a produkty s dlouhými pásky */}
             {(/troj[uúûù]h|smb/i.test(`${product.name} ${product.id}`) ||
               (product.features ?? []).includes("LongStrap™")) && (
-            <div className="mt-6">
-              <Label
-                htmlFor="frame-circ"
-                className="font-heading text-xs font-bold uppercase tracking-wider text-foreground"
-              >
-                Obvod vaší rámové trubky (volitelné)
-              </Label>
-              <div className="flex items-center gap-2 mt-2">
-                <Input
-                  id="frame-circ"
-                  inputMode="decimal"
-                  placeholder={`např. ${maxCircCm} cm`}
-                  value={frameCirc}
-                  onChange={(e) => setFrameCirc(e.target.value)}
-                  className="w-32"
+            <div className="mt-6 rounded-lg border border-border bg-secondary/40 p-4">
+              <label htmlFor="need-straps" className="flex items-start gap-3 cursor-pointer">
+                <Checkbox
+                  id="need-straps"
+                  checked={needStraps}
+                  onCheckedChange={(v) => setNeedStraps(v === true)}
+                  className="mt-0.5"
                 />
-                <span className="font-body text-sm text-muted-foreground">cm</span>
-              </div>
-              <p className="font-body text-xs text-muted-foreground mt-1">
-                Pokud je váš obvod větší než {maxCircCm} cm, automaticky přidáme prodloužené suché zipy.
-              </p>
+                <span className="font-body text-sm text-foreground">
+                  <span className="font-semibold">Mám širší rámovou trubku</span> – přidejte prodloužené suché zipy zdarma.
+                  <span className="block text-xs text-muted-foreground mt-0.5">
+                    Zaškrtněte jen pokud vám standardní pásky nestačí. Nic měřit nemusíte.
+                  </span>
+                </span>
+              </label>
             </div>
+            )}
+
+            {/* Obrázek pro produkty na míru */}
+            {(/na m[ií]ru/i.test(product.name) || CUSTOM_UPLOAD_IDS.includes(product.id)) && (
+              <div className="mt-6 rounded-lg border border-border bg-secondary/40 p-4">
+                <Label className="font-heading text-xs font-bold uppercase tracking-wider text-foreground">
+                  Přiložte obrázek (volitelné)
+                </Label>
+                <p className="font-body text-xs text-muted-foreground mt-1 mb-3">
+                  Nahrajte fotku nebo návrh, podle kterého vám kus vyrobíme na míru.
+                </p>
+                <ImageUpload
+                  value={customImageUrl}
+                  onChange={setCustomImageUrl}
+                  folder="produkt-na-miru"
+                  hint="JPG nebo PNG, do 5 MB."
+                />
+              </div>
             )}
 
             {/* Quantity + Add to cart */}

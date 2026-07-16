@@ -7,7 +7,7 @@ export interface CartItem {
   /** Optional metadata used for auto-injected accessories (e.g. longer straps).
    *  `auto: true` items are still real cart lines (count in totals, invoices)
    *  but the UI marks them as automatically added based on user input. */
-  meta?: { auto?: boolean; autoFor?: string } | null;
+  meta?: { auto?: boolean; autoFor?: string; imageUrl?: string } | null;
 }
 
 interface CartCtx {

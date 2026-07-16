@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { getProductById } from "@/data/products";
 import { fmtCZK, grossFromNet, vatOfGross } from "@/lib/vat";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
+import ImageUpload from "@/components/ImageUpload";
 import { usePromoCode } from "@/hooks/usePromoCode";
 import PromoCodeBox from "@/components/PromoCodeBox";
 
@@ -74,6 +75,7 @@ const B2BCheckout = () => {
   const [submitting, setSubmitting] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [placedOrder, setPlacedOrder] = useState<{ number: string; email: string; total: number } | null>(null);
+  const [orderImageUrl, setOrderImageUrl] = useState<string | null>(null);
   const [billing, setBilling] = useState({
     email: "",
     firstName: "",
@@ -86,6 +88,7 @@ const B2BCheckout = () => {
     company: "",
     ico: "",
     dic: "",
+    note: "",
   });
 
   useEffect(() => {
@@ -192,6 +195,8 @@ const B2BCheckout = () => {
       company_name: billing.company || payload.companyName || null,
       ico: billing.ico || null,
       dic: billing.dic || null,
+      note: billing.note || null,
+      attachment_url: orderImageUrl || null,
       items: payload.items.map((i) => ({
         product_id: i.productId,
         sku: i.sku,
@@ -487,6 +492,26 @@ const B2BCheckout = () => {
                   <div>
                     <label htmlFor="dic" className={labelClass}>DIČ</label>
                     <input id="dic" type="text" placeholder="CZ…" value={billing.dic} onChange={(e) => setBilling({ ...billing, dic: e.target.value })} className={inputClass} />
+                  </div>
+                  <div className="sm:col-span-2 pt-4 border-t border-border">
+                    <label htmlFor="note" className={labelClass}>Poznámka k objednávce</label>
+                    <textarea
+                      id="note"
+                      rows={3}
+                      value={billing.note}
+                      onChange={(e) => setBilling({ ...billing, note: e.target.value })}
+                      placeholder="Vzkaz k objednávce – přání, termín, upřesnění…"
+                      className="w-full px-4 py-3 text-base bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary resize-none"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className={labelClass}>Přiložit obrázek (volitelné)</label>
+                    <ImageUpload
+                      value={orderImageUrl}
+                      onChange={setOrderImageUrl}
+                      folder="objednavka-b2b"
+                      hint="Např. návrh pro kus na míru. JPG/PNG do 5 MB."
+                    />
                   </div>
                 </div>
               </>

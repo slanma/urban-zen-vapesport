@@ -7,6 +7,36 @@ import { toast } from "sonner";
 
 const GA_ID_RE = /^G-[A-Z0-9]{4,}$/i;
 
+/** mod 97 nad dlouhým číselným řetězcem (bez ztráty přesnosti). */
+const mod97 = (numStr: string) => {
+  let rem = 0;
+  for (let i = 0; i < numStr.length; i++) rem = (rem * 10 + (numStr.charCodeAt(i) - 48)) % 97;
+  return rem;
+};
+
+/**
+ * Vrátí IBAN. Přijme:
+ *  - už zadaný IBAN (vrátí ho normalizovaný),
+ *  - klasické české číslo účtu ve tvaru [predcisli-]cislo/kod (převede na CZ IBAN).
+ * Když je vstup neplatný, vrátí null.
+ */
+const toIbanCz = (raw: string): string | null => {
+  const s = raw.replace(/\s+/g, "").toUpperCase();
+  if (!s) return null;
+  // Už IBAN (dvě písmena země + 2 číslice + zbytek)
+  if (/^[A-Z]{2}[0-9]{2}[A-Z0-9]{10,30}$/.test(s)) return s;
+  // Klasické CZ číslo účtu: [predcisli-]cislo/kod
+  const m = s.match(/^(?:([0-9]{1,6})-)?([0-9]{1,10})\/([0-9]{4})$/);
+  if (!m) return null;
+  const prefix = (m[1] ?? "").padStart(6, "0");
+  const acc = m[2].padStart(10, "0");
+  const bank = m[3];
+  const bban = bank + prefix + acc; // 20 číslic
+  // C=12, Z=35 -> "1235"; check = 98 - mod97(bban + "1235" + "00")
+  const check = (98 - mod97(bban + "1235" + "00")).toString().padStart(2, "0");
+  return "CZ" + check + bban;
+};
+
 type BankAccountRow = { id: string; bank_name: string; iban: string; sort_order: number };
 
 const AdminBankAccounts = () => {
@@ -39,9 +69,9 @@ const AdminBankAccounts = () => {
 
   const handleCreate = async () => {
     const bank_name = form.bank_name.trim();
-    const iban = form.iban.replace(/\s+/g, "").toUpperCase();
+    const iban = toIbanCz(form.iban);
     if (!bank_name || !iban) {
-      toast.error("Vyplňte název banky a IBAN");
+      toast.error("Vyplňte název banky a účet (IBAN nebo číslo účtu, např. 19-2000145399/0800)");
       return;
     }
     setCreating(true);
@@ -78,7 +108,7 @@ const AdminBankAccounts = () => {
           disabled={creating}
         />
         <Input
-          placeholder="IBAN (např. CZ6508000000192000145399)"
+          placeholder="IBAN nebo číslo účtu (např. 19-2000145399/0800)"
           value={form.iban}
           onChange={(e) => setForm((f) => ({ ...f, iban: e.target.value }))}
           disabled={creating}

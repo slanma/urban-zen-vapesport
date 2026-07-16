@@ -11,6 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { ShieldCheck, Lock, ChevronLeft, MapPin, Building2, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import ImageUpload from "@/components/ImageUpload";
 import OrderSummaryTable from "@/components/OrderSummaryTable";
 import { fmtCZK } from "@/lib/vat";
 import { getEffectiveProductCode } from "@/lib/effectiveProduct";
@@ -78,12 +80,14 @@ const Checkout = () => {
     company: "",
     ico: "",
     dic: "",
+    note: "",
   });
   const [shipping, setShipping] = useState<ShippingId | null>(null);
   const [payment, setPayment] = useState<PaymentId | null>(null);
   const [packetaPoint, setPacketaPoint] = useState<{ id: string; name: string } | null>(null);
   const [packetaReady, setPacketaReady] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [orderImageUrl, setOrderImageUrl] = useState<string | null>(null);
   const [placedOrder, setPlacedOrder] = useState<{ number: string; total: number; email: string } | null>(null);
 
   // Promo code – shared with Cart / B2B Checkout
@@ -148,6 +152,7 @@ const Checkout = () => {
             unitNet: pricing.unitNet,
             isB2B: pricing.isB2B,
             auto: item.meta?.auto === true,
+            imageUrl: item.meta?.imageUrl ?? null,
           };
         })
         .filter((x): x is {
@@ -159,6 +164,7 @@ const Checkout = () => {
           unitNet: number;
           isB2B: boolean;
           auto: boolean;
+          imageUrl: string | null;
         } => !!x),
     [cartItems, getOverride, isPartner, profile?.discount_percent],
   );
@@ -235,6 +241,8 @@ const Checkout = () => {
         company_name: form.company || null,
         ico: form.ico || null,
         dic: form.dic || null,
+        note: form.note || null,
+        attachment_url: orderImageUrl || null,
         items: [...orderLines]
           .sort((a, b) =>
             a.code.localeCompare(b.code, "cs") ||
@@ -250,6 +258,7 @@ const Checkout = () => {
             line_gross: l.unitGross * l.qty,
             line_net: l.unitNet * l.qty,
             auto: l.auto,
+            image_url: l.imageUrl,
           })),
 
         subtotal_gross: subtotalGross,
@@ -561,6 +570,34 @@ const Checkout = () => {
                   </p>
                 </>
               )}
+            </div>
+            {/* Poznámka k objednávce */}
+            <div>
+              <h2 className="font-heading text-xl font-bold text-foreground mb-3">
+                4. Poznámka k objednávce
+              </h2>
+              <Textarea
+                id="order-note"
+                value={form.note}
+                onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))}
+                placeholder="Cokoli, co potřebujeme vědět – přání k dopravě, barevná varianta na míru, termín…"
+                rows={3}
+                className="resize-none"
+              />
+              <p className="text-xs text-muted-foreground font-body mt-2">
+                Nepovinné. Sem napište vzkaz k objednávce.
+              </p>
+              <div className="mt-4">
+                <label className="block text-sm font-semibold text-foreground mb-2">
+                  Přiložit obrázek k objednávce (volitelné)
+                </label>
+                <ImageUpload
+                  value={orderImageUrl}
+                  onChange={setOrderImageUrl}
+                  folder="objednavka"
+                  hint="Např. návrh pro kus na míru. JPG/PNG do 5 MB."
+                />
+              </div>
             </div>
           </div>
 

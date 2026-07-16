@@ -143,6 +143,7 @@ export type Database = {
           items: Json
           last_name: string | null
           note: string | null
+          attachment_url: string | null
           order_number: string
           packeta_point: string | null
           payment_gross: number
@@ -173,6 +174,7 @@ export type Database = {
           items?: Json
           last_name?: string | null
           note?: string | null
+          attachment_url?: string | null
           order_number: string
           packeta_point?: string | null
           payment_gross?: number
@@ -203,6 +205,7 @@ export type Database = {
           items?: Json
           last_name?: string | null
           note?: string | null
+          attachment_url?: string | null
           order_number?: string
           packeta_point?: string | null
           payment_gross?: number
