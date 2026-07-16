@@ -103,14 +103,42 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
                 </a>
               </li>
             ))}
-            <li className="pt-2 border-t border-border">
+            <li className="pt-2 border-t border-border flex flex-col gap-4 md:hidden">
               <a
-                href="/ucet"
-                className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+                href="/obchod"
+                className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
+                <Search className="w-4 h-4" />
+                HLEDAT
+              </a>
+              <a
+                href="/ucet"
+                className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+                onClick={() => setMobileOpen(false)}
+              >
+                <User className="w-4 h-4" />
                 ÚČET
               </a>
+              {isPartner ? (
+                <a
+                  href="/b2b-nastenka"
+                  className="inline-flex items-center gap-1.5 self-start bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider px-3 py-2 rounded-md border border-primary/30 hover:bg-primary/15 transition-colors"
+                  title="Velkoobchodní režim aktivní"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_6px_2px_hsl(var(--primary)/0.45)] animate-pulse" />
+                  B2B · VOC
+                </a>
+              ) : (
+                <a
+                  href="/b2b-login"
+                  className="inline-flex items-center gap-1.5 self-start bg-primary text-primary-foreground text-sm font-bold px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  B2B Portál
+                </a>
+              )}
             </li>
           </ul>
         </div>
