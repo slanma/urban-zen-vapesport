@@ -42,10 +42,10 @@ const SHIPPING_OPTIONS: { id: ShippingId; label: string; price: number }[] = [
 ];
 
 const PAYMENT_MATRIX: Record<ShippingId, PaymentId[]> = {
-  osobni: ["hotove", "prevodem"],
-  ppl: ["prevodem", "faktura"],
-  slovensko: ["prevodem", "faktura"],
-  zasilkovna: ["prevodem", "faktura"],
+  osobni: ["faktura"],
+  ppl: ["faktura"],
+  slovensko: ["faktura"],
+  zasilkovna: ["faktura"],
 };
 
 const PAYMENT_LABELS: Record<PaymentId, string> = {
@@ -70,9 +70,10 @@ const B2BCheckout = () => {
   const [payload, setPayload] = useState<B2BCheckoutPayload | null>(null);
   const [step, setStep] = useState(1);
   const [shipping, setShipping] = useState<ShippingId>("osobni");
-  const [payment, setPayment] = useState<PaymentId>("prevodem");
+  const [payment, setPayment] = useState<PaymentId>("faktura");
   const [submitting, setSubmitting] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [placedOrder, setPlacedOrder] = useState<{ number: string; email: string; total: number } | null>(null);
   const [billing, setBilling] = useState({
     email: "",
     firstName: "",
@@ -109,6 +110,27 @@ const B2BCheckout = () => {
       navigate("/b2b-dashboard", { replace: true });
     }
   }, [navigate]);
+
+  // Předvyplnění z profilu partnera (jen prázdná pole – nepřepisuje, co už je vyplněné).
+  // Co partner v profilu nemá (např. IČO), zůstane prázdné k vyplnění.
+  useEffect(() => {
+    if (!partnerProfile) return;
+    const contact = (partnerProfile.contact_person ?? "").trim();
+    const firstFromContact = contact.split(" ")[0] ?? "";
+    const restFromContact = contact.split(" ").slice(1).join(" ");
+    setBilling((b) => ({
+      ...b,
+      company: b.company || partnerProfile.company_name || "",
+      ico: b.ico || partnerProfile.ico || "",
+      dic: b.dic || partnerProfile.dic || "",
+      phone: b.phone || partnerProfile.phone || "",
+      street: b.street || partnerProfile.address || "",
+      city: b.city || partnerProfile.city || "",
+      zip: b.zip || partnerProfile.zip || "",
+      firstName: b.firstName || firstFromContact,
+      lastName: b.lastName || restFromContact,
+    }));
+  }, [partnerProfile]);
 
   // Items are stored as NET (VOC bez DPH). Compute gross with VAT.
   const itemsSubtotalNet = useMemo(
@@ -204,8 +226,8 @@ const B2BCheckout = () => {
       });
       if (!response.ok) throw new Error(await response.text());
       sessionStorage.removeItem(STORAGE_KEY);
-      toast.success("Objednávka byla odeslána", { description: `Číslo: ${orderNumber}` });
-      navigate("/b2b-dashboard", { replace: true });
+      setPlacedOrder({ number: orderNumber, email: billing.email, total: Math.round(totalGross) });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("[B2BCheckout] submit failed:", error);
       toast.error("Objednávku se nepodařilo odeslat", {
@@ -215,6 +237,51 @@ const B2BCheckout = () => {
       setSubmitting(false);
     }
   };
+
+  if (placedOrder) {
+    return (
+      <div className="min-h-screen bg-secondary">
+        <header className="bg-background border-b border-border">
+          <div className="max-w-[1200px] mx-auto flex items-center h-16 px-4 md:px-8">
+            <span className="font-heading font-bold text-foreground">Vapesport <span className="text-primary text-sm align-super">B2B</span></span>
+          </div>
+        </header>
+        <section className="pt-16 pb-24 px-6 max-w-xl mx-auto text-center">
+          <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="w-9 h-9" />
+          </div>
+          <h1 className="font-heading text-3xl font-bold text-foreground mb-3">Děkujeme za objednávku!</h1>
+          <p className="text-muted-foreground mb-6">
+            Objednávka{" "}
+            <span className="font-mono font-semibold text-foreground">{placedOrder.number}</span>{" "}
+            byla přijata.
+          </p>
+          <div className="bg-card border border-border rounded-xl p-6 text-left space-y-3 mb-8">
+            <p className="font-semibold text-foreground">Co bude dál?</p>
+            <ol className="list-decimal list-inside text-sm text-muted-foreground space-y-1.5">
+              <li>
+                Na e-mail <span className="text-foreground">{placedOrder.email}</span> jsme poslali
+                potvrzení o přijetí objednávky.
+              </li>
+              <li>
+                Fakturu se splatností 6 dní vám zašleme e-mailem.
+              </li>
+              <li>Objednávku připravíme a odešleme.</li>
+            </ol>
+            <p className="text-sm pt-3 border-t border-border">
+              <span className="text-muted-foreground">Celkem:</span>{" "}
+              <span className="font-heading font-bold text-foreground">{fmtCZK(placedOrder.total)}</span>{" "}
+              <span className="text-muted-foreground text-xs">s DPH (závazná objednávka)</span>
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button onClick={() => navigate("/b2b-dashboard", { replace: true })}>Nová objednávka</Button>
+            <Button variant="outline" onClick={() => navigate("/b2b-nastenka")}>Moje nástěnka</Button>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   if (!payload) {
     return (
@@ -487,8 +554,24 @@ const B2BCheckout = () => {
                   {step === 1 ? "Pokračovat k dopravě" : step === 2 ? "Pokračovat k fakturaci" : "Pokračovat k souhrnu"}
                 </Button>
               ) : (
-                <div className="text-sm text-muted-foreground">
-                  Pro odeslání použijte tlačítko níže.
+                <div className="flex flex-col items-stretch sm:items-end gap-2">
+                  <div className="sm:text-right">
+                    <span className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Celkem k úhradě
+                    </span>
+                    <span className="font-heading text-2xl font-bold text-foreground">
+                      {fmtCZK(totalGross)} <span className="text-sm font-normal text-muted-foreground">s DPH</span>
+                    </span>
+                  </div>
+                  <Button
+                    size="lg"
+                    onClick={handleSubmit}
+                    disabled={submitting || !termsAccepted}
+                    className="h-14 px-8 text-base font-extrabold uppercase tracking-wide gap-2 disabled:opacity-60"
+                  >
+                    {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
+                    Závazně objednat
+                  </Button>
                 </div>
               )}
             </div>
@@ -526,32 +609,6 @@ const B2BCheckout = () => {
         </div>
       </main>
 
-      {/* Legislative final block (always visible) */}
-      <div className="sticky bottom-0 z-50 bg-foreground border-t-4 border-primary shadow-2xl">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-primary-foreground">
-            <p className="text-sm font-semibold uppercase tracking-wider opacity-80">Celkem k úhradě</p>
-            <p className="text-2xl md:text-3xl font-heading font-bold">
-              {fmtCZK(totalGross)} <span className="text-base font-normal opacity-80">s DPH</span>
-            </p>
-          </div>
-          <Button
-            size="lg"
-            onClick={handleSubmit}
-            disabled={step !== 4 || submitting || !termsAccepted}
-            className="h-16 px-8 text-lg font-extrabold uppercase tracking-wide bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60 w-full sm:w-auto"
-            aria-label="ZÁVAZNĚ OBJEDNAT"
-          >
-            {submitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-            ZÁVAZNĚ OBJEDNAT
-          </Button>
-        </div>
-        {step !== 4 && (
-          <p className="text-center text-xs text-primary-foreground/70 pb-2 px-4">
-            Tlačítko se aktivuje v posledním kroku „Dokončení objednávky" po odsouhlasení podmínek.
-          </p>
-        )}
-      </div>
     </div>
   );
 };
