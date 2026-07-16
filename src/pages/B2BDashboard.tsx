@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { getCartonSize } from "@/data/cartons";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getProductById, products } from "@/data/products";
@@ -528,6 +529,7 @@ const B2BDashboard = () => {
                     const colors = (override?.colors_override ?? product.available_colors ?? []) as readonly string[];
                     const detailHref = `/produkt/${product.id}`;
                     const productTotal = colors.length ? colors.reduce((s, c) => s + getQty(product.id, c), 0) : qty;
+                    const carton = getCartonSize(product.id);
 
                     return (
                       <TableRow key={product.id} className="hover:bg-muted/30">
@@ -572,9 +574,13 @@ const B2BDashboard = () => {
                                   </div>
                                 );
                               })}
+                              {carton && (
+                                <p className="text-[11px] text-muted-foreground pt-1">1 karton = {carton} ks</p>
+                              )}
                             </div>
                           ) : (
-                            <div className="flex items-center justify-center gap-2">
+                            <div className="flex flex-col items-center gap-1.5">
+                              <div className="flex items-center justify-center gap-2">
                               <Button variant="outline" size="icon" className="h-12 w-12 text-xl font-bold" onClick={() => setQty(product.id, Math.max(0, qty - 1))} aria-label={`Odebrat 1 kus ${product.name}`}>
                                 <Minus className="w-5 h-5" />
                               </Button>
@@ -582,6 +588,16 @@ const B2BDashboard = () => {
                               <Button variant="outline" size="icon" className="h-12 w-12 text-xl font-bold" onClick={() => setQty(product.id, qty + 1)} aria-label={`Přidat 1 kus ${product.name}`}>
                                 <Plus className="w-5 h-5" />
                               </Button>
+                              </div>
+                              {carton && (
+                                <button
+                                  type="button"
+                                  onClick={() => setQty(product.id, carton)}
+                                  className="text-xs font-semibold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-1"
+                                >
+                                  Celý karton ({carton} ks)
+                                </button>
+                              )}
                             </div>
                           )}
                         </TableCell>

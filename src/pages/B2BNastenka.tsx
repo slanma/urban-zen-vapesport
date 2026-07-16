@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { feedProducts } from "@/data/feedProducts";
+import { CARTON_PER_ID } from "@/data/cartons";
 import { fmtCZK } from "@/lib/vat";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -41,6 +42,7 @@ interface OrderRow {
 }
 
 const brandOf = (cat: string) => (cat === "morseo-evo" ? "Morseovape" : "Vapesport");
+
 
 const B2BNastenka = () => {
   const navigate = useNavigate();
@@ -159,11 +161,12 @@ const B2BNastenka = () => {
         kategorie: p.categoryLabel || p.category,
         voc_bez_dph: p.b2b_price ?? "",
         doporucena_moc: p.price ?? "",
+        ks_v_kartonu: CARTON_PER_ID[p.id] ?? "",
         odkaz: `${origin}/produkt/${p.id}`,
         obrazek: abs(p.image),
       }));
 
-  const HEADER = ["kod", "nazev", "znacka", "kategorie", "voc_bez_dph", "doporucena_moc", "odkaz", "obrazek"];
+  const HEADER = ["kod", "nazev", "znacka", "kategorie", "voc_bez_dph", "doporucena_moc", "ks_v_kartonu", "odkaz", "obrazek"];
 
   const download = (filename: string, content: string, mime: string) => {
     const blob = new Blob([content], { type: mime });
@@ -206,6 +209,7 @@ const B2BNastenka = () => {
     <kategorie>${esc(r.kategorie)}</kategorie>
     <voc_bez_dph>${esc(r.voc_bez_dph)}</voc_bez_dph>
     <doporucena_moc>${esc(r.doporucena_moc)}</doporucena_moc>
+    <ks_v_kartonu>${esc(r.ks_v_kartonu)}</ks_v_kartonu>
     <odkaz>${esc(r.odkaz)}</odkaz>
     <obrazek>${esc(r.obrazek)}</obrazek>
   </produkt>`,
