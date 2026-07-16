@@ -26,6 +26,14 @@ export type Database = {
           free_shipping: boolean
           obrat_2025: number
           obrat_2026: number
+          invoice_email: string | null
+          delivery_same: boolean
+          delivery_company: string | null
+          delivery_address: string | null
+          delivery_city: string | null
+          delivery_zip: string | null
+          delivery_contact: string | null
+          delivery_phone: string | null
           ico: string
           id: string
           notes: string | null
@@ -46,6 +54,14 @@ export type Database = {
           free_shipping?: boolean
           obrat_2025?: number
           obrat_2026?: number
+          invoice_email?: string | null
+          delivery_same?: boolean
+          delivery_company?: string | null
+          delivery_address?: string | null
+          delivery_city?: string | null
+          delivery_zip?: string | null
+          delivery_contact?: string | null
+          delivery_phone?: string | null
           ico: string
           id?: string
           notes?: string | null
@@ -66,6 +82,14 @@ export type Database = {
           free_shipping?: boolean
           obrat_2025?: number
           obrat_2026?: number
+          invoice_email?: string | null
+          delivery_same?: boolean
+          delivery_company?: string | null
+          delivery_address?: string | null
+          delivery_city?: string | null
+          delivery_zip?: string | null
+          delivery_contact?: string | null
+          delivery_phone?: string | null
           ico?: string
           id?: string
           notes?: string | null

@@ -53,6 +53,10 @@ const B2BNastenka = () => {
   const [firma, setFirma] = useState({
     company_name: "", ico: "", dic: "", contact_person: "",
     phone: "", address: "", city: "", zip: "",
+    invoice_email: "",
+    delivery_same: true,
+    delivery_company: "", delivery_address: "", delivery_city: "",
+    delivery_zip: "", delivery_contact: "", delivery_phone: "",
   });
   const [savingFirma, setSavingFirma] = useState(false);
 
@@ -67,6 +71,14 @@ const B2BNastenka = () => {
       address: profile.address ?? "",
       city: profile.city ?? "",
       zip: profile.zip ?? "",
+      invoice_email: profile.invoice_email ?? "",
+      delivery_same: profile.delivery_same ?? true,
+      delivery_company: profile.delivery_company ?? "",
+      delivery_address: profile.delivery_address ?? "",
+      delivery_city: profile.delivery_city ?? "",
+      delivery_zip: profile.delivery_zip ?? "",
+      delivery_contact: profile.delivery_contact ?? "",
+      delivery_phone: profile.delivery_phone ?? "",
     });
   }, [profile]);
 
@@ -84,6 +96,14 @@ const B2BNastenka = () => {
         address: firma.address.trim(),
         city: firma.city.trim(),
         zip: firma.zip.trim(),
+        invoice_email: firma.invoice_email.trim() || null,
+        delivery_same: firma.delivery_same,
+        delivery_company: firma.delivery_same ? null : (firma.delivery_company.trim() || null),
+        delivery_address: firma.delivery_same ? null : (firma.delivery_address.trim() || null),
+        delivery_city: firma.delivery_same ? null : (firma.delivery_city.trim() || null),
+        delivery_zip: firma.delivery_same ? null : (firma.delivery_zip.trim() || null),
+        delivery_contact: firma.delivery_same ? null : (firma.delivery_contact.trim() || null),
+        delivery_phone: firma.delivery_same ? null : (firma.delivery_phone.trim() || null),
       })
       .eq("user_id", profile.user_id);
     setSavingFirma(false);
@@ -402,48 +422,51 @@ const B2BNastenka = () => {
           )}
         </section>
 
-        {/* Firemní údaje – partner si může opravit chybu */}
+        {/* Firemní údaje – partner si doplní/opraví sám */}
         <section className="rounded-2xl border border-border bg-card p-6 mt-6">
           <h2 className="font-heading text-lg font-bold text-foreground mb-1 flex items-center gap-2">
             <Building2 className="w-5 h-5 text-primary" /> Firemní údaje
           </h2>
-          <p className="text-sm text-muted-foreground mb-5">
-            Když v údajích něco nesedí, klidně si to opravte. Slevu a obraty spravuje dodavatel.
+          <p className="text-sm text-muted-foreground mb-6">
+            Doplňte nebo opravte své údaje. Slevu a obraty spravuje dodavatel.
           </p>
-          <div className="grid sm:grid-cols-2 gap-4">
+
+          <h3 className="font-heading text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Fakturační údaje</h3>
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
             <div className="sm:col-span-2">
               <Label htmlFor="f-company">Název firmy</Label>
               <Input id="f-company" value={firma.company_name} onChange={(e) => setFirma({ ...firma, company_name: e.target.value })} />
             </div>
-            <div>
-              <Label htmlFor="f-ico">IČO</Label>
-              <Input id="f-ico" value={firma.ico} onChange={(e) => setFirma({ ...firma, ico: e.target.value })} />
-            </div>
-            <div>
-              <Label htmlFor="f-dic">DIČ</Label>
-              <Input id="f-dic" value={firma.dic} onChange={(e) => setFirma({ ...firma, dic: e.target.value })} />
-            </div>
-            <div>
-              <Label htmlFor="f-kontakt">Kontaktní osoba</Label>
-              <Input id="f-kontakt" value={firma.contact_person} onChange={(e) => setFirma({ ...firma, contact_person: e.target.value })} />
-            </div>
-            <div>
-              <Label htmlFor="f-tel">Telefon</Label>
-              <Input id="f-tel" value={firma.phone} onChange={(e) => setFirma({ ...firma, phone: e.target.value })} />
-            </div>
-            <div className="sm:col-span-2">
-              <Label htmlFor="f-ulice">Ulice a č.p.</Label>
-              <Input id="f-ulice" value={firma.address} onChange={(e) => setFirma({ ...firma, address: e.target.value })} />
-            </div>
-            <div>
-              <Label htmlFor="f-mesto">Město</Label>
-              <Input id="f-mesto" value={firma.city} onChange={(e) => setFirma({ ...firma, city: e.target.value })} />
-            </div>
-            <div>
-              <Label htmlFor="f-psc">PSČ</Label>
-              <Input id="f-psc" value={firma.zip} onChange={(e) => setFirma({ ...firma, zip: e.target.value })} />
-            </div>
+            <div><Label htmlFor="f-ico">IČO</Label><Input id="f-ico" value={firma.ico} onChange={(e) => setFirma({ ...firma, ico: e.target.value })} /></div>
+            <div><Label htmlFor="f-dic">DIČ</Label><Input id="f-dic" value={firma.dic} onChange={(e) => setFirma({ ...firma, dic: e.target.value })} /></div>
+            <div className="sm:col-span-2"><Label htmlFor="f-invmail">Fakturační e-mail</Label><Input id="f-invmail" type="email" placeholder="faktury@firma.cz" value={firma.invoice_email} onChange={(e) => setFirma({ ...firma, invoice_email: e.target.value })} /></div>
+            <div className="sm:col-span-2"><Label htmlFor="f-ulice">Ulice a č.p.</Label><Input id="f-ulice" value={firma.address} onChange={(e) => setFirma({ ...firma, address: e.target.value })} /></div>
+            <div><Label htmlFor="f-mesto">Město</Label><Input id="f-mesto" value={firma.city} onChange={(e) => setFirma({ ...firma, city: e.target.value })} /></div>
+            <div><Label htmlFor="f-psc">PSČ</Label><Input id="f-psc" value={firma.zip} onChange={(e) => setFirma({ ...firma, zip: e.target.value })} /></div>
           </div>
+
+          <h3 className="font-heading text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Kontakt</h3>
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <div><Label htmlFor="f-kontakt">Kontaktní osoba</Label><Input id="f-kontakt" value={firma.contact_person} onChange={(e) => setFirma({ ...firma, contact_person: e.target.value })} /></div>
+            <div><Label htmlFor="f-tel">Telefon</Label><Input id="f-tel" value={firma.phone} onChange={(e) => setFirma({ ...firma, phone: e.target.value })} /></div>
+          </div>
+
+          <h3 className="font-heading text-sm font-bold uppercase tracking-wide text-muted-foreground mb-3">Dodací adresa</h3>
+          <label className="flex items-center gap-2 mb-4 cursor-pointer select-none">
+            <input type="checkbox" className="w-5 h-5 accent-[hsl(var(--primary))]" checked={firma.delivery_same} onChange={(e) => setFirma({ ...firma, delivery_same: e.target.checked })} />
+            <span className="text-sm text-foreground">Dodací adresa je stejná jako fakturační</span>
+          </label>
+          {!firma.delivery_same && (
+            <div className="grid sm:grid-cols-2 gap-4 mb-2">
+              <div className="sm:col-span-2"><Label htmlFor="d-company">Název / provozovna</Label><Input id="d-company" value={firma.delivery_company} onChange={(e) => setFirma({ ...firma, delivery_company: e.target.value })} /></div>
+              <div className="sm:col-span-2"><Label htmlFor="d-ulice">Ulice a č.p.</Label><Input id="d-ulice" value={firma.delivery_address} onChange={(e) => setFirma({ ...firma, delivery_address: e.target.value })} /></div>
+              <div><Label htmlFor="d-mesto">Město</Label><Input id="d-mesto" value={firma.delivery_city} onChange={(e) => setFirma({ ...firma, delivery_city: e.target.value })} /></div>
+              <div><Label htmlFor="d-psc">PSČ</Label><Input id="d-psc" value={firma.delivery_zip} onChange={(e) => setFirma({ ...firma, delivery_zip: e.target.value })} /></div>
+              <div><Label htmlFor="d-kontakt">Příjemce (kontaktní osoba)</Label><Input id="d-kontakt" value={firma.delivery_contact} onChange={(e) => setFirma({ ...firma, delivery_contact: e.target.value })} /></div>
+              <div><Label htmlFor="d-tel">Telefon na dodání</Label><Input id="d-tel" value={firma.delivery_phone} onChange={(e) => setFirma({ ...firma, delivery_phone: e.target.value })} /></div>
+            </div>
+          )}
+
           <Button className="mt-5" onClick={saveFirma} disabled={savingFirma}>
             {savingFirma ? "Ukládám…" : "Uložit údaje"}
           </Button>

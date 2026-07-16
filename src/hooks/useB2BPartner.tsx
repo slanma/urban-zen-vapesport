@@ -15,6 +15,14 @@ export interface B2BProfile {
   free_shipping: boolean;
   obrat_2025: number;
   obrat_2026: number;
+  invoice_email: string | null;
+  delivery_same: boolean;
+  delivery_company: string | null;
+  delivery_address: string | null;
+  delivery_city: string | null;
+  delivery_zip: string | null;
+  delivery_contact: string | null;
+  delivery_phone: string | null;
 }
 
 /**
@@ -43,7 +51,7 @@ export const useB2BPartner = () => {
       }
       const { data } = await supabase
         .from("b2b_profiles")
-        .select("user_id,company_name,ico,dic,contact_person,phone,address,city,zip,discount_percent,free_shipping,obrat_2025,obrat_2026,status")
+        .select("user_id,company_name,ico,dic,contact_person,phone,address,city,zip,discount_percent,free_shipping,obrat_2025,obrat_2026,invoice_email,delivery_same,delivery_company,delivery_address,delivery_city,delivery_zip,delivery_contact,delivery_phone,status")
         .eq("user_id", user.id)
         .maybeSingle();
       const approved = data?.status === "approved";
