@@ -46,7 +46,12 @@ const ProductSearch = () => {
   );
   const searchIndex = useMemo(() => buildSearchIndex(visibleProducts), [visibleProducts]);
   const filtered = useMemo(
-    () => (query.trim() ? smartSearch(searchIndex, query) : []),
+    () => {
+      const base = query.trim() ? smartSearch(searchIndex, query) : [];
+      return [...base].sort(
+        (a, b) => Number(b.category === "morseo-evo") - Number(a.category === "morseo-evo"),
+      );
+    },
     [searchIndex, query],
   );
 
