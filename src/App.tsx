@@ -17,6 +17,7 @@ import B2BLogin from "./pages/B2BLogin";
 import B2BSetPassword from "./pages/B2BSetPassword";
 import B2BRegister from "./pages/B2BRegister";
 import B2BDashboard from "./pages/B2BDashboard";
+import B2BNastenka from "./pages/B2BNastenka";
 import B2BWholesale from "./pages/B2BWholesale";
 import B2BCheckout from "./pages/B2BCheckout";
 import AdminLogin from "./pages/AdminLogin";
@@ -68,6 +69,7 @@ const App = () => (
             <Route path="/b2b-login" element={<B2BLogin />} />
             <Route path="/b2b-heslo" element={<B2BSetPassword />} />
             <Route path="/b2b-register" element={<B2BRegister />} />
+            <Route path="/b2b-nastenka" element={<B2BNastenka />} />
             <Route path="/b2b-dashboard" element={<B2BDashboard />} />
             <Route path="/b2b-velkoobchod" element={<B2BWholesale />} />
             <Route path="/b2b-pokladna" element={<B2BCheckout />} />

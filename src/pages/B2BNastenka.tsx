@@ -1,0 +1,352 @@
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { feedProducts } from "@/data/feedProducts";
+import { fmtCZK } from "@/lib/vat";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
+import { Download, RotateCcw, Package, Truck, Award, ShoppingBag } from "lucide-react";
+
+/** Věrnostní úrovně – ORIENTAČNÍ návrh, klidně přepiš čísla. */
+const TIERY = [
+  { nazev: "Partner", od: 0, sleva: 0 },
+  { nazev: "Bronz", od: 25000, sleva: 3 },
+  { nazev: "Stříbro", od: 60000, sleva: 5 },
+  { nazev: "Zlato", od: 120000, sleva: 8 },
+  { nazev: "Platina", od: 250000, sleva: 12 },
+];
+
+const STATUS_LABELS: Record<string, string> = {
+  nova: "Nová",
+  zpracovava_se: "Zpracovává se",
+  odeslano: "Odesláno",
+  dorucena: "Doručena",
+  zrusena: "Zrušena",
+};
+
+interface OrderRow {
+  id: string;
+  order_number: string;
+  created_at: string;
+  total_gross: number | null;
+  status: string;
+  items: unknown;
+}
+
+const brandOf = (cat: string) => (cat === "morseo-evo" ? "Morseovape" : "Vapesport");
+
+const B2BNastenka = () => {
+  const navigate = useNavigate();
+  const { isPartner, profile, loading } = useB2BPartner();
+  const { get } = useProductOverrides();
+  const [orders, setOrders] = useState<OrderRow[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+
+  useEffect(() => {
+    if (!profile) return;
+    let active = true;
+    (async () => {
+      setOrdersLoading(true);
+      const { data, error } = await supabase
+        .from("orders")
+        .select("id,order_number,created_at,total_gross,status,items")
+        .eq("user_id", profile.user_id)
+        .order("created_at", { ascending: false });
+      if (!active) return;
+      if (!error && data) setOrders(data as OrderRow[]);
+      setOrdersLoading(false);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [profile]);
+
+  const spend = useMemo(
+    () => orders.reduce((s, o) => s + (o.total_gross ?? 0), 0),
+    [orders],
+  );
+  const currentTier = useMemo(
+    () => [...TIERY].reverse().find((t) => spend >= t.od) ?? TIERY[0],
+    [spend],
+  );
+  const nextTier = useMemo(() => TIERY.find((t) => t.od > spend) ?? null, [spend]);
+  const remaining = nextTier ? nextTier.od - spend : 0;
+  const progress = nextTier
+    ? Math.min(100, Math.round(((spend - currentTier.od) / (nextTier.od - currentTier.od)) * 100))
+    : 100;
+
+  // ---- Feed ----
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const abs = (u?: string) => (!u ? "" : u.startsWith("http") ? u : origin + u);
+
+  const rowsForBrand = (brand: string) =>
+    feedProducts
+      .filter((p) => brandOf(p.category) === brand)
+      .filter((p) => get(p.id).visible !== false)
+      .map((p) => ({
+        kod: (p.specs && (p.specs as Record<string, string>)["Kód produktu"]) || p.id,
+        nazev: p.name,
+        znacka: brand,
+        kategorie: p.categoryLabel || p.category,
+        voc_bez_dph: p.b2b_price ?? "",
+        doporucena_moc: p.price ?? "",
+        odkaz: `${origin}/produkt/${p.id}`,
+        obrazek: abs(p.image),
+      }));
+
+  const HEADER = ["kod", "nazev", "znacka", "kategorie", "voc_bez_dph", "doporucena_moc", "odkaz", "obrazek"];
+
+  const download = (filename: string, content: string, mime: string) => {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportCSV = (brand: string) => {
+    const rows = rowsForBrand(brand);
+    if (!rows.length) {
+      toast.error("Žádné produkty k exportu.");
+      return;
+    }
+    const cell = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const body = rows.map((r) => HEADER.map((h) => cell((r as Record<string, unknown>)[h])).join(";")).join("\r\n");
+    const csv = "\uFEFF" + HEADER.join(";") + "\r\n" + body;
+    download(`feed-${brand.toLowerCase()}.csv`, csv, "text/csv;charset=utf-8");
+  };
+
+  const exportXML = (brand: string) => {
+    const rows = rowsForBrand(brand);
+    if (!rows.length) {
+      toast.error("Žádné produkty k exportu.");
+      return;
+    }
+    const esc = (v: unknown) =>
+      String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    const items = rows
+      .map(
+        (r) => `  <produkt>
+    <kod>${esc(r.kod)}</kod>
+    <nazev>${esc(r.nazev)}</nazev>
+    <znacka>${esc(r.znacka)}</znacka>
+    <kategorie>${esc(r.kategorie)}</kategorie>
+    <voc_bez_dph>${esc(r.voc_bez_dph)}</voc_bez_dph>
+    <doporucena_moc>${esc(r.doporucena_moc)}</doporucena_moc>
+    <odkaz>${esc(r.odkaz)}</odkaz>
+    <obrazek>${esc(r.obrazek)}</obrazek>
+  </produkt>`,
+      )
+      .join("\n");
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<produkty znacka="${esc(brand)}">\n${items}\n</produkty>`;
+    download(`feed-${brand.toLowerCase()}.xml`, xml, "application/xml;charset=utf-8");
+  };
+
+  const morseoCount = useMemo(() => rowsForBrand("Morseovape").length, [get]);
+  const vapesportCount = useMemo(() => rowsForBrand("Vapesport").length, [get]);
+
+  // ---- Zopakovat poslední objednávku ----
+  const reorder = () => {
+    const last = orders[0];
+    const raw = (last?.items as Array<{ product_id?: string; color?: string | null; qty?: number }>) ?? [];
+    const items = raw
+      .filter((i) => i && i.product_id)
+      .map((i) => ({ productId: i.product_id, qty: i.qty ?? 1, color: i.color ?? null }));
+    if (!items.length) {
+      toast.error("Poslední objednávku se nepodařilo načíst.");
+      return;
+    }
+    sessionStorage.setItem("vapesport_b2b_prefill", JSON.stringify(items));
+    navigate("/b2b-dashboard");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="max-w-3xl mx-auto px-6 pt-32 pb-20">
+          <p className="text-muted-foreground">Načítám…</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (!isPartner || !profile) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="max-w-md mx-auto px-6 pt-32 pb-20 text-center">
+          <h1 className="font-heading text-2xl font-bold text-foreground mb-3">
+            B2B nástěnka
+          </h1>
+          <p className="text-muted-foreground mb-6">
+            Tahle sekce je jen pro schválené velkoobchodní partnery.
+          </p>
+          <a
+            href="/b2b-login"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-md hover:bg-primary/90 transition-colors"
+          >
+            Přihlásit se do B2B
+          </a>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <Navbar isLoggedIn />
+      <main className="flex-1 w-full max-w-5xl mx-auto px-6 pt-32 pb-20">
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
+          <div>
+            <span className="text-xs font-body font-semibold tracking-[0.28em] uppercase text-primary">
+              B2B nástěnka
+            </span>
+            <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mt-1">
+              {profile.company_name}
+            </h1>
+          </div>
+          <Button onClick={() => navigate("/b2b-dashboard")} className="gap-2">
+            <ShoppingBag className="w-4 h-4" /> Nová objednávka
+          </Button>
+        </div>
+
+        {/* Přehledové dlaždice */}
+        <div className="grid sm:grid-cols-3 gap-5 mb-6">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <ShoppingBag className="w-5 h-5 text-primary mb-3" />
+            <div className="font-heading text-2xl font-bold text-foreground">{fmtCZK(spend)}</div>
+            <div className="text-sm text-muted-foreground mt-1">celkem objednáno</div>
+          </div>
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <Award className="w-5 h-5 text-primary mb-3" />
+            <div className="font-heading text-2xl font-bold text-foreground">{profile.discount_percent} %</div>
+            <div className="text-sm text-muted-foreground mt-1">vaše aktuální sleva</div>
+          </div>
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <Truck className="w-5 h-5 text-primary mb-3" />
+            <div className="font-heading text-2xl font-bold text-foreground">
+              {profile.free_shipping ? "Zdarma" : "Dle sazby"}
+            </div>
+            <div className="text-sm text-muted-foreground mt-1">doprava</div>
+          </div>
+        </div>
+
+        {/* Věrnostní program */}
+        <section className="rounded-2xl border border-border bg-card p-6 mb-10">
+          <h2 className="font-heading text-lg font-bold text-foreground mb-1">Věrnostní program</h2>
+          <p className="text-sm text-muted-foreground mb-5">
+            Úroveň: <strong className="text-foreground">{currentTier.nazev}</strong>
+            {nextTier ? (
+              <>
+                {" "}— do úrovně <strong className="text-foreground">{nextTier.nazev}</strong>{" "}
+                ({nextTier.sleva} %) zbývá <strong className="text-primary">{fmtCZK(remaining)}</strong>.
+              </>
+            ) : (
+              <> — máte nejvyšší úroveň. 🎉</>
+            )}
+          </p>
+          <div className="h-3 rounded-full bg-secondary overflow-hidden">
+            <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
+          </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-1 mt-4">
+            {TIERY.map((t) => (
+              <span
+                key={t.nazev}
+                className={`text-xs font-mono ${spend >= t.od ? "text-primary font-bold" : "text-muted-foreground"}`}
+              >
+                {t.nazev} · {t.sleva}% · {fmtCZK(t.od)}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {/* Feed ke stažení */}
+        <section className="mb-10">
+          <h2 className="font-heading text-lg font-bold text-foreground mb-4">Feed produktů ke stažení</h2>
+          <div className="grid sm:grid-cols-2 gap-5">
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <h3 className="font-heading font-bold text-foreground">Morseovape</h3>
+              <p className="text-sm text-muted-foreground mb-4">{morseoCount} produktů</p>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => exportCSV("Morseovape")}>
+                  <Download className="w-4 h-4" /> CSV
+                </Button>
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => exportXML("Morseovape")}>
+                  <Download className="w-4 h-4" /> XML
+                </Button>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <h3 className="font-heading font-bold text-foreground">Vapesport – skladem</h3>
+              <p className="text-sm text-muted-foreground mb-4">{vapesportCount} produktů (jen dostupné)</p>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => exportCSV("Vapesport")}>
+                  <Download className="w-4 h-4" /> CSV
+                </Button>
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => exportXML("Vapesport")}>
+                  <Download className="w-4 h-4" /> XML
+                </Button>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">
+            Vapesport feed obsahuje jen produkty označené jako dostupné. Dojezdové kusy stačí v administraci skrýt a z feedu automaticky zmizí.
+          </p>
+        </section>
+
+        {/* Objednávky */}
+        <section className="rounded-2xl border border-border bg-card p-6">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="font-heading text-lg font-bold text-foreground flex items-center gap-2">
+              <Package className="w-5 h-5 text-primary" /> Moje objednávky
+            </h2>
+            {orders.length > 0 && (
+              <Button variant="outline" size="sm" className="gap-2" onClick={reorder}>
+                <RotateCcw className="w-4 h-4" /> Zopakovat poslední
+              </Button>
+            )}
+          </div>
+          {ordersLoading ? (
+            <p className="text-muted-foreground text-sm">Načítám objednávky…</p>
+          ) : orders.length === 0 ? (
+            <p className="text-muted-foreground text-sm">Zatím žádné objednávky.</p>
+          ) : (
+            <ul className="divide-y divide-border">
+              {orders.map((o) => (
+                <li key={o.id} className="py-3 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="font-medium text-foreground text-sm">{o.order_number}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(o.created_at).toLocaleDateString("cs-CZ")}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <span className="inline-block text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-secondary text-foreground mb-1">
+                      {STATUS_LABELS[o.status] ?? o.status}
+                    </span>
+                    <p className="font-heading font-bold text-foreground text-sm">
+                      {o.total_gross != null ? fmtCZK(o.total_gross) : "—"}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default B2BNastenka;

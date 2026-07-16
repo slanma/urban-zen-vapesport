@@ -126,6 +126,22 @@ const fetchProfile = async (session: StoredB2BSession): Promise<B2BProfileData |
 const B2BDashboard = () => {
   const navigate = useNavigate();
   const [cart, setCart] = useState<CartItem[]>([]);
+
+  // „Zopakovat poslední objednávku" – předvyplnění košíku z nástěnky
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("vapesport_b2b_prefill");
+      if (raw) {
+        const items = JSON.parse(raw) as CartItem[];
+        if (Array.isArray(items) && items.length) {
+          setCart(items.map((i) => ({ productId: i.productId, qty: i.qty, color: i.color ?? null })));
+        }
+        sessionStorage.removeItem("vapesport_b2b_prefill");
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
   const [profile, setProfile] = useState<B2BProfileData | null>(null);
   const [accountLabel, setAccountLabel] = useState("");
   const [checkingAccess, setCheckingAccess] = useState(true);
