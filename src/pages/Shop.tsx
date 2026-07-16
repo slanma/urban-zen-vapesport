@@ -85,7 +85,8 @@ const Shop = () => {
         .filter(
           (p, i, arr) =>
             arr.findIndex((x) => (x.baseId ?? x.id) === (p.baseId ?? p.id)) === i,
-        );
+        )
+        .sort((a, b) => Number(b.category === "morseo-evo") - Number(a.category === "morseo-evo"));
       return { ...cat, products };
     }).filter((s) => s.products.length > 0);
   }, [get, bikeType]);

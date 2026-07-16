@@ -85,6 +85,7 @@ const InteractiveBikeGuide = ({
             .filter((p) => get(p.id).visible)
             .map((p) => applyProductOverride(p, get(p.id)))
             .filter((p, i, arr) => arr.findIndex((x) => (x.baseId ?? x.id) === (p.baseId ?? p.id)) === i)
+            .sort((a, b) => Number(b.category === "morseo-evo") - Number(a.category === "morseo-evo"))
             .slice(0, 6)
         : [],
     [active, get],

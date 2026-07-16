@@ -34,7 +34,8 @@ const CategoryRozcestnik = () => {
       .filter(
         (p, i, arr) =>
           arr.findIndex((x) => (x.baseId ?? x.id) === (p.baseId ?? p.id)) === i,
-      );
+      )
+      .sort((a, b) => Number(b.category === "morseo-evo") - Number(a.category === "morseo-evo"));
   }, [bikeType, get]);
 
   const handleSelect = (id: string) => {
