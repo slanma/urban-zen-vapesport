@@ -43,7 +43,10 @@ const Cart = () => {
       <Navbar isLoggedIn={isPartner} />
 
       <section className="pt-32 pb-24 px-6 lg:px-12 max-w-[1400px] mx-auto">
-        <h1 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-2">
+        <span className="text-xs font-body font-semibold tracking-[0.28em] uppercase text-primary">
+          Krok 1 ze 2
+        </span>
+        <h1 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground mt-1 mb-2">
           Košík
         </h1>
         <p className="font-body text-muted-foreground mb-6">

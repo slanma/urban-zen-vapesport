@@ -341,9 +341,15 @@ const Checkout = () => {
           Zpět do košíku
         </Link>
 
-        <h1 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-6">
+        <span className="text-xs font-body font-semibold tracking-[0.28em] uppercase text-primary">
+          Krok 2 ze 2
+        </span>
+        <h1 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground mt-1 mb-2">
           Pokladna
         </h1>
+        <p className="font-body text-base text-muted-foreground mb-6">
+          Vyplňte údaje, vyberte dopravu a platbu. Zabere to jen chvilku.
+        </p>
 
         <B2BModeBanner className="mb-8" />
 
@@ -379,8 +385,8 @@ const Checkout = () => {
 
             {/* Personal details */}
             <div>
-              <h2 className="font-heading text-lg font-bold text-foreground mb-5">
-                {isPartner ? "Kontaktní osoba" : "Osobní údaje"}
+              <h2 className="font-heading text-xl font-bold text-foreground mb-5">
+                {isPartner ? "Kontaktní osoba" : "1. Vaše údaje"}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
@@ -420,7 +426,7 @@ const Checkout = () => {
 
             {/* Shipping */}
             <div>
-              <h2 className="font-heading text-lg font-bold text-foreground mb-5">Doprava</h2>
+              <h2 className="font-heading text-xl font-bold text-foreground mb-5">2. Doprava</h2>
               {freeShipping && (
                 <div className="mb-4 p-3 rounded-lg bg-primary/10 border border-primary/30 text-sm font-body text-primary font-semibold flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4" />
@@ -510,7 +516,7 @@ const Checkout = () => {
 
             {/* Payment */}
             <div>
-              <h2 className="font-heading text-lg font-bold text-foreground mb-5">Platba</h2>
+              <h2 className="font-heading text-xl font-bold text-foreground mb-5">3. Platba</h2>
               {!shipping ? (
                 <div className="p-4 rounded-xl border border-dashed border-border bg-muted/30 text-sm font-body text-muted-foreground">
                   Nejprve zvolte způsob dopravy.
