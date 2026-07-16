@@ -266,9 +266,9 @@ const ONas = () => {
           </Reveal>
           <Reveal delay={100}>
             <p className="font-body text-muted-foreground leading-relaxed max-w-2xl mb-8">
-              Důkaz dokonalé synergie obou generací – prémiová řada, ve které se
-              odráží léta zkušeností i moderní přístup. A název? Ten je do
-              designu elegantně zašifrovaný Morseovou abecedou:
+              Vznikla z otevřeného dialogu se zákazníky a partnery – z reálných
+              potřeb cyklistů i prodejců. A název? Ten je do designu elegantně
+              zašifrovaný Morseovou abecedou:
             </p>
           </Reveal>
           <Reveal delay={120}>
@@ -278,9 +278,9 @@ const ONas = () => {
           </Reveal>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { t: "Skryté poselství", d: "Název značky zašifrovaný do designu pomocí Morseovy abecedy." },
-              { t: "Bez kompromisů", d: "Stoprocentní kvalita zpracování a špičkový minimalistický vzhled." },
-              { t: "Prověřeno v provozu", d: "Roky spolehlivosti v každodenním i náročném nasazení." },
+              { t: "Bez velkých log", d: "Žádná pojízdná reklama – čistý, klidný vzhled, který nekřičí." },
+              { t: "Ochrana rámu", d: "Šetrné úchyty chrání lak drahých karbonových i hliníkových rámů." },
+              { t: "Maximální odolnost", d: "Drží tvar, nepromokne a vydrží roky drsného zacházení." },
             ].map((c, i) => (
               <Reveal key={c.t} delay={i * 90}>
                 <div className="rounded-2xl border border-border bg-card p-6 h-full">
@@ -295,6 +295,17 @@ const ONas = () => {
               </Reveal>
             ))}
           </div>
+          <Reveal delay={120}>
+            <div className="mt-10">
+              <Link
+                to="/kolekce-morseo"
+                className="inline-flex items-center gap-2 text-primary font-body font-semibold hover:gap-3 transition-all"
+              >
+                Celý příběh kolekce Morseovape
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 

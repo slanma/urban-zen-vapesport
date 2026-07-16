@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -36,6 +36,74 @@ const pillars = matchFeatureBadges([
   "GekkoGrip™",
   "HydroGuard™",
 ]);
+
+// Reveal: jemné odkrytí při scrollu (bez extra knihoven)
+const Reveal = ({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setShown(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div
+      ref={ref}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`transition-all duration-700 ease-out ${
+        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
+
+// Morse motiv „VAPE"
+const MORSE: Record<string, string> = { V: "...-", A: ".-", P: ".--.", E: "." };
+const MorseWord = ({ word = "VAPE" }: { word?: string }) => (
+  <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
+    {word.split("").map((ch, i) => (
+      <div key={i} className="flex flex-col items-center gap-2">
+        <div className="flex items-center gap-1.5 h-6">
+          {(MORSE[ch] ?? "").split("").map((sym, j) =>
+            sym === "." ? (
+              <span key={j} className="w-2.5 h-2.5 rounded-full bg-primary" />
+            ) : (
+              <span key={j} className="w-6 h-2.5 rounded-full bg-primary" />
+            ),
+          )}
+        </div>
+        <span className="font-mono text-sm font-bold text-foreground">{ch}</span>
+      </div>
+    ))}
+  </div>
+);
 
 const KolekceMorseo = () => {
   const { get } = useProductOverrides();
@@ -213,6 +281,114 @@ const KolekceMorseo = () => {
               </Link>
             );
           })}
+        </div>
+      </section>
+
+      {/* PŘÍBĚH KOLEKCE */}
+      <section className="bg-secondary/40 border-t border-border">
+        <div className="max-w-4xl mx-auto px-6 lg:px-12 py-16 md:py-24">
+          <Reveal>
+            <span className="font-body text-[11px] font-bold tracking-[0.28em] uppercase text-primary">
+              Příběh kolekce
+            </span>
+            <h2 className="font-heading text-3xl md:text-4xl font-bold tracking-tight text-foreground mt-2 mb-5">
+              Když zákazníci a partneři definují novou éru
+            </h2>
+            <p className="font-body text-muted-foreground leading-relaxed">
+              Skutečné inovace nevznikají v kancelářích, ale na cestách.
+              Morseovape je výsledkem otevřeného dialogu s cyklisty i prodejci —
+              naslouchali jsme reálným potřebám a přetavili je do nového
+              standardu moderního cestování.
+            </p>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <h3 className="font-heading text-xl font-bold text-foreground mt-12 mb-5">
+              Tři požadavky, které změnily vše
+            </h3>
+          </Reveal>
+          <div className="grid sm:grid-cols-3 gap-5">
+            {[
+              { t: "Žádná velká loga", d: "Moderní cyklista nechce být pojízdná reklama. Hledá čistotu a vizuální klid." },
+              { t: "Ochrana rámu", d: "Karbon i hliník jsou drahé a náchylné na oděrky. Brašna musí lak stoprocentně chránit." },
+              { t: "Maximální odolnost", d: "Drží tvar, nepromokne a vydrží roky drsného zacházení." },
+            ].map((c, i) => (
+              <Reveal key={c.t} delay={i * 80}>
+                <div className="rounded-2xl border border-border bg-card p-6 h-full">
+                  <div className="w-10 h-1.5 rounded-full bg-primary mb-4" />
+                  <h4 className="font-heading text-base font-bold text-foreground mb-2">
+                    {c.t}
+                  </h4>
+                  <p className="font-body text-sm text-muted-foreground leading-relaxed">
+                    {c.d}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal delay={80}>
+            <h3 className="font-heading text-xl font-bold text-foreground mt-14 mb-4">
+              Tichá šifra: identita bez křiku
+            </h3>
+            <p className="font-body text-muted-foreground leading-relaxed mb-6">
+              Jak na brašnu umístit značku VAPE tak, aby byla rozpoznatelná, ale
+              nerušila minimalistický vzhled kola? Řešení přišlo v Morseově
+              abecedě. Písmena V-A-P-E jsme převedli do decentního geometrického
+              vzoru — pro náhodného pozorovatele elegantní struktura materiálu,
+              pro zasvěcené skrytý symbol identity.
+            </p>
+          </Reveal>
+          <Reveal delay={100}>
+            <div className="rounded-2xl border border-border bg-card p-6 md:p-8 inline-block">
+              <MorseWord word="VAPE" />
+            </div>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <h3 className="font-heading text-xl font-bold text-foreground mt-14 mb-4">
+              Funkční minimalismus a barevná harmonie
+            </h3>
+            <p className="font-body text-muted-foreground leading-relaxed">
+              Vlajkovou lodí je{" "}
+              <strong className="text-foreground font-semibold">
+                celočerná varianta
+              </strong>{" "}
+              — nejpraktičtější, nejodolnější a esteticky nejčistší. Pro ty, kdo
+              chtějí kolo jemně oživit, máme promyšlené barevné varianty, které
+              s kolem ladí a nepůsobí rušivě. A lak drahých rámů chrání speciální
+              šetrné úchyty.
+            </p>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <blockquote className="my-14 border-l-4 border-primary pl-6 py-1">
+              <p className="font-heading text-xl md:text-2xl font-bold text-foreground leading-snug">
+                Morseovape dnes najdete v prémiových showroomech — vedle
+                špičkových světových značek kol a elektrokol.
+              </p>
+            </blockquote>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <h3 className="font-heading text-xl font-bold text-foreground mb-4">
+              Společný růst — víc než produkt v regálu
+            </h3>
+            <p className="font-body text-muted-foreground leading-relaxed mb-6">
+              Spolupráci nebereme jako jednorázový obchod, ale jako dlouhodobé
+              spojenectví. Partnerům pomáháme zjednodušit každodenní kontakt se
+              zákazníkem — zkušenostmi, moderními prezentačními nástroji i
+              podporou digitální viditelnosti. Věříme, že největší hodnotou
+              cyklistického světa jsou lokální specializované obchody, kam se
+              zákazníci rádi vracejí.
+            </p>
+            <Link
+              to="/aplikace-a-sluzby"
+              className="inline-flex items-center gap-2 text-primary font-body font-semibold hover:gap-3 transition-all"
+            >
+              Služby pro prodejny a servisy <ArrowRight className="w-4 h-4" />
+            </Link>
+          </Reveal>
         </div>
       </section>
 
