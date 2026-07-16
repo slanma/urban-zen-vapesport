@@ -277,7 +277,7 @@ const CatalogCard = ({
         <div className="flex items-center justify-between mt-auto">
           <PriceTag
             retailGross={ov.price_override ?? product.price}
-            b2bNet={ov.b2b_price ?? null}
+            b2bNet={ov.b2b_price ?? product.b2b_price ?? null}
             size="md"
           />
         </div>

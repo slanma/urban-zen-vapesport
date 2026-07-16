@@ -42,15 +42,15 @@ const PriceTag = ({ retailGross, b2bNet, size = "md", className = "" }: PriceTag
       <div className={`flex flex-col leading-tight ${className}`}>
         <span className={`font-heading font-bold text-primary inline-flex items-center gap-1.5 flex-wrap ${s.primary}`}>
           <Lock className="w-4 h-4" />
-          Vaše VOC: {fmtCZK(discountedNet)}
+          {fmtCZK(discountedGross)} <span className="font-body font-normal text-primary/70 text-[0.7em]">s DPH</span>
           {discount > 0 && (
             <span className="font-body text-muted-foreground text-sm line-through font-normal">
-              {fmtCZK(b2bNet)}
+              {fmtCZK(grossFromNet(b2bNet))}
             </span>
           )}
         </span>
         <span className={`font-body text-muted-foreground ${s.secondary}`}>
-          s DPH: {fmtCZK(discountedGross)}
+          Vaše VOC bez DPH: {fmtCZK(discountedNet)}
         </span>
         {discount > 0 && (
           <span className="inline-flex items-center gap-1 mt-1 text-xs font-semibold text-primary">
@@ -69,7 +69,7 @@ const PriceTag = ({ retailGross, b2bNet, size = "md", className = "" }: PriceTag
       <div className={`flex flex-col leading-tight ${className}`}>
         <span className={`font-heading font-bold text-primary inline-flex items-center gap-1.5 flex-wrap ${s.primary}`}>
           <Lock className="w-4 h-4" />
-          {fmtCZK(discountedGross)}
+          {fmtCZK(discountedGross)} <span className="font-body font-normal text-primary/70 text-[0.7em]">s DPH</span>
           <span className="font-body text-muted-foreground text-sm line-through font-normal">
             {fmtCZK(retailGross)}
           </span>

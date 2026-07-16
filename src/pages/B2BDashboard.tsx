@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { getCartonSize } from "@/data/cartons";
+import { getCartonSize, partnerHasCartons } from "@/data/cartons";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getProductById, products } from "@/data/products";
@@ -18,7 +18,7 @@ import {
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
-import { fmtCZK, netFromGross } from "@/lib/vat";
+import { fmtCZK, netFromGross, grossFromNet } from "@/lib/vat";
 import { resolveColor } from "@/lib/colorPalette";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -230,6 +230,7 @@ const B2BDashboard = () => {
 
   const addToCart = (id: string) => setQty(id, getQty(id) || 1);
 
+  const cartonEnabled = partnerHasCartons(profile?.company_name);
   const totalItems = useMemo(() => cart.reduce((sum, c) => sum + c.qty, 0), [cart]);
   const totalPrice = useMemo(
     () => cart.reduce((sum, c) => sum + getUnitNet(c.productId) * c.qty, 0),
@@ -529,7 +530,7 @@ const B2BDashboard = () => {
                     const colors = (override?.colors_override ?? product.available_colors ?? []) as readonly string[];
                     const detailHref = `/produkt/${product.id}`;
                     const productTotal = colors.length ? colors.reduce((s, c) => s + getQty(product.id, c), 0) : qty;
-                    const carton = getCartonSize(product.id);
+                    const carton = cartonEnabled ? getCartonSize(product.id) : null;
 
                     return (
                       <TableRow key={product.id} className="hover:bg-muted/30">
@@ -548,8 +549,13 @@ const B2BDashboard = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex flex-col items-end gap-0.5">
-                            <span className="text-lg font-bold text-foreground">VOC {fmtCZK(getUnitNet(product.id))}</span>
-                            <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">bez DPH</span>
+                            <span className="text-lg font-bold text-foreground">
+                              {fmtCZK(grossFromNet(getUnitNet(product.id)))}{" "}
+                              <span className="text-[11px] font-normal text-muted-foreground">s DPH</span>
+                            </span>
+                            <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
+                              VOC {fmtCZK(getUnitNet(product.id))} bez DPH
+                            </span>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -632,7 +638,11 @@ const B2BDashboard = () => {
               <span className="text-lg font-semibold">Celkem v košíku:</span>
             </div>
             <span className="text-xl font-bold">{totalItems} ks</span>
-            <span className="text-xl font-bold">{fmtCZK(totalPrice)} bez DPH</span>
+            <span className="text-xl font-bold">
+              {fmtCZK(grossFromNet(totalPrice))}{" "}
+              <span className="text-sm font-normal opacity-80">s DPH</span>
+              <span className="text-sm font-normal opacity-70 ml-2">({fmtCZK(totalPrice)} bez DPH)</span>
+            </span>
           </div>
           <Button size="lg" className="h-14 px-10 text-lg font-bold gap-3" disabled={totalItems === 0} onClick={handleSubmitOrder}>
             <ShoppingCart className="w-5 h-5" />
