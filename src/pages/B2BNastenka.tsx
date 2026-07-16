@@ -8,8 +8,10 @@ import { fmtCZK } from "@/lib/vat";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/sonner";
-import { Download, RotateCcw, Package, Award, ShoppingBag } from "lucide-react";
+import { Download, RotateCcw, Package, Award, ShoppingBag, Building2 } from "lucide-react";
 
 /** Věrnostní slevový systém (útrata bez DPH → sleva). */
 const TIERY = [
@@ -46,6 +48,48 @@ const B2BNastenka = () => {
   const { get } = useProductOverrides();
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
+
+  // Firemní údaje – partner si je může sám opravit
+  const [firma, setFirma] = useState({
+    company_name: "", ico: "", dic: "", contact_person: "",
+    phone: "", address: "", city: "", zip: "",
+  });
+  const [savingFirma, setSavingFirma] = useState(false);
+
+  useEffect(() => {
+    if (!profile) return;
+    setFirma({
+      company_name: profile.company_name ?? "",
+      ico: profile.ico ?? "",
+      dic: profile.dic ?? "",
+      contact_person: profile.contact_person ?? "",
+      phone: profile.phone ?? "",
+      address: profile.address ?? "",
+      city: profile.city ?? "",
+      zip: profile.zip ?? "",
+    });
+  }, [profile]);
+
+  const saveFirma = async () => {
+    if (!profile) return;
+    setSavingFirma(true);
+    const { error } = await supabase
+      .from("b2b_profiles")
+      .update({
+        company_name: firma.company_name.trim(),
+        ico: firma.ico.trim(),
+        dic: firma.dic.trim() || null,
+        contact_person: firma.contact_person.trim(),
+        phone: firma.phone.trim(),
+        address: firma.address.trim(),
+        city: firma.city.trim(),
+        zip: firma.zip.trim(),
+      })
+      .eq("user_id", profile.user_id);
+    setSavingFirma(false);
+    if (error) toast.error("Uložení selhalo", { description: error.message });
+    else toast.success("Údaje uloženy");
+  };
 
   useEffect(() => {
     if (!profile) return;
@@ -356,6 +400,53 @@ const B2BNastenka = () => {
               ))}
             </ul>
           )}
+        </section>
+
+        {/* Firemní údaje – partner si může opravit chybu */}
+        <section className="rounded-2xl border border-border bg-card p-6 mt-6">
+          <h2 className="font-heading text-lg font-bold text-foreground mb-1 flex items-center gap-2">
+            <Building2 className="w-5 h-5 text-primary" /> Firemní údaje
+          </h2>
+          <p className="text-sm text-muted-foreground mb-5">
+            Když v údajích něco nesedí, klidně si to opravte. Slevu a obraty spravuje dodavatel.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="sm:col-span-2">
+              <Label htmlFor="f-company">Název firmy</Label>
+              <Input id="f-company" value={firma.company_name} onChange={(e) => setFirma({ ...firma, company_name: e.target.value })} />
+            </div>
+            <div>
+              <Label htmlFor="f-ico">IČO</Label>
+              <Input id="f-ico" value={firma.ico} onChange={(e) => setFirma({ ...firma, ico: e.target.value })} />
+            </div>
+            <div>
+              <Label htmlFor="f-dic">DIČ</Label>
+              <Input id="f-dic" value={firma.dic} onChange={(e) => setFirma({ ...firma, dic: e.target.value })} />
+            </div>
+            <div>
+              <Label htmlFor="f-kontakt">Kontaktní osoba</Label>
+              <Input id="f-kontakt" value={firma.contact_person} onChange={(e) => setFirma({ ...firma, contact_person: e.target.value })} />
+            </div>
+            <div>
+              <Label htmlFor="f-tel">Telefon</Label>
+              <Input id="f-tel" value={firma.phone} onChange={(e) => setFirma({ ...firma, phone: e.target.value })} />
+            </div>
+            <div className="sm:col-span-2">
+              <Label htmlFor="f-ulice">Ulice a č.p.</Label>
+              <Input id="f-ulice" value={firma.address} onChange={(e) => setFirma({ ...firma, address: e.target.value })} />
+            </div>
+            <div>
+              <Label htmlFor="f-mesto">Město</Label>
+              <Input id="f-mesto" value={firma.city} onChange={(e) => setFirma({ ...firma, city: e.target.value })} />
+            </div>
+            <div>
+              <Label htmlFor="f-psc">PSČ</Label>
+              <Input id="f-psc" value={firma.zip} onChange={(e) => setFirma({ ...firma, zip: e.target.value })} />
+            </div>
+          </div>
+          <Button className="mt-5" onClick={saveFirma} disabled={savingFirma}>
+            {savingFirma ? "Ukládám…" : "Uložit údaje"}
+          </Button>
         </section>
       </main>
       <Footer />
