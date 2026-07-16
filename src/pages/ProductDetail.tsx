@@ -2,7 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getProductById } from "@/data/products";
+import { getProductById, getProductByCode } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
@@ -48,6 +48,11 @@ const setMeta = (name: string, content: string, attr: "name" | "property" = "nam
 
 /** Produkty, u kterých chceme nabízet přiložení obrázku i bez slova „na míru“ v názvu. */
 const CUSTOM_UPLOAD_IDS = ["vs-neoprenovy-obal-938229"];
+
+/** KLICKfix adaptér (310107) se B2C zákazníkovi automaticky přidá k těmto modelům,
+ *  které se na kolo uchycují právě přes KLICKfix. B2B partneři si adaptér řeší sami. */
+const KLICKFIX_ADAPTER_CODE = "310107";
+const KLICKFIX_BAG_CODES = ["410104", "410105", "410115", "410057"];
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -183,6 +188,24 @@ const ProductDetail = () => {
         );
       }
     }
+    // KLICKfix adaptér – B2C zákazníkovi se k vybraným modelům přidá automaticky
+    // (B2B partner si příslušenství objednává sám).
+    if (!isPartner && KLICKFIX_BAG_CODES.includes(sku)) {
+      const adapter = getProductByCode(KLICKFIX_ADAPTER_CODE);
+      if (adapter && adapter.id !== product.id) {
+        addItem(adapter.id, quantity, null, { auto: true, autoFor: product.id });
+        toast({
+          title: "Přidán držák KLICKfix",
+          description:
+            "K této brašně jsme přidali adaptér KLICKfix (310107) pro uchycení na kolo.",
+        });
+      } else if (!adapter) {
+        console.warn(
+          "[ProductDetail] KLICKfix adaptér 310107 nebyl v katalogu nalezen – auto-přidání přeskočeno.",
+        );
+      }
+    }
+
     openDrawer();
   };
 

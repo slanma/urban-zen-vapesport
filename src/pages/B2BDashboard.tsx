@@ -550,11 +550,11 @@ const B2BDashboard = () => {
                         <TableCell className="text-right">
                           <div className="flex flex-col items-end gap-0.5">
                             <span className="text-lg font-bold text-foreground">
-                              {fmtCZK(grossFromNet(getUnitNet(product.id)))}{" "}
+                              VOC {fmtCZK(grossFromNet(getUnitNet(product.id)))}{" "}
                               <span className="text-[11px] font-normal text-muted-foreground">s DPH</span>
                             </span>
                             <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
-                              VOC {fmtCZK(getUnitNet(product.id))} bez DPH
+                              {fmtCZK(getUnitNet(product.id))} bez DPH
                             </span>
                           </div>
                         </TableCell>

@@ -155,5 +155,16 @@ export const getProductById = (id?: string) => {
   return fromBase?.[0];
 };
 
+/** Najde produkt podle jeho základního kódu ("Kód produktu" ve specs), např. "310107". */
+export const getProductByCode = (code?: string) => {
+  if (!code) return undefined;
+  const target = code.trim();
+  return products.find((p) =>
+    p.specs?.some(
+      (s) => s.label.trim().toLowerCase() === "kód produktu" && s.value.trim() === target,
+    ),
+  );
+};
+
 export const isMorseoProduct = (product: Product) =>
   Boolean(product.color) || MORSEO_PRODUCT_IDS.has(product.baseId ?? product.id);

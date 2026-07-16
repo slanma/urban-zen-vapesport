@@ -36,6 +36,30 @@ export const feedProducts: Product[] = [
       {
         "label": "Varianty",
         "value": "6 barev"
+      },
+      {
+        "label": "Rozměry (D × V × Š)",
+        "value": "22 × 20 × 4,5 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "2 l"
+      },
+      {
+        "label": "Nosnost",
+        "value": "1 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, hardtail (u e-biku / celopéra ověřit volný prostor)"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "S–XXL"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Dlouhé suché zipy po celém obvodu + spodní stabilizační popruh"
       }
     ],
     "image": "/images/produkty-vapesport/maly-trojuhlenik-3kapsy/barva-neon-yellow-vs.jpg",
@@ -136,6 +160,30 @@ export const feedProducts: Product[] = [
       {
         "label": "Varianty",
         "value": "8 barev"
+      },
+      {
+        "label": "Rozměry",
+        "value": "kapsy 19 × 12 × 5 cm (2×), pouzdro na mobil 16 × 10 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "1,6 l (2 × 0,8 l)"
+      },
+      {
+        "label": "Nosnost",
+        "value": "1,2 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, celopéro, hardtail, koloběžky"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "S–XXL"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Suché zipy na horní rámovou trubku + odnímatelné pouzdro na telefon"
       }
     ],
     "image": "/images/produkty-vapesport/lady/barva-neon-yellow-vs.jpg",
@@ -191,6 +239,34 @@ export const feedProducts: Product[] = [
       {
         "label": "Varianty",
         "value": "1 barev"
+      },
+      {
+        "label": "Rozměry (D × V × Š)",
+        "value": "21 × 20 × 5 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "1,5 l"
+      },
+      {
+        "label": "Nosnost",
+        "value": "1 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "E-bike, celopéro, hardtail"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "S–XXL (atypický tvar pro prohnutí rámu)"
+      },
+      {
+        "label": "Kompatibilita se značkami",
+        "value": "Optimalizováno pro HAIBIKE; kompatibilní i LECTRON a CRUSSIS"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Podšité suché zipy (ochrana laku)"
       }
     ],
     "image": "/images/produkty-vapesport/trojuhelnik-elektro-i/hlavni.jpg",
@@ -233,6 +309,26 @@ export const feedProducts: Product[] = [
       {
         "label": "Varianty",
         "value": "7 barev"
+      },
+      {
+        "label": "Rozměry (Š × V × H)",
+        "value": "16,5 × 14 × 7 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "0,5 l"
+      },
+      {
+        "label": "Nosnost",
+        "value": "0,5 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Dětská odrážedla/kola, koloběžky, gravel, MTB, e-biky"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Duální – KlickFix nebo popruhy na suchý zip (oba systémy součástí)"
       }
     ],
     "image": "/images/produkty-vapesport/uni-maxi-twist/barva-grey-vs.jpg",
@@ -275,6 +371,30 @@ export const feedProducts: Product[] = [
       {
         "label": "Výrobce",
         "value": "VAPESPORT"
+      },
+      {
+        "label": "Rozměry (D × Š × V)",
+        "value": "18 × 23 × 13 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "4,7 l"
+      },
+      {
+        "label": "Nosnost",
+        "value": "2 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, celopéro, hardtail, koloběžka"
+      },
+      {
+        "label": "Montáž",
+        "value": "Řídítka / představec (standardní průměry)"
+      },
+      {
+        "label": "Uchycení",
+        "value": "KLICKFIX rychloupínací – adaptér součástí balení"
       }
     ],
     "image": "/images/produkty-vapesport/brasna-mala-na-riditka-pe/hlavni.jpg",
@@ -318,6 +438,26 @@ export const feedProducts: Product[] = [
       {
         "label": "Výrobce",
         "value": "VAPESPORT"
+      },
+      {
+        "label": "Rozměry (D × V × Š)",
+        "value": "19 × 11 × 2 cm"
+      },
+      {
+        "label": "Kapacita",
+        "value": "Telefon do 5,5\", peněženka, doklady (plochý profil)"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, celopéro, hardtail"
+      },
+      {
+        "label": "Montáž",
+        "value": "Řídítka / představec (jakýkoliv průměr)"
+      },
+      {
+        "label": "Uchycení",
+        "value": "KLICKFIX – Mini adaptér součástí balení"
       }
     ],
     "image": "/images/produkty-vapesport/mobil-5-5-pe/hlavni.jpg",
@@ -356,6 +496,30 @@ export const feedProducts: Product[] = [
       {
         "label": "Výrobce",
         "value": "VAPESPORT"
+      },
+      {
+        "label": "Rozměry",
+        "value": "tělo 28 × 16 × 17 cm; boční kapsa 23 × 12 × 4 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "10 l"
+      },
+      {
+        "label": "Nosnost",
+        "value": "8 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, hardtail"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "S–XXL (vyžaduje zadní nosič)"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Robustní suché zipy na konstrukci zadního nosiče"
       }
     ],
     "image": "/images/produkty-vapesport/brasna-na-nosic/hlavni.jpg",
@@ -396,6 +560,30 @@ export const feedProducts: Product[] = [
       {
         "label": "Výrobce",
         "value": "VAPESPORT"
+      },
+      {
+        "label": "Rozměry",
+        "value": "tělo 28 × 16 × 17 cm; výklopné boční kapsy 21 × 34 × 4 cm (2×)"
+      },
+      {
+        "label": "Objem",
+        "value": "až 20 l"
+      },
+      {
+        "label": "Nosnost",
+        "value": "12 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, hardtail"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "S–XXL (vyžaduje klasický zadní nosič)"
+      },
+      {
+        "label": "Uchycení",
+        "value": "4× horní suchý zip + spodní pojistný popruh + přední suché zipy + mechanický háček"
       }
     ],
     "image": "/images/produkty-vapesport/brasna-na-nosic-lux/hlavni.jpg",
@@ -439,6 +627,30 @@ export const feedProducts: Product[] = [
       {
         "label": "Varianty",
         "value": "1 barev"
+      },
+      {
+        "label": "Rozměry (D × V × Š)",
+        "value": "14 × 11–16 × 9 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "0,6–1 l (roztažitelné dno)"
+      },
+      {
+        "label": "Nosnost",
+        "value": "1 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, celopéro, hardtail"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "S–XXL (u rámů M a menších jen s pevnou sedlovkou)"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Rychloupínací zámek TWIST pod ližiny sedla + volitelný pásek na sedlovku"
       }
     ],
     "image": "/images/produkty-vapesport/brasna-pod-sedlo-zralok-twist/hlavni.jpg",
@@ -480,6 +692,30 @@ export const feedProducts: Product[] = [
       {
         "label": "Výrobce",
         "value": "VAPESPORT"
+      },
+      {
+        "label": "Rozměry (D × Š × V)",
+        "value": "19 × 9 × 8 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "0,7 l"
+      },
+      {
+        "label": "Nosnost",
+        "value": "0,6 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, celopéro, hardtail"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "S–XXL (univerzální podsedlový střih)"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Podšité suché zipy (ochrana cyklodresu i laku)"
       }
     ],
     "image": "/images/produkty-vapesport/podsedlo-mala-spe/hlavni.jpg",
@@ -539,6 +775,22 @@ export const feedProducts: Product[] = [
       {
         "label": "Uchycení",
         "value": "řídítka, sedlovka, rám, představec"
+      },
+      {
+        "label": "Rozsah otáčení hlavy",
+        "value": "360° (po 90° krocích)"
+      },
+      {
+        "label": "Utahovací moment",
+        "value": "max. 2 Nm"
+      },
+      {
+        "label": "Materiál popruhu",
+        "value": "Nerezová ocel (patent Unifit)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Systém VAPE – Mobil 4,5\"/5,5\", Tablet 7–8\", brašna na řídítka aj."
       }
     ],
     "image": "/images/produkty-vapesport/klickfix/hlavni.jpg",
@@ -620,6 +872,26 @@ export const feedProducts: Product[] = [
       {
         "label": "Výrobce",
         "value": "VAPESPORT"
+      },
+      {
+        "label": "Rozměry (D × V × Š)",
+        "value": "16 × 23 × 2 cm"
+      },
+      {
+        "label": "Kapacita",
+        "value": "Tablet / iPad 7–8\", mapy, doklady (plochý profil)"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, hardtail"
+      },
+      {
+        "label": "Montáž",
+        "value": "Řídítka / představec"
+      },
+      {
+        "label": "Uchycení",
+        "value": "KLICKFIX – adaptér součástí balení"
       }
     ],
     "image": "/images/produkty-vapesport/tablet-7-8-pe/hlavni.jpg",
@@ -697,6 +969,30 @@ export const feedProducts: Product[] = [
       {
         "label": "Varianty",
         "value": "3 barev"
+      },
+      {
+        "label": "Rozměry (D × V × Š)",
+        "value": "19 × 19 × 4 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "0,75 l"
+      },
+      {
+        "label": "Nosnost",
+        "value": "1,5 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Dámská kola (CTM, Leader Fox Altar), dětská/juniorská (27\"), hardtail"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "XS–XL (střih pro malé a snížené rámy)"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Trojbodové upnutí suchými zipy do vnitřního rohu rámu"
       }
     ],
     "image": "/images/produkty-vapesport/sw/barva-orange-vs.jpg",
@@ -742,6 +1038,34 @@ export const feedProducts: Product[] = [
       {
         "label": "Varianty",
         "value": "2 barev"
+      },
+      {
+        "label": "Rozměry (D × V × Š)",
+        "value": "19 × 10 × 7 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "1,2 l"
+      },
+      {
+        "label": "Nosnost",
+        "value": "0,5 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, celopéro, hardtail"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "S–XXL"
+      },
+      {
+        "label": "Kompatibilita telefonu",
+        "value": "Dotyková fólie 18 × 9 cm, telefon do 6,7\""
+      },
+      {
+        "label": "Uchycení",
+        "value": "Suché zipy podlepené proti podření laku; v balení prodlužovací pár na široké rámy"
       }
     ],
     "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/smb-004-2039648.jpeg",
@@ -775,6 +1099,30 @@ export const feedProducts: Product[] = [
       {
         "label": "Výrobce",
         "value": "VAPESPORT"
+      },
+      {
+        "label": "Rozměry (D × Š × V)",
+        "value": "33 × 14 × 38 cm"
+      },
+      {
+        "label": "Objem",
+        "value": "15 l"
+      },
+      {
+        "label": "Nosnost",
+        "value": "8 kg"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, hardtail"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "S–XXL (vyžaduje klasický zadní nosič)"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Plastové úchyty – nacvaknutí na boční trubku zadního nosiče"
       }
     ],
     "image": "/images/produkty-vapesport/street-bag/hlavni.jpg",
@@ -875,6 +1223,22 @@ export const feedProducts: Product[] = [
       {
         "label": "Výrobce",
         "value": "VAPESPORT"
+      },
+      {
+        "label": "Rozměry",
+        "value": "Plně variabilní – šito na míru dle zadání zákazníka"
+      },
+      {
+        "label": "Materiál",
+        "value": "Premium neopren (termoizolační, voděodolný, tlumící)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Univerzální na míru (Haibike, Crussis, Lectron, Cube, Specialized aj.)"
+      },
+      {
+        "label": "Pozn. k objednávce",
+        "value": "V poznámce uvést typ e-kola + délku a 3× obvod trubky"
       }
     ],
     "image": "/images/produkty-vapesport/neoprenovy-obal/hlavni.jpg",
@@ -933,6 +1297,22 @@ export const feedProducts: Product[] = [
       {
         "label": "Uchycení",
         "value": "řídítka, sedlovka, rám, představec"
+      },
+      {
+        "label": "Kompatibilní průměr trubek",
+        "value": "Ø 15–60 mm (i hranaté profily)"
+      },
+      {
+        "label": "Utahovací moment",
+        "value": "1,5 Nm"
+      },
+      {
+        "label": "Materiál popruhu",
+        "value": "Nerezová ocel (patent Unifit)"
+      },
+      {
+        "label": "Kompatibilita",
+        "value": "Jakýkoliv standardní košík na láhev (kov, plast, karbon)"
       }
     ],
     "image": "/images/produkty-vapesport/klickfix-bottle/hlavni.jpg",
@@ -1955,6 +2335,14 @@ export const feedProducts: Product[] = [
       {
         "label": "Barva",
         "value": "šedá"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, hardtail"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Dlouhé suché zipy po obvodu + spodní stabilizační popruh (prostor i na e-nabíječku)"
       }
     ],
     "image": "/images/produkty-vapesport/velky-trojuhelnik-trikapsy/hlavni.jpg",
@@ -1995,7 +2383,7 @@ export const feedProducts: Product[] = [
       },
       {
         "label": "Rozměry (D × Š × V)",
-        "value": "9 × 11–16 × 14 cm"
+        "value": "14 × 9 × 11–16 cm"
       },
       {
         "label": "Objem",
@@ -2012,6 +2400,18 @@ export const feedProducts: Product[] = [
       {
         "label": "Varianty",
         "value": "8 barev"
+      },
+      {
+        "label": "Typ kola",
+        "value": "Gravel, e-bike, celopéro, hardtail"
+      },
+      {
+        "label": "Velikost rámu",
+        "value": "S–XXL (u rámů M a menších jen s pevnou sedlovkou)"
+      },
+      {
+        "label": "Uchycení",
+        "value": "Rychloupínací zámek TWIST pod ližiny sedla + volitelný pásek na sedlovku"
       }
     ],
     "image": "/images/produkty-vapesport/zralok-led/barva-black-vs.jpg",
