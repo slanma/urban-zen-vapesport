@@ -314,8 +314,8 @@ const Checkout = () => {
             <p className="font-semibold text-foreground">Co bude dál?</p>
             <ol className="list-decimal list-inside text-sm text-muted-foreground space-y-1.5">
               <li>
-                Na e-mail <span className="text-foreground">{placedOrder.email}</span> jsme poslali
-                potvrzení o přijetí objednávky.
+                Na e-mail <span className="text-foreground">{placedOrder.email}</span> vám zašleme
+                potvrzení objednávky.
               </li>
               <li>
                 Připravíme vám platební údaje (QR platba) a zašleme je e-mailem —{" "}
