@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InteractiveBikeGuide from "@/components/InteractiveBikeGuide";
 import ProductSearch from "@/components/ProductSearch";
-import { getProductsByCategory, type Hotspot } from "@/data/productHotspots";
+import { getProductsByCategory, getProductsByHotspot, HOTSPOT_LABELS, type Hotspot } from "@/data/productHotspots";
 import { getBikeType, productMatchesBikeType } from "@/data/bikeTypes";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { getPrimaryImage } from "@/lib/productImages";
@@ -34,16 +34,6 @@ const CATALOG: { id: string; label: string }[] = [
   { id: "doplnky", label: "Doplňky k brašnám" },
 ];
 
-/** Kliknutí na místo na kole → skok na nejbližší odpovídající kategorii. */
-const HOTSPOT_TO_CAT: Partial<Record<Hotspot, string>> = {
-  Handlebar: "riditka",
-  TopTube: "mobil",
-  Frame: "ramove",
-  UnderSaddle: "podsedlo",
-  RearRack: "nosic",
-  BatteryCover: "elektrokolo",
-};
-
 const sectionId = (id: string) => `kat-${id}`;
 
 const scrollToCat = (id: string) => {
@@ -61,6 +51,7 @@ const Shop = () => {
   const kolo = params.get("kolo");
   const bikeType = getBikeType(kolo);
   const { get } = useProductOverrides();
+  const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null);
 
   // Plovoucí tlačítko „Zpět na kolo" se ukáže, až se uživatel odroluje
   // mezi produkty (pryč od kola nahoře).
@@ -74,22 +65,30 @@ const Shop = () => {
 
   // Pro každou kategorii: viditelné produkty, barevné varianty (MORSEO)
   // sloučené do jedné karty podle baseId.
+  const refine = (list: Product[]) =>
+    list
+      .filter((p) => get(p.id).visible)
+      .filter((p) =>
+        bikeType ? productMatchesBikeType(p.baseId ?? p.id, bikeType.id) : true,
+      )
+      .map((p) => applyProductOverride(p, get(p.id)))
+      .filter(
+        (p, i, arr) =>
+          arr.findIndex((x) => (x.baseId ?? x.id) === (p.baseId ?? p.id)) === i,
+      )
+      .sort((a, b) => Number(b.category === "morseo-evo") - Number(a.category === "morseo-evo"));
+
   const catalog = useMemo(() => {
-    return CATALOG.map((cat) => {
-      const products = getProductsByCategory(cat.label)
-        .filter((p) => get(p.id).visible)
-        .filter((p) =>
-          bikeType ? productMatchesBikeType(p.baseId ?? p.id, bikeType.id) : true,
-        )
-        .map((p) => applyProductOverride(p, get(p.id)))
-        .filter(
-          (p, i, arr) =>
-            arr.findIndex((x) => (x.baseId ?? x.id) === (p.baseId ?? p.id)) === i,
-        )
-        .sort((a, b) => Number(b.category === "morseo-evo") - Number(a.category === "morseo-evo"));
-      return { ...cat, products };
-    }).filter((s) => s.products.length > 0);
-  }, [get, bikeType]);
+    // Klik na místo na kole → jen brašny pro tuto pozici (stejně jako u B2B)
+    if (activeHotspot) {
+      const products = refine(getProductsByHotspot(activeHotspot));
+      return [{ id: "pozice", label: `Brašny pro: ${HOTSPOT_LABELS[activeHotspot]}`, products }]
+        .filter((s) => s.products.length > 0);
+    }
+    return CATALOG.map((cat) => ({ ...cat, products: refine(getProductsByCategory(cat.label)) }))
+      .filter((s) => s.products.length > 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [get, bikeType, activeHotspot]);
 
   const totalCount = useMemo(
     () => catalog.reduce((sum, s) => sum + s.products.length, 0),
@@ -98,8 +97,9 @@ const Shop = () => {
 
   // Příchod z rozcestníku / kola (?pozice=…) → skok na odpovídající kategorii.
   useEffect(() => {
-    if (requested && HOTSPOT_TO_CAT[requested]) {
-      const t = setTimeout(() => scrollToCat(HOTSPOT_TO_CAT[requested]!), 60);
+    if (requested) {
+      setActiveHotspot(requested);
+      const t = setTimeout(() => scrollToCat("pozice"), 80);
       return () => clearTimeout(t);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -118,14 +118,33 @@ const Shop = () => {
           mode="b2c"
           suppressPopup
           onActiveChange={(h) => {
-            const cat = HOTSPOT_TO_CAT[h];
-            if (cat) scrollToCat(cat);
+            setActiveHotspot(h);
+            setTimeout(() => scrollToCat("pozice"), 60);
           }}
         />
         <p className="sr-only" aria-live="polite">
           Katalog obsahuje {totalCount} produktů.
         </p>
       </section>
+
+      {/* Aktivní filtr podle pozice na kole */}
+      {activeHotspot && (
+        <div className="px-6 lg:px-12 max-w-[1400px] mx-auto mb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-secondary/50 px-5 py-3">
+            <p className="font-body text-sm text-foreground">
+              Zobrazeny brašny pro:{" "}
+              <span className="font-heading font-bold">{HOTSPOT_LABELS[activeHotspot]}</span>
+            </p>
+            <button
+              type="button"
+              onClick={() => setActiveHotspot(null)}
+              className="text-sm font-body font-semibold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+            >
+              Zobrazit všechny brašny
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Aktivní filtr podle typu kola */}
       {bikeType && (
