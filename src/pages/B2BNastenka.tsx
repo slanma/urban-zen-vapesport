@@ -11,13 +11,14 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
 import { Download, RotateCcw, Package, Truck, Award, ShoppingBag } from "lucide-react";
 
-/** Věrnostní úrovně – ORIENTAČNÍ návrh, klidně přepiš čísla. */
+/** Věrnostní slevový systém (útrata bez DPH → sleva). */
 const TIERY = [
-  { nazev: "Partner", od: 0, sleva: 0 },
-  { nazev: "Bronz", od: 25000, sleva: 3 },
-  { nazev: "Stříbro", od: 60000, sleva: 5 },
-  { nazev: "Zlato", od: 120000, sleva: 8 },
-  { nazev: "Platina", od: 250000, sleva: 12 },
+  { od: 0, sleva: 0 },
+  { od: 5000, sleva: 2 },
+  { od: 10001, sleva: 5 },
+  { od: 25001, sleva: 7 },
+  { od: 40001, sleva: 8 },
+  { od: 50001, sleva: 9 },
 ];
 
 const STATUS_LABELS: Record<string, string> = {
@@ -225,7 +226,7 @@ const B2BNastenka = () => {
           <div className="rounded-2xl border border-border bg-card p-6">
             <ShoppingBag className="w-5 h-5 text-primary mb-3" />
             <div className="font-heading text-2xl font-bold text-foreground">{fmtCZK(spend)}</div>
-            <div className="text-sm text-muted-foreground mt-1">celkem objednáno</div>
+            <div className="text-sm text-muted-foreground mt-1">celkem objednáno (bez DPH)</div>
           </div>
           <div className="rounded-2xl border border-border bg-card p-6">
             <Award className="w-5 h-5 text-primary mb-3" />
@@ -243,28 +244,29 @@ const B2BNastenka = () => {
 
         {/* Věrnostní program */}
         <section className="rounded-2xl border border-border bg-card p-6 mb-10">
-          <h2 className="font-heading text-lg font-bold text-foreground mb-1">Věrnostní program</h2>
+          <h2 className="font-heading text-lg font-bold text-foreground mb-1">Věrnostní sleva</h2>
           <p className="text-sm text-muted-foreground mb-5">
-            Úroveň: <strong className="text-foreground">{currentTier.nazev}</strong>
+            Při útratě <strong className="text-foreground">{fmtCZK(spend)}</strong> (bez DPH) máte
+            nárok na slevu <strong className="text-primary">{currentTier.sleva} %</strong>.
             {nextTier ? (
               <>
-                {" "}— do úrovně <strong className="text-foreground">{nextTier.nazev}</strong>{" "}
-                ({nextTier.sleva} %) zbývá <strong className="text-primary">{fmtCZK(remaining)}</strong>.
+                {" "}Do slevy <strong className="text-foreground">{nextTier.sleva} %</strong> zbývá{" "}
+                <strong className="text-primary">{fmtCZK(remaining)}</strong>.
               </>
             ) : (
-              <> — máte nejvyšší úroveň. 🎉</>
+              <> Máte nejvyšší úroveň slevy. 🎉</>
             )}
           </p>
           <div className="h-3 rounded-full bg-secondary overflow-hidden">
             <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
           </div>
-          <div className="flex flex-wrap gap-x-6 gap-y-1 mt-4">
-            {TIERY.map((t) => (
+          <div className="flex flex-wrap gap-x-5 gap-y-1 mt-4">
+            {TIERY.filter((t) => t.sleva > 0).map((t) => (
               <span
-                key={t.nazev}
+                key={t.od}
                 className={`text-xs font-mono ${spend >= t.od ? "text-primary font-bold" : "text-muted-foreground"}`}
               >
-                {t.nazev} · {t.sleva}% · {fmtCZK(t.od)}
+                od {fmtCZK(t.od)} → {t.sleva} %
               </span>
             ))}
           </div>
