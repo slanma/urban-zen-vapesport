@@ -663,6 +663,22 @@ const Checkout = () => {
                     {submitting ? "Odesílám…" : "Závazně objednat a zaplatit"}
                   </span>
                 </Button>
+
+                {!submitting &&
+                  (orderLines.length === 0 ||
+                    (shipping === "zasilkovna" && !packetaPoint) ||
+                    !b2bFieldsOk ||
+                    !termsAccepted) && (
+                    <p className="mt-3 text-center text-sm font-semibold text-destructive">
+                      {orderLines.length === 0
+                        ? "Košík je prázdný."
+                        : shipping === "zasilkovna" && !packetaPoint
+                          ? "Nejprve vyberte výdejní místo Zásilkovny (tlačítko „Vybrat výdejní místo“ výše)."
+                          : !b2bFieldsOk
+                            ? "Doplňte prosím firemní údaje (název firmy a IČO)."
+                            : "Zaškrtněte prosím souhlas s obchodními podmínkami."}
+                    </p>
+                  )}
               </div>
             </div>
           </div>
