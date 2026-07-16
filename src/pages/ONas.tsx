@@ -76,7 +76,6 @@ const STATS = [
   { num: "1994", label: "rok založení" },
   { num: "3", label: "dekády zkušeností" },
   { num: "2", label: "generace" },
-  { num: "0", label: "reklamací (Morseovape, 3. rok)" },
 ];
 
 const ONas = () => {
@@ -118,22 +117,11 @@ const ONas = () => {
         </div>
       </section>
 
-      {/* EVOLUCE */}
-      <section className="px-6 lg:px-12 pb-8">
-        <div className="max-w-[1400px] mx-auto">
-          <Reveal>
-            <img
-              src="/images/o-nas/evoluce.svg"
-              alt="Evoluce VAPESPORT od roku 1994 přes rok 2026 až do budoucnosti"
-              className="w-full h-auto"
-            />
-          </Reveal>
-        </div>
-      </section>
+      {/* EVOLUCE – dočasně vynecháno (doplní se později) */}
 
       {/* STATISTIKY */}
       <section className="px-6 lg:px-12 py-12">
-        <div className="max-w-[1100px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="max-w-[900px] mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
           {STATS.map((s, i) => (
             <Reveal key={s.label} delay={i * 90}>
               <div className="text-center rounded-2xl border border-border bg-card py-7 px-4 h-full flex flex-col justify-center">
@@ -292,7 +280,7 @@ const ONas = () => {
             {[
               { t: "Skryté poselství", d: "Název značky zašifrovaný do designu pomocí Morseovy abecedy." },
               { t: "Bez kompromisů", d: "Stoprocentní kvalita zpracování a špičkový minimalistický vzhled." },
-              { t: "Nulová chybovost", d: "Na trhu už třetím rokem – bez jediné reklamace." },
+              { t: "Prověřeno v provozu", d: "Roky spolehlivosti v každodenním i náročném nasazení." },
             ].map((c, i) => (
               <Reveal key={c.t} delay={i * 90}>
                 <div className="rounded-2xl border border-border bg-card p-6 h-full">
