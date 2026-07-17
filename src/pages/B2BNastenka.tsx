@@ -155,7 +155,7 @@ const B2BNastenka = () => {
       .filter((p) => brandOf(p.category) === brand)
       .filter((p) => get(p.id).visible !== false)
       .map((p) => ({
-        kod: (p.specs && (p.specs as Record<string, string>)["Kód produktu"]) || p.id,
+        kod: (Array.isArray(p.specs) ? p.specs.find((s: { label: string; value: string }) => s.label === "Kód produktu")?.value : undefined) || p.id,
         nazev: p.name,
         znacka: brand,
         kategorie: p.categoryLabel || p.category,
