@@ -24,16 +24,6 @@ export type Database = {
           dic: string | null
           discount_percent: number
           free_shipping: boolean
-          obrat_2025: number
-          obrat_2026: number
-          invoice_email: string | null
-          delivery_same: boolean
-          delivery_company: string | null
-          delivery_address: string | null
-          delivery_city: string | null
-          delivery_zip: string | null
-          delivery_contact: string | null
-          delivery_phone: string | null
           ico: string
           id: string
           notes: string | null
@@ -52,16 +42,6 @@ export type Database = {
           dic?: string | null
           discount_percent?: number
           free_shipping?: boolean
-          obrat_2025?: number
-          obrat_2026?: number
-          invoice_email?: string | null
-          delivery_same?: boolean
-          delivery_company?: string | null
-          delivery_address?: string | null
-          delivery_city?: string | null
-          delivery_zip?: string | null
-          delivery_contact?: string | null
-          delivery_phone?: string | null
           ico: string
           id?: string
           notes?: string | null
@@ -80,16 +60,6 @@ export type Database = {
           dic?: string | null
           discount_percent?: number
           free_shipping?: boolean
-          obrat_2025?: number
-          obrat_2026?: number
-          invoice_email?: string | null
-          delivery_same?: boolean
-          delivery_company?: string | null
-          delivery_address?: string | null
-          delivery_city?: string | null
-          delivery_zip?: string | null
-          delivery_contact?: string | null
-          delivery_phone?: string | null
           ico?: string
           id?: string
           notes?: string | null
@@ -143,7 +113,6 @@ export type Database = {
           items: Json
           last_name: string | null
           note: string | null
-          attachment_url: string | null
           order_number: string
           packeta_point: string | null
           payment_gross: number
@@ -174,7 +143,6 @@ export type Database = {
           items?: Json
           last_name?: string | null
           note?: string | null
-          attachment_url?: string | null
           order_number: string
           packeta_point?: string | null
           payment_gross?: number
@@ -205,7 +173,6 @@ export type Database = {
           items?: Json
           last_name?: string | null
           note?: string | null
-          attachment_url?: string | null
           order_number?: string
           packeta_point?: string | null
           payment_gross?: number
