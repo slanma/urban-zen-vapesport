@@ -27,6 +27,8 @@ export type Database = {
           ico: string
           id: string
           notes: string | null
+          obrat_2025: number | null
+          obrat_2026: number | null
           phone: string
           status: Database["public"]["Enums"]["b2b_status"]
           updated_at: string
@@ -45,6 +47,8 @@ export type Database = {
           ico: string
           id?: string
           notes?: string | null
+          obrat_2025?: number | null
+          obrat_2026?: number | null
           phone: string
           status?: Database["public"]["Enums"]["b2b_status"]
           updated_at?: string
@@ -63,6 +67,8 @@ export type Database = {
           ico?: string
           id?: string
           notes?: string | null
+          obrat_2025?: number | null
+          obrat_2026?: number | null
           phone?: string
           status?: Database["public"]["Enums"]["b2b_status"]
           updated_at?: string
@@ -100,6 +106,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          attachment_url: string | null
           city: string | null
           company_name: string | null
           created_at: string
@@ -130,6 +137,7 @@ export type Database = {
           zip: string | null
         }
         Insert: {
+          attachment_url?: string | null
           city?: string | null
           company_name?: string | null
           created_at?: string
@@ -160,6 +168,7 @@ export type Database = {
           zip?: string | null
         }
         Update: {
+          attachment_url?: string | null
           city?: string | null
           company_name?: string | null
           created_at?: string
