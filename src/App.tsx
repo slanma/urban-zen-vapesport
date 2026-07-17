@@ -36,6 +36,7 @@ import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
 import ONas from "./pages/ONas";
 import AppServices from "./pages/AppServices";
+import OAuthConsent from "./pages/OAuthConsent";
 import CookieBanner from "./components/CookieBanner";
 import CartDrawer from "./components/CartDrawer";
 import NotFound from "./pages/NotFound";
@@ -92,6 +93,7 @@ const App = () => (
             <Route path="/kontakt" element={<Contact />} />
             <Route path="/o-nas" element={<ONas />} />
             <Route path="/aplikace-a-sluzby" element={<AppServices />} />
+            <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

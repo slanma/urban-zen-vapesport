@@ -45,7 +45,7 @@ const Withdrawal = () => {
     e.preventDefault();
     const parsed = schema.safeParse({ order_number: orderNumber, email });
     if (!parsed.success) {
-      toast({ title: "Zkontrolujte údaje", description: parsed.error.errors[0].message, variant: "destructive" });
+      toast({ title: "Zkontrolujte údaje", description: parsed.error.issues[0].message, variant: "destructive" });
       return;
     }
     setLoading(true);
