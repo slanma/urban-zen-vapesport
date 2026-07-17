@@ -47,7 +47,7 @@ const CookieBanner = () => {
               onClick={() => decide("accepted")}
               className="h-11 px-5 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors min-w-[140px]"
             >
-              Přijmout všehny koláčky
+              Přijmout všechny cookies
             </button>
           </div>
         </div>

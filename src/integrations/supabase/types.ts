@@ -21,22 +21,22 @@ export type Database = {
           company_name: string
           contact_person: string
           created_at: string
+          delivery_address: string | null
+          delivery_city: string | null
+          delivery_company: string | null
+          delivery_contact: string | null
+          delivery_phone: string | null
+          delivery_same: boolean | null
+          delivery_zip: string | null
           dic: string | null
           discount_percent: number
           free_shipping: boolean
-          obrat_2025: number
-          obrat_2026: number
-          invoice_email: string | null
-          delivery_same: boolean
-          delivery_company: string | null
-          delivery_address: string | null
-          delivery_city: string | null
-          delivery_zip: string | null
-          delivery_contact: string | null
-          delivery_phone: string | null
           ico: string
           id: string
+          invoice_email: string | null
           notes: string | null
+          obrat_2025: number | null
+          obrat_2026: number | null
           phone: string
           status: Database["public"]["Enums"]["b2b_status"]
           updated_at: string
@@ -49,22 +49,22 @@ export type Database = {
           company_name: string
           contact_person: string
           created_at?: string
+          delivery_address?: string | null
+          delivery_city?: string | null
+          delivery_company?: string | null
+          delivery_contact?: string | null
+          delivery_phone?: string | null
+          delivery_same?: boolean | null
+          delivery_zip?: string | null
           dic?: string | null
           discount_percent?: number
           free_shipping?: boolean
-          obrat_2025?: number
-          obrat_2026?: number
-          invoice_email?: string | null
-          delivery_same?: boolean
-          delivery_company?: string | null
-          delivery_address?: string | null
-          delivery_city?: string | null
-          delivery_zip?: string | null
-          delivery_contact?: string | null
-          delivery_phone?: string | null
           ico: string
           id?: string
+          invoice_email?: string | null
           notes?: string | null
+          obrat_2025?: number | null
+          obrat_2026?: number | null
           phone: string
           status?: Database["public"]["Enums"]["b2b_status"]
           updated_at?: string
@@ -77,22 +77,22 @@ export type Database = {
           company_name?: string
           contact_person?: string
           created_at?: string
+          delivery_address?: string | null
+          delivery_city?: string | null
+          delivery_company?: string | null
+          delivery_contact?: string | null
+          delivery_phone?: string | null
+          delivery_same?: boolean | null
+          delivery_zip?: string | null
           dic?: string | null
           discount_percent?: number
           free_shipping?: boolean
-          obrat_2025?: number
-          obrat_2026?: number
-          invoice_email?: string | null
-          delivery_same?: boolean
-          delivery_company?: string | null
-          delivery_address?: string | null
-          delivery_city?: string | null
-          delivery_zip?: string | null
-          delivery_contact?: string | null
-          delivery_phone?: string | null
           ico?: string
           id?: string
+          invoice_email?: string | null
           notes?: string | null
+          obrat_2025?: number | null
+          obrat_2026?: number | null
           phone?: string
           status?: Database["public"]["Enums"]["b2b_status"]
           updated_at?: string
@@ -130,6 +130,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          attachment_url: string | null
           city: string | null
           company_name: string | null
           created_at: string
@@ -143,7 +144,6 @@ export type Database = {
           items: Json
           last_name: string | null
           note: string | null
-          attachment_url: string | null
           order_number: string
           packeta_point: string | null
           payment_gross: number
@@ -161,6 +161,7 @@ export type Database = {
           zip: string | null
         }
         Insert: {
+          attachment_url?: string | null
           city?: string | null
           company_name?: string | null
           created_at?: string
@@ -174,7 +175,6 @@ export type Database = {
           items?: Json
           last_name?: string | null
           note?: string | null
-          attachment_url?: string | null
           order_number: string
           packeta_point?: string | null
           payment_gross?: number
@@ -192,6 +192,7 @@ export type Database = {
           zip?: string | null
         }
         Update: {
+          attachment_url?: string | null
           city?: string | null
           company_name?: string | null
           created_at?: string
@@ -205,7 +206,6 @@ export type Database = {
           items?: Json
           last_name?: string | null
           note?: string | null
-          attachment_url?: string | null
           order_number?: string
           packeta_point?: string | null
           payment_gross?: number
