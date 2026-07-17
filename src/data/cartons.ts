@@ -20,3 +20,6 @@ export const CARTON_PER_ID: Record<string, number> = {
 
 /** Vrátí počet kusů v kartonu pro dané ID, nebo null když karton není nastaven. */
 export const getCartonSize = (id: string): number | null => CARTON_PER_ID[id] ?? null;
+
+/** Zda partner (dle názvu firmy) má povolené kartonové balení. */
+export const partnerHasCartons = (_companyName?: string | null): boolean => true;
