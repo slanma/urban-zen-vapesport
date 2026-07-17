@@ -141,7 +141,9 @@ const B2BLogin = () => {
       } catch (e) {
         console.warn("[B2BLogin] setSession selhalo:", e);
       }
-      window.location.assign("/b2b-dashboard");
+      const nextParam = new URLSearchParams(window.location.search).get("next");
+      const safeNext = nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/b2b-dashboard";
+      window.location.assign(safeNext);
     } catch (err) {
       console.error("[B2BLogin] unexpected error:", err);
       const msg = err instanceof Error ? err.message : String(err);
