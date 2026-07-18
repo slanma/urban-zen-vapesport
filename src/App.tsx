@@ -99,6 +99,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <CartDrawer />
+          <Analytics />
         </BrowserRouter>
         <CookieBanner />
         </CartProvider>
