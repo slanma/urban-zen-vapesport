@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { CartProvider } from "@/hooks/useCart";
 import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
+import { Analytics } from "@vercel/analytics/react";
 
 import Shop from "./pages/Shop";
 import KolekceMorseo from "./pages/KolekceMorseo";
@@ -98,6 +99,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <CartDrawer />
+          <Analytics />
         </BrowserRouter>
         <CookieBanner />
         </CartProvider>
