@@ -7,6 +7,7 @@ import type { Product } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { getPrimaryImage } from "@/lib/productImages";
 import { RichText } from "@/lib/richText";
+import { fixWidows } from "@/lib/typografie";
 import FeatureBadges from "@/components/FeatureBadges";
 import PriceTag from "@/components/PriceTag";
 import ColorSwatchRow from "@/components/product/ColorSwatchRow";
@@ -62,7 +63,7 @@ const CategoryRozcestnik = () => {
           Rozcestník
         </span>
         <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-tight mt-2 text-foreground">
-          Vyberte si podle typu kola
+          {fixWidows("Vyberte si podle typu kola")}
         </h2>
       </div>
 
@@ -94,7 +95,7 @@ const CategoryRozcestnik = () => {
                   {bt.label}
                 </h3>
                 <p className="text-sm font-body text-muted-foreground leading-relaxed flex-1">
-                  {bt.subtitle}
+                  {fixWidows(bt.subtitle)}
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs font-body font-semibold tracking-wide uppercase text-primary mt-2">
                   {active ? "Skrýt brašny" : "Zobrazit brašny"}{" "}

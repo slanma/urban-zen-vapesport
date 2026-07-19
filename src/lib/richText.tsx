@@ -1,4 +1,5 @@
 import React from "react";
+import { fixWidows } from "@/lib/typografie";
 
 /**
  * Tiny safe inline rich-text renderer used for product descriptions.
@@ -79,7 +80,7 @@ export const RichText: React.FC<{ text: string; className?: string; as?: keyof J
     <Tag className={className}>
       {lines.map((line, i) => (
         <React.Fragment key={i}>
-          {renderLine(line, `l-${i}`)}
+          {renderLine(fixWidows(line), `l-${i}`)}
           {i < lines.length - 1 && <br />}
         </React.Fragment>
       ))}
