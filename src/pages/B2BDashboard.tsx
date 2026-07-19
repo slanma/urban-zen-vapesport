@@ -321,6 +321,9 @@ const B2BDashboard = () => {
             Vapesport <span className="text-primary font-medium text-sm ml-1">B2B</span>
           </a>
           <div className="flex items-center gap-4">
+            <a href="/b2b-nastenka" className="text-sm text-muted-foreground hover:text-primary hover:underline hidden sm:inline">
+              Nástěnka
+            </a>
             <a href="/b2b-velkoobchod" className="text-sm text-muted-foreground hover:text-primary hover:underline hidden sm:inline">
               Podrobná matice →
             </a>
@@ -550,11 +553,11 @@ const B2BDashboard = () => {
                         <TableCell className="text-right">
                           <div className="flex flex-col items-end gap-0.5">
                             <span className="text-lg font-bold text-foreground">
-                              VOC {fmtCZK(grossFromNet(getUnitNet(product.id)))}{" "}
+                              {fmtCZK(grossFromNet(getUnitNet(product.id)))}{" "}
                               <span className="text-[11px] font-normal text-muted-foreground">s DPH</span>
                             </span>
                             <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
-                              {fmtCZK(getUnitNet(product.id))} bez DPH
+                              VOC {fmtCZK(getUnitNet(product.id))} bez DPH
                             </span>
                           </div>
                         </TableCell>

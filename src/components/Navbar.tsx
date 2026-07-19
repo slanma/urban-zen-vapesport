@@ -62,7 +62,7 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
           </a>
           {isPartner ? (
             <a
-              href="/b2b-nastenka"
+              href="/b2b-dashboard"
               className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-md border border-primary/30 hover:bg-primary/15 transition-colors"
               title="Velkoobchodní režim aktivní"
             >
@@ -122,7 +122,7 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
               </a>
               {isPartner ? (
                 <a
-                  href="/b2b-nastenka"
+                  href="/b2b-dashboard"
                   className="inline-flex items-center gap-1.5 self-start bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider px-3 py-2 rounded-md border border-primary/30 hover:bg-primary/15 transition-colors"
                   title="Velkoobchodní režim aktivní"
                   onClick={() => setMobileOpen(false)}
