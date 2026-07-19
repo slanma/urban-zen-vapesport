@@ -23,10 +23,14 @@ const SYNONYMS: Record<string, string[]> = {
     "integrovaná baterie", "integrovana baterie", "středový motor", "stredovy motor",
     "tlustý rám", "tlusty ram", "horské elektrokolo", "horske elektrokolo",
     "cube", "ktm", "specialized", "bosch", "shimano steps", "yamaha",
+    "haibike", "crussis", "lectron",
   ],
   nepromokava: ["nepromokavá", "nepromokava", "voděodolná", "vodeodolna", "waterproof", "do deště", "do deste"],
   gravel: ["gravel", "bikepacking", "dálkové", "dalkove", "endurance"],
   mtb: ["mtb", "horské", "horske", "trail", "enduro", "cross country", "xc"],
+  kolobezka: ["koloběžka", "kolobezka", "koloběžky", "kolobezky", "koloběžku", "kolobezku", "scooter"],
+  detske: ["dětské", "detske", "dětská", "detska", "dětský", "detsky", "dětem", "detem", "juniorské", "juniorske", "junior", "kids"],
+  damske: ["dámské", "damske", "dámská", "damska", "dámský", "damsky", "dámskou", "damskou", "lady", "women"],
   silnicni: ["silniční", "silnicni", "road", "závodní", "zavodni"],
   golf: ["golf", "ping", "míček", "micek", "tee", "green"],
   zdravotni: ["zdravotní", "zdravotni", "medical", "rehabilitace"],
@@ -194,6 +198,16 @@ export const buildSearchIndex = (products: Product[]): SearchableProduct[] =>
   products.map((p) => {
     const compat = getCompatibilityTags(p);
     const code = (p.specs ?? []).find((s) => s.label === "Kód produktu")?.value ?? "";
+    // Kompatibilita ze specifikací (typ kola, velikost rámu, značky, uchycení…) —
+    // aby šlo hledat i podle značky/typu kola: „haibike“, „koloběžka“, „dámské“…
+    const compatSpecs = (p.specs ?? [])
+      .filter((s) =>
+        /typ kola|velikost rámu|kompatib|montáž|uchycení|materiál|průměr|utahovací|rozsah/i.test(
+          s.label,
+        ),
+      )
+      .map((s) => s.value)
+      .join(" ");
     const haystack = normalize(
       [
         p.name,
@@ -201,6 +215,7 @@ export const buildSearchIndex = (products: Product[]): SearchableProduct[] =>
         p.shortDescription,
         p.color ?? "",
         code,
+        compatSpecs,
         ...(p.features ?? []),
         ...compat,
       ].join(" "),
@@ -278,12 +293,19 @@ export const smartSearch = (
       }
       return { p, score, exactGroups };
     })
-    .filter((r) =>
-      // Require ALL raw query tokens to find an exact substring match,
-      // so "na řídítka" only returns true handlebar bags. Color queries
-      // alone still qualify via the color filter.
-      colorMatch ? true : r.exactGroups >= expandedGroups.length,
-    )
+    .filter((r) => {
+      if (colorMatch) return true;
+      // Koncepty / rychlé filtry: všechna slova dotazu se trefí přesně (přísné,
+      // aby „na řídítka“ vracelo jen brašny na řídítka).
+      if (r.exactGroups >= expandedGroups.length) return true;
+      // Hledání podle názvu / kódu: souvislá fráze z dotazu je v textu produktu.
+      // Pokryje i část názvu a běžné skloňování, když ji uživatel napíše v pořadí.
+      if (normalizedQuery.length >= 3 && r.p.__searchHaystack.includes(normalizedQuery))
+        return true;
+      // Jednoslovný dotaz s překlepem (fuzzy) – typicky název nebo kód produktu.
+      if (expandedGroups.length === 1 && r.score >= 0.7) return true;
+      return false;
+    })
     .sort((a, b) => b.score - a.score);
 
   return scored.map((r) => r.p);

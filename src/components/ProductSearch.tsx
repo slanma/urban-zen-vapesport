@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Search, Sparkles } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 
 import { products, type Product } from "@/data/products";
 import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
@@ -71,9 +71,6 @@ const ProductSearch = () => {
           <h2 className="font-heading text-xl md:text-2xl font-bold tracking-tight text-foreground">
             Najděte svou brašnu
           </h2>
-          <span className="hidden sm:flex items-center gap-1.5 text-xs font-body font-semibold tracking-wide uppercase text-primary">
-            <Sparkles className="w-3.5 h-3.5" /> AI Search
-          </span>
         </div>
 
         <label htmlFor="ai-search" className="sr-only">
