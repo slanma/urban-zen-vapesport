@@ -7,7 +7,7 @@ import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import PriceTag from "@/components/PriceTag";
-import { getEffectiveGallery } from "@/lib/productImages";
+import { getEffectiveGallery, imageIndexForColor } from "@/lib/productImages";
 import { RichText, stripRichMarkers } from "@/lib/richText";
 import { applyProductOverride, getEffectiveProductCode } from "@/lib/effectiveProduct";
 import { resolveColor } from "@/lib/colorPalette";
@@ -98,14 +98,16 @@ const ProductDetail = () => {
     const stock = override?.color_stock ?? null;
     const firstAvailable = availableColors.find((c) => !(stock && stock[c] === 0)) ?? null;
     setSelectedColor(firstAvailable);
+    if (firstAvailable) {
+      const idx = imageIndexForColor(gallery, firstAvailable);
+      if (idx >= 0) setActiveImg(idx);
+    }
   }, [product?.id, availableColors, override?.color_stock]);
 
   // Klik na barvu přepne hlavní fotku na barevnou verzi (u MORSEO), pokud pro barvu fotka existuje.
   const handleSelectColor = (color: string) => {
     setSelectedColor(color);
-    const idx = gallery.findIndex((src) =>
-      src.toLowerCase().includes(`barva-${color.toLowerCase()}-`),
-    );
+    const idx = imageIndexForColor(gallery, color);
     if (idx >= 0) setActiveImg(idx);
   };
 
