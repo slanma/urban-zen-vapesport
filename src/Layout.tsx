@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { CartProvider } from "@/hooks/useCart";
 import ScrollToTop from "@/components/ScrollToTop";
 import Canonical from "@/components/Canonical";
+import PageMeta from "@/components/PageMeta";
 import CookieBanner from "@/components/CookieBanner";
 import CartDrawer from "@/components/CartDrawer";
 import { useAnalytics } from "@/hooks/useAnalytics";
@@ -29,6 +30,7 @@ const Layout = () => (
           <Sonner />
           <ScrollToTop />
           <Canonical />
+          <PageMeta />
           <AnalyticsTracker />
           <Outlet />
           <CartDrawer />
