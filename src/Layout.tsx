@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/hooks/useAuth";
 import { CartProvider } from "@/hooks/useCart";
 import ScrollToTop from "@/components/ScrollToTop";
+import Canonical from "@/components/Canonical";
 import CookieBanner from "@/components/CookieBanner";
 import CartDrawer from "@/components/CartDrawer";
 import { useAnalytics } from "@/hooks/useAnalytics";
@@ -27,6 +28,7 @@ const Layout = () => (
           <Toaster />
           <Sonner />
           <ScrollToTop />
+          <Canonical />
           <AnalyticsTracker />
           <Outlet />
           <CartDrawer />
