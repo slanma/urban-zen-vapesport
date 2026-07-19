@@ -31,6 +31,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   ssgOptions: {
+    dirStyle: "nested",
     includedRoutes(paths: string[]) {
       return paths.filter((p) => !isPrivate(p));
     },
