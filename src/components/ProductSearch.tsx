@@ -4,7 +4,6 @@ import { ArrowRight, Search } from "lucide-react";
 
 import { products, type Product } from "@/data/products";
 import { buildSearchIndex, smartSearch } from "@/lib/smartSearch";
-import { getProductsByHotspot, getProductsByCategory } from "@/data/productHotspots";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { getPrimaryImage } from "@/lib/productImages";
 import { applyProductOverride, getProductCode } from "@/lib/effectiveProduct";
@@ -13,58 +12,12 @@ import PriceTag from "@/components/PriceTag";
 import FeatureBadges from "@/components/FeatureBadges";
 import ColorSwatchRow from "@/components/product/ColorSwatchRow";
 
-// Text produktu pro featurové tagy — přesná slova, žádné fuzzy/synonyma.
-const productText = (p: Product): string =>
-  [p.name, p.shortDescription, ...(p.features ?? []), ...(p.specs ?? []).map((s) => s.value)]
-    .join(" ")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
-// Rychlé tagy filtrují přes KURÁTORSKÁ data — stejná jako interaktivní kolo
-// (pozice na kole = hotspot) a katalog (kategorie). Deterministické, ne fuzzy.
-type QuickTag = { label: string; source: () => Product[] };
-
-const QUICK_TAGS: QuickTag[] = [
-  { label: "Do rámu", source: () => getProductsByHotspot("Frame") },
-  { label: "Na řídítka", source: () => getProductsByHotspot("Handlebar") },
-  { label: "Na představec", source: () => getProductsByHotspot("Handlebar") },
-  { label: "Pod sedlo", source: () => getProductsByHotspot("UnderSaddle") },
-  { label: "Na nosič", source: () => getProductsByHotspot("RearRack") },
-  { label: "Na telefon", source: () => getProductsByCategory("Brašny na mobilní telefony") },
-  { label: "Na navigaci", source: () => getProductsByCategory("Brašny na mobilní telefony") },
-  {
-    label: "S dotykovou fólií",
-    source: () => products.filter((p) => /doty|foli/.test(productText(p))),
-  },
-  {
-    label: "Na e-bike nabíječku",
-    source: () => {
-      const ebike = new Set(
-        getProductsByCategory("Brašny pro ELEKTROKOLO").map((p) => p.id),
-      );
-      // Velké rámové brašny pro elektrokolo (kam se vejde nabíječka).
-      return getProductsByHotspot("Frame").filter((p) => ebike.has(p.id));
-    },
-  },
-  {
-    label: "Na pláštěnku",
-    source: () => products.filter((p) => /plasten/.test(productText(p))),
-  },
-  {
-    label: "Nepromokavá",
-    source: () =>
-      products.filter((p) => /nepromok|vodeodoln|waterproof/.test(productText(p))),
-  },
-];
-
 /**
- * Vyhledávání produktů (zatím klasické, do budoucna AI).
- * Zobrazuje se nad interaktivním kolem. Výsledky se ukážou až po zadání dotazu.
+ * Vyhledávání produktů + živé výsledky (našeptávač). Filtrování podle pozice
+ * a kategorie řeší interaktivní kolo níže na stránce — tady je jen hledání.
  */
 const ProductSearch = () => {
   const [query, setQuery] = useState("");
-  const [activeTag, setActiveTag] = useState<string | null>(null);
   const navigate = useNavigate();
   const { get: getOverride } = useProductOverrides();
 
@@ -78,32 +31,13 @@ const ProductSearch = () => {
     [getOverride],
   );
   const searchIndex = useMemo(() => buildSearchIndex(visibleProducts), [visibleProducts]);
-  const filtered = useMemo(
-    () => {
-      let base: Product[] = [];
-      if (activeTag) {
-        const tag = QUICK_TAGS.find((t) => t.label === activeTag);
-        base = tag
-          ? tag
-              .source()
-              .filter((p) => getOverride(p.id).visible)
-              // dedup na jednu kartu podle baseId (MORSEO varianty barev) — jako kolo
-              .filter(
-                (p, i, arr) =>
-                  arr.findIndex((x) => (x.baseId ?? x.id) === (p.baseId ?? p.id)) === i,
-              )
-              .map((p) => applyProductOverride(p, getOverride(p.id)))
-          : [];
-      } else if (query.trim()) {
-        base = smartSearch(searchIndex, query);
-      }
-      return [...base].sort(
-        (a, b) => Number(b.category === "morseo-evo") - Number(a.category === "morseo-evo"),
-      );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [searchIndex, query, activeTag, getOverride],
-  );
+
+  const filtered = useMemo(() => {
+    const base = query.trim() ? smartSearch(searchIndex, query) : [];
+    return [...base].sort(
+      (a, b) => Number(b.category === "morseo-evo") - Number(a.category === "morseo-evo"),
+    );
+  }, [searchIndex, query]);
 
   // Přesná shoda kódu (např. „M411104") → rovnou na detail produktu.
   useEffect(() => {
@@ -132,40 +66,14 @@ const ProductSearch = () => {
             id="ai-search"
             type="search"
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setActiveTag(null);
-            }}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Hledejte podle kódu (např. M411104) nebo přirozeným jazykem…"
             className="w-full pl-12 pr-4 py-4 bg-background border border-border rounded-full text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-            aria-label="Vyhledávání — kód, umístění nebo účel použití"
+            aria-label="Vyhledávání — kód nebo popis"
           />
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          {QUICK_TAGS.map((t) => {
-            const isActive = activeTag === t.label;
-            return (
-              <button
-                key={t.label}
-                type="button"
-                onClick={() => {
-                  setActiveTag(isActive ? null : t.label);
-                  setQuery("");
-                }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-body font-semibold tracking-wide border transition-all ${
-                  isActive
-                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                    : "bg-background text-foreground border-border hover:border-primary hover:text-primary"
-                }`}
-              >
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {(activeTag || query.trim()) && (
+        {query.trim() && (
           <p className="mt-3 text-xs font-body text-muted-foreground">
             {filtered.length === 0
               ? "Nic jsme nenašli — zkuste jiný popis (např. „nepromokavá brašna na rám“) nebo kód produktu."
@@ -174,8 +82,8 @@ const ProductSearch = () => {
         )}
       </div>
 
-      {/* Výsledky — jen když se hledá nebo je vybraný tag */}
-      {(activeTag || query.trim()) && filtered.length > 0 && (
+      {/* Výsledky — jen když se hledá */}
+      {query.trim() && filtered.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
           {filtered.map((product) => (
             <Link

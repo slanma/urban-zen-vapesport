@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, X } from "lucide-react";
-import { BIKE_TYPES, productMatchesBikeType } from "@/data/bikeTypes";
+import { BIKE_TYPES, productMatchesBikeType, productBikeTypes } from "@/data/bikeTypes";
 import { products } from "@/data/products";
 import type { Product } from "@/data/products";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
@@ -36,7 +36,16 @@ const CategoryRozcestnik = () => {
         (p, i, arr) =>
           arr.findIndex((x) => (x.baseId ?? x.id) === (p.baseId ?? p.id)) === i,
       )
-      .sort((a, b) => Number(b.category === "morseo-evo") - Number(a.category === "morseo-evo"));
+      .sort((a, b) => {
+        // 1) MORSEO kolekce první (jako v rozcestníku)
+        const morseo =
+          Number(b.category === "morseo-evo") - Number(a.category === "morseo-evo");
+        if (morseo !== 0) return morseo;
+        // 2) od nejspecifičtějších (nejméně typů kol) po univerzální (nejvíce typů)
+        const na = (productBikeTypes[a.baseId ?? a.id] ?? []).length;
+        const nb = (productBikeTypes[b.baseId ?? b.id] ?? []).length;
+        return na - nb;
+      });
   }, [bikeType, get]);
 
   const handleSelect = (id: string) => {
