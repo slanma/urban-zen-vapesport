@@ -50,16 +50,20 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
             <Search className="w-4 h-4" />
             <span>Hledat</span>
           </a>
-          <a href={isPartner ? "/b2b-nastenka" : "/ucet"} className="relative hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
-            <User className="w-4 h-4" />
-            <span>Účet</span>
-            {isLoggedIn && (
+          {isPartner && (
+            <a
+              href="/b2b-nastenka"
+              className="relative hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors"
+              title="Můj B2B účet"
+            >
+              <User className="w-4 h-4" />
+              <span>Účet</span>
               <span
                 className="absolute -top-1 -right-1.5 w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_6px_2px_hsl(var(--primary)/0.45)] animate-pulse"
                 aria-label="Přihlášen"
               />
-            )}
-          </a>
+            </a>
+          )}
           {isPartner ? (
             <a
               href="/b2b-dashboard"
@@ -112,14 +116,16 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
                 <Search className="w-4 h-4" />
                 HLEDAT
               </a>
-              <a
-                href={isPartner ? "/b2b-nastenka" : "/ucet"}
-                className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
-                onClick={() => setMobileOpen(false)}
-              >
-                <User className="w-4 h-4" />
-                ÚČET
-              </a>
+              {isPartner && (
+                <a
+                  href="/b2b-nastenka"
+                  className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <User className="w-4 h-4" />
+                  ÚČET
+                </a>
+              )}
               {isPartner ? (
                 <a
                   href="/b2b-dashboard"
