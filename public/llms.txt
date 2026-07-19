@@ -1,23 +1,13 @@
 # Vapesport
 
-> Česká značka prémiových cyklistických brašen a příslušenství pro elektrokola, gravel, koloběžky i dětská kola. Výroba od roku 1994. B2C e-shop i B2B velkoobchod. Kolekce VAPESPORT (klasika) a MORSEO (premium).
-
-Vapesport navrhuje a vyrábí rámové, podsedlové, řídítkové a nosičové brašny, obaly na mobil/tablet, neoprenové obaly na baterie e-kol a zakázkovou výrobu na míru. Uchycení na suché zipy nebo KLICKfix. Web je jednostránková aplikace (SPA); strojově čitelný obsah produktů je v souboru llms-full.txt níže.
+> Prémiové cyklobrašny a příslušenství pro elektrokola, gravel, koloběžky a městská kola. Česká značka od roku 1994. B2B velkoobchod i maloobchodní e-shop. Prémiová řada MORSEO.
 
 ## Hlavní stránky
-- [Domů](https://vapesport.cz/): úvod, značka, kategorie
-- [Obchod](https://vapesport.cz/obchod): kompletní katalog s vyhledáváním
-- [Kolekce MORSEO](https://vapesport.cz/kolekce-morseo): prémiová řada pro elektrokola
-- [O nás](https://vapesport.cz/o-nas): historie značky od roku 1994
-- [Aplikace a služby](https://vapesport.cz/aplikace-a-sluzby): B2B služby a vzdělávání pro cykloservisy
-- [Kontakt](https://vapesport.cz/kontakt): kontaktní údaje
-- [B2B portál](https://vapesport.cz/b2b-login): velkoobchodní přihlášení (VOC ceny)
+- [Obchod](https://vapesport.cz/obchod): Kompletní katalog brašen podle typu kola a umístění
+- [Kolekce MORSEO](https://vapesport.cz/kolekce-morseo): Prémiová designová řada brašen
+- [O nás](https://vapesport.cz/o-nas): Historie a příběh značky Vapesport
+- [B2B velkoobchod](https://vapesport.cz/b2b-velkoobchod): Informace pro prodejce a velkoobchodní partnery
+- [Kontakt](https://vapesport.cz/kontakt): Kontaktní údaje
 
-## Strojově čitelná data
-- [Kompletní katalog produktů (llms-full.txt)](https://vapesport.cz/llms-full.txt): názvy, kódy, ceny, rozměry, kompatibilita, uchycení
-- [Sitemap](https://vapesport.cz/sitemap.xml): všechny URL
-
-## Kontakt
-- E-mail: info@vapesport.cz
-- Web: https://vapesport.cz
-- Sídlo: Ostrava, Česká republika
+## Odkazy
+- [XML sitemap](https://vapesport.cz/sitemap.xml): Úplný seznam stránek a produktů
