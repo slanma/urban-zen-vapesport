@@ -7,7 +7,6 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { CartProvider } from "@/hooks/useCart";
 import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
-import { Analytics } from "@vercel/analytics/react";
 
 import Shop from "./pages/Shop";
 import KolekceMorseo from "./pages/KolekceMorseo";
@@ -31,13 +30,11 @@ import AdminB2B from "./pages/admin/AdminB2B";
 import AdminPromoCodes from "./pages/admin/AdminPromoCodes";
 import AdminSettings from "./pages/admin/AdminSettings";
 import Withdrawal from "./pages/Withdrawal";
-import Account from "./pages/Account";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
 import ONas from "./pages/ONas";
 import AppServices from "./pages/AppServices";
-import OAuthConsent from "./pages/OAuthConsent";
 import CookieBanner from "./components/CookieBanner";
 import CartDrawer from "./components/CartDrawer";
 import NotFound from "./pages/NotFound";
@@ -88,18 +85,15 @@ const App = () => (
               <Route path="nastaveni" element={<AdminSettings />} />
             </Route>
             <Route path="/odstoupeni" element={<Withdrawal />} />
-            <Route path="/ucet" element={<Account />} />
             <Route path="/obchodni-podminky" element={<Terms />} />
             <Route path="/ochrana-udaju" element={<Privacy />} />
             <Route path="/kontakt" element={<Contact />} />
             <Route path="/o-nas" element={<ONas />} />
             <Route path="/aplikace-a-sluzby" element={<AppServices />} />
-            <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           <CartDrawer />
-          <Analytics />
         </BrowserRouter>
         <CookieBanner />
         </CartProvider>

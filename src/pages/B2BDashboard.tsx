@@ -532,7 +532,7 @@ const B2BDashboard = () => {
                     const override = getOverride(product.id);
                     const colors = (override?.colors_override ?? product.available_colors ?? []) as readonly string[];
                     const detailHref = `/produkt/${product.id}`;
-                    const productTotal = colors.length ? colors.reduce((s, c) => s + getQty(product.id, c), 0) : qty;
+                    const productTotal = colors.length > 1 ? colors.reduce((s, c) => s + getQty(product.id, c), 0) : qty;
                     const carton = cartonEnabled ? getCartonSize(product.id) : null;
 
                     return (
@@ -562,7 +562,7 @@ const B2BDashboard = () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          {colors.length > 0 ? (
+                          {colors.length > 1 ? (
                             <div className="space-y-1.5 min-w-[220px]">
                               {colors.map((c) => {
                                 const { label, hex } = resolveColor(c);
@@ -611,7 +611,7 @@ const B2BDashboard = () => {
                           )}
                         </TableCell>
                         <TableCell>
-                          {colors.length > 0 ? (
+                          {colors.length > 1 ? (
                             <div className="text-center">
                               <div className={`text-lg font-bold ${productTotal > 0 ? "text-primary" : "text-muted-foreground"}`}>{productTotal} ks</div>
                               <div className="text-[11px] text-muted-foreground">v objednávce</div>
