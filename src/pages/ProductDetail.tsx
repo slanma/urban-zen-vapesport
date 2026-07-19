@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
+import { Head } from "vite-react-ssg";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getProductById, getProductByCode } from "@/data/products";
@@ -35,16 +36,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const setMeta = (name: string, content: string, attr: "name" | "property" = "name") => {
-  if (!content) return;
-  let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${name}"]`);
-  if (!el) {
-    el = document.createElement("meta");
-    el.setAttribute(attr, name);
-    document.head.appendChild(el);
-  }
-  el.setAttribute("content", content);
-};
+
 
 /** Produkty, u kterých chceme nabízet přiložení obrázku i bez slova „na míru“ v názvu. */
 const CUSTOM_UPLOAD_IDS = ["vs-neoprenovy-obal-938229"];
@@ -89,6 +81,17 @@ const ProductDetail = () => {
   const [needStraps, setNeedStraps] = useState(false);
   const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
 
+  // Index fotky pro barvu: nejdřív explicitní přiřazení z adminu (color_image_map),
+  // jinak fallback na rozpoznání podle názvu souboru.
+  const imageForColor = (color: string): number => {
+    const mapped = override?.color_image_map?.[color];
+    if (mapped) {
+      const i = gallery.findIndex((src) => src === mapped);
+      if (i >= 0) return i;
+    }
+    return imageIndexForColor(gallery, color);
+  };
+
   // Pick first in-stock color when product loads.
   useEffect(() => {
     if (!availableColors || availableColors.length === 0) {
@@ -99,7 +102,7 @@ const ProductDetail = () => {
     const firstAvailable = availableColors.find((c) => !(stock && stock[c] === 0)) ?? null;
     setSelectedColor(firstAvailable);
     if (firstAvailable) {
-      const idx = imageIndexForColor(gallery, firstAvailable);
+      const idx = imageForColor(firstAvailable);
       if (idx >= 0) setActiveImg(idx);
     }
   }, [product?.id, availableColors, override?.color_stock]);
@@ -107,25 +110,10 @@ const ProductDetail = () => {
   // Klik na barvu přepne hlavní fotku na barevnou verzi (u MORSEO), pokud pro barvu fotka existuje.
   const handleSelectColor = (color: string) => {
     setSelectedColor(color);
-    const idx = imageIndexForColor(gallery, color);
+    const idx = imageForColor(color);
     if (idx >= 0) setActiveImg(idx);
   };
 
-  useEffect(() => {
-    if (!product || !override) return;
-    const sku = getEffectiveProductCode(baseProduct!, override);
-    const title = override.meta_title || `${product.name} (${sku}) | VAPESPORT`;
-    const desc = override.meta_description || stripRichMarkers(product.shortDescription);
-    const prevTitle = document.title;
-    document.title = title;
-    setMeta("description", desc);
-    if (override.ai_keywords) setMeta("keywords", override.ai_keywords);
-    setMeta("og:title", title, "property");
-    setMeta("og:description", desc, "property");
-    return () => {
-      document.title = prevTitle;
-    };
-  }, [product, override, baseProduct]);
 
   const selectedColorLabel = selectedColor ? resolveColor(selectedColor).label : "Vyberte";
   const visibleFeatures = useMemo(() => {
@@ -211,8 +199,19 @@ const ProductDetail = () => {
     openDrawer();
   };
 
+  const metaTitle =
+    override.meta_title || `${product.name} (${getEffectiveProductCode(baseProduct, override)}) | VAPESPORT`;
+  const metaDesc = override.meta_description || stripRichMarkers(product.shortDescription);
+
   return (
     <main className="min-h-screen bg-background">
+      <Head>
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDesc} />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDesc} />
+        {override.ai_keywords ? <meta name="keywords" content={override.ai_keywords} /> : null}
+      </Head>
       <Navbar />
 
       <section className="pt-28 pb-16 px-6 lg:px-12 max-w-[1400px] mx-auto">

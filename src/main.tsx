@@ -1,8 +1,6 @@
-import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
+import { ViteReactSSG } from "vite-react-ssg";
+import { routes } from "./App";
 import "./index.css";
-import { registerServiceWorker } from "./lib/registerSw.ts";
 
-createRoot(document.getElementById("root")!).render(<App />);
-
-registerServiceWorker();
+// Prerender (SSG) při buildu, hydratace v prohlížeči.
+export const createRoot = ViteReactSSG({ routes });

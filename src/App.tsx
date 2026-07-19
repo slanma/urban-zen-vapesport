@@ -1,13 +1,9 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "@/hooks/useAuth";
-import { CartProvider } from "@/hooks/useCart";
-import ScrollToTop from "@/components/ScrollToTop";
-import Index from "./pages/Index";
+import type { RouteRecord } from "vite-react-ssg";
+import { Navigate } from "react-router-dom";
+import Layout from "./Layout";
+import { products } from "./data/products";
 
+import Index from "./pages/Index";
 import Shop from "./pages/Shop";
 import KolekceMorseo from "./pages/KolekceMorseo";
 import ProductDetail from "./pages/ProductDetail";
@@ -35,71 +31,59 @@ import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
 import ONas from "./pages/ONas";
 import AppServices from "./pages/AppServices";
-import CookieBanner from "./components/CookieBanner";
-import CartDrawer from "./components/CartDrawer";
 import NotFound from "./pages/NotFound";
-import { useAnalytics } from "@/hooks/useAnalytics";
 
-const AnalyticsTracker = () => {
-  useAnalytics();
-  return null;
-};
+// Konkrétní cesty produktů, které se mají předrenderovat.
+const productPaths = products.map((p) => `produkt/${p.id}`);
 
-const queryClient = new QueryClient();
+export const routes: RouteRecord[] = [
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      { index: true, element: <Index /> },
+      { path: "produkty", element: <Navigate to="/obchod" replace /> },
+      { path: "obchod", element: <Shop /> },
+      { path: "kolekce-morseo", element: <KolekceMorseo /> },
+      {
+        path: "produkt/:id",
+        element: <ProductDetail />,
+        getStaticPaths: () => productPaths,
+      },
+      { path: "kosik", element: <Cart /> },
+      { path: "pokladna", element: <Checkout /> },
+      { path: "b2b-login", element: <B2BLogin /> },
+      { path: "b2b-heslo", element: <B2BSetPassword /> },
+      { path: "b2b-register", element: <B2BRegister /> },
+      { path: "b2b-nastenka", element: <B2BNastenka /> },
+      { path: "b2b-dashboard", element: <B2BDashboard /> },
+      { path: "b2b-velkoobchod", element: <B2BWholesale /> },
+      { path: "b2b-pokladna", element: <B2BCheckout /> },
+      { path: "admin-login", element: <AdminLogin /> },
+      { path: "admin-dashboard", element: <Navigate to="/admin/b2b" replace /> },
+      {
+        path: "admin",
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <AdminOverview /> },
+          { path: "produkty", element: <AdminProducts /> },
+          { path: "produkty/:id", element: <AdminProductEdit /> },
+          { path: "sluzby", element: <AdminServices /> },
+          { path: "objednavky", element: <AdminOrders /> },
+          { path: "b2b", element: <AdminB2B /> },
+          { path: "slevy", element: <AdminPromoCodes /> },
+          { path: "nastaveni", element: <AdminSettings /> },
+        ],
+      },
+      { path: "odstoupeni", element: <Withdrawal /> },
+      { path: "obchodni-podminky", element: <Terms /> },
+      { path: "ochrana-udaju", element: <Privacy /> },
+      { path: "kontakt", element: <Contact /> },
+      { path: "o-nas", element: <ONas /> },
+      { path: "aplikace-a-sluzby", element: <AppServices /> },
+      { path: "*", element: <NotFound /> },
+    ],
+  },
+];
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <CartProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <ScrollToTop />
-          <AnalyticsTracker />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/produkty" element={<Navigate to="/obchod" replace />} />
-            <Route path="/obchod" element={<Shop />} />
-            <Route path="/kolekce-morseo" element={<KolekceMorseo />} />
-            <Route path="/produkt/:id" element={<ProductDetail />} />
-            <Route path="/kosik" element={<Cart />} />
-            <Route path="/pokladna" element={<Checkout />} />
-            <Route path="/b2b-login" element={<B2BLogin />} />
-            <Route path="/b2b-heslo" element={<B2BSetPassword />} />
-            <Route path="/b2b-register" element={<B2BRegister />} />
-            <Route path="/b2b-nastenka" element={<B2BNastenka />} />
-            <Route path="/b2b-dashboard" element={<B2BDashboard />} />
-            <Route path="/b2b-velkoobchod" element={<B2BWholesale />} />
-            <Route path="/b2b-pokladna" element={<B2BCheckout />} />
-            <Route path="/admin-login" element={<AdminLogin />} />
-            <Route path="/admin-dashboard" element={<Navigate to="/admin/b2b" replace />} />
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminOverview />} />
-              <Route path="produkty" element={<AdminProducts />} />
-              <Route path="produkty/:id" element={<AdminProductEdit />} />
-              <Route path="sluzby" element={<AdminServices />} />
-              <Route path="objednavky" element={<AdminOrders />} />
-              <Route path="b2b" element={<AdminB2B />} />
-              <Route path="slevy" element={<AdminPromoCodes />} />
-              <Route path="nastaveni" element={<AdminSettings />} />
-            </Route>
-            <Route path="/odstoupeni" element={<Withdrawal />} />
-            <Route path="/obchodni-podminky" element={<Terms />} />
-            <Route path="/ochrana-udaju" element={<Privacy />} />
-            <Route path="/kontakt" element={<Contact />} />
-            <Route path="/o-nas" element={<ONas />} />
-            <Route path="/aplikace-a-sluzby" element={<AppServices />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <CartDrawer />
-        </BrowserRouter>
-        <CookieBanner />
-        </CartProvider>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
-
-export default App;
+export default routes;
