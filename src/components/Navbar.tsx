@@ -50,7 +50,7 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
             <Search className="w-4 h-4" />
             <span>Hledat</span>
           </a>
-          <a href="/ucet" className="relative hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
+          <a href={isPartner ? "/b2b-nastenka" : "/ucet"} className="relative hidden md:flex items-center gap-1.5 text-foreground text-[13px] font-medium hover:text-primary transition-colors">
             <User className="w-4 h-4" />
             <span>Účet</span>
             {isLoggedIn && (
@@ -113,7 +113,7 @@ const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
                 HLEDAT
               </a>
               <a
-                href="/ucet"
+                href={isPartner ? "/b2b-nastenka" : "/ucet"}
                 className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
                 onClick={() => setMobileOpen(false)}
               >

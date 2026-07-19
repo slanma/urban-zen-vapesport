@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useB2BPartner } from "@/hooks/useB2BPartner";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +11,7 @@ import { User as UserIcon, LogOut, Mail } from "lucide-react";
 
 const Account = () => {
   const { user, loading, signIn, signUp, signOut } = useAuth();
+  const { isPartner } = useB2BPartner();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,6 +34,9 @@ const Account = () => {
       setSubmitting(false);
     }
   };
+
+  // Přihlášený B2B partner má „účet“ = svůj B2B profil (nástěnka).
+  if (isPartner) return <Navigate to="/b2b-nastenka" replace />;
 
   return (
     <div className="min-h-screen bg-background">
