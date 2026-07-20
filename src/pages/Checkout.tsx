@@ -277,6 +277,29 @@ const Checkout = () => {
         discount_gross: discountGross,
       } as never);
       if (error) throw error;
+
+      // Odeslat potvrzovací e-maily (na pozadí; když selže, objednávku to nezablokuje)
+      void fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "order",
+          order: {
+            orderNumber,
+            customerName: `${form.firstName} ${form.lastName}`.trim(),
+            customerEmail: form.email,
+            phone: form.phone || null,
+            items: orderLines.map((l) => ({
+              name: l.color ? `${l.name} (${l.color})` : l.name,
+              qty: l.qty,
+              price: l.unitGross,
+            })),
+            total: grandGross,
+            vat: true,
+          },
+        }),
+      }).catch((e) => console.error("E-mail se nepodařilo odeslat:", e));
+
       setPlacedOrder({ number: orderNumber, total: grandGross, email: form.email });
       clearCart();
       window.scrollTo({ top: 0, behavior: "smooth" });
