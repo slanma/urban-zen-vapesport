@@ -1,15 +1,22 @@
 // api/send-email.ts
-// Odesílání e-mailů přes Resend pro vapesport.cz
-// Nasazuje se jako Vercel serverless funkce (soubor patří do složky /api v repu).
+// Odesílání e-mailů přes Resend pro vapesport.cz (Vercel serverless funkce, složka /api).
 //
-// POTŘEBUJE: nastavit proměnnou prostředí RESEND_API_KEY ve Vercelu.
+// PROMĚNNÉ PROSTŘEDÍ (ve Vercelu):
+//   RESEND_API_KEY        – klíč z Resendu
+//   SUPABASE_URL          – https://<projekt>.supabase.co
+//   SUPABASE_SERVICE_KEY  – tajný (secret) klíč ze Supabase
 //
-// Typy: "order" (potvrzení objednávky), "registration" (uvítání),
-//       "payment" (výzva k platbě s QR kódem jako obrázkem).
+// Zabezpečení:
+//   - "order": e-mail se odešle jen pokud objednávka s daným číslem existuje v DB;
+//              posílá se na e-mail uložený u objednávky.
+//   - "payment": smí spustit jen přihlášený uživatel (ověřuje se token ze Supabase).
 
 const RESEND_API = "https://api.resend.com/emails";
 const FROM = "Vapesport <info@vapesport.cz>";
 const SHOP_EMAIL = "info@vapesport.cz";
+
+const SUPABASE_URL = (process.env.SUPABASE_URL || "").replace(/\/+$/, "");
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || "";
 
 // --- barvy vapesportu (Concrete Nature) ---
 const MOSS = "#6E7B4E";
@@ -18,6 +25,38 @@ const CONCRETE = "#EFECE6";
 
 const czk = (n: number) =>
   new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 }).format(Math.round(n)) + " Kč";
+
+// --- ověření přihlášeného uživatele přes Supabase ---
+async function verifyUser(token: string) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !token) return null;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: { apikey: SUPABASE_SERVICE_KEY, Authorization: `Bearer ${token}` },
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch {
+    return null;
+  }
+}
+
+// --- najít objednávku v DB podle čísla ---
+async function findOrder(orderNumber: string) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) return null;
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/orders?order_number=eq.${encodeURIComponent(
+      orderNumber
+    )}&select=email&limit=1`;
+    const r = await fetch(url, {
+      headers: { apikey: SUPABASE_SERVICE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_KEY}` },
+    });
+    if (!r.ok) return null;
+    const rows = await r.json();
+    return Array.isArray(rows) && rows.length ? rows[0] : null;
+  } catch {
+    return null;
+  }
+}
 
 // --- odeslání přes Resend ---
 async function sendEmail(opts: {
@@ -48,7 +87,7 @@ async function sendEmail(opts: {
   return res.json();
 }
 
-// --- základní vzhled e-mailu (Concrete Nature, inline styly kvůli e-mailům) ---
+// --- základní vzhled e-mailu (Concrete Nature) ---
 function layout(title: string, bodyHtml: string) {
   return `<!DOCTYPE html><html lang="cs"><body style="margin:0;background:${CONCRETE};font-family:Arial,Helvetica,sans-serif;color:${CHARCOAL};">
   <div style="max-width:560px;margin:0 auto;padding:28px 20px;">
@@ -77,7 +116,6 @@ function orderRows(items: Array<{ name: string; qty: number; price: number }>) {
     .join("");
 }
 
-// --- šablony ---
 function customerOrderEmail(o: any) {
   const b2bInfo =
     o.isB2B && o.company
@@ -174,11 +212,17 @@ export default async function handler(req: any, res: any) {
 
     if (type === "order") {
       const o = body.order || {};
-      if (!o.customerEmail || !o.orderNumber) {
-        return res.status(400).json({ error: "Chybí customerEmail nebo orderNumber." });
-      }
+      if (!o.orderNumber) return res.status(400).json({ error: "Chybí orderNumber." });
+
+      // ZABEZPEČENÍ: objednávka musí existovat v databázi
+      const dbOrder = await findOrder(o.orderNumber);
+      if (!dbOrder) return res.status(404).json({ error: "Objednávka nenalezena." });
+
+      const recipient = dbOrder.email || o.customerEmail;
+      if (!recipient) return res.status(400).json({ error: "Chybí e-mail zákazníka." });
+
       await sendEmail({
-        to: o.customerEmail,
+        to: recipient,
         subject: `Potvrzení objednávky #${o.orderNumber} — Vapesport`,
         html: customerOrderEmail(o),
         replyTo: SHOP_EMAIL,
@@ -187,24 +231,17 @@ export default async function handler(req: any, res: any) {
         to: SHOP_EMAIL,
         subject: `Nová objednávka${o.isB2B ? " (B2B)" : ""} #${o.orderNumber}`,
         html: shopOrderEmail(o),
-        replyTo: o.customerEmail,
-      });
-      return res.status(200).json({ ok: true });
-    }
-
-    if (type === "registration") {
-      const u = body.user || {};
-      if (!u.email) return res.status(400).json({ error: "Chybí email." });
-      await sendEmail({
-        to: u.email,
-        subject: "Vítejte ve Vapesportu",
-        html: registrationEmail(u),
-        replyTo: SHOP_EMAIL,
+        replyTo: recipient,
       });
       return res.status(200).json({ ok: true });
     }
 
     if (type === "payment") {
+      // ZABEZPEČENÍ: smí jen přihlášený uživatel
+      const token = body.token || (req.headers?.authorization || "").replace(/^Bearer\s+/i, "");
+      const user = await verifyUser(token);
+      if (!user || !user.id) return res.status(401).json({ error: "Nepřihlášený uživatel." });
+
       const p = body.payment || {};
       if (!p.customerEmail || !p.orderNumber) {
         return res.status(400).json({ error: "Chybí customerEmail nebo orderNumber." });
@@ -229,7 +266,19 @@ export default async function handler(req: any, res: any) {
       return res.status(200).json({ ok: true });
     }
 
-    return res.status(400).json({ error: "Neznámý typ (order / registration / payment)." });
+    if (type === "registration") {
+      const u = body.user || {};
+      if (!u.email) return res.status(400).json({ error: "Chybí email." });
+      await sendEmail({
+        to: u.email,
+        subject: "Vítejte ve Vapesportu",
+        html: registrationEmail(u),
+        replyTo: SHOP_EMAIL,
+      });
+      return res.status(200).json({ ok: true });
+    }
+
+    return res.status(400).json({ error: "Neznámý typ (order / payment / registration)." });
   } catch (e: any) {
     return res.status(500).json({ error: String(e?.message || e) });
   }

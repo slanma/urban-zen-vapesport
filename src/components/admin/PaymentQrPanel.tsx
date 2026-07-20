@@ -82,11 +82,16 @@ const PaymentQrPanel = ({ orderId, orderNumber, totalGross, customerEmail }: Pro
       const canvas = qrWrapperRef.current?.querySelector("canvas");
       const qrBase64 = canvas ? canvas.toDataURL("image/png") : null;
 
+      // Přihlašovací token (ověří se na serveru – výzvu smí poslat jen přihlášený admin)
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+
       const res = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "payment",
+          token,
           payment: {
             orderNumber,
             customerEmail,
