@@ -74,35 +74,37 @@ const PaymentQrPanel = ({ orderId, orderNumber, totalGross, customerEmail }: Pro
     document.body.removeChild(a);
   };
 
-  const handleSendEmail = () => {
+  const handleSendEmail = async () => {
     if (!selected) return;
     setSending(true);
     try {
-      const subject = `Výzva k platbě – objednávka ${orderNumber}`;
-      const body = [
-        `Dobrý den,`,
-        ``,
-        `zasíláme podklady k platbě objednávky ${orderNumber}.`,
-        ``,
-        `Banka: ${selected.bank_name}`,
-        `IBAN: ${selected.iban}`,
-        `Částka: ${totalGross.toLocaleString("cs-CZ")} CZK`,
-        `Variabilní symbol: ${orderNumber.replace(/\D/g, "") || orderNumber}`,
-        ``,
-        `QR platba (SPAYD):`,
-        spayd,
-        ``,
-        `Děkujeme.`,
-      ].join("\n");
-      const href = `mailto:${encodeURIComponent(customerEmail)}?subject=${encodeURIComponent(
-        subject,
-      )}&body=${encodeURIComponent(body)}`;
-      window.location.href = href;
-      toast.success("Otevírám e-mailového klienta…");
-    } catch {
-      toast.error("Odeslání selhalo");
+      // QR kód z canvasu jako PNG (base64) – pošle se jako obrázek v e-mailu
+      const canvas = qrWrapperRef.current?.querySelector("canvas");
+      const qrBase64 = canvas ? canvas.toDataURL("image/png") : null;
+
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "payment",
+          payment: {
+            orderNumber,
+            customerEmail,
+            bankName: selected.bank_name,
+            iban: selected.iban,
+            amount: totalGross,
+            vs: orderNumber.replace(/\D/g, "") || orderNumber,
+            qrBase64,
+          },
+        }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      toast.success("Výzva k platbě odeslána zákazníkovi.");
+    } catch (err) {
+      console.error("[PaymentQrPanel] send failed:", err);
+      toast.error("Odeslání výzvy k platbě selhalo.");
     } finally {
-      setTimeout(() => setSending(false), 600);
+      setSending(false);
     }
   };
 

@@ -1,9 +1,11 @@
 // api/send-email.ts
 // Odesílání e-mailů přes Resend pro vapesport.cz
 // Nasazuje se jako Vercel serverless funkce (soubor patří do složky /api v repu).
-// Volá se z webu po vytvoření objednávky nebo po registraci.
 //
 // POTŘEBUJE: nastavit proměnnou prostředí RESEND_API_KEY ve Vercelu.
+//
+// Typy: "order" (potvrzení objednávky), "registration" (uvítání),
+//       "payment" (výzva k platbě s QR kódem jako obrázkem).
 
 const RESEND_API = "https://api.resend.com/emails";
 const FROM = "Vapesport <info@vapesport.cz>";
@@ -18,7 +20,13 @@ const czk = (n: number) =>
   new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 }).format(Math.round(n)) + " Kč";
 
 // --- odeslání přes Resend ---
-async function sendEmail(opts: { to: string; subject: string; html: string; replyTo?: string }) {
+async function sendEmail(opts: {
+  to: string;
+  subject: string;
+  html: string;
+  replyTo?: string;
+  attachments?: Array<{ filename: string; content: string; content_id?: string }>;
+}) {
   const key = process.env.RESEND_API_KEY;
   if (!key) throw new Error("Chybí RESEND_API_KEY (nastav ve Vercelu).");
   const res = await fetch(RESEND_API, {
@@ -30,6 +38,7 @@ async function sendEmail(opts: { to: string; subject: string; html: string; repl
       subject: opts.subject,
       html: opts.html,
       ...(opts.replyTo ? { reply_to: opts.replyTo } : {}),
+      ...(opts.attachments && opts.attachments.length ? { attachments: opts.attachments } : {}),
     }),
   });
   if (!res.ok) {
@@ -126,6 +135,29 @@ function registrationEmail(u: any) {
   return layout("Vítejte ve Vapesportu", body);
 }
 
+function paymentEmail(p: any) {
+  const vs = p.vs || (String(p.orderNumber).replace(/\D/g, "") || String(p.orderNumber));
+  const qrBlock = p.qrCid
+    ? `<div style="text-align:center;margin:18px 0;">
+         <img src="cid:${p.qrCid}" alt="QR platba" width="200" height="200" style="border:1px solid #e0dcd3;border-radius:8px;padding:8px;background:#fff;" />
+         <div style="font-size:12px;color:#8a8a80;margin-top:6px;">Naskenujte v bankovní aplikaci</div>
+       </div>`
+    : "";
+  const body = `
+    <p style="font-size:16px;margin:0 0 14px;">Dobrý den,</p>
+    <p style="margin:0 0 18px;line-height:1.6;">zasíláme podklady k platbě objednávky <strong>#${escapeHtml(String(p.orderNumber))}</strong>.</p>
+    <div style="background:${CONCRETE};border-radius:6px;padding:16px 18px;font-size:14px;line-height:1.9;">
+      <div><span style="color:#8a8a80;">Banka:</span> <strong>${escapeHtml(p.bankName || "")}</strong></div>
+      <div><span style="color:#8a8a80;">IBAN:</span> <strong>${escapeHtml(p.iban || "")}</strong></div>
+      <div><span style="color:#8a8a80;">Částka:</span> <strong>${czk(p.amount || 0)}</strong></div>
+      <div><span style="color:#8a8a80;">Variabilní symbol:</span> <strong>${escapeHtml(vs)}</strong></div>
+    </div>
+    ${qrBlock}
+    <p style="margin:18px 0 0;line-height:1.6;">Zaplatit můžete naskenováním QR kódu v bankovní aplikaci, nebo klasickým převodem podle údajů výše. Po připsání platby objednávku připravíme a odešleme. Děkujeme!</p>
+  `;
+  return layout("Výzva k platbě", body);
+}
+
 function escapeHtml(s: string) {
   return String(s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string)
@@ -172,7 +204,32 @@ export default async function handler(req: any, res: any) {
       return res.status(200).json({ ok: true });
     }
 
-    return res.status(400).json({ error: "Neznámý typ (použij 'order' nebo 'registration')." });
+    if (type === "payment") {
+      const p = body.payment || {};
+      if (!p.customerEmail || !p.orderNumber) {
+        return res.status(400).json({ error: "Chybí customerEmail nebo orderNumber." });
+      }
+      const attachments: Array<{ filename: string; content: string; content_id?: string }> = [];
+      let qrCid: string | undefined;
+      if (p.qrBase64) {
+        qrCid = "qr-platba";
+        attachments.push({
+          filename: `QR-platba-${p.orderNumber}.png`,
+          content: String(p.qrBase64).replace(/^data:image\/\w+;base64,/, ""),
+          content_id: qrCid,
+        });
+      }
+      await sendEmail({
+        to: p.customerEmail,
+        subject: `Výzva k platbě — objednávka #${p.orderNumber}`,
+        html: paymentEmail({ ...p, qrCid }),
+        replyTo: SHOP_EMAIL,
+        attachments,
+      });
+      return res.status(200).json({ ok: true });
+    }
+
+    return res.status(400).json({ error: "Neznámý typ (order / registration / payment)." });
   } catch (e: any) {
     return res.status(500).json({ error: String(e?.message || e) });
   }
