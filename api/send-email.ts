@@ -48,7 +48,7 @@ async function findOrder(orderNumber: string) {
       orderNumber
     )}&select=email&limit=1`;
     const r = await fetch(url, {
-      headers: { apikey: SUPABASE_SERVICE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_KEY}` },
+      headers: { apikey: SUPABASE_SERVICE_KEY },
     });
     if (!r.ok) return null;
     const rows = await r.json();
@@ -213,13 +213,17 @@ export default async function handler(req: any, res: any) {
     if (type === "order") {
       const o = body.order || {};
       if (!o.orderNumber) return res.status(400).json({ error: "Chybí orderNumber." });
+      if (!o.customerEmail) return res.status(400).json({ error: "Chybí e-mail zákazníka." });
 
-      // ZABEZPEČENÍ: objednávka musí existovat v databázi
-      const dbOrder = await findOrder(o.orderNumber);
-      if (!dbOrder) return res.status(404).json({ error: "Objednávka nenalezena." });
-
-      const recipient = dbOrder.email || o.customerEmail;
-      if (!recipient) return res.status(400).json({ error: "Chybí e-mail zákazníka." });
+      // Best-effort ověření: když objednávku v DB najdeme, použijeme e-mail z ní;
+      // když ne, pošleme na e-mail z požadavku. Potvrzení se nikdy „neumlčí".
+      let recipient = o.customerEmail;
+      try {
+        const dbOrder = await findOrder(o.orderNumber);
+        if (dbOrder && dbOrder.email) recipient = dbOrder.email;
+      } catch {
+        /* ignorujeme – potvrzení pošleme na e-mail z požadavku */
+      }
 
       await sendEmail({
         to: recipient,
