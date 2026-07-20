@@ -198,13 +198,25 @@ const AppServices = () => {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-auto pt-4 border-t border-border">
-                  <div className="font-heading text-lg font-bold text-foreground">
-                    {tier.priceBig}
+                <div className="mt-auto">
+                  <div className="pt-4 border-t border-border">
+                    <div className="font-heading text-lg font-bold text-foreground">
+                      {tier.priceBig}
+                    </div>
+                    <div className="font-body text-xs text-muted-foreground mt-0.5">
+                      {tier.priceSmall}
+                    </div>
                   </div>
-                  <div className="font-body text-xs text-muted-foreground mt-0.5">
-                    {tier.priceSmall}
-                  </div>
+                  <Link
+                    to="/kontakt"
+                    className={`mt-4 w-full inline-flex items-center justify-center gap-2 text-[13px] font-bold uppercase tracking-widest px-5 py-3 rounded-md transition-colors ${
+                      tier.featured
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                        : "border border-border text-foreground hover:border-primary"
+                    }`}
+                  >
+                    Mám zájem <ArrowRight className="w-4 h-4" />
+                  </Link>
                 </div>
               </div>
             );
@@ -332,22 +344,6 @@ const AppServices = () => {
               </div>
             );
           })}
-        </div>
-      </section>
-
-      {/* JAK TO MÁME NASTAVENÉ */}
-      <section className="px-6 lg:px-12 max-w-5xl mx-auto pb-16">
-        <div className="rounded-2xl bg-foreground text-background px-8 py-12 md:px-12">
-          <span className="font-body text-[11px] font-bold tracking-[0.28em] uppercase text-primary">
-            Jak to máme nastavené
-          </span>
-          <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-tight mt-3 mb-4 max-w-xl">
-            Odběratelé brašen mají služby levněji
-          </h2>
-          <p className="font-body text-background/80 leading-relaxed max-w-2xl">
-            Nechceme vydělat na webu. Chceme, aby se vám dařilo prodávat. Proto
-            kdo odebírá naše brašny, má digitální služby se slevou.
-          </p>
         </div>
       </section>
 
