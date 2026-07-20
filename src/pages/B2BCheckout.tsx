@@ -246,7 +246,7 @@ const B2BCheckout = () => {
             company: billing.company || payload.companyName || null,
             ico: billing.ico || null,
             items: payload.items.map((i) => ({
-              name: i.color ? `[${i.sku}] ${i.name} (${i.color})` : `[${i.sku}] ${i.name}`,
+              name: i.name,
               qty: i.qty,
               price: grossFromNet(i.unitPrice),
             })),

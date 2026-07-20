@@ -289,11 +289,19 @@ const Checkout = () => {
             customerName: `${form.firstName} ${form.lastName}`.trim(),
             customerEmail: form.email,
             phone: form.phone || null,
-            items: orderLines.map((l) => ({
-              name: l.color ? `${l.name} (${l.color})` : l.name,
-              qty: l.qty,
-              price: l.unitGross,
-            })),
+            items: orderLines.map((l) => {
+              const barva = l.color
+                ? l.color
+                    .split(/[-_]/)
+                    .map((w) => (w.length <= 1 ? w.toUpperCase() + "." : w.charAt(0).toUpperCase() + w.slice(1)))
+                    .join(" ")
+                : "";
+              return {
+                name: barva ? `${l.name} – ${barva}` : l.name,
+                qty: l.qty,
+                price: l.unitGross,
+              };
+            }),
             total: grandGross,
             vat: true,
           },
