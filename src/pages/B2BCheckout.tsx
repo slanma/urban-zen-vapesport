@@ -230,6 +230,32 @@ const B2BCheckout = () => {
         body: JSON.stringify(body),
       });
       if (!response.ok) throw new Error(await response.text());
+
+      // Odeslat potvrzovací e-maily (na pozadí; když selže, objednávku to nezablokuje)
+      void fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "order",
+          order: {
+            orderNumber,
+            customerName: `${billing.firstName} ${billing.lastName}`.trim(),
+            customerEmail: billing.email,
+            phone: billing.phone || null,
+            isB2B: true,
+            company: billing.company || payload.companyName || null,
+            ico: billing.ico || null,
+            items: payload.items.map((i) => ({
+              name: i.color ? `[${i.sku}] ${i.name} (${i.color})` : `[${i.sku}] ${i.name}`,
+              qty: i.qty,
+              price: grossFromNet(i.unitPrice),
+            })),
+            total: Math.round(totalGross),
+            vat: true,
+          },
+        }),
+      }).catch((e) => console.error("E-mail se nepodařilo odeslat:", e));
+
       sessionStorage.removeItem(STORAGE_KEY);
       setPlacedOrder({ number: orderNumber, email: billing.email, total: Math.round(totalGross) });
       window.scrollTo({ top: 0, behavior: "smooth" });

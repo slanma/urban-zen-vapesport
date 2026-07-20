@@ -4,13 +4,6 @@
 // Volá se z webu po vytvoření objednávky nebo po registraci.
 //
 // POTŘEBUJE: nastavit proměnnou prostředí RESEND_API_KEY ve Vercelu.
-//
-// Volání z webu (příklad):
-//   fetch("/api/send-email", {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ type: "order", order: {...} })
-//   })
 
 const RESEND_API = "https://api.resend.com/emails";
 const FROM = "Vapesport <info@vapesport.cz>";
@@ -77,6 +70,15 @@ function orderRows(items: Array<{ name: string; qty: number; price: number }>) {
 
 // --- šablony ---
 function customerOrderEmail(o: any) {
+  const b2bInfo =
+    o.isB2B && o.company
+      ? `<div style="background:${CONCRETE};border-radius:6px;padding:12px 16px;margin-bottom:18px;font-size:13px;">
+           <strong>Firma:</strong> ${escapeHtml(o.company)}${o.ico ? ` &middot; <strong>IČO:</strong> ${escapeHtml(o.ico)}` : ""}
+         </div>`
+      : "";
+  const closing = o.isB2B
+    ? "Objednávku jsme přijali. Fakturu se splatností 6 dní vám zašleme e-mailem. Kdyby cokoli, stačí odpovědět na tento e-mail."
+    : "Objednávku jsme přijali a co nejdřív se do ní pustíme. O dalším průběhu vás budeme informovat. Kdyby cokoli, stačí odpovědět na tento e-mail.";
   const body = `
     <p style="font-size:16px;margin:0 0 14px;">Dobrý den${o.customerName ? " " + escapeHtml(o.customerName) : ""},</p>
     <p style="margin:0 0 18px;line-height:1.6;">děkujeme za vaši objednávku. Tady je její shrnutí:</p>
@@ -84,6 +86,7 @@ function customerOrderEmail(o: any) {
       <div style="font-size:13px;color:#8a8a80;text-transform:uppercase;letter-spacing:1px;">Objednávka</div>
       <div style="font-size:18px;font-weight:700;">#${escapeHtml(String(o.orderNumber))}</div>
     </div>
+    ${b2bInfo}
     <table style="width:100%;border-collapse:collapse;font-size:14px;">
       ${orderRows(o.items || [])}
       <tr>
@@ -91,18 +94,20 @@ function customerOrderEmail(o: any) {
         <td style="padding:12px 0 0;text-align:right;font-weight:700;color:${MOSS};">${czk(o.total || 0)}</td>
       </tr>
     </table>
-    <p style="margin:22px 0 0;line-height:1.6;">Objednávku jsme přijali a co nejdřív se do ní pustíme. O dalším průběhu vás budeme informovat. Kdyby cokoli, stačí odpovědět na tento e-mail.</p>
+    <p style="margin:22px 0 0;line-height:1.6;">${closing}</p>
   `;
   return layout("Potvrzení objednávky", body);
 }
 
 function shopOrderEmail(o: any) {
   const body = `
-    <p style="font-size:16px;margin:0 0 14px;font-weight:700;">Nová objednávka #${escapeHtml(String(o.orderNumber))}</p>
+    <p style="font-size:16px;margin:0 0 14px;font-weight:700;">Nová objednávka${o.isB2B ? " (B2B)" : ""} #${escapeHtml(String(o.orderNumber))}</p>
     <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:14px;">
       <tr><td style="padding:4px 0;color:#8a8a80;">Zákazník</td><td style="padding:4px 0;text-align:right;">${escapeHtml(o.customerName || "—")}</td></tr>
       <tr><td style="padding:4px 0;color:#8a8a80;">E-mail</td><td style="padding:4px 0;text-align:right;">${escapeHtml(o.customerEmail || "—")}</td></tr>
       ${o.phone ? `<tr><td style="padding:4px 0;color:#8a8a80;">Telefon</td><td style="padding:4px 0;text-align:right;">${escapeHtml(o.phone)}</td></tr>` : ""}
+      ${o.company ? `<tr><td style="padding:4px 0;color:#8a8a80;">Firma</td><td style="padding:4px 0;text-align:right;">${escapeHtml(o.company)}</td></tr>` : ""}
+      ${o.ico ? `<tr><td style="padding:4px 0;color:#8a8a80;">IČO</td><td style="padding:4px 0;text-align:right;">${escapeHtml(o.ico)}</td></tr>` : ""}
     </table>
     <table style="width:100%;border-collapse:collapse;font-size:14px;">
       ${orderRows(o.items || [])}
@@ -140,17 +145,15 @@ export default async function handler(req: any, res: any) {
       if (!o.customerEmail || !o.orderNumber) {
         return res.status(400).json({ error: "Chybí customerEmail nebo orderNumber." });
       }
-      // 1) potvrzení zákazníkovi
       await sendEmail({
         to: o.customerEmail,
         subject: `Potvrzení objednávky #${o.orderNumber} — Vapesport`,
         html: customerOrderEmail(o),
         replyTo: SHOP_EMAIL,
       });
-      // 2) upozornění do obchodu
       await sendEmail({
         to: SHOP_EMAIL,
-        subject: `Nová objednávka #${o.orderNumber}`,
+        subject: `Nová objednávka${o.isB2B ? " (B2B)" : ""} #${o.orderNumber}`,
         html: shopOrderEmail(o),
         replyTo: o.customerEmail,
       });
