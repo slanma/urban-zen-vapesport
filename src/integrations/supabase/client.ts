@@ -2,16 +2,17 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const SUPABASE_URL = "https://qxvsmorbirwmputlrjsq.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4dnNtb3JiaXJ3bXB1dGxyanNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NjE3OTYsImV4cCI6MjA5OTQzNzc5Nn0.Mw8cSrdMsloQjQAy91nzOcdluK0Gafa4kvYKW5RaDJY";
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
+    // SSR-safe: localStorage použij jen v prohlížeči, ne při buildu na serveru.
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
     persistSession: true,
     autoRefreshToken: true,
-  }
+  },
 });
