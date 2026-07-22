@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { feedProducts } from "@/data/feedProducts";
+import { getGtin } from "@/data/productGtins";
+import { resolveColor } from "@/lib/colorPalette";
 import { CARTON_PER_ID } from "@/data/cartons";
 import { fmtCZK } from "@/lib/vat";
 import Navbar from "@/components/Navbar";
@@ -42,6 +44,23 @@ interface OrderRow {
 }
 
 const brandOf = (cat: string) => (cat === "morseo-evo" ? "Morseovape" : "Vapesport");
+
+type FeedProduct = (typeof feedProducts)[number];
+
+// MORSEO marketingové slugy -> prostá čeština (feed chce běžné názvy barev,
+// ne "Coral Code" / "Blackout G."). VAPESPORT slugy přeloží resolveColor sám.
+const MORSEO_CZECH: Record<string, string> = {
+  "blackout-g": "šedá",
+  "arctic-white": "bílá",
+  "coral-code": "červená",
+  "flamingo-luxe": "růžová",
+  "dandelite-yellow": "žlutá",
+  "lime-spark": "zelená",
+  "lazurite-blue": "modrá",
+  "golden-wheat": "zlatá",
+};
+const czechColor = (slug: string) =>
+  (MORSEO_CZECH[slug] ?? resolveColor(slug).label).toLocaleLowerCase("cs");
 
 
 const B2BNastenka = () => {
@@ -150,23 +169,70 @@ const B2BNastenka = () => {
   const origin = typeof window !== "undefined" ? window.location.origin : "";
   const abs = (u?: string) => (!u ? "" : u.startsWith("http") ? u : origin + u);
 
+  // --- pomocné funkce pro B2B feed ---
+  const specVal = (p: FeedProduct, needle: string) => {
+    if (!Array.isArray(p.specs)) return "";
+    const hit = p.specs.find((s: { label: string; value: string }) =>
+      s.label.toLowerCase().includes(needle.toLowerCase()),
+    );
+    return hit?.value ?? "";
+  };
+
+  // Souvislý popis: krátký popis + věta s parametry (rozměry / objem / nosnost).
+  const buildPopis = (p: FeedProduct) => {
+    const base = (p.shortDescription || "").trim();
+    const parts: string[] = [];
+    const rozmery = specVal(p, "rozměr");
+    const objem = specVal(p, "objem");
+    const nosnost = specVal(p, "nosnost");
+    if (rozmery) parts.push(`rozměry ${rozmery}`);
+    if (objem) parts.push(`objem ${objem}`);
+    if (nosnost) parts.push(`nosnost ${nosnost}`);
+    const paramy = parts.length ? `Parametry: ${parts.join(", ")}.` : "";
+    return [base, paramy].filter(Boolean).join(" ").trim();
+  };
+
+  // Fotka dané barvy: obrázek, jehož název obsahuje "barva-<slug>" (MORSEO i VS),
+  // jinak hlavní obrázek produktu.
+  const colorImage = (p: FeedProduct, slug: string) => {
+    const imgs = Array.isArray(p.images) ? p.images : [];
+    const hit = imgs.find((u) => u.toLowerCase().includes(`barva-${slug.toLowerCase()}`));
+    return abs(hit || p.image);
+  };
+
+  const kodOf = (p: FeedProduct) =>
+    (Array.isArray(p.specs)
+      ? p.specs.find((s: { label: string; value: string }) => s.label === "Kód produktu")?.value
+      : undefined) || p.id;
+
+  // Jeden řádek na každou skladovou barvu. Produkt gatuje visible + in_stock
+  // (product_overrides). Produkt bez barevných variant = jeden řádek bez barvy.
   const rowsForBrand = (brand: string) =>
     feedProducts
       .filter((p) => brandOf(p.category) === brand)
-      .filter((p) => get(p.id).visible !== false)
-      .map((p) => ({
-        kod: (Array.isArray(p.specs) ? p.specs.find((s: { label: string; value: string }) => s.label === "Kód produktu")?.value : undefined) || p.id,
-        nazev: p.name,
-        znacka: brand,
-        kategorie: p.categoryLabel || p.category,
-        voc_bez_dph: p.b2b_price ?? "",
-        doporucena_moc: p.price ?? "",
-        ks_v_kartonu: CARTON_PER_ID[p.id] ?? "",
-        odkaz: `${origin}/produkt/${p.id}`,
-        obrazek: abs(p.image),
-      }));
+      .filter((p) => get(p.id).visible !== false && get(p.id).in_stock !== false)
+      .flatMap((p) => {
+        const colors =
+          Array.isArray(p.available_colors) && p.available_colors.length
+            ? p.available_colors
+            : [""];
+        return colors.map((slug) => ({
+          kod: kodOf(p),
+          nazev: p.name,
+          barva: slug ? czechColor(slug) : "",
+          ean: slug ? getGtin(p.id, slug) ?? "" : "",
+          znacka: brand,
+          kategorie: p.categoryLabel || p.category,
+          popis: buildPopis(p),
+          voc_bez_dph: p.b2b_price ?? "",
+          doporucena_moc_s_dph: p.price ?? "",
+          ks_v_kartonu: CARTON_PER_ID[p.id] ?? "",
+          odkaz: `${origin}/produkt/${p.id}`,
+          obrazek: slug ? colorImage(p, slug) : abs(p.image),
+        }));
+      });
 
-  const HEADER = ["kod", "nazev", "znacka", "kategorie", "voc_bez_dph", "doporucena_moc", "ks_v_kartonu", "odkaz", "obrazek"];
+  const HEADER = ["kod", "nazev", "barva", "ean", "znacka", "kategorie", "popis", "voc_bez_dph", "doporucena_moc_s_dph", "ks_v_kartonu", "odkaz", "obrazek"];
 
   const download = (filename: string, content: string, mime: string) => {
     const blob = new Blob([content], { type: mime });
@@ -201,19 +267,12 @@ const B2BNastenka = () => {
     const esc = (v: unknown) =>
       String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     const items = rows
-      .map(
-        (r) => `  <produkt>
-    <kod>${esc(r.kod)}</kod>
-    <nazev>${esc(r.nazev)}</nazev>
-    <znacka>${esc(r.znacka)}</znacka>
-    <kategorie>${esc(r.kategorie)}</kategorie>
-    <voc_bez_dph>${esc(r.voc_bez_dph)}</voc_bez_dph>
-    <doporucena_moc>${esc(r.doporucena_moc)}</doporucena_moc>
-    <ks_v_kartonu>${esc(r.ks_v_kartonu)}</ks_v_kartonu>
-    <odkaz>${esc(r.odkaz)}</odkaz>
-    <obrazek>${esc(r.obrazek)}</obrazek>
-  </produkt>`,
-      )
+      .map((r) => {
+        const inner = HEADER.map(
+          (h) => `    <${h}>${esc((r as Record<string, unknown>)[h])}</${h}>`,
+        ).join("\n");
+        return `  <produkt>\n${inner}\n  </produkt>`;
+      })
       .join("\n");
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<produkty znacka="${esc(brand)}">\n${items}\n</produkty>`;
     download(`feed-${brand.toLowerCase()}.xml`, xml, "application/xml;charset=utf-8");
