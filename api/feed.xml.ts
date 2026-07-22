@@ -297,7 +297,7 @@ function buildXml(): string {
     for (const c of p.colors) {
       const barva = czechColor(c.slug);
       items.push(`    <item>
-      <g:id>${esc(p.id + "-" + c.slug)}</g:id>
+      <g:id>${esc(p.kod + "-" + c.slug)}</g:id>
       <g:item_group_id>${esc(p.id)}</g:item_group_id>
       <g:title>${esc(p.name + " – " + barva)}</g:title>
       <g:description>${esc(desc)}</g:description>
