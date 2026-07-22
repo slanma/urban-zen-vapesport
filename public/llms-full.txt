@@ -2,261 +2,269 @@
 
 > Strojově čitelný přehled produktů e-shopu vapesport.cz pro AI agenty a LLM. Ceny jsou doporučené maloobchodní (MOC) v Kč včetně DPH. Velkoobchodní (VOC) ceny jsou po přihlášení v B2B portálu.
 
-Aktualizováno: 2026-07-17
+Aktualizováno: 2026-07-22
 
 
 ## BRAŠNY NA KOLO
 
-### Brašna malá na řidítka PE (kód 410115)
-- URL: https://vapesport.cz/produkt/vs-brasna-mala-na-riditka-pe-904688
-- Cena (MOC s DPH): 737 Kč
-- Popis: Brašna je na uchycení KLICKFIX adaptér. KLICKFIX adaptér je součástí a pláštěnka také. Díky adaptéru má brašna různé možnosti uchycení jak n…
-- Parametry: Rozměry: 18 × 23 × 13 cm; Objem: 4,7 l; Nosnost: 2 kg; Typ kola: Gravel, e-bike, celopéro, hardtail, koloběžka; Montáž: Řídítka / představec (standardní průměry); Uchycení: KLICKFIX rychloupínací – adaptér součástí balení
-
-### Brašna na míru (kód gpc-951815)
-- URL: https://vapesport.cz/produkt/vs-brasna-na-miru-951815
-- Cena (MOC s DPH): 2500 Kč
-- Popis: Brašna na míru pro váš rám. Společně projdeme krátkou konzultaci a dodáte přesné rozměry – my připravíme návrh a výrobu. Cena od 2 500 Kč. O…
-
 ### Malý trojúhleník 3kapsý (kód 410001)
-- URL: https://vapesport.cz/produkt/vs-maly-trojuhlenik-3kapsy-904673
+- URL: https://www.vapesport.cz/produkt/vs-maly-trojuhlenik-3kapsy-904673
 - Cena (MOC s DPH): 378 Kč
 - Popis: Hledáte lehkou, spolehlivou a skvěle organizovanou brašnu do rámu kola, kam schováte peněženku, klíče, nářadí i záložní duši? Malý trojúhelník tříkapsý Vapesport nabízí optimální šířku 4,5 cm, která zaručuje, že brašna stoprocentně lícuje s profilem kola a nikdy vám nebude překážet nebo dřít o kolena při šlapání.
-- Parametry: Rozměry: 22 × 20 × 4,5 cm; Objem: 2 l; Nosnost: 1 kg; Typ kola: Gravel, hardtail (u e-biku / celopéra ověřit volný prostor); Velikost rámu: S–XXL; Uchycení: Dlouhé suché zipy po celém obvodu + spodní stabilizační popruh
-- Barvy: neon-yellow, neon-green, orange, red, pink
-
-### Mobil 5,5" PE (kód 410104)
-- URL: https://vapesport.cz/produkt/vs-mobil-5-5-pe-904696
-- Cena (MOC s DPH): 362 Kč
-- Popis: Obal na mobilní telefon o velikosti 5,5" s dotykovou folii. Brašna je uchycena na systém KLICKFIX Adaptér, který JE součástí balení.  Díky s…
-- Parametry: Rozměry: 19 × 11 × 2 cm; Kapacita: Telefon do 5,5", peněženka, doklady (plochý profil); Typ kola: Gravel, e-bike, celopéro, hardtail; Montáž: Řídítka / představec (jakýkoliv průměr); Uchycení: KLICKFIX – Mini adaptér součástí balení
+- Parametry: Kategorie: Brašny na kolo; Varianty: 6 barev; Rozměry (D × V × Š): 22 × 20 × 4,5 cm; Objem: 2 l; Nosnost: 1 kg; Typ kola: Gravel, hardtail (u e-biku / celopéra ověřit volný prostor); Velikost rámu: S–XXL; Uchycení: Dlouhé suché zipy po celém obvodu + spodní stabilizační popruh
+- Barvy: neonově žlutá, neonově zelená, oranžová, červená, růžová
 
 ### Plochý trojúhelník 4kapsý VAPE (kód 311055)
-- URL: https://vapesport.cz/produkt/vs-plochy-trojuhelnik-4kapsy-vape-904677
+- URL: https://www.vapesport.cz/produkt/vs-plochy-trojuhelnik-4kapsy-vape-904677
 - Cena (MOC s DPH): 411 Kč
 - Popis: 4kapsý trojúhelník do rámu kola. Je vhodný i na určité rámy elektrokol.
-- Barvy: neon-yellow, orange, pink, turquoise
-
-### SMB Vapesport (kód 310073)
-- URL: https://vapesport.cz/produkt/vs-smb-vapesport-904678
-- Cena (MOC s DPH): 400 Kč
-- Popis: Brašna na rám za představec kola s uchopením na suché zipy. Slída 6,7" je dotyková.
-- Parametry: Rozměry: 19 × 10 × 7 cm; Objem: 1,2 l; Nosnost: 0,5 kg; Typ kola: Gravel, e-bike, celopéro, hardtail; Velikost rámu: S–XXL; Uchycení: Suché zipy podlepené proti podření laku; v balení prodlužovací pár na široké rámy; Kompatibilita: Dotyková fólie 18 × 9 cm, telefon do 6,7"
-
-### Street bag (kód 410123)
-- URL: https://vapesport.cz/produkt/vs-street-bag-922789
-- Cena (MOC s DPH): 911 Kč
-- Popis: Velká taška na kolo nebo jako velká kabela s možností využití na nosič z boční části.   Objem: 15l   Nosnost: 8kg   Rozměry: 33cm x 14cm x 3…
-- Parametry: Rozměry: 33 × 14 × 38 cm; Objem: 15 l; Nosnost: 8 kg; Typ kola: Gravel, e-bike, hardtail; Velikost rámu: S–XXL (vyžaduje klasický zadní nosič); Uchycení: Plastové úchyty – nacvaknutí na boční trubku zadního nosiče
-
-### Trojúhelnik SW (kód 310017)
-- URL: https://vapesport.cz/produkt/vs-trojuhelnik-sw-914131
-- Cena (MOC s DPH): 333 Kč
-- Popis: Dámský trojúhelník i dětský trojúhelník
-- Parametry: Rozměry: 19 × 19 × 4 cm; Objem: 0,75 l; Nosnost: 1,5 kg; Typ kola: Dámská kola (CTM, Leader Fox Altar), dětská/juniorská (27"), hardtail; Velikost rámu: XS–XL (střih pro malé a snížené rámy); Uchycení: Trojbodové upnutí suchými zipy do vnitřního rohu rámu
-- Barvy: orange, yellow
-
-### MORSEO Plochý trojúhelník 2-kapsý (kód M311055)
-- URL: https://vapesport.cz/produkt/vs-ramova-brasna-nepromokavy-zip-945203
-- Cena (MOC s DPH): 619 Kč
-- Popis: Kompaktní rámová brašna s nízkým profilem a šířkou pouhých 6 cm – ideální na menší a dámské rámy, kde velká brašna nesedí. Silikonové pásky drží pevně a chrání lak.
-- Parametry: Rozměry: 25 × 6 × 16 cm; Objem: 0,8 l; Nosnost: 0,8 kg; Uchycení: zadní i přední část rámu (oboustranné); Kompatibilita: Kolo i elektrokolo, menší a dámské rámy
-- Barvy: blackout-g, arctic-white, coral-code, flamingo-luxe, dandelite-yellow, lime-spark, lazurite-blue, golden-wheat
-
-### MORSEO SMB 6,7" (kód M310073)
-- URL: https://vapesport.cz/produkt/vs-smb-morseo-945206
-- Cena (MOC s DPH): 599 Kč
-- Popis: MORSEO SMB 6,7" – brašna na mobil na horní rámovou trubku pro telefony do 6,7". Dotyková fólie pro navigaci, prodloužené silikonové pásky E-bike Ready na široké trubky a šetrné k laku.
-- Parametry: Rozměry: 19 × 7 × 8–5,5 cm; Objem: 1,2 l; Nosnost: 0,5 kg; Kompatibilita: Kolo i elektrokolo
-- Barvy: coral-code, flamingo-luxe, dandelite-yellow, lime-spark, lazurite-blue, golden-wheat
-
-### MORSEO SMB XXL 8" (kód M310073-1)
-- URL: https://vapesport.cz/produkt/vs-smb-morseo-zlata-947383
-- Cena (MOC s DPH): 640 Kč
-- Popis: Velká brašna na horní trubku e-biku. Vejde se i ten největší telefon v krytu (iPhone Pro Max, Galaxy Ultra), powerbanka i svačina. Přes slídu 10 × 19 cm ovládáš telefon bez vyndávání. Pásky drží jako přibité a nepodřou lak.
-- Parametry: Rozměry: 20 × 8 × 8–5 cm; Objem: 1,2 l; Nosnost: 0,5 kg; Kompatibilita: Elektrokolo (masivní rámy); Materiál: 600D / PVC, voděodolný zip
-- Barvy: blackout-g, arctic-white, coral-code, flamingo-luxe, dandelite-yellow, lime-spark, lazurite-blue, golden-wheat
-
-### MORSEO Střední trojúhelník 2-kapsý (kód M410102)
-- URL: https://vapesport.cz/produkt/vs-ramova-brasna-stredni-se-2-zipy-a-sitkou-945204
-- Cena (MOC s DPH): 640 Kč
-- Popis: Největší rámovka do e-kola – pobere rychlonabíječku Fast Charger i bidon. Šířka 7,5 cm neodírá stehna, upne se dopředu i dozadu.
-- Parametry: Rozměry: 35 × 7,5 × 18,5 cm; Objem: 2 l; Nosnost: 1,4 kg; Uchycení: zadní i přední část rámu (oboustranné); Kompatibilita: Elektrokolo, velké rámy (kde chybí košík na láhev)
-- Barvy: blackout-g, arctic-white, flamingo-luxe, lime-spark, golden-wheat
-
-### MORSEO Transformer 5,5" (kód M411104)
-- URL: https://vapesport.cz/produkt/vs-brasna-na-mobil-5-5-945205
-- Cena (MOC s DPH): 531 Kč
-- Popis: Svislá brašna na řídítka a představec pro e-kola s ovládáním na horní trubce a bez displeje uprostřed. Dotyková fólie 16,5 × 9 cm – navigace za jízdy. Tenký profil nepřekáží.
-- Parametry: Rozměry: 18 × 10 × 4 cm; Objem: 0,8 l; Nosnost: 0,8 kg; Uchycení: 3× na představec + 2× na řídítka; Kompatibilita: Elektrokolo a koloběžka (atypické rámy)
-- Barvy: blackout-g, arctic-white, coral-code, flamingo-luxe, dandelite-yellow, lime-spark, lazurite-blue, golden-wheat
-
-### MORSEO WDB (voděodolná rámová) (kód M50001)
-- URL: https://vapesport.cz/produkt/vs-waterproof-bike-bag-bila-945208
-- Cena (MOC s DPH): 1055 Kč
-- Popis: 100% vodotěsná brašna na horní trubku – na e-bike, silničku i gravel. Nenateče ani kapka, aero tvar nepřekáží ve stoje. Telefon vložíš našikmo dovnitř.
-- Parametry: Rozměry: 23 × 6,5 × 9–3 cm; Objem: 0,65 l; Nosnost: 0,5 kg; Kompatibilita: Elektrokolo, gravel, silniční i klasické (univerzální)
-- Barvy: blackout-g, arctic-white, coral-code, flamingo-luxe, dandelite-yellow, lime-spark, lazurite-blue, golden-wheat
-
-### MORSEO WDS (voděodolná podsedlová) (kód M50002)
-- URL: https://vapesport.cz/produkt/vs-waterproof-saddle-bag-945209
-- Cena (MOC s DPH): 950 Kč
-- Popis: Ultralehká 100% vodotěsná podsedlová brašna se svařovanými švy. Boční suché zipy ji zachytí o sedlovku a spodní zip o její trubku; vnitřní síťka udrží drobnosti. Vaše nářadí zůstane v suchu i v největším blátě.
-- Parametry: Rozměry: 17 × 6,5–5,5 × 8 cm; Objem: 0,85 l; Nosnost: 0,5 kg; Kompatibilita: Elektrokolo, gravel, MTB i silniční (univerzální)
-- Barvy: blackout-g, arctic-white, coral-code, flamingo-luxe, dandelite-yellow, lime-spark, golden-wheat
+- Parametry: Kategorie: Brašny na kolo; Varianty: 5 barev
+- Barvy: neonově žlutá, oranžová, růžová, tyrkysová
 
 ### UNI MAXI TWIST (kód 410057)
-- URL: https://vapesport.cz/produkt/vs-uni-maxi-twist-904687
+- URL: https://www.vapesport.cz/produkt/vs-uni-maxi-twist-904687
 - Cena (MOC s DPH): 550 Kč
 - Popis: Malá brašna na řídítka na uchycení KLICKFIX adaptér i suchý zip. Vhodnost na kolo, koloběžku, elektrokola i dětská kola.
-- Parametry: Rozměry: 16,5 × 14 × 7 cm; Objem: 0,5 l; Nosnost: 0,5 kg; Typ kola: Dětská odrážedla/kola, koloběžky, gravel, MTB, e-biky; Uchycení: Duální – KlickFix nebo popruhy na suchý zip (oba systémy součástí)
+- Parametry: Kategorie: Brašny na kolo; Varianty: 7 barev; Rozměry (Š × V × H): 16,5 × 14 × 7 cm; Objem: 0,5 l; Nosnost: 0,5 kg; Typ kola: Dětská odrážedla/kola, koloběžky, gravel, MTB, e-biky; Uchycení: Duální – KlickFix nebo popruhy na suchý zip (oba systémy součástí)
 
+### Brašna malá na řidítka PE (kód 410115)
+- URL: https://www.vapesport.cz/produkt/vs-brasna-mala-na-riditka-pe-904688
+- Cena (MOC s DPH): 737 Kč
+- Popis: Brašna je na uchycení KLICKFIX adaptér. KLICKFIX adaptér je součástí a pláštěnka také. Díky adaptéru má brašna různé možnosti uchycení jak n…
+- Parametry: Kategorie: Brašny na kolo; Rozměry (D × Š × V): 18 × 23 × 13 cm; Objem: 4,7 l; Nosnost: 2 kg; Typ kola: Gravel, e-bike, celopéro, hardtail, koloběžka; Montáž: Řídítka / představec (standardní průměry); Uchycení: KLICKFIX rychloupínací – adaptér součástí balení
 
-## BRAŠNY NA NOSIČ
+### Mobil 5,5" PE (kód 410104)
+- URL: https://www.vapesport.cz/produkt/vs-mobil-5-5-pe-904696
+- Cena (MOC s DPH): 362 Kč
+- Popis: Obal na mobilní telefon o velikosti 5,5" s dotykovou folii. Brašna je uchycena na systém KLICKFIX Adaptér, který JE součástí balení.  Díky s…
+- Parametry: Kategorie: Brašny na kolo; Rozměry (D × V × Š): 19 × 11 × 2 cm; Kapacita: Telefon do 5,5", peněženka, doklady (plochý profil); Typ kola: Gravel, e-bike, celopéro, hardtail; Montáž: Řídítka / představec (jakýkoliv průměr); Uchycení: KLICKFIX – Mini adaptér součástí balení
 
-### Brašna na nosič (kód 410122)
-- URL: https://vapesport.cz/produkt/vs-vapesport-904698
-- Cena (MOC s DPH): 999 Kč
-- Popis: Součástí brašny je pláštěnka, uchopení na suchý zip. Objem - 10L Nosnost - 8Kg Rozměry: 28cm x 16cm x 17cm x  Boční kapsa: 23cm x 12cm  x 4c…
-- Parametry: Rozměry: tělo 28 × 16 × 17 cm; boční kapsa 23 × 12 × 4 cm; Objem: 10 l; Nosnost: 8 kg; Typ kola: Gravel, e-bike, hardtail; Velikost rámu: S–XXL (vyžaduje zadní nosič); Uchycení: Robustní suché zipy na konstrukci zadního nosiče
+### Trojúhelnik SW (kód 310017)
+- URL: https://www.vapesport.cz/produkt/vs-trojuhelnik-sw-914131
+- Cena (MOC s DPH): 333 Kč
+- Popis: Dámský trojúhelník i dětský trojúhelník
+- Parametry: Kategorie: Brašny na kolo; Varianty: 3 barev; Rozměry (D × V × Š): 19 × 19 × 4 cm; Objem: 0,75 l; Nosnost: 1,5 kg; Typ kola: Dámská kola (CTM, Leader Fox Altar), dětská/juniorská (27"), hardtail; Velikost rámu: XS–XL (střih pro malé a snížené rámy); Uchycení: Trojbodové upnutí suchými zipy do vnitřního rohu rámu
+- Barvy: oranžová, žlutá
 
-### Brašna na nosič LUX (kód 411122)
-- URL: https://vapesport.cz/produkt/vs-vapesport-904699
-- Cena (MOC s DPH): 1466 Kč
-- Popis: Brašna s bočními plnohodnotnými výklopnými kapsami ze stejného materiálu, jako je celá brašna.  boční uchopení na suchý zip a uchopení boční…
-- Parametry: Rozměry: tělo 28 × 16 × 17 cm; výklopné boční kapsy 21 × 34 × 4 cm (2×); Objem: až 20 l; Nosnost: 12 kg; Typ kola: Gravel, e-bike, hardtail; Velikost rámu: S–XXL (vyžaduje klasický zadní nosič); Uchycení: 4× horní suchý zip + spodní pojistný popruh + přední suché zipy + mechanický háček
+### SMB Vapesport (kód 310073)
+- URL: https://www.vapesport.cz/produkt/vs-smb-vapesport-904678
+- Cena (MOC s DPH): 400 Kč
+- Popis: Brašna na rám za představec kola s uchopením na suché zipy. Slída 6,7" je dotyková.
+- Parametry: Kategorie: Brašny na kolo; Varianty: 2 barev; Rozměry (D × V × Š): 19 × 10 × 7 cm; Objem: 1,2 l; Nosnost: 0,5 kg; Typ kola: Gravel, e-bike, celopéro, hardtail; Velikost rámu: S–XXL; Kompatibilita telefonu: Dotyková fólie 18 × 9 cm, telefon do 6,7"; Uchycení: Suché zipy podlepené proti podření laku; v balení prodlužovací pár na široké rámy
 
+### Street bag (kód 410123)
+- URL: https://www.vapesport.cz/produkt/vs-street-bag-922789
+- Cena (MOC s DPH): 911 Kč
+- Popis: Velká taška na kolo nebo jako velká kabela s možností využití na nosič z boční části.   Objem: 15l   Nosnost: 8kg   Rozměry: 33cm x 14cm x 3…
+- Parametry: Kategorie: Brašny na kolo; Rozměry (D × Š × V): 33 × 14 × 38 cm; Objem: 15 l; Nosnost: 8 kg; Typ kola: Gravel, e-bike, hardtail; Velikost rámu: S–XXL (vyžaduje klasický zadní nosič); Uchycení: Plastové úchyty – nacvaknutí na boční trubku zadního nosiče
 
-## BATOHY
+### MORSEO Plochý trojúhelník 2-kapsý (kód M311055)
+- URL: https://www.vapesport.cz/produkt/vs-ramova-brasna-nepromokavy-zip-945203
+- Cena (MOC s DPH): 619 Kč
+- Popis: Kompaktní rámová brašna s nízkým profilem a šířkou pouhých 6 cm – ideální na menší a dámské rámy, kde velká brašna nesedí. Silikonové pásky drží pevně a chrání lak.
+- Parametry: Rozměry (D × Š × V): 25 × 6 × 16 cm; Objem: 0,8 l; Nosnost: 0,8 kg; Doporučené rámy: S, M; Uchycení: zadní i přední část rámu (oboustranné); Voděodolnost: vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé); Úhel: 90°; Pásky: silikonové suché zipy 12 cm/ks + 2 navíc v balení; Kompatibilita: Kolo i elektrokolo, menší a dámské rámy
+- Barvy: šedá, bílá, červená, růžová, žlutá, zelená, modrá, zlatá
 
-### Cyklo batoh 9l (kód 410082)
-- URL: https://vapesport.cz/produkt/vs-cyklo-batoh-9l-904713
-- Cena (MOC s DPH): 982 Kč
-- Popis: Malý batoh o velikosti 9L. Součástí batohu je pláštěnka. Určen na cyklistiku, horskou turistiku nebo i do města.
+### MORSEO Střední trojúhelník 2-kapsý (kód M410102)
+- URL: https://www.vapesport.cz/produkt/vs-ramova-brasna-stredni-se-2-zipy-a-sitkou-945204
+- Cena (MOC s DPH): 640 Kč
+- Popis: Největší rámovka do e-kola – pobere rychlonabíječku Fast Charger i bidon. Šířka 7,5 cm neodírá stehna, upne se dopředu i dozadu.
+- Parametry: Rozměry (D × Š × V): 35 × 7,5 × 18,5 cm; Objem: 2 l; Nosnost: 1,4 kg; Doporučené rámy: L, XL, XXL; Uchycení: zadní i přední část rámu (oboustranné); Voděodolnost: vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé); Úhel: 90° (do pravoúhlého rohu rámu); Pásky: silikonové suché zipy 12 cm/ks + 2 navíc v balení; Kompatibilita: Elektrokolo, velké rámy (kde chybí košík na láhev)
+- Barvy: šedá, bílá, růžová, zelená, zlatá
 
+### MORSEO Transformer 5,5" (kód M411104)
+- URL: https://www.vapesport.cz/produkt/vs-brasna-na-mobil-5-5-945205
+- Cena (MOC s DPH): 531 Kč
+- Popis: Svislá brašna na řídítka a představec pro e-kola s ovládáním na horní trubce a bez displeje uprostřed. Dotyková fólie 16,5 × 9 cm – navigace za jízdy. Tenký profil nepřekáží.
+- Parametry: Rozměry (D × Š × V): 18 × 10 × 4 cm; Slída (průzor): 16,5 × 9 cm; Telefon: do cca 6,7"; Objem: 0,8 l; Nosnost: 0,8 kg; Voděodolnost: vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé); Uchycení: 3× na představec + 2× na řídítka; Kompatibilita: Elektrokolo a koloběžka (atypické rámy)
+- Barvy: šedá, bílá, červená, růžová, žlutá, zelená, modrá, zlatá
 
-## DOPLŇKY K BRAŠNÁM
+### MORSEO SMB 6,7" (kód M310073)
+- URL: https://www.vapesport.cz/produkt/vs-smb-morseo-945206
+- Cena (MOC s DPH): 599 Kč
+- Popis: MORSEO SMB 6,7" – brašna na mobil na horní rámovou trubku pro telefony do 6,7". Dotyková fólie pro navigaci, prodloužené silikonové pásky E-bike Ready na široké trubky a šetrné k laku.
+- Parametry: Rozměry (D × Š × V): 19 × 7 × 8–5,5 cm; Slída (průzor): 18 × 9 cm; Telefon: do cca 6,7"; Objem: 1,2 l; Nosnost: 0,5 kg; Voděodolnost: vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé); Pásky: silikonové suché zipy 12 cm/ks; Kompatibilita: Kolo i elektrokolo
+- Barvy: červená, růžová, žlutá, zelená, modrá, zlatá
 
-### KLICKfix Bottleklick (kód 411107)
-- URL: https://vapesport.cz/produkt/vs-klickfix-bottle-941236
-- Cena (MOC s DPH): 382 Kč
-- Popis: Odnímatelný držák pro košíky na láhev. S adaptérem Bottleklick nasadíte a sundáte jakýkoli košík na láhev jediným stiskem – košík se jednou spojí s můstkem adaptéru. Montáž nerezovým páskem (Unifit) na kulaté rámy i řídítka. Nedoporučuje se na karbonové a lehké díly.
-- Parametry: Uchycení: řídítka, sedlovka, rám, představec; Kompatibilní průměr trubek: Ø 15–60 mm (i hranaté profily); Kompatibilita: Jakýkoliv standardní košík na láhev (kov, plast, karbon); Materiál: Nerezová ocel (patent Unifit)
+### MORSEO WDB (voděodolná rámová) (kód M50001)
+- URL: https://www.vapesport.cz/produkt/vs-waterproof-bike-bag-bila-945208
+- Cena (MOC s DPH): 1055 Kč
+- Popis: 100% vodotěsná brašna na horní trubku – na e-bike, silničku i gravel. Nenateče ani kapka, aero tvar nepřekáží ve stoje. Telefon vložíš našikmo dovnitř.
+- Parametry: Rozměry (D × Š × V): 23 × 6,5 × 9–3 cm; Objem: 0,65 l; Nosnost: 0,5 kg; Doporučené rámy: univerzální; Voděodolnost: 100% nepromokavé; Kompatibilita: Elektrokolo, gravel, silniční i klasické (univerzální)
+- Barvy: šedá, bílá, červená, růžová, žlutá, zelená, modrá, zlatá
 
-### KLICKfix Mini Adapter (kód 310107)
-- URL: https://vapesport.cz/produkt/vs-klickfix-904710
-- Cena (MOC s DPH): 320 Kč
-- Popis: Malý, kulatý a všestranný adaptér KLICKfix. Hlavu lze otáčet po 90°, takže příslušenství připevníte ze čtyř směrů. Snadná montáž nerezovým páskem (Unifit) na rám, řídítka, představec či sedlovku o průměru 15–60 mm. Nedoporučuje se na karbonové a lehké díly – řiďte se pokyny výrobce kola.
-- Parametry: Uchycení: řídítka, sedlovka, rám, představec; Kompatibilita: Systém VAPE – Mobil 4,5"/5,5", Tablet 7–8", brašna na řídítka aj.; Materiál: Nerezová ocel (patent Unifit)
+### MORSEO WDS (voděodolná podsedlová) (kód M50002)
+- URL: https://www.vapesport.cz/produkt/vs-waterproof-saddle-bag-945209
+- Cena (MOC s DPH): 950 Kč
+- Popis: Ultralehká 100% vodotěsná podsedlová brašna se svařovanými švy. Boční suché zipy ji zachytí o sedlovku a spodní zip o její trubku; vnitřní síťka udrží drobnosti. Vaše nářadí zůstane v suchu i v největším blátě.
+- Parametry: Rozměry (D × Š × V): 17 × 6,5–5,5 × 8 cm; Objem: 0,85 l; Nosnost: 0,5 kg; Doporučené rámy: univerzální; Voděodolnost: 100% nepromokavé (materiál + zip); Kompatibilita: Elektrokolo, gravel, MTB i silniční (univerzální)
+- Barvy: šedá, bílá, červená, růžová, žlutá, zelená, zlatá
+
+### MORSEO SMB XXL 8" (kód M310073-1)
+- URL: https://www.vapesport.cz/produkt/vs-smb-morseo-zlata-947383
+- Cena (MOC s DPH): 640 Kč
+- Popis: Velká brašna na horní trubku e-biku. Vejde se i ten největší telefon v krytu (iPhone Pro Max, Galaxy Ultra), powerbanka i svačina. Přes slídu 10 × 19 cm ovládáš telefon bez vyndávání. Pásky drží jako přibité a nepodřou lak.
+- Parametry: Rozměry (D × Š × V): 20 × 8 × 8–5 cm; Slída (průzor): 10 × 19 cm (3,9" × 7,5"); Telefon: největší vlajkové modely i v odolném krytu; Objem: 1,2 l; Nosnost: 0,5 kg; Materiál: 600D / PVC, voděodolný zip; Voděodolnost: vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé); Kompatibilita: Elektrokolo (masivní rámy)
+- Barvy: šedá, bílá, červená, růžová, žlutá, zelená, modrá, zlatá
+
+### Brašna na míru (kód gpc-951815)
+- URL: https://www.vapesport.cz/produkt/vs-brasna-na-miru-951815
+- Cena (MOC s DPH): 2500 Kč
+- Popis: Brašna na míru pro váš rám. Společně projdeme krátkou konzultaci a dodáte přesné rozměry – my připravíme návrh a výrobu. Cena od 2 500 Kč. O…
+- Parametry: Kategorie: Brašny na kolo
 
 
 ## BRAŠNY NA MOBILNÍ TELEFONY
 
 ### Lady s mobilem (kód 410048)
-- URL: https://vapesport.cz/produkt/vs-lady-s-mobilem-904681
+- URL: https://www.vapesport.cz/produkt/vs-lady-s-mobilem-904681
 - Cena (MOC s DPH): 490 Kč
 - Popis: 2kapsá brašna přes rámovou trubku na kola, elektrokola i koloběžky.
-- Parametry: Rozměry: kapsy 19 × 12 × 5 cm (2×), pouzdro na mobil 16 × 10 cm; Objem: 1,6 l (2 × 0,8 l); Nosnost: 1,2 kg; Typ kola: Gravel, e-bike, celopéro, hardtail, koloběžky; Velikost rámu: S–XXL; Uchycení: Suché zipy na horní rámovou trubku + odnímatelné pouzdro na telefon
-- Barvy: neon-yellow, neon-green, neon-orange, red, pink, turquoise, blue
+- Parametry: Kategorie: Brašny na mobilní telefony; Varianty: 8 barev; Rozměry: kapsy 19 × 12 × 5 cm (2×), pouzdro na mobil 16 × 10 cm; Objem: 1,6 l (2 × 0,8 l); Nosnost: 1,2 kg; Typ kola: Gravel, e-bike, celopéro, hardtail, koloběžky; Velikost rámu: S–XXL; Uchycení: Suché zipy na horní rámovou trubku + odnímatelné pouzdro na telefon
+- Barvy: neonově žlutá, neonově zelená, neonově oranžová, červená, růžová, tyrkysová, modrá
 
 ### Tablet 7-8" PE (kód 410105)
-- URL: https://vapesport.cz/produkt/vs-tablet-7-8-pe-904716
+- URL: https://www.vapesport.cz/produkt/vs-tablet-7-8-pe-904716
 - Cena (MOC s DPH): 367 Kč
 - Popis: Obal na Ipad o velikosti 7-8". Uchopen na kolo za pomocí KLICKFIX adaptéru, který je součástí balení. Ochranný obal na tablet je lehce voděv…
-- Parametry: Rozměry: 16 × 23 × 2 cm; Kapacita: Tablet / iPad 7–8", mapy, doklady (plochý profil); Typ kola: Gravel, e-bike, hardtail; Montáž: Řídítka / představec; Uchycení: KLICKFIX – adaptér součástí balení
+- Parametry: Kategorie: Brašny na mobilní telefony; Rozměry (D × V × Š): 16 × 23 × 2 cm; Kapacita: Tablet / iPad 7–8", mapy, doklady (plochý profil); Typ kola: Gravel, e-bike, hardtail; Montáž: Řídítka / představec; Uchycení: KLICKFIX – adaptér součástí balení
+
+
+## RÁMOVÉ BRAŠNY
+
+### Trojúhelník Elektro I (kód 410005)
+- URL: https://www.vapesport.cz/produkt/vs-trojuhelnik-elektro-i-904682
+- Cena (MOC s DPH): 360 Kč
+- Popis: Elektro trojúhelník specialně vytvarovaný pro HAIBIKE  a LECTRON elektrokola.
+- Parametry: Kategorie: Rámové brašny; Varianty: 1 barev; Rozměry (D × V × Š): 21 × 20 × 5 cm; Objem: 1,5 l; Nosnost: 1 kg; Typ kola: E-bike, celopéro, hardtail; Velikost rámu: S–XXL (atypický tvar pro prohnutí rámu); Kompatibilita se značkami: Optimalizováno pro HAIBIKE; kompatibilní i LECTRON a CRUSSIS; Uchycení: Podšité suché zipy (ochrana laku)
+
+### MORSEO Elektro II (kód M410006)
+- URL: https://www.vapesport.cz/produkt/vs-ramova-brasna-nepromokavy-zip-947097
+- Cena (MOC s DPH): 620 Kč
+- Popis: Rámová brašna na elektrokolo, do které se pohodlně vejde i těžká nabíječka Bosch nebo Yamaha. Díky úzkému profilu (6–7 cm) se schová do prostoru nad integrovanou baterií a nepřekáží při šlapání. Prodloužené silikonové pásky drží pevně a chrání lak před podřením.
+- Parametry: Rozměry (D × Š × V): 24 × 6 × 20 cm; Objem: 2,5 l; Nosnost: 2 kg; Doporučené rámy: M, L, XL; Uchycení: zadní i přední část rámu (oboustranné); Voděodolnost: vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé); Úhel: 90° (do pravoúhlého rohu rámu); Pásky: silikonové suché zipy 12 cm/ks + 2 navíc v balení; Kompatibilita: Elektrokolo (integrovaná baterie), střední a větší rámy
+- Barvy: červená, bílá, růžová, žlutá, zelená, modrá, zlatá
+
+### MORSEO Plochý trojúhelník 2-kapsý FLEXI (kód M311055-1)
+- URL: https://www.vapesport.cz/produkt/vs-ramova-brasna-nepromokavy-zip-bila-947404
+- Cena (MOC s DPH): 619 Kč
+- Popis: Nízká rámovka (výška 16 cm), co obejde zadní tlumič u celopér. Uchytíš ji dopředu, dozadu i na horní trubku. Šířka 6 cm nepřekáží.
+- Parametry: Rozměry (D × Š × V): 25 × 6 × 16 cm; Objem: 0,8 l; Nosnost: 0,8 kg; Doporučené rámy: S, M; Uchycení: zadní i přední část rámu (oboustranné); Voděodolnost: vysoce nepromokavý materiál + nepromokavý zip (není 100% nepromokavé); Úhel: 90° (do pravoúhlého rohu rámu); Pásky: silikonové suché zipy 12 cm/ks + 2 navíc v balení; Kompatibilita: Elektrokolo (celoodpružené) i klasické kolo
+- Barvy: bílá, červená, růžová, žlutá, zelená, modrá, zlatá
+
+### Velký trojúhelník tříkapsý (kód 410002)
+- URL: https://www.vapesport.cz/produkt/vs-velky-trojuhelnik-3kapsy-410002
+- Cena (MOC s DPH): 490 Kč
+- Popis: Prostorná tříkapsá rámová brašna do rámů s velkým vnitřním prostorem. Tři oddělené kapsy na zip udrží pořádek, pojme i masivní nabíječku na e-kolo a šířka 6 cm nepřekáží při šlapání.
+- Parametry: Kategorie: Rámové brašny; Rozměry (D × Š × V): 36 × 6 × 27,5 cm; Objem: 2,6 L; Nosnost: 2 kg; Doporučené rámy: pánské/unisex; Voděodolnost: odolný materiál proti vodě; Barva: šedá; Typ kola: Gravel, e-bike, hardtail; Uchycení: Dlouhé suché zipy po obvodu + spodní stabilizační popruh (prostor i na e-nabíječku)
+
+
+## BRAŠNY NA NOSIČ
+
+### Brašna na nosič (kód 410122)
+- URL: https://www.vapesport.cz/produkt/vs-vapesport-904698
+- Cena (MOC s DPH): 999 Kč
+- Popis: Součástí brašny je pláštěnka, uchopení na suchý zip. Objem - 10L Nosnost - 8Kg Rozměry: 28cm x 16cm x 17cm x  Boční kapsa: 23cm x 12cm  x 4c…
+- Parametry: Kategorie: Brašny na nosič; Rozměry: tělo 28 × 16 × 17 cm; boční kapsa 23 × 12 × 4 cm; Objem: 10 l; Nosnost: 8 kg; Typ kola: Gravel, e-bike, hardtail; Velikost rámu: S–XXL (vyžaduje zadní nosič); Uchycení: Robustní suché zipy na konstrukci zadního nosiče
+
+### Brašna na nosič LUX (kód 411122)
+- URL: https://www.vapesport.cz/produkt/vs-vapesport-904699
+- Cena (MOC s DPH): 1466 Kč
+- Popis: Brašna s bočními plnohodnotnými výklopnými kapsami ze stejného materiálu, jako je celá brašna.  boční uchopení na suchý zip a uchopení boční…
+- Parametry: Kategorie: Brašny na nosič; Rozměry: tělo 28 × 16 × 17 cm; výklopné boční kapsy 21 × 34 × 4 cm (2×); Objem: až 20 l; Nosnost: 12 kg; Typ kola: Gravel, e-bike, hardtail; Velikost rámu: S–XXL (vyžaduje klasický zadní nosič); Uchycení: 4× horní suchý zip + spodní pojistný popruh + přední suché zipy + mechanický háček
+
+
+## BRAŠNY POD SEDLO
+
+### Brašna pod sedlo žralok TWIST (kód 310121)
+- URL: https://www.vapesport.cz/produkt/vs-brasna-pod-sedlo-zralok-twist-904706
+- Cena (MOC s DPH): 393 Kč
+- Popis: Podsedlová brašna s rozšířením. 2 zipy pro zvětšení objemu brašny.
+- Parametry: Kategorie: Brašny pod sedlo; Varianty: 1 barev; Rozměry (D × V × Š): 14 × 11–16 × 9 cm; Objem: 0,6–1 l (roztažitelné dno); Nosnost: 1 kg; Typ kola: Gravel, e-bike, celopéro, hardtail; Velikost rámu: S–XXL (u rámů M a menších jen s pevnou sedlovkou); Uchycení: Rychloupínací zámek TWIST pod ližiny sedla + volitelný pásek na sedlovku
+
+### Podsedlo malá SPE (kód 410046)
+- URL: https://www.vapesport.cz/produkt/vs-podsedlo-mala-spe-904708
+- Cena (MOC s DPH): 411 Kč
+- Popis: Podsedlová brašna Vapesport s rychlým uchycením na suchý zip Kompaktní a elegantní podsedlovka navržená pro cyklisty, kteří preferují rychlo…
+- Parametry: Kategorie: Brašny pod sedlo; Rozměry (D × Š × V): 19 × 9 × 8 cm; Objem: 0,7 l; Nosnost: 0,6 kg; Typ kola: Gravel, e-bike, celopéro, hardtail; Velikost rámu: S–XXL (univerzální podsedlový střih); Uchycení: Podšité suché zipy (ochrana cyklodresu i laku)
+
+### M2 podsedlo (kód 411046)
+- URL: https://www.vapesport.cz/produkt/vs-m2-podsedlo-925467
+- Cena (MOC s DPH): 355 Kč
+- Popis: Malá podsedlo s uchopením na klip
+- Parametry: Kategorie: Brašny pod sedlo; Varianty: 9 barev
+- Barvy: černá, šedá, neonově žlutá, žlutá, neonově zelená, neonově oranžová, červená, růžová, tyrkysová, modrá
+
+
+## DOPLŇKY K BRAŠNÁM
+
+### KLICKfix Mini Adapter (kód 310107)
+- URL: https://www.vapesport.cz/produkt/vs-klickfix-904710
+- Cena (MOC s DPH): 320 Kč
+- Popis: Malý, kulatý a všestranný adaptér KLICKfix. Hlavu lze otáčet po 90°, takže příslušenství připevníte ze čtyř směrů. Snadná montáž nerezovým páskem (Unifit) na rám, řídítka, představec či sedlovku o průměru 15–60 mm. Nedoporučuje se na karbonové a lehké díly – řiďte se pokyny výrobce kola.
+- Parametry: Kategorie: Doplňky k brašnám; Kód (KLICKfix): 0000MA; EAN: 4030572000074; Hmotnost: 35 g; Max. zatížení: 1 kg; Průměr uchycení: 15–60 mm; Uchycení: řídítka, sedlovka, rám, představec; Rozsah otáčení hlavy: 360° (po 90° krocích); Utahovací moment: max. 2 Nm; Materiál popruhu: Nerezová ocel (patent Unifit); Kompatibilita: Systém VAPE – Mobil 4,5"/5,5", Tablet 7–8", brašna na řídítka aj.
+
+### KLICKfix Bottleklick (kód 411107)
+- URL: https://www.vapesport.cz/produkt/vs-klickfix-bottle-941236
+- Cena (MOC s DPH): 382 Kč
+- Popis: Odnímatelný držák pro košíky na láhev. S adaptérem Bottleklick nasadíte a sundáte jakýkoli košík na láhev jediným stiskem – košík se jednou spojí s můstkem adaptéru. Montáž nerezovým páskem (Unifit) na kulaté rámy i řídítka. Nedoporučuje se na karbonové a lehké díly.
+- Parametry: Kategorie: Doplňky k brašnám; Kód (KLICKfix): 1650; EAN: 4030572002184; Hmotnost: 60 g; Max. zatížení: 1 kg; Uchycení: řídítka, sedlovka, rám, představec; Kompatibilní průměr trubek: Ø 15–60 mm (i hranaté profily); Utahovací moment: 1,5 Nm; Materiál popruhu: Nerezová ocel (patent Unifit); Kompatibilita: Jakýkoliv standardní košík na láhev (kov, plast, karbon)
+
+
+## BATOHY
+
+### Cyklo batoh 9l (kód 410082)
+- URL: https://www.vapesport.cz/produkt/vs-cyklo-batoh-9l-904713
+- Cena (MOC s DPH): 982 Kč
+- Popis: Malý batoh o velikosti 9L. Součástí batohu je pláštěnka. Určen na cyklistiku, horskou turistiku nebo i do města.
+- Parametry: Kategorie: Batohy; Varianty: 3 barev
 
 
 ## ELEKTROKOLA
 
-### Neoprenová sada na převoz elektrokola (kód 410096)
-- URL: https://vapesport.cz/produkt/vs-neoprenova-sada-na-prevoz-elektrokola-943570
-- Cena (MOC s DPH): 1100 Kč
-- Popis: BALÍČEK na převoz elektrokol zahrnuje obal na rám elektrokola se 3 suchými zipy pro různé obvody rámů, obal na display a popruh na zajištění…
-
-### Obal na převoz elektrokola (kód 410099)
-- URL: https://vapesport.cz/produkt/vs-obal-na-prevoz-elektrokola-943567
-- Cena (MOC s DPH): 620 Kč
-- Popis: Neoprenový obal na suché zipy, které jsou variabilní pro uchopení od nejširšího po nejtenčí rámy. Délka neoprenu je 50cm.
-
 ### Obal na tlumič (kód 210605)
-- URL: https://vapesport.cz/produkt/vs-obal-na-tlumic-908656
+- URL: https://www.vapesport.cz/produkt/vs-obal-na-tlumic-908656
 - Cena (MOC s DPH): 333 Kč
 - Popis: Ochrana před vnějšími vlivy.
+- Parametry: Kategorie: Elektrokola
+
+### Obal na převoz elektrokola (kód 410099)
+- URL: https://www.vapesport.cz/produkt/vs-obal-na-prevoz-elektrokola-943567
+- Cena (MOC s DPH): 620 Kč
+- Popis: Neoprenový obal na suché zipy, které jsou variabilní pro uchopení od nejširšího po nejtenčí rámy. Délka neoprenu je 50cm.
+- Parametry: Kategorie: Elektrokola
+
+### Neoprenová sada na převoz elektrokola (kód 410096)
+- URL: https://www.vapesport.cz/produkt/vs-neoprenova-sada-na-prevoz-elektrokola-943570
+- Cena (MOC s DPH): 1100 Kč
+- Popis: BALÍČEK na převoz elektrokol zahrnuje obal na rám elektrokola se 3 suchými zipy pro různé obvody rámů, obal na display a popruh na zajištění…
+- Parametry: Kategorie: Elektrokola
 
 
 ## BRAŠNY PRO ELEKTROKOLO
 
 ### Neoprenový obal (kód 111222)
-- URL: https://vapesport.cz/produkt/vs-neoprenovy-obal-938229
+- URL: https://www.vapesport.cz/produkt/vs-neoprenovy-obal-938229
 - Cena (MOC s DPH): 578 Kč
 - Popis: Neopren na míru je vytvořen na základě Vašich požadavků. Budeme však potřebovat základní údaje, které napište do poznámky: -značka elektroko…
-- Parametry: Rozměry: Plně variabilní – šito na míru dle zadání zákazníka; Kompatibilita: Univerzální na míru (Haibike, Crussis, Lectron, Cube, Specialized aj.); Materiál: Premium neopren (termoizolační, voděodolný, tlumící)
-
-
-## NEOPRENOVÉ OBALY
-
-### Obal na display na míru (kód 210604)
-- URL: https://vapesport.cz/produkt/vs-obal-na-display-na-miru-210604
-- Cena (MOC s DPH): 445 Kč
-- Popis: Neoprenová ochrana displeje elektrokola při převozu. Chrání display před tlakovou vodou a solí – ideální při převozu kola na nosiči auta.
-- Parametry: Kompatibilita: Elektrokolo; Materiál: neopren
-
-
-## BRAŠNY POD SEDLO
-
-### Podsedlo malá SPE (kód 410046)
-- URL: https://vapesport.cz/produkt/vs-podsedlo-mala-spe-904708
-- Cena (MOC s DPH): 411 Kč
-- Popis: Podsedlová brašna Vapesport s rychlým uchycením na suchý zip Kompaktní a elegantní podsedlovka navržená pro cyklisty, kteří preferují rychlo…
-- Parametry: Rozměry: 19 × 9 × 8 cm; Objem: 0,7 l; Nosnost: 0,6 kg; Typ kola: Gravel, e-bike, celopéro, hardtail; Velikost rámu: S–XXL (univerzální podsedlový střih); Uchycení: Podšité suché zipy (ochrana cyklodresu i laku)
-
-### Brašna pod sedlo žralok TWIST (kód 310121)
-- URL: https://vapesport.cz/produkt/vs-brasna-pod-sedlo-zralok-twist-904706
-- Cena (MOC s DPH): 393 Kč
-- Popis: Podsedlová brašna s rozšířením. 2 zipy pro zvětšení objemu brašny.
-- Parametry: Rozměry: 14 × 11–16 × 9 cm; Objem: 0,6–1 l (roztažitelné dno); Nosnost: 1 kg; Typ kola: Gravel, e-bike, celopéro, hardtail; Velikost rámu: S–XXL (u rámů M a menších jen s pevnou sedlovkou); Uchycení: Rychloupínací zámek TWIST pod ližiny sedla + volitelný pásek na sedlovku
-
-### M2 podsedlo (kód 411046)
-- URL: https://vapesport.cz/produkt/vs-m2-podsedlo-925467
-- Cena (MOC s DPH): 355 Kč
-- Popis: Malá podsedlo s uchopením na klip
-- Barvy: black, grey, neon-yellow, yellow, neon-green, neon-orange, red, pink, turquoise, blue
-
-
-## RÁMOVÉ BRAŠNY
-
-### Velký trojúhelník tříkapsý (kód 410002)
-- URL: https://vapesport.cz/produkt/vs-velky-trojuhelnik-3kapsy-410002
-- Cena (MOC s DPH): 490 Kč
-- Popis: Prostorná tříkapsá rámová brašna do rámů s velkým vnitřním prostorem. Tři oddělené kapsy na zip udrží pořádek, pojme i masivní nabíječku na e-kolo a šířka 6 cm nepřekáží při šlapání.
-- Parametry: Rozměry: 36 × 6 × 27,5 cm; Objem: 2,6 L; Nosnost: 2 kg; Typ kola: Gravel, e-bike, hardtail; Uchycení: Dlouhé suché zipy po obvodu + spodní stabilizační popruh (prostor i na e-nabíječku)
-
-### MORSEO Elektro II (kód M410006)
-- URL: https://vapesport.cz/produkt/vs-ramova-brasna-nepromokavy-zip-947097
-- Cena (MOC s DPH): 620 Kč
-- Popis: Rámová brašna na elektrokolo, do které se pohodlně vejde i těžká nabíječka Bosch nebo Yamaha. Díky úzkému profilu (6–7 cm) se schová do prostoru nad integrovanou baterií a nepřekáží při šlapání. Prodloužené silikonové pásky drží pevně a chrání lak před podřením.
-- Parametry: Rozměry: 24 × 6 × 20 cm; Objem: 2,5 l; Nosnost: 2 kg; Uchycení: zadní i přední část rámu (oboustranné); Kompatibilita: Elektrokolo (integrovaná baterie), střední a větší rámy
-- Barvy: coral-code, arctic-white, flamingo-luxe, dandelite-yellow, lime-spark, lazurite-blue, golden-wheat
-
-### MORSEO Plochý trojúhelník 2-kapsý FLEXI (kód M311055-1)
-- URL: https://vapesport.cz/produkt/vs-ramova-brasna-nepromokavy-zip-bila-947404
-- Cena (MOC s DPH): 619 Kč
-- Popis: Nízká rámovka (výška 16 cm), co obejde zadní tlumič u celopér. Uchytíš ji dopředu, dozadu i na horní trubku. Šířka 6 cm nepřekáží.
-- Parametry: Rozměry: 25 × 6 × 16 cm; Objem: 0,8 l; Nosnost: 0,8 kg; Uchycení: zadní i přední část rámu (oboustranné); Kompatibilita: Elektrokolo (celoodpružené) i klasické kolo
-- Barvy: arctic-white, coral-code, flamingo-luxe, dandelite-yellow, lime-spark, lazurite-blue, golden-wheat
-
-### Trojúhelník Elektro I (kód 410005)
-- URL: https://vapesport.cz/produkt/vs-trojuhelnik-elektro-i-904682
-- Cena (MOC s DPH): 360 Kč
-- Popis: Elektro trojúhelník specialně vytvarovaný pro HAIBIKE  a LECTRON elektrokola.
-- Parametry: Rozměry: 21 × 20 × 5 cm; Objem: 1,5 l; Nosnost: 1 kg; Typ kola: E-bike, celopéro, hardtail; Velikost rámu: S–XXL (atypický tvar pro prohnutí rámu); Uchycení: Podšité suché zipy (ochrana laku); Kompatibilita: Optimalizováno pro HAIBIKE; kompatibilní i LECTRON a CRUSSIS
+- Parametry: Kategorie: Brašny pro ELEKTROKOLO; Rozměry: Plně variabilní – šito na míru dle zadání zákazníka; Materiál: Premium neopren (termoizolační, voděodolný, tlumící); Kompatibilita: Univerzální na míru (Haibike, Crussis, Lectron, Cube, Specialized aj.); Pozn. k objednávce: V poznámce uvést typ e-kola + délku a 3× obvod trubky
 
 
 ## PODSEDLOVÉ BRAŠNY
 
 ### Podsedlo Twist žralok LED (kód 410121)
-- URL: https://vapesport.cz/produkt/vs-podsedlo-twist-zralok-led-410121
+- URL: https://www.vapesport.cz/produkt/vs-podsedlo-twist-zralok-led-410121
 - Cena (MOC s DPH): 555 Kč
 - Popis: Bezpečnostní podsedlovka s integrovaným LED světlem a rozšiřitelným objemem (Active Safety). ŽRALOK expandér zvětší objem až na 1 L, mechanický TWIST úchyt je součástí balení.
-- Parametry: Rozměry: 14 × 9 × 11–16 cm; Objem: 0,6–1 L; Nosnost: 1 kg; Typ kola: Gravel, e-bike, celopéro, hardtail; Velikost rámu: S–XXL (u rámů M a menších jen s pevnou sedlovkou); Uchycení: Rychloupínací zámek TWIST pod ližiny sedla + volitelný pásek na sedlovku
-- Barvy: black, grey, neon-yellow, neon-green, neon-orange, red, pink, turquoise, blue
+- Parametry: Kategorie: Podsedlové brašny; Rozměry (D × Š × V): 14 × 9 × 11–16 cm; Objem: 0,6–1 L; Nosnost: 1 kg; Voděodolnost: odolný materiál proti vodě; Varianty: 8 barev; Typ kola: Gravel, e-bike, celopéro, hardtail; Velikost rámu: S–XXL (u rámů M a menších jen s pevnou sedlovkou); Uchycení: Rychloupínací zámek TWIST pod ližiny sedla + volitelný pásek na sedlovku
+- Barvy: černá, šedá, neonově žlutá, neonově zelená, neonově oranžová, červená, růžová, tyrkysová, modrá
+
+
+## NEOPRENOVÉ OBALY
+
+### Obal na display na míru (kód 210604)
+- URL: https://www.vapesport.cz/produkt/vs-obal-na-display-na-miru-210604
+- Cena (MOC s DPH): 445 Kč
+- Popis: Neoprenová ochrana displeje elektrokola při převozu. Chrání display před tlakovou vodou a solí – ideální při převozu kola na nosiči auta.
+- Parametry: Kategorie: Neoprenové obaly; Materiál: neopren; Kompatibilita: Elektrokolo
+

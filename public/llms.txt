@@ -3,11 +3,11 @@
 > Prémiové cyklobrašny a příslušenství pro elektrokola, gravel, koloběžky a městská kola. Česká značka od roku 1994. B2B velkoobchod i maloobchodní e-shop. Prémiová řada MORSEO.
 
 ## Hlavní stránky
-- [Obchod](https://vapesport.cz/obchod): Kompletní katalog brašen podle typu kola a umístění
-- [Kolekce MORSEO](https://vapesport.cz/kolekce-morseo): Prémiová designová řada brašen
-- [O nás](https://vapesport.cz/o-nas): Historie a příběh značky Vapesport
-- [B2B velkoobchod](https://vapesport.cz/b2b-velkoobchod): Informace pro prodejce a velkoobchodní partnery
-- [Kontakt](https://vapesport.cz/kontakt): Kontaktní údaje
+- [Obchod](https://www.vapesport.cz/obchod): Kompletní katalog brašen podle typu kola a umístění
+- [Kolekce MORSEO](https://www.vapesport.cz/kolekce-morseo): Prémiová designová řada brašen
+- [O nás](https://www.vapesport.cz/o-nas): Historie a příběh značky Vapesport
+- [B2B velkoobchod](https://www.vapesport.cz/b2b-velkoobchod): Informace pro prodejce a velkoobchodní partnery
+- [Kontakt](https://www.vapesport.cz/kontakt): Kontaktní údaje
 
 ## Odkazy
-- [XML sitemap](https://vapesport.cz/sitemap.xml): Úplný seznam stránek a produktů
+- [XML sitemap](https://www.vapesport.cz/sitemap.xml): Úplný seznam stránek a produktů

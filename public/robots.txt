@@ -10,4 +10,4 @@ Disallow: /b2b-register
 Disallow: /kosik
 Disallow: /pokladna
 
-Sitemap: https://vapesport.cz/sitemap.xml
+Sitemap: https://www.vapesport.cz/sitemap.xml
