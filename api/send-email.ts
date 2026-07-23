@@ -58,6 +58,22 @@ async function findOrder(orderNumber: string) {
   }
 }
 
+// --- najít B2B profil podle e-mailu (invoice_email) ---
+async function findB2BProfile(email: string) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !email) return null;
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/b2b_profiles?invoice_email=eq.${encodeURIComponent(
+      email
+    )}&select=company_name,status&limit=1`;
+    const r = await fetch(url, { headers: { apikey: SUPABASE_SERVICE_KEY } });
+    if (!r.ok) return null;
+    const rows = await r.json();
+    return Array.isArray(rows) && rows.length ? rows[0] : null;
+  } catch {
+    return null;
+  }
+}
+
 // --- odeslání přes Resend ---
 async function sendEmail(opts: {
   to: string;
@@ -173,6 +189,32 @@ function registrationEmail(u: any) {
   return layout("Vítejte ve Vapesportu", body);
 }
 
+// B2B: potvrzení registrace (žádost přijata, čeká na schválení)
+function b2bPendingEmail(u: any) {
+  const jmeno = u.contactName || u.company || "";
+  const body = `
+    <p style="font-size:16px;margin:0 0 14px;">Dobrý den${jmeno ? " " + escapeHtml(jmeno) : ""},</p>
+    <p style="margin:0 0 18px;line-height:1.6;">děkujeme za registraci do velkoobchodu Vapesport${u.company ? ` (<strong>${escapeHtml(u.company)}</strong>)` : ""}. Vaši žádost jsme přijali a nyní ji zkontrolujeme.</p>
+    <div style="background:${CONCRETE};border-radius:6px;padding:14px 18px;margin-bottom:18px;font-size:14px;line-height:1.7;">
+      Jakmile žádost schválíme, dáme vám vědět e-mailem a budete se moci přihlásit s velkoobchodními cenami.
+    </div>
+    <p style="margin:0;line-height:1.6;">Kdyby cokoli, stačí odpovědět na tento e-mail. Děkujeme za zájem!</p>
+  `;
+  return layout("Registrace přijata", body);
+}
+
+// B2B: schválení účtu
+function b2bApprovedEmail(u: any) {
+  const jmeno = u.contactName || u.company || "";
+  const body = `
+    <p style="font-size:16px;margin:0 0 14px;">Dobrý den${jmeno ? " " + escapeHtml(jmeno) : ""},</p>
+    <p style="margin:0 0 18px;line-height:1.6;">máme pro vás dobrou zprávu — váš velkoobchodní účet Vapesport${u.company ? ` (<strong>${escapeHtml(u.company)}</strong>)` : ""} byl <strong>schválen</strong>. Nyní se můžete přihlásit a nakupovat s velkoobchodními cenami.</p>
+    <a href="https://www.vapesport.cz/b2b" style="display:inline-block;background:${MOSS};color:#fff;text-decoration:none;padding:12px 22px;border-radius:4px;font-weight:700;">Přihlásit se do B2B →</a>
+    <p style="margin:18px 0 0;line-height:1.6;">Přihlašujete se e-mailem a heslem, které jste zadali při registraci. Kdyby cokoli, stačí odpovědět na tento e-mail.</p>
+  `;
+  return layout("Váš B2B účet byl schválen", body);
+}
+
 function paymentEmail(p: any) {
   const vs = p.vs || (String(p.orderNumber).replace(/\D/g, "") || String(p.orderNumber));
   const qrBlock = p.qrCid
@@ -282,7 +324,46 @@ export default async function handler(req: any, res: any) {
       return res.status(200).json({ ok: true });
     }
 
-    return res.status(400).json({ error: "Neznámý typ (order / payment / registration)." });
+    if (type === "b2b_pending") {
+      // Potvrzení registrace. Anti-spam: pošleme jen pokud pro daný e-mail
+      // opravdu existuje B2B profil (ověřeno přes service key).
+      const u = body.user || {};
+      const email = String(u.email || "").trim();
+      if (!email) return res.status(400).json({ error: "Chybí email." });
+      const prof = await findB2BProfile(email);
+      if (!prof) return res.status(200).json({ ok: true, skipped: "no_profile" });
+      await sendEmail({
+        to: email,
+        subject: "Registrace přijata – čeká na schválení | Vapesport B2B",
+        html: b2bPendingEmail({ ...u, company: u.company ?? prof.company_name }),
+        replyTo: SHOP_EMAIL,
+      });
+      return res.status(200).json({ ok: true });
+    }
+
+    if (type === "b2b_approved") {
+      // Schválení. Smí spustit jen přihlášený uživatel (admin) a jen pokud
+      // profil s daným e-mailem je opravdu approved.
+      const token = body.token || (req.headers?.authorization || "").replace(/^Bearer\s+/i, "");
+      const user = await verifyUser(token);
+      if (!user || !user.id) return res.status(401).json({ error: "Nepřihlášený uživatel." });
+      const u = body.user || {};
+      const email = String(u.email || "").trim();
+      if (!email) return res.status(400).json({ error: "Chybí email." });
+      const prof = await findB2BProfile(email);
+      if (!prof || prof.status !== "approved") {
+        return res.status(200).json({ ok: true, skipped: "not_approved" });
+      }
+      await sendEmail({
+        to: email,
+        subject: "Váš B2B účet byl schválen | Vapesport",
+        html: b2bApprovedEmail({ ...u, company: u.company ?? prof.company_name }),
+        replyTo: SHOP_EMAIL,
+      });
+      return res.status(200).json({ ok: true });
+    }
+
+    return res.status(400).json({ error: "Neznámý typ (order / payment / registration / b2b_pending / b2b_approved)." });
   } catch (e: any) {
     return res.status(500).json({ error: String(e?.message || e) });
   }

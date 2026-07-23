@@ -38,6 +38,7 @@ const AdminB2B = () => {
   const [savingId, setSavingId] = useState<string | null>(null);
   const [editing, setEditing] = useState<Partner | null>(null);
   const [form, setForm] = useState<EditForm>(EMPTY_FORM);
+  const [pendingDiscounts, setPendingDiscounts] = useState<Record<string, number>>({});
   const [savingEdit, setSavingEdit] = useState(false);
 
   const loadAll = async () => {
@@ -76,14 +77,39 @@ const AdminB2B = () => {
 
   const handleApprove = async (id: string) => {
     setLoadingAction(id);
+    const discount = Math.max(0, Math.min(100, pendingDiscounts[id] ?? 0));
     const { data } = await supabase
       .from("b2b_profiles")
-      .update({ status: "approved", discount_percent: 0 })
+      .update({ status: "approved", discount_percent: discount })
       .eq("id", id)
       .select()
       .single();
     setRegistrations((r) => r.filter((x) => x.id !== id));
     if (data) setApproved((a) => [...a, data].sort((x, y) => x.company_name.localeCompare(y.company_name)));
+
+    // E-mail partnerovi „účet schválen" (best-effort)
+    if (data?.invoice_email) {
+      try {
+        const { data: sess } = await supabase.auth.getSession();
+        const token = sess?.session?.access_token;
+        await fetch("/api/send-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "b2b_approved",
+            token,
+            user: {
+              email: data.invoice_email,
+              company: data.company_name,
+              contactName: data.contact_person,
+            },
+          }),
+        });
+      } catch {
+        /* schválení platí i když se e-mail nepovede odeslat */
+      }
+    }
+
     setLoadingAction(null);
     toast.success("Partner schválen");
   };
@@ -224,6 +250,7 @@ const AdminB2B = () => {
                       <th className="text-left px-4 py-3 font-semibold text-foreground">Kontaktní osoba</th>
                       <th className="text-left px-4 py-3 font-semibold text-foreground">Telefon</th>
                       <th className="text-left px-4 py-3 font-semibold text-foreground">Adresa</th>
+                      <th className="text-left px-4 py-3 font-semibold text-foreground">Sleva (%)</th>
                       <th className="text-right px-4 py-3 font-semibold text-foreground">Akce</th>
                     </tr>
                   </thead>
@@ -238,6 +265,22 @@ const AdminB2B = () => {
                         <td className="px-4 py-3 text-foreground">{r.contact_person}</td>
                         <td className="px-4 py-3 text-foreground">{r.phone}</td>
                         <td className="px-4 py-3 text-foreground text-xs">{r.address}, {r.city} {r.zip}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-1">
+                            <Input
+                              type="number"
+                              min={0}
+                              max={100}
+                              value={pendingDiscounts[r.id] ?? 0}
+                              onChange={(e) => {
+                                const v = Math.max(0, Math.min(100, parseInt(e.target.value, 10) || 0));
+                                setPendingDiscounts((d) => ({ ...d, [r.id]: v }));
+                              }}
+                              className="h-8 w-20 text-sm"
+                            />
+                            <span className="text-xs text-muted-foreground">%</span>
+                          </div>
+                        </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center justify-end gap-2">
                             <Button size="sm" variant="ghost" className="gap-1.5 text-xs font-bold" onClick={() => openEdit(r)}>
