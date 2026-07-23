@@ -23,6 +23,7 @@ import { AdminProducts, AdminServices } from "./pages/admin/AdminProductTable";
 import AdminProductEdit from "./pages/admin/AdminProductEdit";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminB2B from "./pages/admin/AdminB2B";
+import AdminNewsletters from "./pages/admin/AdminNewsletters";
 import AdminPromoCodes from "./pages/admin/AdminPromoCodes";
 import AdminSettings from "./pages/admin/AdminSettings";
 import Withdrawal from "./pages/Withdrawal";
@@ -71,6 +72,7 @@ export const routes: RouteRecord[] = [
           { path: "sluzby", element: <AdminServices /> },
           { path: "objednavky", element: <AdminOrders /> },
           { path: "b2b", element: <AdminB2B /> },
+          { path: "newslettery", element: <AdminNewsletters /> },
           { path: "slevy", element: <AdminPromoCodes /> },
           { path: "nastaveni", element: <AdminSettings /> },
         ],

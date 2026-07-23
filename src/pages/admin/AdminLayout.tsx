@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Loader2, LayoutDashboard, Package, Sparkles, ShoppingCart, LogOut, Moon, Sun, Users, Ticket, Settings as SettingsIcon } from "lucide-react";
+import { Loader2, LayoutDashboard, Package, Sparkles, ShoppingCart, LogOut, Moon, Sun, Users, Ticket, Mail, Settings as SettingsIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { checkAdminRole, clearStoredAdminSession, getStoredAdminSession } from "@/lib/adminAuth";
@@ -72,6 +72,7 @@ const AdminLayout = () => {
     { to: "/admin/produkty", label: "Produkty", icon: Package, badge: 0 },
     { to: "/admin/sluzby", label: "Služby", icon: Sparkles, badge: 0 },
     { to: "/admin/b2b", label: "B2B partneři", icon: Users, badge: counts.pendingB2B },
+    { to: "/admin/newslettery", label: "Newslettery", icon: Mail, badge: 0 },
     { to: "/admin/slevy", label: "Slevové kódy", icon: Ticket, badge: 0 },
     { to: "/admin/nastaveni", label: "Nastavení", icon: SettingsIcon, badge: 0 },
   ];
