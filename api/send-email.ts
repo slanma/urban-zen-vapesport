@@ -58,22 +58,6 @@ async function findOrder(orderNumber: string) {
   }
 }
 
-// --- najít B2B profil podle e-mailu (invoice_email) ---
-async function findB2BProfile(email: string) {
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !email) return null;
-  try {
-    const url = `${SUPABASE_URL}/rest/v1/b2b_profiles?invoice_email=eq.${encodeURIComponent(
-      email
-    )}&select=company_name,status&limit=1`;
-    const r = await fetch(url, { headers: { apikey: SUPABASE_SERVICE_KEY } });
-    if (!r.ok) return null;
-    const rows = await r.json();
-    return Array.isArray(rows) && rows.length ? rows[0] : null;
-  } catch {
-    return null;
-  }
-}
-
 // --- odeslání přes Resend ---
 async function sendEmail(opts: {
   to: string;
@@ -325,39 +309,32 @@ export default async function handler(req: any, res: any) {
     }
 
     if (type === "b2b_pending") {
-      // Potvrzení registrace. Anti-spam: pošleme jen pokud pro daný e-mail
-      // opravdu existuje B2B profil (ověřeno přes service key).
+      // Potvrzení registrace. Volá jen naše registrační funkce (register-b2b),
+      // takže e-mail posíláme rovnou bez další kontroly v DB.
       const u = body.user || {};
       const email = String(u.email || "").trim();
       if (!email) return res.status(400).json({ error: "Chybí email." });
-      const prof = await findB2BProfile(email);
-      if (!prof) return res.status(200).json({ ok: true, skipped: "no_profile" });
       await sendEmail({
         to: email,
         subject: "Registrace přijata – čeká na schválení | Vapesport B2B",
-        html: b2bPendingEmail({ ...u, company: u.company ?? prof.company_name }),
+        html: b2bPendingEmail(u),
         replyTo: SHOP_EMAIL,
       });
       return res.status(200).json({ ok: true });
     }
 
     if (type === "b2b_approved") {
-      // Schválení. Smí spustit jen přihlášený uživatel (admin) a jen pokud
-      // profil s daným e-mailem je opravdu approved.
+      // Schválení. Smí spustit jen přihlášený uživatel (admin).
       const token = body.token || (req.headers?.authorization || "").replace(/^Bearer\s+/i, "");
       const user = await verifyUser(token);
       if (!user || !user.id) return res.status(401).json({ error: "Nepřihlášený uživatel." });
       const u = body.user || {};
       const email = String(u.email || "").trim();
       if (!email) return res.status(400).json({ error: "Chybí email." });
-      const prof = await findB2BProfile(email);
-      if (!prof || prof.status !== "approved") {
-        return res.status(200).json({ ok: true, skipped: "not_approved" });
-      }
       await sendEmail({
         to: email,
         subject: "Váš B2B účet byl schválen | Vapesport",
-        html: b2bApprovedEmail({ ...u, company: u.company ?? prof.company_name }),
+        html: b2bApprovedEmail(u),
         replyTo: SHOP_EMAIL,
       });
       return res.status(200).json({ ok: true });
