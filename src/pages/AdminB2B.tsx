@@ -22,14 +22,11 @@ interface EditForm {
   city: string;
   zip: string;
   notes: string;
-  obrat_2025: string;
-  obrat_2026: string;
 }
 
 const EMPTY_FORM: EditForm = {
   company_name: "", ico: "", dic: "", contact_person: "",
   phone: "", address: "", city: "", zip: "", notes: "",
-  obrat_2025: "", obrat_2026: "",
 };
 
 const AdminB2B = () => {
@@ -41,7 +38,24 @@ const AdminB2B = () => {
   const [savingId, setSavingId] = useState<string | null>(null);
   const [editing, setEditing] = useState<Partner | null>(null);
   const [form, setForm] = useState<EditForm>(EMPTY_FORM);
+  const [pendingDiscounts, setPendingDiscounts] = useState<Record<string, number>>({});
   const [savingEdit, setSavingEdit] = useState(false);
+  const [search, setSearch] = useState("");
+  const [discountFilter, setDiscountFilter] = useState<"all" | "with" | "without">("all");
+
+  // Filtrovaný seznam schválených partnerů (hledání textem + filtr slevy)
+  const approvedFiltered = approved.filter((p) => {
+    const disc = Number(p.discount_percent) || 0;
+    if (discountFilter === "with" && disc <= 0) return false;
+    if (discountFilter === "without" && disc > 0) return false;
+    const q = search.trim().toLowerCase();
+    if (!q) return true;
+    const hay = [p.company_name, p.contact_person, p.invoice_email, p.city, p.ico, p.phone, p.notes]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    return hay.includes(q);
+  });
 
   const loadAll = async () => {
     setLoading(true);
@@ -79,14 +93,39 @@ const AdminB2B = () => {
 
   const handleApprove = async (id: string) => {
     setLoadingAction(id);
+    const discount = Math.max(0, Math.min(100, pendingDiscounts[id] ?? 0));
     const { data } = await supabase
       .from("b2b_profiles")
-      .update({ status: "approved", discount_percent: 0 })
+      .update({ status: "approved", discount_percent: discount })
       .eq("id", id)
       .select()
       .single();
     setRegistrations((r) => r.filter((x) => x.id !== id));
     if (data) setApproved((a) => [...a, data].sort((x, y) => x.company_name.localeCompare(y.company_name)));
+
+    // E-mail partnerovi „účet schválen" (best-effort)
+    if (data?.invoice_email) {
+      try {
+        const { data: sess } = await supabase.auth.getSession();
+        const token = sess?.session?.access_token;
+        await fetch("/api/send-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "b2b_approved",
+            token,
+            user: {
+              email: data.invoice_email,
+              company: data.company_name,
+              contactName: data.contact_person,
+            },
+          }),
+        });
+      } catch {
+        /* schválení platí i když se e-mail nepovede odeslat */
+      }
+    }
+
     setLoadingAction(null);
     toast.success("Partner schválen");
   };
@@ -135,8 +174,6 @@ const AdminB2B = () => {
       city: p.city ?? "",
       zip: p.zip ?? "",
       notes: p.notes ?? "",
-      obrat_2025: String(p.obrat_2025 ?? 0),
-      obrat_2026: String(p.obrat_2026 ?? 0),
     });
   };
 
@@ -162,8 +199,6 @@ const AdminB2B = () => {
       city: form.city.trim(),
       zip: form.zip.trim(),
       notes: form.notes.trim() || null,
-      obrat_2025: Number(form.obrat_2025) || 0,
-      obrat_2026: Number(form.obrat_2026) || 0,
     };
     const { error } = await supabase.from("b2b_profiles").update(patch).eq("id", editing.id);
     setSavingEdit(false);
@@ -231,6 +266,7 @@ const AdminB2B = () => {
                       <th className="text-left px-4 py-3 font-semibold text-foreground">Kontaktní osoba</th>
                       <th className="text-left px-4 py-3 font-semibold text-foreground">Telefon</th>
                       <th className="text-left px-4 py-3 font-semibold text-foreground">Adresa</th>
+                      <th className="text-left px-4 py-3 font-semibold text-foreground">Sleva (%)</th>
                       <th className="text-right px-4 py-3 font-semibold text-foreground">Akce</th>
                     </tr>
                   </thead>
@@ -245,6 +281,22 @@ const AdminB2B = () => {
                         <td className="px-4 py-3 text-foreground">{r.contact_person}</td>
                         <td className="px-4 py-3 text-foreground">{r.phone}</td>
                         <td className="px-4 py-3 text-foreground text-xs">{r.address}, {r.city} {r.zip}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-1">
+                            <Input
+                              type="number"
+                              min={0}
+                              max={100}
+                              value={pendingDiscounts[r.id] ?? 0}
+                              onChange={(e) => {
+                                const v = Math.max(0, Math.min(100, parseInt(e.target.value, 10) || 0));
+                                setPendingDiscounts((d) => ({ ...d, [r.id]: v }));
+                              }}
+                              className="h-8 w-20 text-sm"
+                            />
+                            <span className="text-xs text-muted-foreground">%</span>
+                          </div>
+                        </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center justify-end gap-2">
                             <Button size="sm" variant="ghost" className="gap-1.5 text-xs font-bold" onClick={() => openEdit(r)}>
@@ -287,7 +339,47 @@ const AdminB2B = () => {
               <p className="text-muted-foreground text-lg">Zatím žádní schválení partneři.</p>
             </div>
           ) : (
-            <div className="bg-background border border-border rounded-lg overflow-hidden">
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+                <Input
+                  placeholder="Hledat firmu, kontakt, e-mail, IČO, město…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="h-10 flex-1"
+                />
+                <div className="flex gap-1 shrink-0">
+                  <Button
+                    size="sm"
+                    variant={discountFilter === "all" ? "default" : "outline"}
+                    onClick={() => setDiscountFilter("all")}
+                  >
+                    Vše
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={discountFilter === "with" ? "default" : "outline"}
+                    onClick={() => setDiscountFilter("with")}
+                  >
+                    Se slevou
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={discountFilter === "without" ? "default" : "outline"}
+                    onClick={() => setDiscountFilter("without")}
+                  >
+                    Bez slevy
+                  </Button>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Zobrazeno {approvedFiltered.length} z {approved.length} partnerů
+              </p>
+              {approvedFiltered.length === 0 ? (
+                <div className="bg-background border border-border rounded-lg p-8 text-center">
+                  <p className="text-muted-foreground">Nic nenalezeno.</p>
+                </div>
+              ) : (
+              <div className="bg-background border border-border rounded-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
@@ -300,7 +392,7 @@ const AdminB2B = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {approved.map((p) => (
+                    {approvedFiltered.map((p) => (
                       <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
                         <td className="px-4 py-3">
                           <span className="text-foreground font-medium block">{p.company_name}</span>
@@ -360,6 +452,8 @@ const AdminB2B = () => {
                   </tbody>
                 </table>
               </div>
+              </div>
+              )}
             </div>
           )}
         </TabsContent>
@@ -384,8 +478,6 @@ const AdminB2B = () => {
             {field("Adresa", "address")}
             {field("Město", "city")}
             {field("PSČ", "zip")}
-            {field("Obrat 2025 (Kč, bez DPH)", "obrat_2025", { optional: true })}
-            {field("Obrat 2026 (Kč, bez DPH)", "obrat_2026", { optional: true })}
           </div>
 
           <div className="mt-2">
