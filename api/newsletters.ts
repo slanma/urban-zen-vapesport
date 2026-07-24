@@ -82,9 +82,17 @@ export default async function handler(req: any, res: any) {
       return res.status(200).json({ ok: true });
     }
 
+    if (action === "partners") {
+      const r = await fetch(
+        `${SUPABASE_URL}/rest/v1/b2b_profiles?status=eq.approved&invoice_email=not.is.null&select=id,company_name,contact_person,invoice_email,discount_percent&order=company_name.asc`,
+        { headers: svcHeaders },
+      );
+      return res.status(200).json({ ok: true, partners: await r.json() });
+    }
+
     if (action === "history") {
       const r = await fetch(
-        `${SUPABASE_URL}/rest/v1/newsletter_sends?select=id,subject,discount_min,discount_max,recipient_count,sent_at&order=sent_at.desc&limit=100`,
+        `${SUPABASE_URL}/rest/v1/newsletter_sends?select=id,subject,segment,recipient_count,sent_at&order=sent_at.desc&limit=100`,
         { headers: svcHeaders },
       );
       const rows = await r.json();

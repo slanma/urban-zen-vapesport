@@ -40,6 +40,7 @@ const AdminB2B = () => {
   const [form, setForm] = useState<EditForm>(EMPTY_FORM);
   const [pendingDiscounts, setPendingDiscounts] = useState<Record<string, number>>({});
   const [savingEdit, setSavingEdit] = useState(false);
+  const [activity, setActivity] = useState<Record<string, string | null>>({});
   const [search, setSearch] = useState("");
   const [discountFilter, setDiscountFilter] = useState<"all" | "with" | "without">("all");
 
@@ -89,6 +90,16 @@ const AdminB2B = () => {
 
   useEffect(() => {
     loadAll();
+    (async () => {
+      try {
+        const { data: sess } = await supabase.auth.getSession();
+        const token = sess?.session?.access_token;
+        if (!token) return;
+        const r = await fetch("/api/partner-activity", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token }) });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.activity) setActivity(d.activity);
+      } catch { /* stitky jsou nepovinne */ }
+    })();
   }, []);
 
   const handleApprove = async (id: string) => {
@@ -395,7 +406,20 @@ const AdminB2B = () => {
                     {approvedFiltered.map((p) => (
                       <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
                         <td className="px-4 py-3">
-                          <span className="text-foreground font-medium block">{p.company_name}</span>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-foreground font-medium">{p.company_name}</span>
+                            {(() => {
+                              const last = p.user_id ? activity[p.user_id] : null;
+                              if (!last) return null;
+                              const days = (Date.now() - new Date(last).getTime()) / 86400000;
+                              return (
+                                <>
+                                  <span className="text-[10px] font-bold uppercase tracking-wide text-blue-700 bg-blue-100 rounded px-1.5 py-0.5">Registrace</span>
+                                  {days <= 7 ? <span className="text-[10px] font-bold uppercase tracking-wide text-emerald-700 bg-emerald-100 rounded px-1.5 py-0.5">Aktivní</span> : null}
+                                </>
+                              );
+                            })()}
+                          </div>
                           <span className="text-xs text-muted-foreground">IČO: {p.ico}{p.dic ? ` · DIČ: ${p.dic}` : ""}</span>
                           {p.notes ? <span className="text-xs text-muted-foreground italic block mt-0.5">📝 {p.notes}</span> : null}
                         </td>

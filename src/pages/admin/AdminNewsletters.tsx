@@ -14,8 +14,7 @@ interface Newsletter {
 interface SendRecord {
   id: string;
   subject: string;
-  discount_min: number;
-  discount_max: number;
+  segment: string | null;
   recipient_count: number;
   sent_at: string;
 }
@@ -53,10 +52,11 @@ const AdminNewsletters = () => {
 
   // odesílání
   const [sendTarget, setSendTarget] = useState<Newsletter | null>(null);
-  const [min, setMin] = useState(0);
-  const [max, setMax] = useState(100);
-  const [count, setCount] = useState<number | null>(null);
-  const [counting, setCounting] = useState(false);
+  const [partners, setPartners] = useState<{ id: string; company_name: string; contact_person: string | null; invoice_email: string; discount_percent: number }[]>([]);
+  const [selAll, setSelAll] = useState(false);
+  const [selDiscounts, setSelDiscounts] = useState<Set<number>>(new Set());
+  const [selManual, setSelManual] = useState<Set<string>>(new Set());
+  const [pSearch, setPSearch] = useState("");
   const [sending, setSending] = useState(false);
 
   const load = async () => {
@@ -111,34 +111,65 @@ const AdminNewsletters = () => {
     }
   };
 
-  const openSend = (nl: Newsletter) => {
+  const openSend = async (nl: Newsletter) => {
     setSendTarget(nl);
-    setMin(0);
-    setMax(100);
-    setCount(null);
-  };
-
-  const applyPreset = (lo: number, hi: number) => {
-    setMin(lo);
-    setMax(hi);
-    setCount(null);
-  };
-
-  const doCount = async () => {
-    setCounting(true);
+    setSelAll(false);
+    setSelDiscounts(new Set());
+    setSelManual(new Set());
+    setPSearch("");
     try {
-      const r = await api("/api/send-newsletter", { action: "count", discount_min: min, discount_max: max });
-      setCount(r.count);
+      const r = await api("/api/newsletters", { action: "partners" });
+      setPartners(r.partners || []);
     } catch (e: any) {
-      toast.error(e.message || "Spočítání selhalo");
-    } finally {
-      setCounting(false);
+      toast.error(e.message || "Načtení partnerů selhalo");
     }
   };
 
+  // seskupení podle slevy (unikátní hodnoty + počty)
+  const discountGroups = Array.from(
+    partners.reduce((m, p) => {
+      const d = Number(p.discount_percent) || 0;
+      m.set(d, (m.get(d) || 0) + 1);
+      return m;
+    }, new Map<number, number>())
+  ).sort((a, b) => a[0] - b[0]);
+
+  // spočítej příjemce (e-maily) z aktuálního výběru
+  const recipientEmails = (() => {
+    const set = new Set<string>();
+    for (const p of partners) {
+      const e = (p.invoice_email || "").trim().toLowerCase();
+      if (!e) continue;
+      const d = Number(p.discount_percent) || 0;
+      if (selAll || selDiscounts.has(d) || selManual.has(p.id)) set.add(e);
+    }
+    return [...set];
+  })();
+
+  const segmentLabel = selAll
+    ? "Všichni"
+    : [
+        [...selDiscounts].sort((a, b) => a - b).map((d) => `${d} %`).join(", "),
+        selManual.size ? `${selManual.size} ručně` : "",
+      ].filter(Boolean).join(" + ") || "—";
+
+  const toggleDiscount = (d: number) =>
+    setSelDiscounts((s2) => {
+      const n = new Set(s2);
+      n.has(d) ? n.delete(d) : n.add(d);
+      return n;
+    });
+  const toggleManual = (id: string) =>
+    setSelManual((s2) => {
+      const n = new Set(s2);
+      n.has(id) ? n.delete(id) : n.add(id);
+      return n;
+    });
+
   const doSend = async () => {
     if (!sendTarget) return;
-    if (!window.confirm(`Opravdu rozeslat „${sendTarget.subject}" na ${count ?? "?"} příjemců?`)) return;
+    if (!recipientEmails.length) { toast.error("Vyber alespoň jednoho příjemce."); return; }
+    if (!window.confirm(`Opravdu rozeslat „${sendTarget.subject}" na ${recipientEmails.length} příjemců?`)) return;
     setSending(true);
     try {
       const r = await api("/api/send-newsletter", {
@@ -146,8 +177,8 @@ const AdminNewsletters = () => {
         newsletter_id: sendTarget.id,
         subject: sendTarget.subject,
         html: sendTarget.html,
-        discount_min: min,
-        discount_max: max,
+        emails: recipientEmails,
+        segment: segmentLabel,
       });
       toast.success(`Odesláno ${r.sent} příjemcům`);
       setSendTarget(null);
@@ -245,36 +276,59 @@ const AdminNewsletters = () => {
             <Send className="w-4 h-4" /> Rozeslat: {sendTarget.subject}
           </h2>
 
+          <p className="text-xs text-muted-foreground bg-primary/5 rounded-md px-3 py-2">
+            Tip: do HTML newsletteru vlož <code className="font-mono">{"{osloveni}"}</code> — nahradí se za „Dobrý den, [příjmení]," (nebo „Dobrý den," když partner nemá kontaktní osobu).
+          </p>
+
           <div>
-            <p className="text-sm text-muted-foreground mb-2">Komu poslat (podle výše slevy):</p>
-            <div className="flex flex-wrap gap-1 mb-3">
-              <Button size="sm" variant={min === 0 && max === 100 ? "default" : "outline"} onClick={() => applyPreset(0, 100)}>Všichni</Button>
-              <Button size="sm" variant={min === 0 && max === 0 ? "default" : "outline"} onClick={() => applyPreset(0, 0)}>Bez slevy</Button>
-              <Button size="sm" variant={min === 1 && max === 100 ? "default" : "outline"} onClick={() => applyPreset(1, 100)}>Se slevou</Button>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">Sleva od</span>
-              <Input type="number" min={0} max={100} value={min} onChange={(e) => { setMin(Math.max(0, Math.min(100, parseInt(e.target.value, 10) || 0))); setCount(null); }} className="h-9 w-20" />
-              <span className="text-muted-foreground">% do</span>
-              <Input type="number" min={0} max={100} value={max} onChange={(e) => { setMax(Math.max(0, Math.min(100, parseInt(e.target.value, 10) || 0))); setCount(null); }} className="h-9 w-20" />
-              <span className="text-muted-foreground">%</span>
-            </div>
+            <label className="flex items-center gap-2 mb-2 cursor-pointer">
+              <input type="checkbox" checked={selAll} onChange={(e) => setSelAll(e.target.checked)} className="w-4 h-4 accent-primary" />
+              <span className="text-sm font-medium text-foreground">Všichni ({partners.length})</span>
+            </label>
+            {!selAll && (
+              <>
+                <p className="text-sm text-muted-foreground mb-1">Podle slevy:</p>
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {discountGroups.map(([d, n]) => (
+                    <label key={d} className={`flex items-center gap-1.5 text-sm border rounded-md px-2.5 py-1 cursor-pointer ${selDiscounts.has(d) ? "border-primary bg-primary/10" : "border-border"}`}>
+                      <input type="checkbox" checked={selDiscounts.has(d)} onChange={() => toggleDiscount(d)} className="w-3.5 h-3.5 accent-primary" />
+                      {d} % <span className="text-muted-foreground">({n})</span>
+                    </label>
+                  ))}
+                </div>
+
+                <p className="text-sm text-muted-foreground mb-1">Nebo vyber ručně:</p>
+                <Input placeholder="Hledat partnera…" value={pSearch} onChange={(e) => setPSearch(e.target.value)} className="h-9 mb-2" />
+                <div className="max-h-52 overflow-y-auto border border-border rounded-md divide-y divide-border">
+                  {partners
+                    .filter((p) => {
+                      const q = pSearch.trim().toLowerCase();
+                      if (!q) return true;
+                      return [p.company_name, p.contact_person, p.invoice_email].filter(Boolean).join(" ").toLowerCase().includes(q);
+                    })
+                    .slice(0, 200)
+                    .map((p) => (
+                      <label key={p.id} className="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer hover:bg-muted/40">
+                        <input type="checkbox" checked={selManual.has(p.id)} onChange={() => toggleManual(p.id)} className="w-4 h-4 accent-primary shrink-0" />
+                        <span className="flex-1">
+                          <span className="text-foreground">{p.company_name}</span>
+                          <span className="text-xs text-muted-foreground block">{p.invoice_email} · {Number(p.discount_percent) || 0} %</span>
+                        </span>
+                      </label>
+                    ))}
+                </div>
+              </>
+            )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <Button variant="outline" onClick={doCount} disabled={counting} className="gap-2">
-              {counting && <Loader2 className="w-4 h-4 animate-spin" />} Spočítat příjemce
-            </Button>
-            {count !== null && (
-              <span className="text-sm font-medium text-foreground">
-                Pošle se <strong>{count}</strong> partnerům
-              </span>
-            )}
+          <div className="flex items-center gap-2 text-sm bg-muted/40 rounded-md px-3 py-2">
+            Pošle se <strong className="text-foreground">{recipientEmails.length}</strong> příjemcům
+            <span className="text-muted-foreground">· výběr: {segmentLabel}</span>
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
             <Button variant="ghost" onClick={() => setSendTarget(null)} disabled={sending}>Zrušit</Button>
-            <Button onClick={doSend} disabled={sending || count === null || count === 0} className="gap-2">
+            <Button onClick={doSend} disabled={sending || recipientEmails.length === 0} className="gap-2">
               {sending && <Loader2 className="w-4 h-4 animate-spin" />} Rozeslat teď
             </Button>
           </div>
@@ -296,7 +350,7 @@ const AdminNewsletters = () => {
               <thead>
                 <tr className="border-b border-border bg-muted/50 text-left">
                   <th className="px-4 py-3 font-semibold">Předmět</th>
-                  <th className="px-4 py-3 font-semibold">Sleva</th>
+                  <th className="px-4 py-3 font-semibold">Komu</th>
                   <th className="px-4 py-3 font-semibold">Příjemců</th>
                   <th className="px-4 py-3 font-semibold">Odesláno</th>
                 </tr>
@@ -305,7 +359,7 @@ const AdminNewsletters = () => {
                 {history.map((h) => (
                   <tr key={h.id} className="border-b border-border last:border-0">
                     <td className="px-4 py-3 text-foreground">{h.subject}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{h.discount_min}–{h.discount_max} %</td>
+                    <td className="px-4 py-3 text-muted-foreground">{h.segment || "—"}</td>
                     <td className="px-4 py-3 text-foreground">{h.recipient_count}</td>
                     <td className="px-4 py-3 text-muted-foreground">{fmtDate(h.sent_at)}</td>
                   </tr>
