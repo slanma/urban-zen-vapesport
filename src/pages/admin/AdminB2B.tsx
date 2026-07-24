@@ -40,6 +40,22 @@ const AdminB2B = () => {
   const [form, setForm] = useState<EditForm>(EMPTY_FORM);
   const [pendingDiscounts, setPendingDiscounts] = useState<Record<string, number>>({});
   const [savingEdit, setSavingEdit] = useState(false);
+  const [search, setSearch] = useState("");
+  const [discountFilter, setDiscountFilter] = useState<"all" | "with" | "without">("all");
+
+  // Filtrovaný seznam schválených partnerů (hledání textem + filtr slevy)
+  const approvedFiltered = approved.filter((p) => {
+    const disc = Number(p.discount_percent) || 0;
+    if (discountFilter === "with" && disc <= 0) return false;
+    if (discountFilter === "without" && disc > 0) return false;
+    const q = search.trim().toLowerCase();
+    if (!q) return true;
+    const hay = [p.company_name, p.contact_person, p.invoice_email, p.city, p.ico, p.phone, p.notes]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    return hay.includes(q);
+  });
 
   const loadAll = async () => {
     setLoading(true);
@@ -323,7 +339,47 @@ const AdminB2B = () => {
               <p className="text-muted-foreground text-lg">Zatím žádní schválení partneři.</p>
             </div>
           ) : (
-            <div className="bg-background border border-border rounded-lg overflow-hidden">
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+                <Input
+                  placeholder="Hledat firmu, kontakt, e-mail, IČO, město…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="h-10 flex-1"
+                />
+                <div className="flex gap-1 shrink-0">
+                  <Button
+                    size="sm"
+                    variant={discountFilter === "all" ? "default" : "outline"}
+                    onClick={() => setDiscountFilter("all")}
+                  >
+                    Vše
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={discountFilter === "with" ? "default" : "outline"}
+                    onClick={() => setDiscountFilter("with")}
+                  >
+                    Se slevou
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={discountFilter === "without" ? "default" : "outline"}
+                    onClick={() => setDiscountFilter("without")}
+                  >
+                    Bez slevy
+                  </Button>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Zobrazeno {approvedFiltered.length} z {approved.length} partnerů
+              </p>
+              {approvedFiltered.length === 0 ? (
+                <div className="bg-background border border-border rounded-lg p-8 text-center">
+                  <p className="text-muted-foreground">Nic nenalezeno.</p>
+                </div>
+              ) : (
+              <div className="bg-background border border-border rounded-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
@@ -336,7 +392,7 @@ const AdminB2B = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {approved.map((p) => (
+                    {approvedFiltered.map((p) => (
                       <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
                         <td className="px-4 py-3">
                           <span className="text-foreground font-medium block">{p.company_name}</span>
@@ -396,6 +452,8 @@ const AdminB2B = () => {
                   </tbody>
                 </table>
               </div>
+              </div>
+              )}
             </div>
           )}
         </TabsContent>
