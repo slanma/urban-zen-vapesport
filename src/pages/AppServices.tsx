@@ -361,10 +361,11 @@ const AppServices = () => {
         <p className="font-body text-xs text-muted-foreground text-center mt-6 max-w-2xl mx-auto">
           Uvedené ceny jsou orientační a bez DPH. Přesnou nabídku připravíme podle konkrétních potřeb vaší prodejny.
         </p>
-        <div className="mt-8 max-w-2xl mx-auto bg-primary/5 border border-border rounded-xl px-6 py-5 text-center">
-          <p className="font-heading text-lg font-bold text-foreground mb-1">Spouštíme v září 2026</p>
-          <p className="font-body text-sm text-muted-foreground leading-relaxed">
-            Právě připravujeme ukázkové weby, ať přesně vidíte, jak to bude vypadat. Poptávky přijímáme už teď, ozveme se vám na start.
+        <div className="mt-8 max-w-2xl mx-auto bg-primary text-primary-foreground rounded-2xl px-8 py-8 text-center shadow-sm">
+          <span className="inline-block text-[11px] font-bold tracking-[0.28em] uppercase bg-primary-foreground/15 rounded-full px-3 py-1 mb-3">Září 2026</span>
+          <p className="font-heading text-2xl md:text-3xl font-bold mb-2">Naplno startujeme v&nbsp;září 2026</p>
+          <p className="font-body text-sm md:text-base leading-relaxed max-w-xl mx-auto" style={{ opacity: 0.92 }}>
+            Právě dolaďujeme ukázky, ať máte přesnou představu. Poptávky přijímáme už&nbsp;teď.
           </p>
         </div>
       </section>
