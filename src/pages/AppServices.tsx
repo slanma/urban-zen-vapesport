@@ -10,14 +10,16 @@ type Service = {
   once?: number;
   month?: number;
   custom?: boolean;
+  from?: boolean;
   feat?: string;
   defaultOn?: boolean;
 };
 
 const SERVICES: Service[] = [
-  { id: "web", name: "Web na míru", desc: "Kompletní web pro vaši prodejnu — viz co je v ceně níže.", once: 10000, month: 500, defaultOn: true, feat: "V ceně webu: jednoduchý e-shop s platbou přes QR kód · napojení na Zásilkovnu (výběr výdejního místa) · dohledatelnost pro Google, Seznam i AI asistenty · zabezpečení, aktualizace a zálohy · úpravy obsahu." },
+  { id: "web", name: "Jednoduchý web na míru", desc: "Kompletní web pro vaši prodejnu — viz co je v ceně níže.", once: 10000, month: 500, defaultOn: true, feat: "V ceně webu: jednoduchý e-shop s platbou přes QR kód · napojení na Zásilkovnu (výběr výdejního místa) · dohledatelnost pro Google, Seznam i AI asistenty · zabezpečení, aktualizace a zálohy · úpravy obsahu." },
+  { id: "webplus", name: "Web na přání", desc: "Speciální web podle vašich představ a požadavků — cena podle rozsahu.", once: 20000, from: true },
   { id: "social", name: "Sociální sítě", desc: "Kompletní správa Facebooku a Instagramu.", month: 5000, defaultOn: true },
-  { id: "foto", name: "Nafocení a natočení prodejny", desc: "Jednoduché fotky a záběry prodejny a prostředí — bez mluvení a asistence.", once: 2500 },
+  { id: "foto", name: "Natočení materiálů", desc: "Natočíme jednoduché materiály z vaší prodejny a okolí. Máte vlastní materiály? Položku nechte nezaškrtnutou.", once: 2500 },
   { id: "newsletter", name: "Newsletter a e-maily", desc: "Pravidelné kampaně vašim zákazníkům.", month: 999 },
   { id: "letaky", name: "Letáky a tištěná reklama", desc: "Grafika na míru plus tipy, kam ji umístit.", month: 999 },
   { id: "produkty", name: "Naplnění webu produkty", desc: "Nahrání produktů do webu/e-shopu.", once: 3000 },
@@ -27,7 +29,7 @@ const SERVICES: Service[] = [
 ];
 
 const MODULES = [
-  { icon: Share2, title: "Sociální sítě", tag: "Měsíční balíček", text: "Kompletní správa Facebooku a Instagramu na míru prodejně — příspěvky, fotky, videa i Reels, propagace akcí a servisu. Vy prodáváte, obsah řešíme my." },
+  { icon: Share2, title: "Sociální sítě", tag: "Měsíční balíček", text: "Kompletní správa Facebooku a Instagramu za vás. Pravidelně přidáváme příspěvky, jednoduché fotky a krátká videa z vaší prodejny, upozorňujeme na akce a servis. Držíme jednoduchou, přirozenou formu — žádné složité natáčení před kamerou ani moderátoři. Jen prodejna, produkty a to podstatné. Vy se staráte o zákazníky, my o vaše sítě." },
   { icon: Mail, title: "Newsletter a e-maily", tag: "Kampaně na míru", text: "Pravidelné e-maily vašim zákazníkům: novinky, servisní akce, výprodeje, nové modely a sezónní nabídky. Připravíme i rozešleme." },
   { icon: Printer, title: "Letáky a tištěná reklama", tag: "Grafika + tipy", text: "Profesionální letáky a grafika na míru — plus tipy, kam je umístit, aby přivedly zákazníky do prodejny." },
 ];
@@ -52,6 +54,13 @@ const AppServices = () => {
   const [checked, setChecked] = useState<Record<string, boolean>>(
     Object.fromEntries(SERVICES.map((s) => [s.id, Boolean(s.defaultOn)])),
   );
+  const toggle = (id: string, val: boolean) =>
+    setChecked((c) => {
+      const next = { ...c, [id]: val };
+      if (val && id === "web") next.webplus = false;
+      if (val && id === "webplus") next.web = false;
+      return next;
+    });
   const [form, setForm] = useState({ company: "", email: "", phone: "", web: "", message: "", hp: "" });
   const [consent, setConsent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -252,7 +261,7 @@ const AppServices = () => {
                   <input
                     type="checkbox"
                     checked={Boolean(checked[s.id])}
-                    onChange={(e) => setChecked((c) => ({ ...c, [s.id]: e.target.checked }))}
+                    onChange={(e) => toggle(s.id, e.target.checked)}
                     className="w-5 h-5 mt-0.5 accent-primary shrink-0"
                   />
                   <span className="flex-1">
@@ -264,7 +273,7 @@ const AppServices = () => {
                       <span className="text-primary">Na míru</span>
                     ) : (
                       <>
-                        {s.once ? <span className="block">{fmt(s.once)} Kč<span className="block text-[11px] font-normal text-muted-foreground">jednorázově</span></span> : null}
+                        {s.once ? <span className="block">{s.from ? "od " : ""}{fmt(s.once)} Kč<span className="block text-[11px] font-normal text-muted-foreground">jednorázově</span></span> : null}
                         {s.month ? <span className="block">{fmt(s.month)} Kč<span className="block text-[11px] font-normal text-muted-foreground">/ měsíc</span></span> : null}
                       </>
                     )}
@@ -281,8 +290,7 @@ const AppServices = () => {
           <div className="bg-card border border-border rounded-2xl p-6 md:sticky md:top-24">
             {!sent ? (
               <>
-                <h3 className="font-heading text-base font-bold text-foreground mb-1">Vaše cena</h3>
-                <p className="font-body text-xs text-muted-foreground mb-3">Ceny jsou bez DPH</p>
+                <h3 className="font-heading text-base font-bold text-foreground mb-3">Vaše cena</h3>
                 <div className="flex justify-between items-baseline py-2 border-b border-border">
                   <span className="font-body text-[13px] text-muted-foreground">Jednorázově</span>
                   <span><span className="font-heading font-bold text-2xl tabular-nums">{fmt(totals.once)}</span> <span className="text-xs text-muted-foreground">Kč</span></span>
@@ -293,6 +301,9 @@ const AppServices = () => {
                   <span><span className="font-heading font-bold text-2xl tabular-nums">{fmt(totals.month)}</span> <span className="text-xs text-muted-foreground">Kč</span></span>
                 </div>
                 <p className="font-body text-xs text-muted-foreground text-right py-1">s DPH {fmt(totals.month * 1.21)} Kč</p>
+                {checked["webplus"] ? (
+                  <p className="font-body text-xs text-primary bg-primary/5 rounded-lg px-3 py-2 mt-2 leading-relaxed">Web na přání: od 20 000 Kč — přesnou cenu určíme podle vašich požadavků.</p>
+                ) : null}
                 {totals.custom ? (
                   <p className="font-body text-xs text-primary bg-primary/5 rounded-lg px-3 py-2 mt-2 leading-relaxed">+ E-shop na míru — cenu vyčíslíme podle vašich požadavků.</p>
                 ) : null}
@@ -347,6 +358,9 @@ const AppServices = () => {
             )}
           </div>
         </div>
+        <p className="font-body text-xs text-muted-foreground text-center mt-6 max-w-2xl mx-auto">
+          Uvedené ceny jsou orientační a bez DPH. Přesnou nabídku připravíme podle konkrétních potřeb vaší prodejny.
+        </p>
       </section>
 
       <Footer />
