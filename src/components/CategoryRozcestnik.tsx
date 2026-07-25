@@ -100,7 +100,7 @@ const CategoryRozcestnik = () => {
                 />
               </div>
               <div className="p-5 flex flex-col gap-2 flex-1">
-                <h3 className="font-heading text-lg font-bold leading-snug text-foreground">
+                <h3 lang="cs" className="font-heading text-base md:text-lg font-bold leading-snug text-foreground break-words hyphens-auto">
                   {bt.label}
                 </h3>
                 <p className="text-sm font-body text-muted-foreground leading-relaxed flex-1">

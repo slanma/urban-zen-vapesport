@@ -10,7 +10,7 @@ export interface BikeType {
 
 export const BIKE_TYPES: BikeType[] = [
   { id: "gravel", label: "Gravel", image: "/images/kola/gravel.jpg", subtitle: "Brašny na dobrodružství po zpevněných i nezpevněných cestách." },
-  { id: "celoodpruzene", label: "Celoodpružené elektrokolo", image: "/images/kola/celoodpruzene-ebike.jpg", subtitle: "Odolné brašny, které drží i v náročném terénu." },
+  { id: "celoodpruzene", label: "Odpružené elektrokolo", image: "/images/kola/celoodpruzene-ebike.jpg", subtitle: "Odolné brašny, které drží i v náročném terénu." },
   { id: "elektrokolo", label: "Elektrokolo", image: "/images/kola/elektrokolo.jpg", subtitle: "Prostor na nabíječku, nářadí i věci na každý den." },
   { id: "silnicka", label: "Silnička", image: "/images/kola/silnicka.jpg", subtitle: "Lehké a nenápadné brašny pro rychlou jízdu." },
   { id: "mestske", label: "Městské elektrokolo", image: "/images/kola/mestske-ebike.jpg", subtitle: "Praktické brašny pro dojíždění a město." },
