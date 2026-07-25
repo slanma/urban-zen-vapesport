@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Mail, Trash2, Eye, Send, Plus, History } from "lucide-react";
+import { Loader2, Mail, Trash2, Eye, Send, History } from "lucide-react";
 import { toast } from "sonner";
 
 interface Newsletter {
@@ -201,9 +201,7 @@ const AdminNewsletters = () => {
 
       {/* Nový newsletter */}
       <section className="bg-background border border-border rounded-lg p-5 space-y-3">
-        <h2 className="font-semibold text-foreground flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Nový newsletter
-        </h2>
+        <h2 className="font-semibold text-foreground">Nový newsletter</h2>
         <Input
           placeholder="Předmět e-mailu"
           value={subject}
