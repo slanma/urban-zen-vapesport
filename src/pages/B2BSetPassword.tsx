@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,6 @@ import { Loader2, KeyRound, MailCheck } from "lucide-react";
  *  - set:     po kliknutí na odkaz z e-mailu (recovery session) zadá nové heslo
  */
 const B2BSetPassword = () => {
-  const navigate = useNavigate();
   const [mode, setMode] = useState<"request" | "sent" | "set">("request");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,10 +64,10 @@ const B2BSetPassword = () => {
       toast.error("Nastavení hesla se nezdařilo", { description: error.message });
       return;
     }
-    await supabase.auth.signOut();
     setLoading(false);
-    toast.success("Heslo nastaveno. Nyní se přihlaste.");
-    navigate("/b2b-login", { replace: true });
+    toast.success("Heslo nastaveno. Vítejte v portálu!");
+    // Partner má po nastavení hesla platnou session → pošleme ho rovnou do portálu.
+    window.location.assign("/b2b-dashboard");
   };
 
   return (
