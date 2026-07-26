@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Mail, Trash2, Eye, Send, History } from "lucide-react";
+import { Loader2, Mail, Trash2, Eye, Send, History, ImagePlus, Copy } from "lucide-react";
 import { toast } from "sonner";
 
 interface Newsletter {
@@ -47,6 +47,8 @@ const AdminNewsletters = () => {
   const [subject, setSubject] = useState("");
   const [html, setHtml] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadUrl, setUploadUrl] = useState("");
 
   const [previewId, setPreviewId] = useState<string | null>(null);
 
@@ -79,6 +81,38 @@ const AdminNewsletters = () => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const uploadImage = async (file: File) => {
+    if (!file.type.startsWith("image/")) { toast.error("Vyber prosím obrázek."); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error("Obrázek je příliš velký (max 5 MB)."); return; }
+    setUploading(true);
+    try {
+      const dataUrl: string = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(String(r.result));
+        r.onerror = () => rej(new Error("Nepodařilo se načíst soubor"));
+        r.readAsDataURL(file);
+      });
+      const base64 = dataUrl.split(",")[1] || "";
+      const token = await getToken();
+      const resp = await fetch("/api/upload-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, filename: file.name, contentType: file.type, dataBase64: base64 }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) throw new Error(data?.error || "Nahrání selhalo");
+      setUploadUrl(data.url);
+      // rovnou vlož obrázek do obsahu newsletteru
+      const imgTag = `\n<img src="${data.url}" width="600" alt="" style="display:block;width:100%;max-width:600px;height:auto;border:0;border-radius:8px;" />\n`;
+      setHtml((h) => h + imgTag);
+      toast.success("Obrázek nahrán a vložen do obsahu");
+    } catch (e: any) {
+      toast.error(e.message || "Nahrání selhalo");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSave = async () => {
     if (!subject.trim() || !html.trim()) {
@@ -214,11 +248,26 @@ const AdminNewsletters = () => {
           rows={10}
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-mono min-h-[160px] focus:outline-none focus:ring-2 focus:ring-ring"
         />
-        <div className="flex justify-end">
-          <Button onClick={handleSave} disabled={saving} className="gap-2">
-            {saving && <Loader2 className="w-4 h-4 animate-spin" />} Uložit newsletter
-          </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <label className="inline-flex items-center gap-2 text-sm font-medium border border-border rounded-md px-3 py-2 cursor-pointer hover:bg-muted/50">
+            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />}
+            Nahrát obrázek
+            <input type="file" accept="image/*" className="hidden" disabled={uploading}
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f); e.currentTarget.value = ""; }} />
+          </label>
+          {uploadUrl && (
+            <button type="button" onClick={() => { navigator.clipboard?.writeText(uploadUrl); toast.success("Odkaz zkopírován"); }}
+              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
+              <Copy className="w-3.5 h-3.5" /> Kopírovat odkaz obrázku
+            </button>
+          )}
+          <div className="ml-auto">
+            <Button onClick={handleSave} disabled={saving} className="gap-2">
+              {saving && <Loader2 className="w-4 h-4 animate-spin" />} Uložit newsletter
+            </Button>
+          </div>
         </div>
+        <p className="text-xs text-muted-foreground -mt-1">Tip: obrázek se po nahrání sám vloží na konec obsahu. Odkaz můžeš i zkopírovat a dát do HTML ručně (např. do hlavičky e-mailu).</p>
       </section>
 
       {/* Uložené newslettery */}
