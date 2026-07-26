@@ -40,6 +40,10 @@ const AdminB2B = () => {
   const [form, setForm] = useState<EditForm>(EMPTY_FORM);
   const [pendingDiscounts, setPendingDiscounts] = useState<Record<string, number>>({});
   const [savingEdit, setSavingEdit] = useState(false);
+  const [activity, setActivity] = useState<Record<string, string | null>>({});
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkDiscount, setBulkDiscount] = useState("");
+  const [bulkBusy, setBulkBusy] = useState(false);
   const [search, setSearch] = useState("");
   const [discountFilter, setDiscountFilter] = useState<"all" | "with" | "without">("all");
 
@@ -89,6 +93,16 @@ const AdminB2B = () => {
 
   useEffect(() => {
     loadAll();
+    (async () => {
+      try {
+        const { data: sess } = await supabase.auth.getSession();
+        const token = sess?.session?.access_token;
+        if (!token) return;
+        const r = await fetch("/api/partner-activity", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token }) });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.activity) setActivity(d.activity);
+      } catch { /* stitky jsou nepovinne */ }
+    })();
   }, []);
 
   const handleApprove = async (id: string) => {
@@ -139,6 +153,43 @@ const AdminB2B = () => {
       toast.error("Uložení selhalo");
       await loadApproved();
     }
+  };
+
+  const toggleSelect = (id: string) =>
+    setSelectedIds((s2) => {
+      const n = new Set(s2);
+      n.has(id) ? n.delete(id) : n.add(id);
+      return n;
+    });
+  const allFilteredSelected = approvedFiltered.length > 0 && approvedFiltered.every((p) => selectedIds.has(p.id));
+  const toggleSelectAll = () =>
+    setSelectedIds((s2) => {
+      const n = new Set(s2);
+      if (allFilteredSelected) approvedFiltered.forEach((p) => n.delete(p.id));
+      else approvedFiltered.forEach((p) => n.add(p.id));
+      return n;
+    });
+  const clearSelection = () => setSelectedIds(new Set());
+
+  const bulkUpdate = async (patch: Partial<Partner>) => {
+    const ids = [...selectedIds];
+    if (!ids.length) return;
+    setBulkBusy(true);
+    setApproved((a) => a.map((p) => (selectedIds.has(p.id) ? { ...p, ...patch } : p)));
+    const { error } = await supabase.from("b2b_profiles").update(patch).in("id", ids);
+    setBulkBusy(false);
+    if (error) {
+      toast.error("Hromadná úprava selhala");
+      await loadApproved();
+    } else {
+      toast.success(`Upraveno ${ids.length} partnerů`);
+    }
+  };
+
+  const applyBulkDiscount = async () => {
+    const v = Math.max(0, Math.min(100, parseFloat(bulkDiscount.replace(",", ".")) || 0));
+    await bulkUpdate({ discount_percent: v } as Partial<Partner>);
+    setBulkDiscount("");
   };
 
   const handleReject = async (id: string) => {
@@ -374,6 +425,28 @@ const AdminB2B = () => {
               <p className="text-xs text-muted-foreground">
                 Zobrazeno {approvedFiltered.length} z {approved.length} partnerů
               </p>
+              {selectedIds.size > 0 && (
+                <div className="flex flex-wrap items-center gap-2 bg-primary/10 border border-primary/40 rounded-lg px-4 py-3">
+                  <span className="text-sm font-semibold text-foreground">Vybráno {selectedIds.size}</span>
+                  <span className="text-muted-foreground text-sm">·</span>
+                  <span className="text-sm text-muted-foreground">Doprava zdarma:</span>
+                  <Button size="sm" onClick={() => bulkUpdate({ free_shipping: true } as Partial<Partner>)} disabled={bulkBusy}>Zapnout</Button>
+                  <Button size="sm" variant="outline" onClick={() => bulkUpdate({ free_shipping: false } as Partial<Partner>)} disabled={bulkBusy}>Vypnout</Button>
+                  <span className="text-muted-foreground text-sm">·</span>
+                  <span className="text-sm text-muted-foreground">Sleva:</span>
+                  <Input
+                    type="number"
+                    min={0}
+                    max={100}
+                    value={bulkDiscount}
+                    onChange={(e) => setBulkDiscount(e.target.value)}
+                    placeholder="%"
+                    className="h-8 w-20"
+                  />
+                  <Button size="sm" onClick={applyBulkDiscount} disabled={bulkBusy || bulkDiscount === ""}>Nastavit slevu</Button>
+                  <button className="ml-auto text-sm text-muted-foreground hover:text-foreground underline" onClick={clearSelection}>Zrušit výběr</button>
+                </div>
+              )}
               {approvedFiltered.length === 0 ? (
                 <div className="bg-background border border-border rounded-lg p-8 text-center">
                   <p className="text-muted-foreground">Nic nenalezeno.</p>
@@ -384,6 +457,9 @@ const AdminB2B = () => {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border bg-muted/50">
+                      <th className="px-4 py-3 w-10">
+                        <input type="checkbox" checked={allFilteredSelected} onChange={toggleSelectAll} className="w-4 h-4 accent-primary" aria-label="Vybrat vše" />
+                      </th>
                       <th className="text-left px-4 py-3 font-semibold text-foreground">Firma / IČO</th>
                       <th className="text-left px-4 py-3 font-semibold text-foreground">Kontakt</th>
                       <th className="text-left px-4 py-3 font-semibold text-foreground w-32">Sleva (%)</th>
@@ -394,8 +470,24 @@ const AdminB2B = () => {
                   <tbody>
                     {approvedFiltered.map((p) => (
                       <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
+                        <td className="px-4 py-3 w-10">
+                          <input type="checkbox" checked={selectedIds.has(p.id)} onChange={() => toggleSelect(p.id)} className="w-4 h-4 accent-primary" aria-label={`Vybrat ${p.company_name}`} />
+                        </td>
                         <td className="px-4 py-3">
-                          <span className="text-foreground font-medium block">{p.company_name}</span>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-foreground font-medium">{p.company_name}</span>
+                            {(() => {
+                              const last = p.user_id ? activity[p.user_id] : null;
+                              if (!last) return null;
+                              const days = (Date.now() - new Date(last).getTime()) / 86400000;
+                              return (
+                                <>
+                                  <span className="text-[10px] font-bold uppercase tracking-wide text-blue-700 bg-blue-100 rounded px-1.5 py-0.5">Registrace</span>
+                                  {days <= 7 ? <span className="text-[10px] font-bold uppercase tracking-wide text-emerald-700 bg-emerald-100 rounded px-1.5 py-0.5">Aktivní</span> : null}
+                                </>
+                              );
+                            })()}
+                          </div>
                           <span className="text-xs text-muted-foreground">IČO: {p.ico}{p.dic ? ` · DIČ: ${p.dic}` : ""}</span>
                           {p.notes ? <span className="text-xs text-muted-foreground italic block mt-0.5">📝 {p.notes}</span> : null}
                         </td>
