@@ -220,6 +220,57 @@ function b2bApprovedEmail(u: any) {
   return layout("Váš B2B účet byl schválen", body);
 }
 
+/** Texty pro jednotlivé stavy objednávky. */
+const STATUS_TEXT: Record<string, { title: string; subject: string; body: string }> = {
+  zpracovava_se: {
+    title: "Objednávka byla přijata",
+    subject: "Objednávka byla přijata",
+    body: "vaši objednávku jsme přijali a začínáme ji zpracovávat. Až ji odešleme, dáme vám vědět.",
+  },
+  odeslano: {
+    title: "Objednávka odeslána",
+    subject: "Objednávka byla odeslána",
+    body: "vaše objednávka byla odeslána a je na cestě k vám.",
+  },
+};
+
+// Poznámka: pro stavy „Doručena" a „Zrušena" se e-mail záměrně neposílá.
+// Kdyby je bylo potřeba doplnit, přidej je do STATUS_TEXT výše.
+
+function statusEmail(o: any, statusKey: string) {
+  const t = STATUS_TEXT[statusKey];
+  const jmeno = o.customerName ? " " + escapeHtml(String(o.customerName)) : "";
+  const tracking =
+    o.trackingUrl || o.trackingNumber
+      ? `<div style="margin:0 0 18px;padding:14px 16px;background:${CONCRETE};border-radius:6px;">
+           <div style="font-size:12px;color:#8a8a80;text-transform:uppercase;letter-spacing:1px;">Sledování zásilky</div>
+           ${o.trackingNumber ? `<div style="font-weight:700;margin-top:4px;">${escapeHtml(String(o.trackingNumber))}</div>` : ""}
+           ${o.trackingUrl ? `<div style="margin-top:6px;"><a href="${escapeHtml(String(o.trackingUrl))}" style="color:${MOSS};">Zobrazit stav zásilky</a></div>` : ""}
+         </div>`
+      : "";
+
+  return layout(
+    t.title,
+    `
+    <p style="font-size:16px;margin:0 0 14px;">Dobrý den${jmeno},</p>
+    <p style="margin:0 0 18px;line-height:1.6;">${t.body}</p>
+    <div style="margin:0 0 18px;padding:14px 16px;background:${CONCRETE};border-radius:6px;">
+      <div style="font-size:12px;color:#8a8a80;text-transform:uppercase;letter-spacing:1px;">Objednávka</div>
+      <div style="font-size:18px;font-weight:700;">#${escapeHtml(String(o.orderNumber))}</div>
+      ${o.total != null ? `<div style="margin-top:4px;color:#8a8a80;">Celkem ${czk(Number(o.total))}</div>` : ""}
+    </div>
+    ${tracking}
+    ${
+      Array.isArray(o.items) && o.items.length
+        ? `<table role="presentation" width="100%" style="border-collapse:collapse;font-size:14px;margin:0 0 18px;">${orderRows(o.items)}</table>`
+        : ""
+    }
+    <p style="margin:0;line-height:1.6;color:#8a8a80;font-size:14px;">
+      Máte dotaz? Odpovězte na tento e-mail nebo zavolejte na +420 606 080 922.
+    </p>`
+  );
+}
+
 function paymentEmail(p: any) {
   const vs = p.vs || (String(p.orderNumber).replace(/\D/g, "") || String(p.orderNumber));
   const qrBlock = p.qrCid
@@ -303,6 +354,54 @@ export default async function handler(req: any, res: any) {
       });
 
       return res.status(200).json({ ok: true, sentToCustomer: Boolean(recipient) });
+    }
+
+    if (type === "status") {
+      // ZABEZPEČENÍ: jen administrátor
+      const token = body.token || (req.headers?.authorization || "").replace(/^Bearer\s+/i, "");
+      const user = await verifyUser(token);
+      if (!user?.id) return res.status(401).json({ error: "Nepřihlášený uživatel." });
+      const rr = await fetch(`${SUPABASE_URL}/rest/v1/rpc/has_role`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_SERVICE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ _user_id: user.id, _role: "admin" }),
+      });
+      if (!rr.ok || !(await rr.json())) {
+        return res.status(401).json({ error: "Přístup jen pro administrátora." });
+      }
+
+      const o = body.order || {};
+      const statusKey = String(body.status || "").trim();
+      if (!o.orderNumber) return res.status(400).json({ error: "Chybí orderNumber." });
+      if (!STATUS_TEXT[statusKey]) {
+        return res.status(400).json({ error: `Pro stav „${statusKey}" se e-mail neposílá.` });
+      }
+
+      // Adresát: z požadavku → z objednávky v DB → z přihlašovacího účtu.
+      let recipient: string | null = o.customerEmail || null;
+      try {
+        const dbOrder = await findOrder(o.orderNumber);
+        if (dbOrder?.email) recipient = dbOrder.email;
+        else if (!recipient && dbOrder?.user_id) recipient = await findUserEmail(dbOrder.user_id);
+      } catch {
+        /* zkusíme poslat na to, co máme */
+      }
+      if (!recipient) {
+        return res.status(400).json({ error: "Objednávka nemá e-mail zákazníka — nelze odeslat." });
+      }
+
+      await sendEmail({
+        to: recipient,
+        subject: `${STATUS_TEXT[statusKey].subject} #${o.orderNumber} — Vapesport`,
+        html: statusEmail(o, statusKey),
+        replyTo: SHOP_EMAIL,
+      });
+
+      return res.status(200).json({ ok: true, sentTo: recipient });
     }
 
     if (type === "payment") {

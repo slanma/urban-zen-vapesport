@@ -44,6 +44,35 @@ const statusLabel: Record<string, string> = {
   zrusena: "Zrušena",
 };
 type OrderStatus = Exclude<StatusFilter, "all">;
+/** Stavy, u kterých se zákazníkovi posílá informační e-mail. */
+const STATUS_EMAIL: Record<string, string> = {
+  zpracovava_se: "Objednávka byla přijata",
+  odeslano: "Objednávka byla odeslána",
+};
+
+/** Barvu z klíče („flamingo-luxe") přepíše na čitelný text („Flamingo Luxe"). */
+const prettyColor = (c: unknown): string =>
+  typeof c === "string" && c
+    ? c
+        .split(/[-_]/)
+        .map((w) => (w.length <= 1 ? w.toUpperCase() + "." : w.charAt(0).toUpperCase() + w.slice(1)))
+        .join(" ")
+    : "";
+
+/** Položky objednávky převede na tvar, který čeká /api/send-email. */
+const emailItems = (raw: unknown) => {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((it: any) => {
+    const barva = prettyColor(it?.color);
+    return {
+      name: barva ? `${it?.name ?? ""} – ${barva}` : String(it?.name ?? ""),
+      qty: Number(it?.qty) || 1,
+      // B2C ukládá unit_gross, B2B unit_price — bereme, co je k dispozici.
+      price: Number(it?.unit_gross ?? it?.unit_price ?? 0),
+    };
+  });
+};
+
 const STATUS_FLOW: OrderStatus[] = ["nova", "zpracovava_se", "odeslano", "dorucena", "zrusena"];
 
 interface OrderItem { name: string; qty: number; unitGross: number }
@@ -126,14 +155,69 @@ const AdminOrders = () => {
     })),
   ];
 
-  const updateStatus = async (id: string, newStatus: Order["status"]) => {
+  const updateStatus = async (order: Order, newStatus: Order["status"]) => {
+    const id = order.id;
     setUpdatingId(id);
+
     const { error } = await supabase.from("orders").update({ status: newStatus }).eq("id", id);
-    if (error) toast.error("Změna stavu se nezdařila");
-    else {
-      toast.success(`Stav změněn: ${statusLabel[newStatus]}`);
-      if (selected?.id === id) setSelected({ ...selected, status: newStatus });
+    if (error) {
+      toast.error("Změna stavu se nezdařila");
+      setUpdatingId(null);
+      return;
     }
+
+    toast.success(`Stav změněn: ${statusLabel[newStatus]}`);
+    if (selected?.id === id) setSelected({ ...selected, status: newStatus });
+
+    // U vybraných stavů nabídneme odeslání informace zákazníkovi.
+    const emailSubject = STATUS_EMAIL[newStatus as string];
+    if (emailSubject) {
+      const komu = order.email || "(e-mail v objednávce chybí)";
+      const potvrdit = window.confirm(
+        `Odeslat zákazníkovi e-mail „${emailSubject}"?\n\n` +
+          `Objednávka: ${order.order_number}\nNa adresu: ${komu}`
+      );
+
+      if (potvrdit) {
+        // U odeslané zásilky se dá připojit číslo pro sledování (nepovinné).
+        let trackingNumber: string | null = null;
+        if (newStatus === "odeslano") {
+          trackingNumber =
+            window.prompt("Číslo zásilky pro sledování (nepovinné — nechte prázdné a potvrďte):", "") || null;
+        }
+
+        try {
+          const { data: sess } = await supabase.auth.getSession();
+          const token = sess.session?.access_token;
+          if (!token) throw new Error("Vypršelo přihlášení, přihlaste se prosím znovu.");
+
+          const res = await fetch("/api/send-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              type: "status",
+              token,
+              status: newStatus,
+              order: {
+                orderNumber: order.order_number,
+                customerEmail: order.email || null,
+                customerName: `${order.first_name ?? ""} ${order.last_name ?? ""}`.trim(),
+                total: order.total_gross,
+                items: emailItems(order.items),
+                trackingNumber,
+              },
+            }),
+          });
+
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data?.error || "Odeslání se nezdařilo.");
+          toast.success(`E-mail odeslán na ${data?.sentTo || komu}`);
+        } catch (e: any) {
+          toast.error("E-mail se nepodařilo odeslat", { description: String(e?.message || e) });
+        }
+      }
+    }
+
     setUpdatingId(null);
   };
 
@@ -389,7 +473,7 @@ const AdminOrders = () => {
                   {STATUS_FLOW.map((s) => (
                     <button
                       key={s}
-                      onClick={() => updateStatus(selected.id, s)}
+                      onClick={() => updateStatus(selected, s)}
                       disabled={updatingId === selected.id || selected.status === s}
                       className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border ${
                         selected.status === s
