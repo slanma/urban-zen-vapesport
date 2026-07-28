@@ -46,13 +46,34 @@ async function findOrder(orderNumber: string) {
   try {
     const url = `${SUPABASE_URL}/rest/v1/orders?order_number=eq.${encodeURIComponent(
       orderNumber
-    )}&select=email&limit=1`;
+    )}&select=email,user_id&limit=1`;
     const r = await fetch(url, {
-      headers: { apikey: SUPABASE_SERVICE_KEY },
+      headers: {
+        apikey: SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+      },
     });
     if (!r.ok) return null;
     const rows = await r.json();
     return Array.isArray(rows) && rows.length ? rows[0] : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Poslední záchrana: e-mail přihlašovacího účtu, na který je objednávka vázaná. */
+async function findUserEmail(userId: string): Promise<string | null> {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !userId) return null;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${userId}`, {
+      headers: {
+        apikey: SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+      },
+    });
+    if (!r.ok) return null;
+    const u = await r.json();
+    return u?.email || null;
   } catch {
     return null;
   }
@@ -239,31 +260,49 @@ export default async function handler(req: any, res: any) {
     if (type === "order") {
       const o = body.order || {};
       if (!o.orderNumber) return res.status(400).json({ error: "Chybí orderNumber." });
-      if (!o.customerEmail) return res.status(400).json({ error: "Chybí e-mail zákazníka." });
 
-      // Best-effort ověření: když objednávku v DB najdeme, použijeme e-mail z ní;
-      // když ne, pošleme na e-mail z požadavku. Potvrzení se nikdy „neumlčí".
-      let recipient = o.customerEmail;
+      // Adresát se hledá ve třech krocích. Chybějící e-mail v požadavku NESMÍ
+      // zablokovat oznámení do obchodu — jinak o objednávce nikdo neví.
+      let recipient: string | null = o.customerEmail || null;
       try {
         const dbOrder = await findOrder(o.orderNumber);
-        if (dbOrder && dbOrder.email) recipient = dbOrder.email;
+        if (dbOrder?.email) {
+          recipient = dbOrder.email;
+        } else if (!recipient && dbOrder?.user_id) {
+          recipient = await findUserEmail(dbOrder.user_id);
+        }
       } catch {
-        /* ignorujeme – potvrzení pošleme na e-mail z požadavku */
+        /* ignorujeme – zkusíme poslat aspoň to, co máme */
       }
 
-      await sendEmail({
-        to: recipient,
-        subject: `Potvrzení objednávky #${o.orderNumber} — Vapesport`,
-        html: customerOrderEmail(o),
-        replyTo: SHOP_EMAIL,
-      });
+      // 1) Potvrzení zákazníkovi (jen když máme kam)
+      if (recipient) {
+        await sendEmail({
+          to: recipient,
+          subject: `Potvrzení objednávky #${o.orderNumber} — Vapesport`,
+          html: customerOrderEmail({ ...o, customerEmail: recipient }),
+          replyTo: SHOP_EMAIL,
+        });
+      }
+
+      // 2) Oznámení do obchodu — odejde VŽDY
       await sendEmail({
         to: SHOP_EMAIL,
-        subject: `Nová objednávka${o.isB2B ? " (B2B)" : ""} #${o.orderNumber}`,
-        html: shopOrderEmail(o),
-        replyTo: recipient,
+        subject: recipient
+          ? `Nová objednávka${o.isB2B ? " (B2B)" : ""} #${o.orderNumber}`
+          : `⚠️ Objednávka BEZ E-MAILU${o.isB2B ? " (B2B)" : ""} #${o.orderNumber}`,
+        html:
+          shopOrderEmail({ ...o, customerEmail: recipient || "" }) +
+          (recipient
+            ? ""
+            : `<p style="margin-top:16px;padding:12px;background:#fdeaea;border:1px solid #e5b4b4;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+                 <strong>Pozor:</strong> objednávka nemá e-mail zákazníka, potvrzení se nepodařilo odeslat.
+                 Kontaktujte prosím zákazníka telefonicky${o.phone ? ` na ${escapeHtml(String(o.phone))}` : ""}.
+               </p>`),
+        ...(recipient ? { replyTo: recipient } : {}),
       });
-      return res.status(200).json({ ok: true });
+
+      return res.status(200).json({ ok: true, sentToCustomer: Boolean(recipient) });
     }
 
     if (type === "payment") {
