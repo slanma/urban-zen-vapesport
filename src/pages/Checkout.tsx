@@ -111,8 +111,16 @@ const Checkout = () => {
         f.lastName ||
         profile.contact_person.split(" ").slice(1).join(" ") ||
         "",
+      // E-mail: z fakturačního e-mailu profilu, jinak z přihlášeného účtu.
+      email: f.email || (profile as any).invoice_email || user?.email || "",
     }));
-  }, [profile]);
+  }, [profile, user]);
+
+  // Přihlášený uživatel bez B2B profilu — doplň e-mail z účtu.
+  useEffect(() => {
+    if (!user?.email) return;
+    setForm((f) => (f.email ? f : { ...f, email: user.email as string }));
+  }, [user]);
 
   const availablePayments = useMemo<PaymentOption[]>(() => {
     if (!shipping) return [];
@@ -326,6 +334,7 @@ const Checkout = () => {
 
   // B2B-required validation: company + IČO
   const b2bFieldsOk = !isPartner || (form.company.trim() && form.ico.trim());
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.email.trim());
 
   if (placedOrder) {
     return (
@@ -431,8 +440,15 @@ const Checkout = () => {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
-                  <label htmlFor="email" className={labelClass}>E-mail</label>
-                  <input id="email" type="email" placeholder="vas@email.cz" value={form.email} onChange={(e) => handleInput("email", e.target.value)} className={inputClass} />
+                  <label htmlFor="email" className={labelClass}>E-mail *</label>
+                  <input id="email" type="email" required placeholder="vas@email.cz" value={form.email} onChange={(e) => handleInput("email", e.target.value)} className={inputClass} />
+                  {!emailOk && (
+                    <p className="mt-1.5 text-sm text-destructive">
+                      {form.email.trim()
+                        ? "E-mail nemá správný tvar."
+                        : "E-mail je povinný — pošleme na něj potvrzení objednávky."}
+                    </p>
+                  )}
                 </div>
                 <div className="sm:col-span-2">
                   <label htmlFor="phone" className={labelClass}>Telefon</label>
@@ -719,7 +735,8 @@ const Checkout = () => {
                     !payment ||
                     orderLines.length === 0 ||
                     (shipping === "zasilkovna" && !packetaPoint) ||
-                    !b2bFieldsOk
+                    !b2bFieldsOk ||
+                    !emailOk
                   }
                   className="w-full h-16 text-base md:text-lg font-extrabold rounded-full tracking-wide gap-2 px-4 text-center bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -736,6 +753,7 @@ const Checkout = () => {
                 {!submitting &&
                   (orderLines.length === 0 ||
                     (shipping === "zasilkovna" && !packetaPoint) ||
+                    !emailOk ||
                     !b2bFieldsOk ||
                     !termsAccepted) && (
                     <p className="mt-3 text-center text-sm font-semibold text-destructive">
@@ -743,7 +761,9 @@ const Checkout = () => {
                         ? "Košík je prázdný."
                         : shipping === "zasilkovna" && !packetaPoint
                           ? "Nejprve vyberte výdejní místo Zásilkovny (tlačítko „Vybrat výdejní místo“ výše)."
-                          : !b2bFieldsOk
+                          : !emailOk
+                            ? "Doplňte prosím platný e-mail — pošleme na něj potvrzení objednávky."
+                            : !b2bFieldsOk
                             ? "Doplňte prosím firemní údaje (název firmy a IČO)."
                             : "Zaškrtněte prosím souhlas s obchodními podmínkami."}
                     </p>
