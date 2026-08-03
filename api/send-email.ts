@@ -214,7 +214,7 @@ function b2bApprovedEmail(u: any) {
   const body = `
     <p style="font-size:16px;margin:0 0 14px;">Dobrý den${jmeno ? " " + escapeHtml(jmeno) : ""},</p>
     <p style="margin:0 0 18px;line-height:1.6;">máme pro vás dobrou zprávu — váš velkoobchodní účet Vapesport${u.company ? ` (<strong>${escapeHtml(u.company)}</strong>)` : ""} byl <strong>schválen</strong>. Nyní se můžete přihlásit a nakupovat s velkoobchodními cenami.</p>
-    <a href="https://www.vapesport.cz/b2b" style="display:inline-block;background:${MOSS};color:#fff;text-decoration:none;padding:12px 22px;border-radius:4px;font-weight:700;">Přihlásit se do B2B →</a>
+    <a href="https://www.vapesport.cz/b2b-login" style="display:inline-block;background:${MOSS};color:#fff;text-decoration:none;padding:12px 22px;border-radius:4px;font-weight:700;">Přihlásit se do B2B →</a>
     <p style="margin:18px 0 0;line-height:1.6;">Přihlašujete se e-mailem a heslem, které jste zadali při registraci. Kdyby cokoli, stačí odpovědět na tento e-mail.</p>
   `;
   return layout("Váš B2B účet byl schválen", body);
