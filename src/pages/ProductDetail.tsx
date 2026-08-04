@@ -460,32 +460,17 @@ const ProductDetail = () => {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="specs" className="border-b border-border">
-                <AccordionTrigger className="font-heading text-sm font-bold uppercase tracking-wider text-foreground hover:no-underline py-5">
-                  Specifikace
-                </AccordionTrigger>
-                <AccordionContent>
-                  <dl className="rounded-lg overflow-hidden border border-border divide-y divide-border">
-                    {visibleSpecs.map((spec, i) => (
-                      <div
-                        key={spec.label}
-                        className={`grid grid-cols-[40%_1fr] gap-4 px-4 py-3 text-sm ${
-                          i % 2 === 0 ? "bg-muted/40" : "bg-background"
-                        }`}
-                      >
-                        <dt className="font-body font-semibold text-foreground">{spec.label}</dt>
-                        <dd className="font-body text-muted-foreground">{spec.value}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </AccordionContent>
-              </AccordionItem>
             </Accordion>
           </div>
         </div>
 
         {/* BLOCK D — full-width tech table */}
-        <TechSpecTable sku={sku} categoryLabel={product.categoryLabel} override={override} />
+        <TechSpecTable
+          sku={sku}
+          categoryLabel={product.categoryLabel}
+          override={override}
+          specs={visibleSpecs}
+        />
 
         {override?.description_html ? (
           <article
