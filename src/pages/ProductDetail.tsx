@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import { Head } from "vite-react-ssg";
 import Navbar from "@/components/Navbar";
@@ -77,7 +77,22 @@ const ProductDetail = () => {
       null,
     [override?.colors_override, baseProduct?.available_colors],
   );
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
+  /** Barva se drží v adrese jako ?barva=slug, aby se dal poslat odkaz
+   *  na konkrétní barevnou verzi. Záměrně parametr, ne další cesta —
+   *  cesty se generují při buildu a osm barev × 9 modelů by znamenalo
+   *  desítky stránek se stejným obsahem. Kanonická adresa parametr
+   *  neobsahuje (řeší Canonical.tsx), takže Google vidí jednu stránku. */
+  const writeColorToUrl = (color: string | null) => {
+    const next = new URLSearchParams(searchParams);
+    if (color) next.set("barva", color);
+    else next.delete("barva");
+    // replace: true — proklikání barev jinak zaplní historii a tlačítko
+    // Zpět by se muselo mačkat osmkrát, než se člověk vrátí do katalogu.
+    setSearchParams(next, { replace: true });
+  };
   const [quantity, setQuantity] = useState(1);
   const [needStraps, setNeedStraps] = useState(false);
   const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
@@ -100,7 +115,14 @@ const ProductDetail = () => {
       return;
     }
     const stock = override?.color_stock ?? null;
-    const firstAvailable = availableColors.find((c) => !(stock && stock[c] === 0)) ?? null;
+    // Barva z adresy má přednost (otevřený odkaz na konkrétní variantu),
+    // jinak se vybere první, která není vyprodaná.
+    const wanted = searchParams.get("barva")?.trim().toLowerCase() ?? null;
+    const fromUrl = wanted
+      ? availableColors.find((c) => c.toLowerCase() === wanted) ?? null
+      : null;
+    const firstAvailable =
+      fromUrl ?? availableColors.find((c) => !(stock && stock[c] === 0)) ?? null;
     setSelectedColor(firstAvailable);
     if (firstAvailable) {
       const idx = imageForColor(firstAvailable);
@@ -111,6 +133,7 @@ const ProductDetail = () => {
   // Klik na barvu přepne hlavní fotku na barevnou verzi (u MORSEO), pokud pro barvu fotka existuje.
   const handleSelectColor = (color: string) => {
     setSelectedColor(color);
+    writeColorToUrl(color);
     const idx = imageForColor(color);
     if (idx >= 0) setActiveImg(idx);
   };
