@@ -37,50 +37,58 @@ export interface ProductFeature {
   icon: LucideIcon;
   image: string;
   tooltip: string;
+  /** Do které řady technologie patří. MORSEO a klasika se v komunikaci nemíchají. */
+  group: "morseo" | "klasika";
 }
 
 export const PRODUCT_FEATURES: ReadonlyArray<ProductFeature> = [
   { label: "GekkoGrip™", icon: Hand, image: gekkoGripIcon,
-    tooltip: "Pevné uchycení, které hýčká lak." },
+    tooltip: "Pevné uchycení, které hýčká lak.", group: "morseo" },
   { label: "AquaLock™", icon: Lock, image: armourShellIcon,
-    tooltip: "Voděodolný zip." },
+    tooltip: "Voděodolný zip.", group: "morseo" },
   { label: "HydroGuard™", icon: ShieldCheck, image: aquaBlockIcon,
-    tooltip: "Prémiový materiál odolný vodě i špíně." },
+    tooltip: "Prémiový materiál odolný vodě i špíně.", group: "morseo" },
   { label: "MaxiMobile™", icon: Smartphone, image: maxSpaceIcon,
-    tooltip: "Pojme i modely Ultra/Max." },
+    tooltip: "Pojme i modely Ultra/Max.", group: "morseo" },
   { label: "AeroFlow™", icon: Wind, image: aeroFlowIcon,
-    tooltip: "Aerodynamický tvar, který nezpomaluje." },
+    tooltip: "Aerodynamický tvar, který nezpomaluje.", group: "morseo" },
   { label: "100%HydroGuard™", icon: Percent, image: pureGuardIcon,
-    tooltip: "Absolutní ochrana s nulovou nasákovostí." },
+    tooltip: "Absolutní ochrana s nulovou nasákavostí.", group: "morseo" },
   { label: "UltraTouch™", icon: Pointer, image: smartLinkIcon,
-    tooltip: "Vysoce citlivá slída pro ovládání." },
+    tooltip: "Vysoce citlivá slída pro ovládání.", group: "morseo" },
   { label: "E-bikeReady™", icon: Zap, image: voltFitIcon,
-    tooltip: "Navrženo pro elektrokola a gravel." },
+    tooltip: "Navrženo pro elektrokola a gravel.", group: "morseo" },
   { label: "ID™", icon: Fingerprint, image: idLockIcon,
-    tooltip: "Unikátní design s příběhem v logu." },
+    tooltip: "Unikátní design s příběhem v logu.", group: "morseo" },
   { label: "Flexible Touch™", icon: Wrench, image: quickMountIcon,
-    tooltip: "Možnost montáže na bolt on systém." },
+    tooltip: "Možnost montáže na bolt on systém.", group: "morseo" },
   { label: "MorseoColors™", icon: Palette, image: chromaPickIcon,
-    tooltip: "8 barev pro dokonalý match s elektrokolem/gravelem." },
+    tooltip: "8 barev pro dokonalý match s elektrokolem/gravelem.", group: "morseo" },
 
   // ── VAPESPORT klasika ──────────────────────────────
   { label: "LongStrap™", icon: Cable, image: vsLongStrapIcon,
-    tooltip: "Dlouhé pásky obepnou i široké rámy elektrokol." },
+    tooltip: "Dlouhé pásky obepnou i široké rámy elektrokol.", group: "klasika" },
   { label: "QuickMount™", icon: Anchor, image: vsQuickMountIcon,
-    tooltip: "Rychloupínací KLICKFIX adaptér v balení." },
+    tooltip: "Rychloupínací KLICKFIX adaptér v balení.", group: "klasika" },
   { label: "QuickClip™", icon: Paperclip, image: vsQuickClipIcon,
-    tooltip: "Rychloupínací T-klip — nacvaknutí jednou rukou." },
+    tooltip: "Rychloupínací T-klip — nacvaknutí jednou rukou.", group: "klasika" },
   { label: "ActiveLED™", icon: Lightbulb, image: vsActiveLedIcon,
-    tooltip: "Integrované LED světlo pro bezpečnost." },
+    tooltip: "Integrované LED světlo pro bezpečnost.", group: "klasika" },
   { label: "NightGlow™", icon: Sparkles, image: vsNightGlowIcon,
-    tooltip: "Reflexní prvky pro viditelnost za tmy." },
+    tooltip: "Reflexní prvky pro viditelnost za tmy.", group: "klasika" },
   { label: "RainShield™", icon: Umbrella, image: vsRainShieldIcon,
-    tooltip: "Pláštěnka v balení — obsah zůstane suchý." },
+    tooltip: "Pláštěnka v balení — obsah zůstane suchý.", group: "klasika" },
   { label: "FlexVolume™", icon: Maximize2, image: vsFlexVolumeIcon,
-    tooltip: "Rozšiřitelný objem, když potřebuješ naložit víc." },
+    tooltip: "Rozšiřitelný objem, když potřebuješ naložit víc.", group: "klasika" },
   { label: "BottleDock™", icon: GlassWater, image: vsBottleDockIcon,
-    tooltip: "Kapsa na láhev (bidon) po ruce." },
+    tooltip: "Kapsa na láhev (bidon) po ruce.", group: "klasika" },
 ];
+
+/** Technologie prémiové řady MORSEO. */
+export const MORSEO_FEATURES = PRODUCT_FEATURES.filter((f) => f.group === "morseo");
+
+/** Osvědčené vlastnosti klasické řady VAPESPORT. */
+export const KLASIKA_FEATURES = PRODUCT_FEATURES.filter((f) => f.group === "klasika");
 
 const FEATURE_BY_LABEL = new Map(
   PRODUCT_FEATURES.map((f) => [f.label.toLowerCase(), f] as const),

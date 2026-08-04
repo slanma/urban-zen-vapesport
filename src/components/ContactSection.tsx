@@ -77,7 +77,7 @@ END:VCARD`;
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-6 border-b border-foreground/10">
               {[
                 { num: "+420 606 080 922", role: "marketing a prodej" },
-                { num: "+420 606 080 933", role: "výroba na míru + golf" },
+                { num: "+420 606 080 933", role: "výroba na míru" },
               ].map((p) => (
                 <a
                   key={p.num}

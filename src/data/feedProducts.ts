@@ -7,7 +7,7 @@ import type { Product } from "./products";
 export const feedProducts: Product[] = [
   {
     "id": "vs-maly-trojuhlenik-3kapsy-904673",
-    "name": "Malý trojúhleník 3kapsý",
+    "name": "Malý trojúhelník 3kapsý",
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 378,
@@ -214,7 +214,7 @@ export const feedProducts: Product[] = [
     "category": "vape-legends",
     "categoryLabel": "RÁMOVÉ BRAŠNY",
     "price": 360,
-    "shortDescription": "Elektro trojúhelník specialně vytvarovaný pro HAIBIKE  a LECTRON elektrokola.",
+    "shortDescription": "Elektro trojúhelník speciálně vytvarovaný pro HAIBIKE a LECTRON elektrokola.",
     "problem": "Standardní rámové brašny nesednou na specifické tvary rámů elektrokol HAIBIKE a LECTRON.",
     "funkce": "Trojúhelník speciálně vytvarovaný přesně pro rámy HAIBIKE a LECTRON, takže lícuje bez překážení.",
     "pouziti": "Pro majitele elektrokol HAIBIKE a LECTRON, kteří chtějí brašnu šitou na míru jejich rámu.",
@@ -284,7 +284,7 @@ export const feedProducts: Product[] = [
     "category": "vape-legends",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 550,
-    "shortDescription": "Malá brašna na řídítka na uchycení KLICKFIX adaptér i suchý zip. Vhodnost na kolo, koloběžku, elektrokola i dětská kola.",
+    "shortDescription": "Malá brašna na řídítka na uchycení KLICKFIX adaptér i suchý zip. Vhodná na kolo, koloběžku, elektrokolo i dětské kolo.",
     "problem": "Malou brašnu na řídítka chcete mít univerzální — aby seděla na kolo, koloběžku i dětské kolo, ať s adaptérem, nebo bez něj.",
     "funkce": "Brašna na řídítka s dvojím uchycením — KLICKfix adaptér i suchý zip. Univerzální rozměr pro různé typy kol.",
     "pouziti": "Na kolo, elektrokolo, koloběžku i dětské kolo, kdykoli potřebujete rychle sundat a nasadit.",
@@ -1414,7 +1414,9 @@ export const feedProducts: Product[] = [
       "GekkoGrip™",
       "HydroGuard™",
       "AquaLock™",
-      "E-bikeReady™"
+      "E-bikeReady™",
+      "ID™",
+      "MorseoColors™"
     ],
     "specs": [
       {
@@ -1513,7 +1515,9 @@ export const feedProducts: Product[] = [
       "GekkoGrip™",
       "HydroGuard™",
       "AquaLock™",
-      "E-bikeReady™"
+      "E-bikeReady™",
+      "ID™",
+      "MorseoColors™"
     ],
     "specs": [
       {
@@ -1608,7 +1612,9 @@ export const feedProducts: Product[] = [
       "E-bikeReady™",
       "MaxiMobile™",
       "AeroFlow™",
-      "UltraTouch™"
+      "UltraTouch™",
+      "ID™",
+      "MorseoColors™"
     ],
     "specs": [
       {
@@ -1706,7 +1712,9 @@ export const feedProducts: Product[] = [
       "AquaLock™",
       "E-bikeReady™",
       "MaxiMobile™",
-      "UltraTouch™"
+      "UltraTouch™",
+      "ID™",
+      "MorseoColors™"
     ],
     "specs": [
       {
@@ -1798,7 +1806,9 @@ export const feedProducts: Product[] = [
       "AquaLock™",
       "E-bikeReady™",
       "Flexible Touch™",
-      "AeroFlow™"
+      "AeroFlow™",
+      "ID™",
+      "MorseoColors™"
     ],
     "specs": [
       {
@@ -1885,7 +1895,9 @@ export const feedProducts: Product[] = [
       "Vnitřní síťka na drobnosti",
       "100%HydroGuard™",
       "AquaLock™",
-      "AeroFlow™"
+      "AeroFlow™",
+      "ID™",
+      "MorseoColors™"
     ],
     "specs": [
       {
@@ -1972,7 +1984,9 @@ export const feedProducts: Product[] = [
       "GekkoGrip™",
       "HydroGuard™",
       "AquaLock™",
-      "E-bikeReady™"
+      "E-bikeReady™",
+      "ID™",
+      "MorseoColors™"
     ],
     "specs": [
       {
@@ -2069,7 +2083,9 @@ export const feedProducts: Product[] = [
       "AquaLock™",
       "E-bikeReady™",
       "MaxiMobile™",
-      "UltraTouch™"
+      "UltraTouch™",
+      "ID™",
+      "MorseoColors™"
     ],
     "specs": [
       {
@@ -2172,7 +2188,9 @@ export const feedProducts: Product[] = [
       "GekkoGrip™",
       "HydroGuard™",
       "AquaLock™",
-      "E-bikeReady™"
+      "E-bikeReady™",
+      "ID™",
+      "MorseoColors™"
     ],
     "specs": [
       {

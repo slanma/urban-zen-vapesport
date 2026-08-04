@@ -60,7 +60,7 @@ export const productHotspotEntries: HotspotEntry[] = [
   { productId: "vs-ramova-brasna-nepromokavy-zip-945203", hotspot: "Frame", categories: ["MORSEOVAPE"] }, // MORSEO Plochý trojúhelník 2-kapsý
   { productId: "vs-ramova-brasna-nepromokavy-zip-bila-947404", hotspot: "Frame", categories: ["MORSEOVAPE"] }, // MORSEO Plochý trojúhelník 2-kapsý FLEXI
   { productId: "vs-ramova-brasna-stredni-se-2-zipy-a-sitkou-945204", hotspot: "Frame", categories: ["MORSEOVAPE"] }, // MORSEO Střední trojúhelník 2-kapsý
-  { productId: "vs-maly-trojuhlenik-3kapsy-904673", hotspot: "Frame", categories: ["Rámové brašny"] }, // Malý trojúhleník 3kapsý
+  { productId: "vs-maly-trojuhlenik-3kapsy-904673", hotspot: "Frame", categories: ["Rámové brašny"] }, // Malý trojúhelník 3kapsý
   { productId: "vs-plochy-trojuhelnik-4kapsy-vape-904677", hotspot: "Frame", categories: ["Brašny pro ELEKTROKOLO", "Rámové brašny"] }, // Plochý trojúhelník 4kapsý VAPE
   { productId: "vs-trojuhelnik-sw-914131", hotspot: "Frame", categories: ["Rámové brašny"] }, // Trojúhelnik SW
   { productId: "vs-trojuhelnik-elektro-i-904682", hotspot: "Frame", categories: ["Brašny pro ELEKTROKOLO", "Rámové brašny"] }, // Trojúhelník Elektro I

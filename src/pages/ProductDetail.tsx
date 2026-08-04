@@ -10,6 +10,7 @@ import { useB2BPartner } from "@/hooks/useB2BPartner";
 import PriceTag from "@/components/PriceTag";
 import { getEffectiveGallery, imageIndexForColor } from "@/lib/productImages";
 import { RichText, stripRichMarkers } from "@/lib/richText";
+import { absoluteUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { applyProductOverride, getEffectiveProductCode } from "@/lib/effectiveProduct";
 import { resolveColor } from "@/lib/colorPalette";
 import { netFromGross, fmtCZK } from "@/lib/vat";
@@ -202,14 +203,24 @@ const ProductDetail = () => {
   const metaTitle =
     override.meta_title || `${product.name} (${getEffectiveProductCode(baseProduct, override)}) | VAPESPORT`;
   const metaDesc = override.meta_description || stripRichMarkers(product.shortDescription);
+  // Hlavní fotka produktu jako náhled pro Facebook / Instagram / WhatsApp.
+  // Musí být absolutní URL — relativní cestu sociální sítě neumí načíst.
+  const ogImage = absoluteUrl(gallery[0] || product.image || DEFAULT_OG_IMAGE);
 
   return (
     <main className="min-h-screen bg-background">
       <Head>
         <title>{metaTitle}</title>
         <meta name="description" content={metaDesc} />
+        <meta property="og:type" content="product" />
         <meta property="og:title" content={metaTitle} />
         <meta property="og:description" content={metaDesc} />
+        {/* Náhled při sdílení: fotka produktu, ne obecná ikona webu. */}
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:alt" content={product.name} />
+        <meta name="twitter:title" content={metaTitle} />
+        <meta name="twitter:description" content={metaDesc} />
+        <meta name="twitter:image" content={ogImage} />
         {override.ai_keywords ? <meta name="keywords" content={override.ai_keywords} /> : null}
       </Head>
       <Navbar />
