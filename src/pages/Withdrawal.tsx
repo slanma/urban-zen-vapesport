@@ -30,6 +30,8 @@ const Withdrawal = () => {
   const [items, setItems] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  // null = zatím neodesláno, true = potvrzení odešlo, false = odeslání selhalo
+  const [mailSent, setMailSent] = useState<boolean | null>(null);
   // Dvoufázové potvrzení: null = fáze 1 (vyplňování), objekt = fáze 2 (rekapitulace)
   const [pending, setPending] = useState<WithdrawalForm | null>(null);
 
@@ -94,16 +96,33 @@ const Withdrawal = () => {
       return;
     }
 
-    await supabase.functions.invoke("notify-withdrawal-request", {
-      body: {
-        order_number: pending.order_number,
-        email: pending.email,
-        full_name: pending.full_name,
-        bank_account: pending.bank_account || null,
-        items: pending.items || null,
-        request_id: data?.id,
-      },
-    }).catch(() => null);
+    // Potvrzovací e-mail. Selhání NESMÍ shodit odstoupení — to je platné
+    // okamžikem odeslání zákazníkem. Ale nesmíme ani tvrdit, že e-mail odešel,
+    // když neodešel; proto výsledek sledujeme a promítneme do textu.
+    try {
+      const { error: mailError } = await supabase.functions.invoke(
+        "notify-withdrawal-request",
+        {
+          body: {
+            order_number: pending.order_number,
+            email: pending.email,
+            full_name: pending.full_name,
+            bank_account: pending.bank_account || null,
+            items: pending.items || null,
+            request_id: data?.id,
+          },
+        },
+      );
+      if (mailError) {
+        console.error("notify-withdrawal-request selhalo:", mailError);
+        setMailSent(false);
+      } else {
+        setMailSent(true);
+      }
+    } catch (err) {
+      console.error("notify-withdrawal-request výjimka:", err);
+      setMailSent(false);
+    }
 
     setLoading(false);
     setSuccess(true);
@@ -140,9 +159,18 @@ const Withdrawal = () => {
         {success ? (
           <div className="rounded-lg border border-border bg-card p-8">
             <h2 className="font-heading text-xl font-semibold mb-3">Odstoupení jsme přijali</h2>
-            <p className="text-muted-foreground mb-4">
-              Potvrzení jsme odeslali na <strong className="text-foreground">{pending?.email}</strong>. Uschovejte si ho — je dokladem o tom, že jste od smlouvy odstoupili ve lhůtě.
-            </p>
+            {mailSent ? (
+              <p className="text-muted-foreground mb-4">
+                Potvrzení jsme odeslali na <strong className="text-foreground">{pending?.email}</strong>. Uschovejte si ho — je dokladem o tom, že jste od smlouvy odstoupili ve lhůtě.
+              </p>
+            ) : (
+              <p className="text-muted-foreground mb-4">
+                Vaše odstoupení máme zaznamenané a je platné — rozhoduje okamžik, kdy jste ho odeslali.
+                Automatické potvrzení se nám ale nepodařilo odeslat, ozveme se vám ručně na{" "}
+                <strong className="text-foreground">{pending?.email}</strong>. Pro jistotu si uschovejte
+                snímek této obrazovky.
+              </p>
+            )}
             <div className="text-sm text-muted-foreground space-y-2">
               <p className="font-semibold text-foreground">Co bude dál</p>
               <p>1. Zboží nám zašlete nebo předejte nejpozději do 14 dnů od dnešního dne na adresu Vapesport Vlach s.r.o., Paskovská 636/275, 720 00 Ostrava-Hrabová.</p>
