@@ -6,12 +6,10 @@ import Footer from "@/components/Footer";
 const UCINNOST_OD = "9. 8. 2026";
 
 /**
- * Cesty na související stránky.
- * ROUTE_PRIVACY je ověřeno proti Checkout.tsx.
- * ROUTE_WITHDRAWAL zkontrolujte v App.tsx a případně opravte tady na jednom místě.
+ * Cesty na související stránky. Obojí ověřeno proti routingu aplikace.
  */
 const ROUTE_PRIVACY = "/ochrana-udaju";
-const ROUTE_WITHDRAWAL = "/odstoupeni-od-smlouvy";
+const ROUTE_WITHDRAWAL = "/odstoupeni";
 
 const Terms = () => {
   return (
