@@ -49,6 +49,21 @@ export default async function handler(req: any, res: any) {
       },
       body: JSON.stringify({ email }),
     });
+    // Pokud je adresa mezi potenciálními partnery, označ ji i tam,
+    // ať je v adminu vidět, kdo se odhlásil (rozesílku řídí obě místa).
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/newsletter_contacts?email=eq.${encodeURIComponent(email)}`, {
+        method: "PATCH",
+        headers: {
+          apikey: SUPABASE_SERVICE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({ unsubscribed: true, unsubscribed_at: new Date().toISOString() }),
+      });
+    } catch { /* nepovinné – hlavní záznam je v newsletter_unsubscribes */ }
+
     if (!r.ok && r.status !== 409) {
       return res.status(500).send(page("Něco se nepovedlo", "Odhlášení se teď nepodařilo uložit. Zkuste to prosím později, nebo napište na info@vapesport.cz."));
     }

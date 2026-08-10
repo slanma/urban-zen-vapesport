@@ -11,6 +11,13 @@ interface Newsletter {
   html: string;
   created_at: string;
 }
+interface Contact {
+  id: string;
+  email: string;
+  company_name: string | null;
+  city: string | null;
+  last_sent_at: string | null;
+}
 interface SendRecord {
   id: string;
   subject: string;
@@ -60,6 +67,14 @@ const AdminNewsletters = () => {
   const [selManual, setSelManual] = useState<Set<string>>(new Set());
   const [pSearch, setPSearch] = useState("");
   const [sending, setSending] = useState(false);
+
+  // potenciální partneři (newsletter_contacts)
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [selAllContacts, setSelAllContacts] = useState(false);
+  const [selContacts, setSelContacts] = useState<Set<string>>(new Set());
+  const [cSearch, setCSearch] = useState("");
+  const [hideSent, setHideSent] = useState(false);
+  const [firstN, setFirstN] = useState("100");
 
   const load = async () => {
     setLoading(true);
@@ -151,11 +166,19 @@ const AdminNewsletters = () => {
     setSelDiscounts(new Set());
     setSelManual(new Set());
     setPSearch("");
+    setSelAllContacts(false);
+    setSelContacts(new Set());
+    setCSearch("");
+    setHideSent(false);
     try {
-      const r = await api("/api/newsletters", { action: "partners" });
-      setPartners(r.partners || []);
+      const [rp, rc] = await Promise.all([
+        api("/api/newsletters", { action: "partners" }),
+        api("/api/send-newsletter", { action: "contacts" }),
+      ]);
+      setPartners(rp.partners || []);
+      setContacts(rc.contacts || []);
     } catch (e: any) {
-      toast.error(e.message || "Načtení partnerů selhalo");
+      toast.error(e.message || "Načtení příjemců selhalo");
     }
   };
 
@@ -168,8 +191,17 @@ const AdminNewsletters = () => {
     }, new Map<number, number>())
   ).sort((a, b) => a[0] - b[0]);
 
+  // potenciální partneři po filtru (hledání + skrytí už oslovených)
+  const contactsFiltered = contacts.filter((c) => {
+    if (hideSent && c.last_sent_at) return false;
+    const q = cSearch.trim().toLowerCase();
+    if (!q) return true;
+    return [c.company_name, c.email, c.city].filter(Boolean).join(" ").toLowerCase().includes(q);
+  });
+  const contactsNeverSent = contacts.filter((c) => !c.last_sent_at).length;
+
   // spočítej příjemce (e-maily) z aktuálního výběru
-  const recipientEmails = (() => {
+  const partnerEmails = (() => {
     const set = new Set<string>();
     for (const p of partners) {
       const e = (p.invoice_email || "").trim().toLowerCase();
@@ -177,15 +209,29 @@ const AdminNewsletters = () => {
       const d = Number(p.discount_percent) || 0;
       if (selAll || selDiscounts.has(d) || selManual.has(p.id)) set.add(e);
     }
-    return [...set];
+    return set;
   })();
 
-  const segmentLabel = selAll
-    ? "Všichni"
+  const contactEmails = (() => {
+    const set = new Set<string>();
+    const pool = selAllContacts ? contactsFiltered : contacts.filter((c) => selContacts.has(c.id));
+    for (const c of pool) {
+      const e = (c.email || "").trim().toLowerCase();
+      if (e) set.add(e);
+    }
+    return set;
+  })();
+
+  const recipientEmails = [...new Set([...partnerEmails, ...contactEmails])];
+
+  const partnerLabel = selAll
+    ? "Partneři: všichni"
     : [
         [...selDiscounts].sort((a, b) => a - b).map((d) => `${d} %`).join(", "),
         selManual.size ? `${selManual.size} ručně` : "",
-      ].filter(Boolean).join(" + ") || "—";
+      ].filter(Boolean).join(" + ");
+  const contactLabel = contactEmails.size ? `Potenciální: ${contactEmails.size}` : "";
+  const segmentLabel = [partnerLabel, contactLabel].filter(Boolean).join(" · ") || "—";
 
   const toggleDiscount = (d: number) =>
     setSelDiscounts((s2) => {
@@ -199,6 +245,20 @@ const AdminNewsletters = () => {
       n.has(id) ? n.delete(id) : n.add(id);
       return n;
     });
+
+  const toggleContact = (id: string) =>
+    setSelContacts((s2) => {
+      const n = new Set(s2);
+      n.has(id) ? n.delete(id) : n.add(id);
+      return n;
+    });
+
+  const selectFirstN = () => {
+    const n = parseInt(firstN, 10);
+    if (Number.isNaN(n) || n <= 0) { toast.error("Zadej kladné číslo."); return; }
+    setSelAllContacts(false);
+    setSelContacts(new Set(contactsFiltered.slice(0, n).map((c) => c.id)));
+  };
 
   const doSend = async () => {
     if (!sendTarget) return;
@@ -365,6 +425,69 @@ const AdminNewsletters = () => {
                     ))}
                 </div>
               </>
+            )}
+          </div>
+
+          {/* Potenciální partneři */}
+          <div className="border-t border-border pt-4">
+            <label className="flex items-center gap-2 mb-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={selAllContacts}
+                onChange={(e) => { setSelAllContacts(e.target.checked); if (e.target.checked) setSelContacts(new Set()); }}
+                className="w-4 h-4 accent-primary"
+              />
+              <span className="text-sm font-medium text-foreground">
+                Potenciální partneři ({contactsFiltered.length})
+              </span>
+              <span className="text-xs text-muted-foreground">
+                · zatím neoslovených: {contactsNeverSent}
+              </span>
+            </label>
+
+            <p className="text-xs text-muted-foreground mb-2">
+              Nemají účet ani slevu. Dostanou patičku označenou jako obchodní sdělení.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <Input placeholder="Hledat firmu, e-mail, město…" value={cSearch} onChange={(e) => setCSearch(e.target.value)} className="h-9 flex-1 min-w-[180px]" />
+              <label className="flex items-center gap-1.5 text-sm cursor-pointer shrink-0">
+                <input type="checkbox" checked={hideSent} onChange={(e) => setHideSent(e.target.checked)} className="w-3.5 h-3.5 accent-primary" />
+                Skrýt už oslovené
+              </label>
+              <div className="flex items-center gap-1 shrink-0">
+                <Input type="number" min={1} value={firstN} onChange={(e) => setFirstN(e.target.value)} className="h-9 w-20" />
+                <Button size="sm" variant="outline" className="h-9" onClick={selectFirstN} disabled={selAllContacts}>
+                  Vybrat prvních
+                </Button>
+              </div>
+            </div>
+
+            {!selAllContacts && (
+              <div className="max-h-52 overflow-y-auto border border-border rounded-md divide-y divide-border">
+                {contactsFiltered.slice(0, 300).map((c) => (
+                  <label key={c.id} className="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer hover:bg-muted/40">
+                    <input type="checkbox" checked={selContacts.has(c.id)} onChange={() => toggleContact(c.id)} className="w-4 h-4 accent-primary shrink-0" />
+                    <span className="flex-1">
+                      <span className="text-foreground">{c.company_name || c.email}</span>
+                      <span className="text-xs text-muted-foreground block">
+                        {c.email}{c.city ? ` · ${c.city}` : ""}
+                        {c.last_sent_at ? ` · osloveno ${fmtDate(c.last_sent_at)}` : ""}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+                {contactsFiltered.length > 300 && (
+                  <div className="px-3 py-2 text-xs text-muted-foreground">
+                    Zobrazeno prvních 300 z {contactsFiltered.length}. Zúži hledáním nebo zaškrtni celou skupinu.
+                  </div>
+                )}
+              </div>
+            )}
+            {selContacts.size > 0 && (
+              <button type="button" onClick={() => setSelContacts(new Set())} className="text-xs text-muted-foreground underline mt-2">
+                Zrušit výběr ({selContacts.size})
+              </button>
             )}
           </div>
 
