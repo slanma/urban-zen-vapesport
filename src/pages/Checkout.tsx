@@ -41,7 +41,7 @@ interface PaymentOption {
 const SHIPPING_OPTIONS: ShippingOption[] = [
   { id: "zasilkovna", label: "Zásilkovna – výdejní místa", price: 150, hint: "Vyberte výdejní místo přes widget Packety" },
   { id: "ppl", label: "PPL – Doručení na adresu", price: 200 },
-  { id: "slovensko", label: "Doručení na Slovensko", price: 250, hint: "Doručení na adresu, platba předem převodem" },
+  { id: "slovensko", label: "Doručení na Slovensko", price: 300, hint: "Doručení na adresu, platba předem převodem" },
   { id: "osobni", label: "Osobní odběr na prodejně", price: 0 },
 ];
 
