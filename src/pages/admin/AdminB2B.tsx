@@ -43,15 +43,20 @@ const AdminB2B = () => {
   const [activity, setActivity] = useState<Record<string, string | null>>({});
   const [search, setSearch] = useState("");
   const [discountFilter, setDiscountFilter] = useState<"all" | "with" | "without">("all");
+  const [activityFilter, setActivityFilter] = useState<"all" | "registered" | "never">("all");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
   const [bulkDiscount, setBulkDiscount] = useState("");
 
   // Filtrovaný seznam schválených partnerů (hledání textem + filtr slevy)
+  const lastLogin = (p: Partner): string | null => (p.user_id ? activity[p.user_id] ?? null : null);
+
   const approvedFiltered = approved.filter((p) => {
     const disc = Number(p.discount_percent) || 0;
     if (discountFilter === "with" && disc <= 0) return false;
     if (discountFilter === "without" && disc > 0) return false;
+    if (activityFilter === "registered" && !lastLogin(p)) return false;
+    if (activityFilter === "never" && lastLogin(p)) return false;
     const q = search.trim().toLowerCase();
     if (!q) return true;
     const hay = [p.company_name, p.contact_person, p.invoice_email, p.city, p.ico, p.phone, p.notes]
@@ -60,6 +65,15 @@ const AdminB2B = () => {
       .toLowerCase();
     return hay.includes(q);
   });
+
+  // --- Přehled aktivace účtů ----------------------------------------------
+  const statRegistered = approved.filter((p) => lastLogin(p)).length;
+  const statActive7 = approved.filter((p) => {
+    const l = lastLogin(p);
+    return l ? (Date.now() - new Date(l).getTime()) / 86400000 <= 7 : false;
+  }).length;
+  const statNever = approved.length - statRegistered;
+  const activityKnown = Object.keys(activity).length > 0;
 
   // --- Hromadné úpravy -----------------------------------------------------
   const visibleIds = approvedFiltered.map((p) => p.id);
@@ -353,17 +367,17 @@ const AdminB2B = () => {
   return (
     <section aria-labelledby="b2b-heading" className="p-6 md:p-8">
       <h1 id="b2b-heading" className="text-2xl font-heading font-bold text-foreground mb-6">B2B Partneři</h1>
-      <Tabs defaultValue="pending" className="w-full">
+      <Tabs defaultValue="approved" className="w-full">
         <TabsList>
+          <TabsTrigger value="approved">
+            Schválení partneři
+            <Badge variant="secondary" className="ml-2 text-xs px-1.5 py-0">{approved.length}</Badge>
+          </TabsTrigger>
           <TabsTrigger value="pending">
             Čekající registrace
             {registrations.length > 0 && (
               <Badge variant="destructive" className="ml-2 text-xs px-1.5 py-0">{registrations.length}</Badge>
             )}
-          </TabsTrigger>
-          <TabsTrigger value="approved">
-            Schválení partneři
-            <Badge variant="secondary" className="ml-2 text-xs px-1.5 py-0">{approved.length}</Badge>
           </TabsTrigger>
         </TabsList>
 
@@ -497,8 +511,45 @@ const AdminB2B = () => {
                   </Button>
                 </div>
               </div>
+              {/* Souhrn aktivace účtů */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActivityFilter("all")}
+                  className={`text-left rounded-lg border px-4 py-3 transition-colors ${activityFilter === "all" ? "border-primary bg-primary/5" : "border-border bg-background hover:bg-muted/40"}`}
+                >
+                  <div className="text-2xl font-bold text-foreground">{approved.length}</div>
+                  <div className="text-xs text-muted-foreground">schválených partnerů celkem</div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActivityFilter("registered")}
+                  className={`text-left rounded-lg border px-4 py-3 transition-colors ${activityFilter === "registered" ? "border-primary bg-primary/5" : "border-border bg-background hover:bg-muted/40"}`}
+                >
+                  <div className="text-2xl font-bold text-emerald-700">{statRegistered}</div>
+                  <div className="text-xs text-muted-foreground">
+                    už se přihlásilo{statActive7 > 0 ? ` · ${statActive7} za posledních 7 dní` : ""}
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActivityFilter("never")}
+                  className={`text-left rounded-lg border px-4 py-3 transition-colors ${activityFilter === "never" ? "border-primary bg-primary/5" : "border-border bg-background hover:bg-muted/40"}`}
+                >
+                  <div className="text-2xl font-bold text-foreground">{statNever}</div>
+                  <div className="text-xs text-muted-foreground">zatím se nepřihlásilo</div>
+                </button>
+              </div>
+
+              {!activityKnown && (
+                <p className="text-xs text-muted-foreground">
+                  Údaje o přihlášení se teď nepodařilo načíst, čísla o aktivaci proto nemusí sedět.
+                </p>
+              )}
+
               <p className="text-xs text-muted-foreground">
                 Zobrazeno {approvedFiltered.length} z {approved.length} partnerů
+                {activityFilter === "registered" ? " · jen přihlášení" : activityFilter === "never" ? " · jen nepřihlášení" : ""}
               </p>
 
               {/* Hromadné akce – viditelné pořád, nad tabulkou */}
