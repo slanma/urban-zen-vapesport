@@ -22,7 +22,7 @@ import { usePromoCode } from "@/hooks/usePromoCode";
 import PromoCodeBox from "@/components/PromoCodeBox";
 
 
-type ShippingId = "zasilkovna" | "ppl" | "osobni";
+type ShippingId = "zasilkovna" | "ppl" | "slovensko" | "osobni";
 type PaymentId = "cash" | "transfer" | "cod" | "invoice";
 
 interface ShippingOption {
@@ -41,6 +41,7 @@ interface PaymentOption {
 const SHIPPING_OPTIONS: ShippingOption[] = [
   { id: "zasilkovna", label: "Zásilkovna – výdejní místa", price: 150, hint: "Vyberte výdejní místo přes widget Packety" },
   { id: "ppl", label: "PPL – Doručení na adresu", price: 200 },
+  { id: "slovensko", label: "Doručení na Slovensko", price: 250, hint: "Doručení na adresu, platba předem převodem" },
   { id: "osobni", label: "Osobní odběr na prodejně", price: 0 },
 ];
 
@@ -58,6 +59,10 @@ const PAYMENT_MATRIX: Record<ShippingId, PaymentOption[]> = {
     { id: "transfer", label: "Převodem na účet", price: 0 },
     { id: "cod", label: "Dobírka (+50 Kč)", price: 50 },
     { id: "invoice", label: "Platba na fakturu", price: 0 },
+  ],
+  // Slovensko: bez dobírky – přeshraniční dobírka je drahá a řeší se v EUR.
+  slovensko: [
+    { id: "transfer", label: "Převodem na účet", price: 0 },
   ],
 };
 

@@ -38,7 +38,7 @@ type PaymentId = "hotove" | "prevodem" | "faktura";
 const SHIPPING_OPTIONS: { id: ShippingId; label: string; price: number }[] = [
   { id: "osobni", label: "Osobní odběr", price: 0 },
   { id: "ppl", label: "PPL", price: 200 },
-  { id: "slovensko", label: "Slovensko", price: 300 },
+  { id: "slovensko", label: "Slovensko", price: 250 },
   { id: "zasilkovna", label: "Zásilkovna", price: 150 },
 ];
 
