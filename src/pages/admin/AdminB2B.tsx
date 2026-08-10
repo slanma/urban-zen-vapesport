@@ -86,6 +86,32 @@ const AdminB2B = () => {
 
   const clearSelection = () => setSelectedIds(new Set());
 
+  // Skupiny podle výše slevy – počítají se z právě zobrazených partnerů
+  const discountGroups = (() => {
+    const map = new Map<number, string[]>();
+    approvedFiltered.forEach((p) => {
+      const d = Number(p.discount_percent) || 0;
+      const arr = map.get(d) ?? [];
+      arr.push(p.id);
+      map.set(d, arr);
+    });
+    return Array.from(map.entries())
+      .sort((a, b) => a[0] - b[0])
+      .map(([value, ids]) => ({ value, ids }));
+  })();
+
+  const fmtPct = (v: number) => `${v.toLocaleString("cs-CZ")} %`;
+
+  const toggleGroup = (ids: string[]) => {
+    const allIn = ids.every((id) => selectedIds.has(id));
+    setSelectedIds((s) => {
+      const next = new Set(s);
+      if (allIn) ids.forEach((id) => next.delete(id));
+      else ids.forEach((id) => next.add(id));
+      return next;
+    });
+  };
+
   // Supabase update po dávkách – u 231 ID by jeden dotaz narazil na délku URL
   const bulkUpdate = async (patch: Partial<Partner>, doneLabel: string) => {
     const ids = Array.from(selectedIds);
@@ -475,26 +501,60 @@ const AdminB2B = () => {
                 Zobrazeno {approvedFiltered.length} z {approved.length} partnerů
               </p>
 
-              {selectedCount > 0 && (
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-lg border border-border bg-muted/60 px-4 py-3">
-                  <div className="flex items-center gap-2 shrink-0">
+              {/* Hromadné akce – viditelné pořád, nad tabulkou */}
+              <div className="rounded-lg border border-border bg-muted/60 px-4 py-3 space-y-3">
+                {/* Řádek 1: rychlý výběr skupin */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs text-muted-foreground shrink-0">Vybrat skupinu:</span>
+                  <Button
+                    size="sm"
+                    variant={allVisibleSelected ? "secondary" : "default"}
+                    className="h-8 text-xs font-bold"
+                    onClick={toggleAllVisible}
+                    disabled={bulkBusy || visibleIds.length === 0}
+                  >
+                    {allVisibleSelected ? "ODZNAČIT VŠE" : `VŠICHNI (${visibleIds.length})`}
+                  </Button>
+                  {discountGroups.map((g) => {
+                    const active = g.ids.every((id) => selectedIds.has(id));
+                    return (
+                      <Button
+                        key={g.value}
+                        size="sm"
+                        variant={active ? "secondary" : "outline"}
+                        className="h-8 text-xs"
+                        onClick={() => toggleGroup(g.ids)}
+                        disabled={bulkBusy}
+                      >
+                        {g.value === 0 ? "Bez slevy" : fmtPct(g.value)}
+                        <span className="ml-1.5 text-muted-foreground">({g.ids.length})</span>
+                      </Button>
+                    );
+                  })}
+                </div>
+
+                {/* Řádek 2: co se s výběrem má stát */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-1 border-t border-border/60">
+                  <div className="flex items-center gap-2 shrink-0 pt-2 sm:pt-3">
                     {bulkBusy && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />}
-                    <span className="text-sm font-semibold text-foreground">
+                    <span className={`text-sm ${selectedCount > 0 ? "font-semibold text-foreground" : "text-muted-foreground"}`}>
                       Vybráno {selectedCount}
                     </span>
-                    <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={clearSelection} disabled={bulkBusy}>
-                      Zrušit výběr
-                    </Button>
+                    {selectedCount > 0 && (
+                      <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={clearSelection} disabled={bulkBusy}>
+                        Zrušit výběr
+                      </Button>
+                    )}
                   </div>
 
-                  <div className="h-4 w-px bg-border hidden sm:block" />
+                  <div className="h-4 w-px bg-border hidden sm:block sm:mt-3" />
 
-                  <div className="flex items-center gap-2 flex-wrap">
+                  <div className="flex items-center gap-2 flex-wrap sm:pt-3">
                     <span className="text-xs text-muted-foreground">Doprava zdarma:</span>
                     <Button
                       size="sm"
                       className="h-8 text-xs font-bold"
-                      disabled={bulkBusy}
+                      disabled={bulkBusy || selectedCount === 0}
                       onClick={() => bulkUpdate({ free_shipping: true }, "Doprava zdarma zapnuta")}
                     >
                       ZAPNOUT
@@ -503,16 +563,16 @@ const AdminB2B = () => {
                       size="sm"
                       variant="outline"
                       className="h-8 text-xs font-bold"
-                      disabled={bulkBusy}
+                      disabled={bulkBusy || selectedCount === 0}
                       onClick={() => bulkUpdate({ free_shipping: false }, "Doprava zdarma vypnuta")}
                     >
                       VYPNOUT
                     </Button>
                   </div>
 
-                  <div className="h-4 w-px bg-border hidden sm:block" />
+                  <div className="h-4 w-px bg-border hidden sm:block sm:mt-3" />
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 sm:pt-3">
                     <span className="text-xs text-muted-foreground">Sleva:</span>
                     <Input
                       type="number"
@@ -522,20 +582,20 @@ const AdminB2B = () => {
                       onChange={(e) => setBulkDiscount(e.target.value)}
                       placeholder="%"
                       className="h-8 w-20 text-sm"
-                      disabled={bulkBusy}
+                      disabled={bulkBusy || selectedCount === 0}
                     />
                     <Button
                       size="sm"
                       variant="outline"
                       className="h-8 text-xs font-bold"
-                      disabled={bulkBusy || bulkDiscount.trim() === ""}
+                      disabled={bulkBusy || selectedCount === 0 || bulkDiscount.trim() === ""}
                       onClick={bulkSetDiscount}
                     >
                       NASTAVIT
                     </Button>
                   </div>
                 </div>
-              )}
+              </div>
               {approvedFiltered.length === 0 ? (
                 <div className="bg-background border border-border rounded-lg p-8 text-center">
                   <p className="text-muted-foreground">Nic nenalezeno.</p>
