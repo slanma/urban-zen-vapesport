@@ -43,6 +43,9 @@ const AdminB2B = () => {
   const [activity, setActivity] = useState<Record<string, string | null>>({});
   const [search, setSearch] = useState("");
   const [discountFilter, setDiscountFilter] = useState<"all" | "with" | "without">("all");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
+  const [bulkDiscount, setBulkDiscount] = useState("");
 
   // Filtrovaný seznam schválených partnerů (hledání textem + filtr slevy)
   const approvedFiltered = approved.filter((p) => {
@@ -57,6 +60,87 @@ const AdminB2B = () => {
       .toLowerCase();
     return hay.includes(q);
   });
+
+  // --- Hromadné úpravy -----------------------------------------------------
+  const visibleIds = approvedFiltered.map((p) => p.id);
+  const allVisibleSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedIds.has(id));
+  const selectedCount = selectedIds.size;
+
+  const toggleOne = (id: string) => {
+    setSelectedIds((s) => {
+      const next = new Set(s);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAllVisible = () => {
+    setSelectedIds((s) => {
+      const next = new Set(s);
+      if (allVisibleSelected) visibleIds.forEach((id) => next.delete(id));
+      else visibleIds.forEach((id) => next.add(id));
+      return next;
+    });
+  };
+
+  const clearSelection = () => setSelectedIds(new Set());
+
+  // Supabase update po dávkách – u 231 ID by jeden dotaz narazil na délku URL
+  const bulkUpdate = async (patch: Partial<Partner>, doneLabel: string) => {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    setBulkBusy(true);
+
+    const keys = Object.keys(patch) as (keyof Partner)[];
+    let failed = 0;
+    let reverted = 0;
+
+    for (let i = 0; i < ids.length; i += 100) {
+      const part = ids.slice(i, i + 100);
+      const { data, error } = await supabase
+        .from("b2b_profiles")
+        .update(patch)
+        .in("id", part)
+        .select("*");
+      if (error) {
+        failed += part.length;
+        continue;
+      }
+      // b2b_guard vrací změny chráněných sloupců tiše zpět – ověříme výsledek
+      (data ?? []).forEach((row) => {
+        if (keys.some((k) => row[k] !== patch[k])) reverted += 1;
+      });
+    }
+
+    setBulkBusy(false);
+
+    if (failed > 0) {
+      toast.error(`Uložení selhalo u ${failed} partnerů`);
+      await loadApproved();
+      return;
+    }
+    if (reverted > 0) {
+      toast.error(`Databáze změnu zamítla u ${reverted} partnerů`, {
+        description: "Nejspíš chybí role admin (trigger b2b_guard).",
+      });
+      await loadApproved();
+      return;
+    }
+
+    setApproved((a) => a.map((p) => (selectedIds.has(p.id) ? { ...p, ...patch } : p)));
+    toast.success(`${doneLabel} – ${ids.length} partnerů`);
+  };
+
+  const bulkSetDiscount = async () => {
+    const v = parseInt(bulkDiscount, 10);
+    if (Number.isNaN(v) || v < 0 || v > 100) {
+      toast.error("Zadej slevu 0–100 %");
+      return;
+    }
+    await bulkUpdate({ discount_percent: v }, `Sleva nastavena na ${v} %`);
+    setBulkDiscount("");
+  };
 
   const loadAll = async () => {
     setLoading(true);
@@ -170,6 +254,11 @@ const AdminB2B = () => {
     }
     setRegistrations((r) => r.filter((x) => x.id !== p.id));
     setApproved((a) => a.filter((x) => x.id !== p.id));
+    setSelectedIds((s) => {
+      const next = new Set(s);
+      next.delete(p.id);
+      return next;
+    });
     toast.success("Partner smazán");
   };
 
@@ -385,6 +474,68 @@ const AdminB2B = () => {
               <p className="text-xs text-muted-foreground">
                 Zobrazeno {approvedFiltered.length} z {approved.length} partnerů
               </p>
+
+              {selectedCount > 0 && (
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-lg border border-border bg-muted/60 px-4 py-3">
+                  <div className="flex items-center gap-2 shrink-0">
+                    {bulkBusy && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />}
+                    <span className="text-sm font-semibold text-foreground">
+                      Vybráno {selectedCount}
+                    </span>
+                    <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={clearSelection} disabled={bulkBusy}>
+                      Zrušit výběr
+                    </Button>
+                  </div>
+
+                  <div className="h-4 w-px bg-border hidden sm:block" />
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs text-muted-foreground">Doprava zdarma:</span>
+                    <Button
+                      size="sm"
+                      className="h-8 text-xs font-bold"
+                      disabled={bulkBusy}
+                      onClick={() => bulkUpdate({ free_shipping: true }, "Doprava zdarma zapnuta")}
+                    >
+                      ZAPNOUT
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 text-xs font-bold"
+                      disabled={bulkBusy}
+                      onClick={() => bulkUpdate({ free_shipping: false }, "Doprava zdarma vypnuta")}
+                    >
+                      VYPNOUT
+                    </Button>
+                  </div>
+
+                  <div className="h-4 w-px bg-border hidden sm:block" />
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">Sleva:</span>
+                    <Input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={bulkDiscount}
+                      onChange={(e) => setBulkDiscount(e.target.value)}
+                      placeholder="%"
+                      className="h-8 w-20 text-sm"
+                      disabled={bulkBusy}
+                    />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 text-xs font-bold"
+                      disabled={bulkBusy || bulkDiscount.trim() === ""}
+                      onClick={bulkSetDiscount}
+                    >
+                      NASTAVIT
+                    </Button>
+                  </div>
+                </div>
+              )}
               {approvedFiltered.length === 0 ? (
                 <div className="bg-background border border-border rounded-lg p-8 text-center">
                   <p className="text-muted-foreground">Nic nenalezeno.</p>
@@ -395,6 +546,16 @@ const AdminB2B = () => {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border bg-muted/50">
+                      <th className="text-left pl-4 pr-1 py-3 w-10">
+                        <input
+                          type="checkbox"
+                          checked={allVisibleSelected}
+                          onChange={toggleAllVisible}
+                          className="h-4 w-4 cursor-pointer accent-primary align-middle"
+                          aria-label="Vybrat všechny zobrazené"
+                          title="Vybrat všechny zobrazené"
+                        />
+                      </th>
                       <th className="text-left px-4 py-3 font-semibold text-foreground">Firma / IČO</th>
                       <th className="text-left px-4 py-3 font-semibold text-foreground">Kontakt</th>
                       <th className="text-left px-4 py-3 font-semibold text-foreground w-32">Sleva (%)</th>
@@ -404,7 +565,21 @@ const AdminB2B = () => {
                   </thead>
                   <tbody>
                     {approvedFiltered.map((p) => (
-                      <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
+                      <tr
+                        key={p.id}
+                        className={`border-b border-border last:border-0 transition-colors ${
+                          selectedIds.has(p.id) ? "bg-muted/50" : "hover:bg-muted/30"
+                        }`}
+                      >
+                        <td className="pl-4 pr-1 py-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.has(p.id)}
+                            onChange={() => toggleOne(p.id)}
+                            className="h-4 w-4 cursor-pointer accent-primary align-middle"
+                            aria-label={`Vybrat ${p.company_name}`}
+                          />
+                        </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1.5 flex-wrap">
                             <span className="text-foreground font-medium">{p.company_name}</span>
