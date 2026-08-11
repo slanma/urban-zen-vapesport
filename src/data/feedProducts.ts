@@ -1068,9 +1068,10 @@ export const feedProducts: Product[] = [
         "value": "Suché zipy podlepené proti podření laku; v balení prodlužovací pár na široké rámy"
       }
     ],
-    "image": "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/smb-004-2039648.jpeg",
+    "image": "/images/produkty-vapesport/smb-vapesport/barva-neon-orange-vs.jpg",
     "images": [
-      "https://www.vapesport.cz/cms-app/001/657/527/main/images/800x800x0/000/002/040/smb-004-2039648.jpeg"
+      "/images/produkty-vapesport/smb-vapesport/barva-neon-orange-vs.jpg",
+      "/images/produkty-vapesport/smb-vapesport/barva-light-turquoise-vs.jpg"
     ]
   },
   {
