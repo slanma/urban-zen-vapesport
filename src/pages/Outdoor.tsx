@@ -1,17 +1,26 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
+  Anchor,
   ArrowRight,
   Check,
+  Layers,
+  Mail,
+  Phone,
   Ruler,
-  ShieldCheck,
+  Scissors,
   ShoppingCart,
-  Sparkles,
-  Users,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PriceTag from "@/components/PriceTag";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   outdoorProducts,
   getOutdoorSizes,
@@ -46,6 +55,30 @@ const HERO_SCRIM_DESKTOP = [
 
 const HERO_SCRIM_MOBILE =
   "linear-gradient(180deg, rgba(238,236,231,0.96) 0%, rgba(238,236,231,0.90) 45%, rgba(238,236,231,0.55) 72%, rgba(238,236,231,0.25) 100%)";
+
+/* Kontakt pro dotaz na velikost. Shodné údaje jako v patičce webu. */
+const PHONE = "+420606080922";
+const PHONE_LABEL = "+420 606 080 922";
+const EMAIL = "info@vapesport.cz";
+
+/* Předplněný e-mail — zákazník nemusí vymýšlet, co napsat, a nám přijde
+   dotaz s údaji, které k doporučení velikosti opravdu potřebujeme. */
+const MAIL_HREF =
+  `mailto:${EMAIL}` +
+  `?subject=${encodeURIComponent("Dotaz na velikost návleku")}` +
+  `&body=${encodeURIComponent(
+    [
+      "Dobrý den,",
+      "",
+      "poradíte mi prosím s velikostí návleku?",
+      "",
+      "Obvod lýtka (cm): ",
+      "Velikost obuvi (EU): ",
+      "Na co návlek chci (turistika / vysoké hory / běžky): ",
+      "",
+      "Děkuji",
+    ].join("\n"),
+  )}`;
 
 /* Velikostní přehled u velké fotky. Zdroj: list „velikosti" v ceníku. */
 const SIZE_OVERVIEW = [
@@ -103,32 +136,30 @@ const Reveal = ({
 };
 
 /**
- * Důvody ke koupi.
- *
- * POZOR — tvrzení o původu výroby tu ZÁMĚRNĚ NENÍ. U brašen platí, že se
- * nešijí v ČR, a dokud nepotvrdíte, jak to je u návleků, nesmí na web jít
- * „česká výroba". Až to bude potvrzené, přidá se sem další karta.
+ * Čtyři pilíře hodnoty. Text dodán zadavatelem 18. 8. 2026 — nesahat na
+ * formulace bez jeho vědomí. Původ výroby (Ostrava) je tím potvrzený,
+ * u brašen naopak dál platí, že se v ČR nešijí.
  */
 const REASONS = [
   {
-    icon: Sparkles,
-    title: "Česká značka od roku 1994",
-    text: "Návleky vyvíjíme a prodáváme z Ostravy-Hrabové přes třicet let. Nejsme přeprodejce bezejmenného zboží — za sortimentem stojí konkrétní firma s historií.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Dvě úrovně materiálu",
-    text: "Nylon 210 na běžnou turistiku, Surftex 5000 pro vysoké hory a trvalé mokro. Vyberete podle toho, kam opravdu chodíte — ne podle jedné univerzální ceny.",
+    icon: Scissors,
+    title: "Šijeme přímo v Ostravě od roku 1994",
+    text: "Nejsme přeprodejci anonymního dovozu z katalogu. Návleky sami navrhujeme, testujeme a šijeme v Ostravě-Hrabové už přes 30 let. Známe každý šev, popruh i sponu.",
   },
   {
     icon: Ruler,
-    title: "Velikosti včetně dětských",
-    text: "M, L a XL u vyšších modelů, jednovelikostní návlek na běžky a samostatná dětská verze. Rodina vyřeší výbavu na jednom místě.",
+    title: "Ušijeme návleky i na míru (asymetrie / širší lýtka)",
+    text: "Nesedí vám konfekce, máte silnější lýtka, ortézu nebo atypické boty? Protože držíme celou výrobu pod vlastní střechou, dokážeme upravit střih a ušít návleky přesně podle vašich mír.",
   },
   {
-    icon: Users,
-    title: "Poradíme s výběrem osobně",
-    text: "Napíšete obvod lýtka a velikost obuvi, my doporučíme model i velikost. Žádný chatbot — odpovídá člověk, který sortiment zná.",
+    icon: Anchor,
+    title: "Funkční konstrukce, co drží na noze",
+    text: "Přední kovový háček do tkaniček, nastavitelný podvlekový popruh s bočními sponami a horní stahovací guma. Návlek nepovolí, neposouvá se nahoru a dokonale uzavře prostor proti vodě, sněhu i jehličí.",
+  },
+  {
+    icon: Layers,
+    title: "Volba materiálu podle reálného terénu",
+    text: "Pevný a nepromokavý Nylon 210 na běžné chození, houbaření a les, nebo funkční membrána Surftex 5000 s reflexním pruhem do Alp, Tater a náročných celodenních výšlapů, kde se noha nesmí zapařit.",
   },
 ];
 
@@ -137,6 +168,7 @@ const Outdoor = () => {
   const { addItem, openDrawer } = useCart();
 
   const [use, setUse] = useState<OutdoorUseCase>("vse");
+  const [helpOpen, setHelpOpen] = useState(false);
 
   /* Skryté produkty (admin → viditelnost) na stránku nepatří. */
   const visible = useMemo(
@@ -183,7 +215,8 @@ const Outdoor = () => {
               KAŽDÉ VÝZVY
             </h1>
             <p className="font-body text-sm md:text-base font-medium uppercase tracking-[0.14em] text-foreground/80 leading-relaxed mt-6 max-w-lg">
-              Outdoorové návleky pro turistiku, vysoké hory a běžky
+              Odolné návleky na boty do mokré trávy, hlubokého sněhu
+              i vysokohorského terénu.
             </p>
             <a
               href="#navleky"
@@ -243,7 +276,7 @@ const Outdoor = () => {
                 Proč VAPESPORT
               </span>
               <h2 className="font-heading text-3xl md:text-4xl font-bold tracking-tight text-foreground mt-2 mb-8">
-                Čtyři důvody, proč vzít návlek od nás
+                Proč vzít návleky od nás
               </h2>
             </Reveal>
 
@@ -356,14 +389,78 @@ const Outdoor = () => {
               i velikost.
             </p>
           </div>
-          <Link
-            to="/kontakt"
+          <button
+            type="button"
+            onClick={() => setHelpOpen(true)}
             className="inline-flex items-center gap-2 bg-primary-foreground text-primary text-[13px] font-bold uppercase tracking-widest px-6 py-3 rounded-md hover:opacity-90 transition-opacity shrink-0"
           >
             Zeptat se <ArrowRight className="w-4 h-4" />
-          </Link>
+          </button>
         </div>
       </section>
+
+      {/* Okno s přímou akcí — zavolat nebo napsat. Dřív tady byl jen odkaz
+          na kontaktní stránku, což byl krok navíc bez užitku. */}
+      <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-xl">
+              Poradíme s velikostí
+            </DialogTitle>
+            <DialogDescription className="font-body">
+              Řekněte nám obvod lýtka a velikost obuvi. Doporučíme model
+              i velikost — odpovídá člověk, ne robot.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-3 mt-2">
+            <a
+              href={`tel:${PHONE}`}
+              className="flex items-center gap-3 rounded-lg border border-border bg-card p-4 hover:border-primary transition-colors"
+            >
+              <span className="shrink-0 w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                <Phone className="w-5 h-5" />
+              </span>
+              <span className="min-w-0">
+                <span className="block font-heading text-sm font-bold text-foreground">
+                  Zavolat
+                </span>
+                <span className="block font-body text-sm text-muted-foreground">
+                  {PHONE_LABEL} · Po–Pá 9:00–14:00
+                </span>
+              </span>
+            </a>
+
+            <a
+              href={MAIL_HREF}
+              className="flex items-center gap-3 rounded-lg border border-border bg-card p-4 hover:border-primary transition-colors"
+            >
+              <span className="shrink-0 w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                <Mail className="w-5 h-5" />
+              </span>
+              <span className="min-w-0">
+                <span className="block font-heading text-sm font-bold text-foreground">
+                  Napsat e-mail
+                </span>
+                <span className="block font-body text-sm text-muted-foreground break-all">
+                  {EMAIL}
+                </span>
+              </span>
+            </a>
+          </div>
+
+          <p className="font-body text-xs text-muted-foreground mt-1">
+            E-mail se otevře s předplněnými otázkami, stačí doplnit čísla.{" "}
+            <Link
+              to="/kontakt"
+              className="text-primary underline underline-offset-2"
+              onClick={() => setHelpOpen(false)}
+            >
+              Celý kontakt
+            </Link>
+          </p>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </main>

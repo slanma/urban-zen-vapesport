@@ -15,6 +15,11 @@
  * ruční zápisy by příští generování smazalo. Do katalogu se produkty
  * přidávají v products.ts (concat).
  *
+ * TEXTY: formulace vycházejí z popisů na starším webu vapesport.cz
+ *   (háček za tkaničky, pásek pro seřízení dle typu boty, stahování horního
+ *   okraje na gumičku, zip na zadní části, výška 20 cm u běžkového modelu)
+ *   a z dodaných fotek. Nic není domyšlené — co nebylo potvrzené, tam není.
+ *
  * CO JEŠTĚ CHYBÍ (označeno TODO):
  *   • EAN kódy (GS1 prefix 8594182)
  *   • hmotnost a rozměry
@@ -57,11 +62,11 @@ export const outdoorProducts: Product[] = [
     price: 682, // MC s DPH 682,44
     b2b_price: 282, // VOC bez DPH
     shortDescription:
-      "Klasický vysoký návlek z nylonu 210 pro turistiku a trekking. Chrání nohavici i obuv před blátem, mokrou trávou a sněhem. Velikosti L a XL.",
+      "Klasický vysoký návlek z nylonu 210 pro všechna roční období. Chrání nohavici i obuv před blátem, mokrou trávou a sněhem. Velikosti L a XL.",
     problem:
-      "V mokré trávě, blátě a snehu se voda a nečistoty dostanou do boty i pod nohavici. Mokré nohy znamenají chlad a otlaky.",
+      "V mokré trávě, blátě a sněhu se voda a nečistoty dostanou do boty i pod nohavici. Mokré nohy znamenají chlad a otlaky.",
     funkce:
-      "Vysoký střih přes lýtko z nylonu 210, stahování v horní části a poutko pod podrážku pro pevné dosednutí na obuv.",
+      "Vysoký střih z nylonu 210. Háček pro zachycení za tkaničky, pásek pro seřízení velikosti podle typu boty a horní okraj stahovaný na gumičku.",
     pouziti:
       "Turistika, trekking a práce venku — kdykoli vede cesta mokrým nebo blátivým terénem.",
     features: [],
@@ -98,11 +103,11 @@ export const outdoorProducts: Product[] = [
     price: 557, // MC s DPH 556,60
     b2b_price: 230, // VOC bez DPH
     shortDescription:
-      "Dětská verze klasického návleku z nylonu 210. Udrží dětskou botu a nohavici v suchu na výletě, na táboře i cestou do školy. Jednovelikostní.",
+      "Lehký dětský návlek z nylonu 210 určený pro všechna roční období. Udrží dětskou botu a nohavici v suchu na výletě, na táboře i cestou do školy.",
     problem:
       "Děti si mokro a bláto najdou vždycky. Promočené boty a nohavice pak ukončí výlet dřív, než měl skončit.",
     funkce:
-      "Zmenšený střih klasického návleku z nylonu 210 se stahováním, nasadí se rychle i dětskými prsty.",
+      "Lehký dětský návlek z nylonu 210. Háček pro zachycení za tkaničky, vrchní vstup, pásek pro seřízení podle typu boty a horní okraj na gumičku.",
     pouziti:
       "Rodinné výlety, tábory a vycházky v mokrém či zasněženém terénu.",
     features: [],
@@ -127,13 +132,13 @@ export const outdoorProducts: Product[] = [
     price: 416, // MC s DPH 416,24
     b2b_price: 172, // VOC bez DPH
     shortDescription:
-      "Nízký návlek na běžky z nylonu 210. Úzký profil nekoliduje s běžeckým vázáním a drží sníh mimo botu. Jednovelikostní.",
+      "Návlek na běžky z nylonu 210 o výšce 20 cm. Chrání boty proti zapadání sněhu, s háčkem pro upevnění na botu.",
     problem:
-      "Při běžkování se sníh nabaluje na přechod boty a nohavice, taje a stéká dovnitř. Mokrá noha na stopě znamená konec zábavy.",
+      "Při běžkování zapadává sníh do boty přes okraj a taje. Mokrá noha na stopě znamená konec zábavy.",
     funkce:
-      "Úzký nízký střih z nylonu 210, který respektuje běžecké vázání a nepřekáží při odrazu.",
+      "Výška 20 cm, guma v horním i spodním okraji, takže se šířka přizpůsobí botě. Háček pro upevnění na botu drží návlek na místě.",
     pouziti:
-      "Běžecké lyžování na upravené stopě i mimo ni, zimní vycházky v hlubším snehu.",
+      "Běžecké lyžování na upravené stopě i mimo ni, zimní vycházky v hlubším sněhu.",
     features: [],
     specs: [
       { label: "Kategorie", value: "Návleky" },
@@ -156,11 +161,11 @@ export const outdoorProducts: Product[] = [
     price: 762, // MC s DPH 762,30
     b2b_price: 315, // VOC bez DPH
     shortDescription:
-      "Vysoký návlek z nylonu 210 se zipem — nasadíte a sundáte ho, aniž byste zouvali botu. Velikosti M, L a XL.",
+      "Lehký vysoký návlek z nylonu 210 se zipem na zadní části. Nasazení i sundání bez zdlouhavého natahování. Velikosti M, L a XL.",
     problem:
-      "Návlek bez zipu se musí natahovat přes celou botu. V dešti, v rukavicích nebo s mačkami na nohou je to zdržení.",
+      "Návlek bez zipu se musí natahovat přes celou botu. V dešti nebo v rukavicích je to zdržení.",
     funkce:
-      "Zip po straně umožní nasazení a sundání bez zouvání. Jinak stejný vysoký střih z nylonu 210 jako klasický model.",
+      "Zip na zadní části pro rychlé nasazení. Háček pro zachycení za tkaničky, pásek pro seřízení velikosti podle typu boty a horní okraj na gumičku.",
     pouziti:
       "Turistika a trekking, kde se počasí mění a návleky se během dne opakovaně nasazují a sundávají.",
     features: [],
@@ -185,13 +190,13 @@ export const outdoorProducts: Product[] = [
     price: 1016, // MC s DPH 1 016,40
     b2b_price: 420, // VOC bez DPH
     shortDescription:
-      "Vrcholný model z materiálu Surftex 5000 pro vysokohorskou turistiku a náročné podmínky. Velikosti M, L a XL.",
+      "Vysoký, lehký a voděodolný návlek z materiálu Surftex 5000. Prodyšný a větruvzdorný, se zipem na zadní části. Velikosti M, L a XL.",
     problem:
-      "Ve vysokých horách, dlouhém snehu a trvalém dešti dojde běžnému nylonu odolnost. Pak je jedno, jak dobrý je střih.",
+      "V trvalém dešti a mokrém sněhu potřebujete návlek, který vodu udrží venku a přitom nechá nohu dýchat. Jinak se zapotíte zvnitřku.",
     funkce:
-      "Materiál Surftex 5000 s vyšší odolností proti vodě a mechanickému oděru než nylon 210, ve stejném vysokém střihu.",
+      "Materiál Surftex 5000 — voděodolný, prodyšný a větruvzdorný. Zip na zadní části, háček pro zachycení za tkaničky a pásek pro seřízení podle typu boty.",
     pouziti:
-      "Vysokohorská turistika, přechody hřebenů, zimní výstupy a vše, kde je výbava celý den v mokru.",
+      "Vysokohorská turistika, přechody hřebenů a zimní výstupy — všude, kde je výbava celý den v mokru.",
     features: [],
     specs: [
       { label: "Kategorie", value: "Návleky" },

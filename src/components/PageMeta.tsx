@@ -46,9 +46,9 @@ const META: Record<string, Meta> = {
     image: "/og/og-kolekce-morseo.jpg",
   },
   "/outdoor": {
-    title: "Outdoor návleky – na turistiku, trail i běžky | VAPESPORT",
+    title: "Outdoor návleky na boty – šité v Ostravě od roku 1994 | VAPESPORT",
     description:
-      "Návleky VAPESPORT pro turistiku, trekking a běžky. Ochrana proti blátu, vodě a sněhu — vysoké, nízké i běžecké střihy ve velikostech M–XL.",
+      "Odolné návleky na boty do mokré trávy, hlubokého sněhu i vysokohorského terénu. Nylon 210 nebo membrána Surftex 5000, velikosti M–XL i výroba na míru.",
     image: "/og/og-outdoor.jpg",
   },
   "/o-nas": {
