@@ -1,6 +1,10 @@
 import type { Product } from "@/data/products";
 import type { ProductOverride } from "@/hooks/useProductOverrides";
-import { getOutdoorSizes } from "@/data/outdoorProducts";
+import {
+  getOutdoorSizes,
+  getOutdoorVariantLabel,
+  getOutdoorVariantLabelPlural,
+} from "@/data/outdoorProducts";
 
 /**
  * Varianty produktu na jednom místě.
@@ -38,10 +42,15 @@ export const isSizeVariant = (
   product: Pick<Product, "category">,
 ): boolean => product.category === "outdoor";
 
-/** Popisek varianty do UI — jednotné číslo. */
-export const variantLabel = (product: Pick<Product, "category">): string =>
-  isSizeVariant(product) ? "Velikost" : "Barva";
+/** Popisek varianty do UI — jednotné číslo. U outdoor produktů se liší
+ *  podle kusu: konfekce má „Velikost", zakázková výroba „Materiál". */
+export const variantLabel = (
+  product: Pick<Product, "id" | "category">,
+): string =>
+  isSizeVariant(product) ? getOutdoorVariantLabel(product.id) : "Barva";
 
 /** Popisek varianty do UI — množné číslo (nadpisy, aria-label). */
-export const variantLabelPlural = (product: Pick<Product, "category">): string =>
-  isSizeVariant(product) ? "Velikosti" : "Barvy";
+export const variantLabelPlural = (
+  product: Pick<Product, "id" | "category">,
+): string =>
+  isSizeVariant(product) ? getOutdoorVariantLabelPlural(product.id) : "Barvy";

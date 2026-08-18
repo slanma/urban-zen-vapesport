@@ -28,7 +28,7 @@ import ProblemSolutionBullets from "@/components/product/ProblemSolutionBullets"
 import TechSpecTable from "@/components/product/TechSpecTable";
 import ColorCells from "@/components/product/ColorCells";
 import SizeCells from "@/components/product/SizeCells";
-import { getOutdoorSizes } from "@/data/outdoorProducts";
+import { getOutdoorSizes, getOutdoorVariantLabel } from "@/data/outdoorProducts";
 import RagSeoBlock from "@/components/product/RagSeoBlock";
 import FeatureBadges from "@/components/FeatureBadges";
 import { isKnownFeature } from "@/lib/productFeatures";
@@ -422,7 +422,7 @@ const ProductDetail = () => {
               <div className="mt-6">
                 <div className="flex items-baseline justify-between mb-3">
                   <h2 className="font-heading text-xs font-bold uppercase tracking-wider text-foreground">
-                    Velikost
+                    {getOutdoorVariantLabel(baseProduct!.id)}
                   </h2>
                   <span className="font-body text-sm text-muted-foreground">
                     {selectedSize ?? "Vyberte"}

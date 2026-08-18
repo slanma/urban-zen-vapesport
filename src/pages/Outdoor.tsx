@@ -7,6 +7,7 @@ import {
   Layers,
   Mail,
   Phone,
+  Loader2,
   Ruler,
   Scissors,
   ShoppingCart,
@@ -14,6 +15,7 @@ import {
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PriceTag from "@/components/PriceTag";
+import ProblemSolutionBullets from "@/components/product/ProblemSolutionBullets";
 import {
   Dialog,
   DialogContent,
@@ -25,6 +27,7 @@ import {
   outdoorProducts,
   getOutdoorSizes,
   matchesUseCase,
+  CUSTOM_GAITER,
   OUTDOOR_USE_CASES,
   type OutdoorUseCase,
 } from "@/data/outdoorProducts";
@@ -32,6 +35,7 @@ import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useCart } from "@/hooks/useCart";
 import { getPrimaryImage } from "@/lib/productImages";
 import { applyProductOverride, getEffectiveProductCode } from "@/lib/effectiveProduct";
+import { fmtCZK, grossFromNet } from "@/lib/vat";
 
 /* Fotky — nahraj do public/images/outdoor/ a přepiš cesty. */
 const HERO_IMAGE = "/images/outdoor/hero-outdoor.jpg";
@@ -377,6 +381,9 @@ const Outdoor = () => {
         </div>
       </section>
 
+      {/* ---------------- NÁVLEK NA MÍRU ---------------- */}
+      <CustomGaiterSection />
+
       {/* ---------------- ZÁVĚREČNÁ CTA ---------------- */}
       <section className="bg-primary text-primary-foreground">
         <div className="max-w-[1600px] mx-auto px-6 lg:px-12 py-14 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
@@ -581,6 +588,314 @@ const OutdoorCard = ({
         </div>
       </div>
     </div>
+  );
+};
+
+/* ------------------------------------------------------------------ */
+
+/**
+ * Sekce „Návlek na míru" s poptávkovým formulářem.
+ *
+ * Posílá se na /api/poptavka — stejné potrubí, jaké používá stránka
+ * Aplikace a služby, takže poptávka přijde do Admin → Poptávky a nevzniká
+ * druhý systém, který by se musel hlídat.
+ *
+ * ZÁMĚRNĚ SE NEPTÁME NA DŮVOD. K ušití stačí obvod, výška a typ obuvi.
+ * Kdybychom se ptali „proč", začnou lidé psát diagnózy a v systému vzniknou
+ * zdravotní údaje — zvláštní kategorie podle GDPR s přísnějším režimem.
+ */
+const CustomGaiterSection = () => {
+  const fromGross = grossFromNet(CUSTOM_GAITER.fromNet);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    material: CUSTOM_GAITER.materials[0] as string,
+    calf: "",
+    height: "",
+    shoes: "",
+    message: "",
+    hp: "",
+  });
+  const [consent, setConsent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [err, setErr] = useState("");
+
+  const set = (k: keyof typeof form, v: string) =>
+    setForm((f) => ({ ...f, [k]: v }));
+
+  const submit = async () => {
+    setErr("");
+    if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setErr("Vyplňte prosím platný e-mail, ať se vám můžeme ozvat.");
+      return;
+    }
+    if (!form.calf.trim() || !form.shoes.trim()) {
+      setErr(
+        "Doplňte prosím obvod lýtka a velikost obuvi — bez nich střih neurčíme.",
+      );
+      return;
+    }
+    if (!consent) {
+      setErr("Pro odeslání je potřeba souhlas se zpracováním údajů.");
+      return;
+    }
+    setSending(true);
+    try {
+      const res = await fetch("/api/poptavka", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "create",
+          company: form.name,
+          email: form.email,
+          phone: form.phone,
+          web: "",
+          hp: form.hp,
+          message: [
+            `Materiál: ${form.material}`,
+            `Obvod lýtka v nejsilnějším místě: ${form.calf}`,
+            `Požadovaná výška návleku: ${form.height || "neuvedeno"}`,
+            `Typ / velikost obuvi: ${form.shoes}`,
+            "",
+            form.message,
+          ]
+            .join("\n")
+            .trim(),
+          services: [
+            {
+              name: `Návlek na míru — ${form.material}`,
+              price: `od ${fmtCZK(CUSTOM_GAITER.fromNet)} bez DPH`,
+            },
+          ],
+          price_once: CUSTOM_GAITER.fromNet,
+          price_month: 0,
+          has_custom: true,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Odeslání selhalo");
+      setSent(true);
+    } catch (e: any) {
+      setErr(e?.message || "Odeslání se nepodařilo. Zkuste to prosím znovu.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const field =
+    "w-full rounded-md border border-border bg-background px-3 py-2.5 font-body text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none";
+
+  return (
+    <section id="na-miru" className="scroll-mt-20">
+      <div className="max-w-[1600px] mx-auto px-6 lg:px-12 py-16 md:py-24">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+          {/* Text */}
+          <div>
+            <span className="font-body text-[11px] font-bold tracking-[0.28em] uppercase text-primary">
+              {CUSTOM_GAITER.subtitle}
+            </span>
+            <h2 className="font-heading text-3xl md:text-4xl font-bold tracking-tight text-foreground mt-2">
+              {CUSTOM_GAITER.title}
+            </h2>
+            <p className="font-heading text-xl font-bold text-foreground mt-4">
+              od {fmtCZK(fromGross)}{" "}
+              <span className="font-body text-sm font-normal text-muted-foreground">
+                s DPH ({fmtCZK(CUSTOM_GAITER.fromNet)} bez DPH)
+              </span>
+            </p>
+            <p className="font-body text-xs text-muted-foreground mt-1">
+              Konečnou cenu potvrdíme podle rozměrů, než začneme šít.
+            </p>
+
+            <figure className="mt-8">
+              <img
+                src={CUSTOM_GAITER.image}
+                alt="Materiál, spony a popruhy pro šití návleků na míru"
+                className="w-full rounded-xl border border-border"
+                loading="lazy"
+              />
+              <figcaption className="font-body text-xs text-muted-foreground mt-2">
+                Materiál, spony a popruhy z naší ostravské dílny.
+              </figcaption>
+            </figure>
+
+            <p className="font-body text-muted-foreground leading-relaxed mt-8">
+              {CUSTOM_GAITER.popis}
+            </p>
+            <div className="mt-7 pt-7 border-t border-border">
+              <ProblemSolutionBullets
+                problem={CUSTOM_GAITER.problem}
+                fn={CUSTOM_GAITER.funkce}
+                usage={CUSTOM_GAITER.pouziti}
+              />
+            </div>
+          </div>
+
+          {/* Formulář */}
+          <div className="bg-card border border-border rounded-xl p-6 md:p-8 lg:sticky lg:top-24">
+            {sent ? (
+              <div className="text-center py-10">
+                <span className="inline-flex w-12 h-12 rounded-full bg-primary/10 text-primary items-center justify-center">
+                  <Check className="w-6 h-6" />
+                </span>
+                <h3 className="font-heading text-xl font-bold text-foreground mt-4">
+                  Poptávka odeslána
+                </h3>
+                <p className="font-body text-sm text-muted-foreground mt-2">
+                  Ozveme se s cenou a termínem, obvykle do dvou pracovních dnů.
+                </p>
+              </div>
+            ) : (
+              <>
+                <h3 className="font-heading text-lg font-bold text-foreground">
+                  Nezávazná poptávka
+                </h3>
+                <p className="font-body text-sm text-muted-foreground mt-1 mb-5">
+                  Pošlete míry, my spočítáme cenu a termín. Nic tím
+                  neobjednáváte.
+                </p>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="font-heading text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Materiál
+                    </label>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {CUSTOM_GAITER.materials.map((m) => (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => set("material", m)}
+                          aria-pressed={form.material === m}
+                          className={`px-4 py-2 rounded-md border font-body text-sm font-semibold transition-colors ${
+                            form.material === m
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-border text-foreground hover:border-primary/50"
+                          }`}
+                        >
+                          {m}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="font-heading text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Míry
+                    </label>
+                    <p className="font-body text-xs text-muted-foreground mt-1 mb-2">
+                      Stačí v centimetrech, měřte přes nohavici a obutou botu.
+                      Když si nebudete jistí, dopište to do poznámky a doladíme
+                      to spolu.
+                    </p>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <input
+                        className={field}
+                        placeholder="Obvod lýtka v nejsilnějším místě (cm) *"
+                        value={form.calf}
+                        onChange={(e) => set("calf", e.target.value)}
+                      />
+                      <input
+                        className={field}
+                        placeholder="Typ a velikost obuvi (EU) *"
+                        value={form.shoes}
+                        onChange={(e) => set("shoes", e.target.value)}
+                      />
+                    </div>
+                    <input
+                      className={`${field} mt-3`}
+                      placeholder="Požadovaná výška návleku (cm)"
+                      value={form.height}
+                      onChange={(e) => set("height", e.target.value)}
+                    />
+                  </div>
+
+                  <div className="pt-2 border-t border-border" />
+
+                  <input
+                    className={field}
+                    placeholder="Jméno nebo firma"
+                    value={form.name}
+                    onChange={(e) => set("name", e.target.value)}
+                  />
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <input
+                      className={field}
+                      type="email"
+                      placeholder="E-mail *"
+                      value={form.email}
+                      onChange={(e) => set("email", e.target.value)}
+                    />
+                    <input
+                      className={field}
+                      placeholder="Telefon"
+                      value={form.phone}
+                      onChange={(e) => set("phone", e.target.value)}
+                    />
+                  </div>
+                  <textarea
+                    className={`${field} min-h-[90px]`}
+                    placeholder="Poznámka — typ boty, zapínání se zipem či bez, cokoli dalšího"
+                    value={form.message}
+                    onChange={(e) => set("message", e.target.value)}
+                  />
+
+                  {/* past na roboty — člověk toto pole nevidí */}
+                  <input
+                    className="hidden"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={form.hp}
+                    onChange={(e) => set("hp", e.target.value)}
+                  />
+
+                  <label className="flex items-start gap-2.5 cursor-pointer pt-1">
+                    <input
+                      type="checkbox"
+                      checked={consent}
+                      onChange={(e) => setConsent(e.target.checked)}
+                      className="mt-1 accent-[hsl(var(--primary))]"
+                    />
+                    <span className="font-body text-xs text-muted-foreground">
+                      Souhlasím se zpracováním údajů pro vyřízení této poptávky.{" "}
+                      <Link
+                        to="/ochrana-udaju"
+                        className="text-primary underline underline-offset-2"
+                      >
+                        Ochrana osobních údajů
+                      </Link>
+                    </span>
+                  </label>
+
+                  {err && (
+                    <p className="font-body text-sm text-destructive">{err}</p>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={submit}
+                    disabled={sending}
+                    className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground text-[13px] font-bold uppercase tracking-widest px-6 py-3.5 rounded-md hover:bg-primary/90 disabled:opacity-60 transition-colors"
+                  >
+                    {sending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" /> Odesílám
+                      </>
+                    ) : (
+                      <>
+                        Poslat poptávku <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 

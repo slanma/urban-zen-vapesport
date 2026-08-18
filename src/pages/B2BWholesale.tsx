@@ -13,7 +13,12 @@ import { useCart } from "@/hooks/useCart";
 import { products, type Product } from "@/data/products";
 import { applyProductOverride } from "@/lib/effectiveProduct";
 import { resolveColor } from "@/lib/colorPalette";
-import { getVariantValues, isSizeVariant, variantLabelPlural } from "@/lib/variantOptions";
+import {
+  getVariantValues,
+  isSizeVariant,
+  variantLabel,
+  variantLabelPlural,
+} from "@/lib/variantOptions";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { fmtCZK, grossFromNet } from "@/lib/vat";
 import { productHotspotEntries, type Hotspot } from "@/data/productHotspots";
@@ -290,7 +295,7 @@ const B2BWholesale = () => {
               <div>Foto</div>
               <div>Kód / Název</div>
               <div className="text-right">B2B / ks bez DPH</div>
-              <div className="text-center">{section === "outdoor" ? "Velikost / ks" : "Množství"}</div>
+              <div className="text-center">{section === "outdoor" ? "Varianta / ks" : "Množství"}</div>
               <div className="text-right">Konečná cena s DPH</div>
               <div />
             </div>
@@ -357,7 +362,10 @@ const B2BWholesale = () => {
                                   );
                                 })}
                             <span className="text-[11px] text-muted-foreground ml-0.5">
-                              {colors.length} {bySize ? "velikostí" : "barev"}
+                              {colors.length}{" "}
+                              {bySize
+                                ? variantLabelPlural(row.base).toLocaleLowerCase("cs")
+                                : "barev"}
                             </span>
                           </div>
                         )}
@@ -409,9 +417,7 @@ const B2BWholesale = () => {
                             return (
                               <div key={color} className="grid grid-cols-[20px_1fr_140px_120px] gap-3 items-center">
                                 {bySize && color !== "__single__" ? (
-                                  <span className="w-4 h-4 flex items-center justify-center text-[10px] font-bold text-muted-foreground">
-                                    {color.charAt(0)}
-                                  </span>
+                                  <span className="w-4 h-4 rounded-sm border border-border bg-background" />
                                 ) : (
                                   <span
                                     className="w-4 h-4 rounded-full border border-border"
@@ -422,7 +428,7 @@ const B2BWholesale = () => {
                                   {color === "__single__"
                                     ? "Jediná varianta"
                                     : bySize
-                                      ? `Velikost ${color}`
+                                      ? `${variantLabel(row.base)} ${color}`
                                       : resolveColor(color).label}
                                 </span>
                                 <span className={`text-xs ${stock > 0 ? "text-emerald-600" : "text-muted-foreground"}`}>

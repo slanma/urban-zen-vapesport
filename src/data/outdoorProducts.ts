@@ -31,21 +31,68 @@ import type { Product } from "./products";
 export const OUTDOOR_CATEGORY_LABEL = "NÁVLEKY";
 
 /**
- * Velikostní řady podle listu „velikosti".
- * POZOR: nejsou stejné! „Obyčejný" se dělá jen v L a XL (žádné M),
- * dětský návlek a návlek na běžky jsou jednovelikostní (prázdné pole =
- * na stránce se selektor velikosti vůbec nezobrazí).
+ * Návlek na míru ZÁMĚRNĚ NENÍ katalogový produkt.
+ *
+ * Cena je „od" a finální se určí až podle rozměrů, takže objednávka za fixní
+ * částku by zavazovala k ceně, kterou ještě nikdo nespočítal. Řeší se proto
+ * poptávkou (sekce na /outdoor → /api/poptavka → Admin → Poptávky).
+ * Zároveň tím nespadne do B2B matice, kde by ho partner mohl naskládat
+ * do objednávky po kusech.
  */
-export const OUTDOOR_SIZES_BY_ID: Record<string, readonly string[]> = {
-  "vs-outdoor-navlek-obycejny-310112": ["L", "XL"],
-  "vs-outdoor-navlek-obycejny-detsky-311112": [],
-  "vs-outdoor-navlek-na-bezky-211096": [],
-  "vs-outdoor-navlek-obycejny-se-zipem-310114": ["M", "L", "XL"],
-  "vs-outdoor-navlek-surflex-510114": ["M", "L", "XL"],
+export const CUSTOM_GAITER = {
+  title: "Návlek na míru",
+  subtitle: "Zakázková výroba",
+  /** Výchozí cena bez DPH; s DPH se dopočítá přes grossFromNet. */
+  fromNet: 1000,
+  materials: ["Nylon 210", "Surftex 5000"] as const,
+  problem:
+    "Běžná konfekce nesedí každému. Širší či asymetrická lýtka, nošení ortéz nebo robustní expediční boty často způsobují, že standardní návleky škrtí, nejdou dopnout, nebo naopak sjíždějí a propouštějí vlhkost.",
+  funkce:
+    "Úprava střihu, výšky i obvodu přesně podle vašich parametrů. Volba materiálu (nepromokavý Nylon 210 nebo prodyšný Surftex 5000), zapínání na míru (se zipem i bez), individuální délka podvlekového popruhu a přesné umístění fixačního háčku.",
+  pouziti:
+    "Turisté s nekonfekčními proporcemi, uživatelé zdravotních pomůcek/ortéz, majitelé masivní obuvi a všichni, kdo vyžadují 100% padnoucí vybavení bez kompromisů.",
+  popis:
+    "Protože máme celou výrobu pod vlastní střechou v Ostravě, nejsme vázáni pouze na tabulkové velikosti. Stačí nám poslat obvod lýtka, výšku a typ obuvi – ušijeme vám návleky, které budou sedět na milimetr přesně.",
+  image: "/images/outdoor/navlek-na-miru-card.jpg",
+} as const;
+
+/**
+ * Varianty jednotlivých návleků.
+ *
+ * Velikostní řady podle listu „velikosti" v ceníku — POZOR, nejsou stejné!
+ * „Obyčejný" se dělá jen v L a XL (žádné M), dětský a běžkový jsou
+ * jednovelikostní (prázdné pole = selektor se vůbec nezobrazí).
+ *
+ * Návlek na míru je výjimka: nevybírá se velikost (tu určí míry zákazníka),
+ * ale materiál. Proto má varianta u každého produktu vlastní popisek —
+ * jinak by u zakázkové výroby svítilo „Velikost: Nylon 210".
+ */
+export interface OutdoorVariants {
+  /** Popisek v jednotném čísle, např. „Velikost" nebo „Materiál". */
+  label: string;
+  values: readonly string[];
+}
+
+export const OUTDOOR_VARIANTS_BY_ID: Record<string, OutdoorVariants> = {
+  "vs-outdoor-navlek-obycejny-310112": { label: "Velikost", values: ["L", "XL"] },
+  "vs-outdoor-navlek-obycejny-detsky-311112": { label: "Velikost", values: [] },
+  "vs-outdoor-navlek-na-bezky-211096": { label: "Velikost", values: [] },
+  "vs-outdoor-navlek-obycejny-se-zipem-310114": { label: "Velikost", values: ["M", "L", "XL"] },
+  "vs-outdoor-navlek-surftex-510114": { label: "Velikost", values: ["M", "L", "XL"] },
 };
 
 export const getOutdoorSizes = (id: string): readonly string[] =>
-  OUTDOOR_SIZES_BY_ID[id] ?? [];
+  OUTDOOR_VARIANTS_BY_ID[id]?.values ?? [];
+
+/** Popisek varianty (jednotné číslo) — „Velikost" u konfekce, „Materiál" na míru. */
+export const getOutdoorVariantLabel = (id: string): string =>
+  OUTDOOR_VARIANTS_BY_ID[id]?.label ?? "Velikost";
+
+/** Popisek varianty v množném čísle pro nadpisy a aria-label. */
+export const getOutdoorVariantLabelPlural = (id: string): string => {
+  const label = getOutdoorVariantLabel(id);
+  return label === "Materiál" ? "Materiály" : "Velikosti";
+};
 
 /**
  * `features` je u všech produktů zatím prázdné. Technologie (RainShield™,
@@ -62,13 +109,13 @@ export const outdoorProducts: Product[] = [
     price: 682, // MC s DPH 682,44
     b2b_price: 282, // VOC bez DPH
     shortDescription:
-      "Klasický vysoký návlek z nylonu 210 pro všechna roční období. Chrání nohavici i obuv před blátem, mokrou trávou a sněhem. Velikosti L a XL.",
+      "Jednoduchá a maximálně spolehlivá mechanická ochrana z nepromokavého Nylonu 210. Díky absenci zipu se na návleku nemá co pokazit. Vyrábíme přímo v Ostravě ve velikostech L a XL, případně ušijeme úpravu na míru pro širší či asymetrická lýtka.",
     problem:
-      "V mokré trávě, blátě a sněhu se voda a nečistoty dostanou do boty i pod nohavici. Mokré nohy znamenají chlad a otlaky.",
+      "Mokrá tráva při ranní rose, hluboké bláto i sníh, který padá vrchem do bot. Běžné zipové návleky se v těžkém terénu navíc často zanesou nečistotami a zadrhávají.",
     funkce:
-      "Vysoký střih z nylonu 210. Háček pro zachycení za tkaničky, pásek pro seřízení velikosti podle typu boty a horní okraj stahovaný na gumičku.",
+      "Vysoký bezzipový střih pod koleno kryje celé lýtko. Natahuje se přímo přes botu, spodní popruh s bočními sponami drží návlek na podrážce, přední háček fixuje tkaničky a horní lem těsně uzavře stahovací gumička.",
     pouziti:
-      "Turistika, trekking a práce venku — kdykoli vede cesta mokrým nebo blátivým terénem.",
+      "Podzimní houbaření ve vysoké trávě, nenáročná turistika (Beskydy, Lysá hora), lesní práce a chůze ve sněhu.",
     features: [],
     specs: [
       { label: "Kategorie", value: "Návleky" },
@@ -90,6 +137,7 @@ export const outdoorProducts: Product[] = [
     ],
   },
 
+
   /* ------------------------------------------------------------------
    * Fotky všech pěti návleků dodány 18. 8. 2026, přiřazení podle zadání:
    * běžky / dětský / se zipem / Surflex. Placeholder už se nikde nepoužívá.
@@ -103,13 +151,13 @@ export const outdoorProducts: Product[] = [
     price: 557, // MC s DPH 556,60
     b2b_price: 230, // VOC bez DPH
     shortDescription:
-      "Lehký dětský návlek z nylonu 210 určený pro všechna roční období. Udrží dětskou botu a nohavici v suchu na výletě, na táboře i cestou do školy.",
+      "Poctivý dětský návlek z nepromokavého Nylonu 210 šitý v Ostravě. Žádný zip, který by se mohl rozbít nebo skřípnout nohavici – návlek stačí jednoduše přetáhnout a utáhnout. Udrží dětské nožky v teple a suchu po celý den. Jednovelikostní provedení.",
     problem:
-      "Děti si mokro a bláto najdou vždycky. Promočené boty a nohavice pak ukončí výlet dřív, než měl skončit.",
+      "Děti mokro, bláto ani hluboký sníh neobcházejí. Promočené boty a studené nohy pak spolehlivě ukončí výlet dřív, než jste plánovali.",
     funkce:
-      "Lehký dětský návlek z nylonu 210. Háček pro zachycení za tkaničky, vrchní vstup, pásek pro seřízení podle typu boty a horní okraj na gumičku.",
+      "Bezzipový střih z odolného Nylonu 210 se snadno natáhne přes botu. Spodní nastavitelný pásek s bočními sponami, přední ocelový háček do tkaniček a horní stahovací gumička spolehlivě uzavřou prostor proti vodě i sněhu.",
     pouziti:
-      "Rodinné výlety, tábory a vycházky v mokrém či zasněženém terénu.",
+      "Rodinné výlety, lesní školky, podzimní houbaření, tábory a zimní sáňkování v mokrém terénu.",
     features: [],
     specs: [
       { label: "Kategorie", value: "Návleky" },
@@ -132,13 +180,13 @@ export const outdoorProducts: Product[] = [
     price: 416, // MC s DPH 416,24
     b2b_price: 172, // VOC bez DPH
     shortDescription:
-      "Návlek na běžky z nylonu 210 o výšce 20 cm. Chrání boty proti zapadání sněhu, s háčkem pro upevnění na botu.",
+      "Lehký bariérový návlek z mrazuvzdorného Nylonu 210. Spolehlivě zabrání vniknutí sněhu a namrzání obuvi bez omezení kotníku při sportovním pohybu. Šijeme v Ostravě v univerzální velikosti.",
     problem:
-      "Při běžkování zapadává sníh do boty přes okraj a taje. Mokrá noha na stopě znamená konec zábavy.",
+      "Jemný prašan padající kolem kotníku přímo do běžkařské boty, kde taje a studí. Dlouhé turistické návleky jsou na běžky zbytečně těžké a omezují nohu v pohybu.",
     funkce:
-      "Výška 20 cm, guma v horním i spodním okraji, takže se šířka přizpůsobí botě. Háček pro upevnění na botu drží návlek na místě.",
+      "Kompaktní nízký profil navržený přesně nad běžeckou obuv, který nekoliduje s běžeckým vázáním. Dvojité stažení pružnou gumičkou nahoře i dole a přední háček pro stabilní zakotvení za tkaničky při odrazu.",
     pouziti:
-      "Běžecké lyžování na upravené stopě i mimo ni, zimní vycházky v hlubším sněhu.",
+      "Běžecké lyžování (klasika i skate), trénink i turistika v bílé stopě a v hlubším sněhu.",
     features: [],
     specs: [
       { label: "Kategorie", value: "Návleky" },
@@ -161,13 +209,13 @@ export const outdoorProducts: Product[] = [
     price: 762, // MC s DPH 762,30
     b2b_price: 315, // VOC bez DPH
     shortDescription:
-      "Lehký vysoký návlek z nylonu 210 se zipem na zadní části. Nasazení i sundání bez zdlouhavého natahování. Velikosti M, L a XL.",
+      "Vysoký turistický návlek z odolného a 100% nepromokavého Nylonu 210 kryjící celou holeň. Praktický zip šetří čas při obouvání. Vyrábíme v Ostravě ve velikostech M, L a XL s možností zakázkové úpravy střihu na míru.",
     problem:
-      "Návlek bez zipu se musí natahovat přes celou botu. V dešti nebo v rukavicích je to zdržení.",
+      "Potřeba bleskově nasadit nebo sundat návleky během túry na těžké, zablácené či sněhem obalené pohorky, aniž byste se museli zouvat.",
     funkce:
-      "Zip na zadní části pro rychlé nasazení. Háček pro zachycení za tkaničky, pásek pro seřízení velikosti podle typu boty a horní okraj na gumičku.",
+      "Celorozepínací zip podél lýtka pro rychlé obléknutí. Podvlekový popruh pod podrážku nastavitelný bočními sponami, přední kovový háček do tkaniček a horní elastická šňůrka s brzdičkou proti propadávání nečistot.",
     pouziti:
-      "Turistika a trekking, kde se počasí mění a návleky se během dne opakovaně nasazují a sundávají.",
+      "Celoroční turistika, horské výstupy, chůze v blátě, mokrém sněhu i vysokém lesním podrostu.",
     features: [],
     specs: [
       { label: "Kategorie", value: "Návleky" },
@@ -183,32 +231,33 @@ export const outdoorProducts: Product[] = [
   },
 
   {
-    id: "vs-outdoor-navlek-surflex-510114",
-    name: "Návlek Surflex",
+    id: "vs-outdoor-navlek-surftex-510114",
+    name: "Návlek Surftex – membránový",
     category: "outdoor",
     categoryLabel: OUTDOOR_CATEGORY_LABEL,
     price: 1016, // MC s DPH 1 016,40
     b2b_price: 420, // VOC bez DPH
     shortDescription:
-      "Vysoký, lehký a voděodolný návlek z materiálu Surftex 5000. Prodyšný a větruvzdorný, se zipem na zadní části. Velikosti M, L a XL.",
+      "Technický návlek pro náročné podmínky ušitý v naší ostravské dílně. Udrží nohy v suchu zvenku i zevnitř i při celodenní zátěži a díky zadnímu reflexnímu pruhu budete bezpečně vidět při dešti i za svitu čelovky. Dostupné velikosti M, L, XL nebo šití na míru.",
     problem:
-      "V trvalém dešti a mokrém sněhu potřebujete návlek, který vodu udrží venku a přitom nechá nohu dýchat. Jinak se zapotíte zvnitřku.",
+      "Při celodenním výstupu ve sněhu se noha v neprodyšném materiálu zapaří („upeče“) a promočí vlastním potem. Vánice, mlha a šero navíc zásadně zhoršují viditelnost v terénu.",
     funkce:
-      "Materiál Surftex 5000 — voděodolný, prodyšný a větruvzdorný. Zip na zadní části, háček pro zachycení za tkaničky a pásek pro seřízení podle typu boty.",
+      "Funkční membrána Surftex (5 000 mm H₂O / 5 000 g/m²/24 h) nepustí vodu ani sníh dovnitř a odvádí tělesnou vlhkost ven. Celorozepínací zip, nastavitelné spodní uchycení sponami, háček do tkaniček a výrazný reflexní pás po celé zadní délce.",
     pouziti:
-      "Vysokohorská turistika, přechody hřebenů a zimní výstupy — všude, kde je výbava celý den v mokru.",
+      "Vysokohorská turistika, náročný zimní trekking, Alpy, Tatry, Roháče a celodenní brodění v hlubokém sněhu.",
     features: [],
     specs: [
       { label: "Kategorie", value: "Návleky" },
       { label: "Kód produktu", value: "510114" },
       { label: "Výrobce", value: "VAPESPORT" },
-      { label: "Materiál", value: "Surftex 5000" },
+      { label: "Materiál", value: "Membrána Surftex 5000" },
+      { label: "Vodní sloupec / prodyšnost", value: "5 000 mm H₂O / 5 000 g/m²/24 h" },
       { label: "Velikosti", value: "M, L, XL" },
       { label: "EAN", value: "TODO" },
       { label: "Hmotnost (pár)", value: "TODO" },
     ],
-    image: "/images/outdoor/navlek-surflex-card.jpg",
-    images: ["/images/outdoor/navlek-surflex-card.jpg"],
+    image: "/images/outdoor/navlek-surftex-card.jpg",
+    images: ["/images/outdoor/navlek-surftex-card.jpg"],
   },
 ];
 
@@ -232,7 +281,7 @@ export const OUTDOOR_USE_BY_ID: Record<string, readonly OutdoorUseCase[]> = {
   "vs-outdoor-navlek-obycejny-detsky-311112": ["turistika", "deti"],
   "vs-outdoor-navlek-na-bezky-211096": ["bezky"],
   "vs-outdoor-navlek-obycejny-se-zipem-310114": ["turistika", "hory"],
-  "vs-outdoor-navlek-surflex-510114": ["hory", "bezky"],
+  "vs-outdoor-navlek-surftex-510114": ["hory", "bezky"],
 };
 
 export const matchesUseCase = (id: string, use: OutdoorUseCase): boolean =>
