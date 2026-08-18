@@ -23,7 +23,8 @@ import { fmtCZK, netFromGross, grossFromNet } from "@/lib/vat";
 import { resolveColor } from "@/lib/colorPalette";
 import { supabase } from "@/integrations/supabase/client";
 
-type HotspotFilter = Hotspot | "All";
+/** Outdoor není pozice na kole — je to samostatná kategorie sortimentu. */
+type HotspotFilter = Hotspot | "All" | "Outdoor";
 
 interface BikeDot {
   id: Hotspot;
@@ -166,14 +167,21 @@ const B2BDashboard = () => {
     return pricing.unitNet;
   };
 
+  const outdoorProductsList = useMemo(
+    () => products.filter((p) => p.category === "outdoor"),
+    [],
+  );
+
   const visibleProducts = useMemo(() => {
     const base =
       activeHotspot === "All"
         ? products
-        : (() => {
-            const ids = new Set(getProductsByHotspot(activeHotspot).map((p) => p.id));
-            return products.filter((p) => ids.has(p.id));
-          })();
+        : activeHotspot === "Outdoor"
+          ? outdoorProductsList
+          : (() => {
+              const ids = new Set(getProductsByHotspot(activeHotspot).map((p) => p.id));
+              return products.filter((p) => ids.has(p.id));
+            })();
     // MORSEO kolekci nabízíme vždy jako první (kde pro danou pozici existuje).
     // Řazení je stabilní, takže pořadí uvnitř skupin zůstává zachované.
     return [...base].sort((a, b) => {
@@ -181,7 +189,7 @@ const B2BDashboard = () => {
       const bm = b.category === "morseo-evo" ? 0 : 1;
       return am - bm;
     });
-  }, [activeHotspot]);
+  }, [activeHotspot, outdoorProductsList]);
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -481,6 +489,24 @@ const B2BDashboard = () => {
                       </button>
                     );
                   })}
+                  {outdoorProductsList.length > 0 && (() => {
+                    const isActive = activeHotspot === "Outdoor";
+                    return (
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => setActiveHotspot(isActive ? "All" : "Outdoor")}
+                        className={`min-h-10 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                          isActive
+                            ? "bg-primary text-primary-foreground shadow-md"
+                            : "bg-secondary text-foreground hover:bg-accent"
+                        }`}
+                      >
+                        Outdoor — návleky ({outdoorProductsList.length})
+                      </button>
+                    );
+                  })()}
                   {(() => {
                     const count = getProductsByHotspot("None").length;
                     if (count === 0) return null;
@@ -505,7 +531,9 @@ const B2BDashboard = () => {
                 <p className="sr-only" aria-live="polite">
                   {activeHotspot === "All"
                     ? `Zobrazeno všech ${products.length} produktů.`
-                    : `Filtr: ${HOTSPOT_LABELS[activeHotspot]}. ${visibleProducts.length} produktů.`}
+                    : activeHotspot === "Outdoor"
+                      ? `Filtr: Outdoor — návleky. ${visibleProducts.length} produktů.`
+                      : `Filtr: ${HOTSPOT_LABELS[activeHotspot]}. ${visibleProducts.length} produktů.`}
                 </p>
               </div>
             </div>

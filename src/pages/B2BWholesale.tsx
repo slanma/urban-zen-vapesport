@@ -199,9 +199,15 @@ const B2BWholesale = () => {
     );
   }
 
-  // Suggestions: pick up to 3 other base rows
-  const suggestionsFor = (row: BaseRow) =>
-    baseRows.filter((r) => r.baseId !== row.baseId).slice(0, 3);
+  /**
+   * Doporučení do setu. Nabízí se jen zboží ze stejné části sortimentu —
+   * k návleku další návleky, k brašně další brašny. Křížem to nemá smysl:
+   * kdo objednává návleky na běžky, nechce k nim rámovou brašnu.
+   */
+  const suggestionsFor = (row: BaseRow) => {
+    const sameKind = row.base.category === "outdoor" ? outdoorRows : bagRows;
+    return sameKind.filter((r) => r.baseId !== row.baseId).slice(0, 4);
+  };
 
   return (
     <div className="min-h-screen bg-secondary">
