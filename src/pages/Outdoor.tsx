@@ -1,73 +1,153 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Check, ShoppingCart } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Ruler,
+  ShieldCheck,
+  ShoppingCart,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import FeatureBadges from "@/components/FeatureBadges";
 import PriceTag from "@/components/PriceTag";
-import ProblemSolutionBullets from "@/components/product/ProblemSolutionBullets";
-import QuantitySelector from "@/components/product/QuantitySelector";
-import { outdoorProducts, OUTDOOR_SIZES } from "@/data/outdoorProducts";
+import {
+  outdoorProducts,
+  getOutdoorSizes,
+  matchesUseCase,
+  OUTDOOR_USE_CASES,
+  type OutdoorUseCase,
+} from "@/data/outdoorProducts";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useCart } from "@/hooks/useCart";
-import { getEffectiveGallery, getPrimaryImage } from "@/lib/productImages";
+import { getPrimaryImage } from "@/lib/productImages";
 import { getEffectiveProductCode } from "@/lib/effectiveProduct";
-import { fmtCZK } from "@/lib/vat";
 
-/* Hero fotka — nahraj do public/images/outdoor/ a přepiš cestu.
-   Doporučení: šířka min. 2400 px, tmavší dolní část, klidná horní část
-   (v horní části leží průhledný Navbar s tmavým textem). */
+/* Fotky — nahraj do public/images/outdoor/ a přepiš cesty. */
 const HERO_IMAGE = "/images/outdoor/hero-outdoor.jpg";
+const SHOWCASE_IMAGE = "/images/outdoor/navlek-obycejny-1.jpg";
 
-/* Světlý závoj pod navigací — Navbar má text-foreground (tmavý), takže
-   na fotce potřebuje světlý podklad, jinak by byl nečitelný. */
-const HERO_SCRIM =
-  "linear-gradient(180deg, rgba(240,238,232,0.96) 0%, rgba(240,238,232,0.72) 18%, rgba(240,238,232,0.15) 42%, rgba(0,0,0,0.05) 100%)";
+/**
+ * Závoj pod textem hera.
+ *
+ * Fotka je v dolní části tmavá (černé návleky, kameny), takže tmavý text
+ * na ní zmizí. Řešení: světlý pruh zleva doprava — text leží na světlém
+ * podkladu, fotka se odkryje v pravé části. Zároveň zůstane čitelná
+ * navigace, která má tmavé písmo.
+ *
+ * DESKTOP: gradient zleva. MOBIL: sloupec je na celou šířku, takže pruh
+ * zleva nepomůže — tam se použije svislý závoj.
+ */
+const HERO_SCRIM_DESKTOP = [
+  "linear-gradient(100deg, rgba(238,236,231,0.97) 0%, rgba(238,236,231,0.93) 34%, rgba(238,236,231,0.55) 58%, rgba(238,236,231,0) 78%)",
+  "linear-gradient(180deg, rgba(238,236,231,0.85) 0%, rgba(238,236,231,0) 22%)",
+].join(", ");
+
+const HERO_SCRIM_MOBILE =
+  "linear-gradient(180deg, rgba(238,236,231,0.96) 0%, rgba(238,236,231,0.90) 45%, rgba(238,236,231,0.55) 72%, rgba(238,236,231,0.25) 100%)";
+
+/* Velikostní přehled u velké fotky. Zdroj: list „velikosti" v ceníku. */
+const SIZE_OVERVIEW = [
+  { size: "M", note: "se zipem · Surflex" },
+  { size: "L", note: "všechny modely" },
+  { size: "XL", note: "všechny modely" },
+  { size: "Uni", note: "dětský · běžky" },
+];
+
+/* Reveal: jemné odkrytí při scrollu (stejný vzor jako /kolekce-morseo). */
+const Reveal = ({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setShown(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div
+      ref={ref}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`transition-all duration-700 ease-out ${
+        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
+
+/**
+ * Důvody ke koupi.
+ *
+ * POZOR — tvrzení o původu výroby tu ZÁMĚRNĚ NENÍ. U brašen platí, že se
+ * nešijí v ČR, a dokud nepotvrdíte, jak to je u návleků, nesmí na web jít
+ * „česká výroba". Až to bude potvrzené, přidá se sem další karta.
+ */
+const REASONS = [
+  {
+    icon: Sparkles,
+    title: "Česká značka od roku 1994",
+    text: "Návleky vyvíjíme a prodáváme z Ostravy-Hrabové přes třicet let. Nejsme přeprodejce bezejmenného zboží — za sortimentem stojí konkrétní firma s historií.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Dvě úrovně materiálu",
+    text: "Nylon 210 na běžnou turistiku, Surftex 5000 pro vysoké hory a trvalé mokro. Vyberete podle toho, kam opravdu chodíte — ne podle jedné univerzální ceny.",
+  },
+  {
+    icon: Ruler,
+    title: "Velikosti včetně dětských",
+    text: "M, L a XL u vyšších modelů, jednovelikostní návlek na běžky a samostatná dětská verze. Rodina vyřeší výbavu na jednom místě.",
+  },
+  {
+    icon: Users,
+    title: "Poradíme s výběrem osobně",
+    text: "Napíšete obvod lýtka a velikost obuvi, my doporučíme model i velikost. Žádný chatbot — odpovídá člověk, který sortiment zná.",
+  },
+];
 
 const Outdoor = () => {
   const { get } = useProductOverrides();
   const { addItem, openDrawer } = useCart();
 
+  const [use, setUse] = useState<OutdoorUseCase>("vse");
+
   /* Skryté produkty (admin → viditelnost) na stránku nepatří. */
-  const items = useMemo(
+  const visible = useMemo(
     () => outdoorProducts.filter((p) => get(p.id).visible),
     [get],
   );
 
-  const [activeId, setActiveId] = useState(items[0]?.id ?? "");
-  const active = items.find((p) => p.id === activeId) ?? items[0];
-
-  const [size, setSize] = useState<string>(OUTDOOR_SIZES[1]);
-  const [qty, setQty] = useState(1);
-  const [imgIndex, setImgIndex] = useState(0);
-  const [added, setAdded] = useState(false);
-
-  /* Přepnutí produktu = reset galerie, velikosti a počtu. */
-  useEffect(() => {
-    setImgIndex(0);
-    setQty(1);
-    setSize(OUTDOOR_SIZES[1]);
-    setAdded(false);
-  }, [activeId]);
-
-  if (!active) return null;
-
-  const ov = get(active.id);
-  const gallery = getEffectiveGallery(active, ov);
-  const price = ov.price_override ?? active.price;
-  const features = ov.features_override ?? active.features;
-  const code = getEffectiveProductCode(active, ov);
-  const inStock = ov.in_stock;
-
-  const handleAdd = () => {
-    /* Velikost jde do košíku přes stávající pole `color` — je to jediný
-       variantní klíč, který košík, pokladna i objednávky už umí. Nezavádíme
-       druhý mechanismus, aby se nerozbil odladěný checkout. */
-    addItem(active.id, qty, size);
-    setAdded(true);
-    openDrawer();
-    window.setTimeout(() => setAdded(false), 2000);
-  };
+  const shown = useMemo(
+    () => visible.filter((p) => matchesUseCase(p.id, use)),
+    [visible, use],
+  );
 
   return (
     <main className="min-h-screen bg-background">
@@ -76,13 +156,23 @@ const Outdoor = () => {
       {/* ---------------- HERO ---------------- */}
       <section className="relative">
         <div className="absolute inset-0">
+          {/* object-position posouvá noha s návlekem doprava, mimo text */}
           <img
             src={HERO_IMAGE}
             alt="Návleky VAPESPORT v horském terénu"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center lg:object-[68%_50%]"
             loading="eager"
           />
-          <div aria-hidden className="absolute inset-0" style={{ background: HERO_SCRIM }} />
+          <div
+            aria-hidden
+            className="absolute inset-0 lg:hidden"
+            style={{ background: HERO_SCRIM_MOBILE }}
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 hidden lg:block"
+            style={{ background: HERO_SCRIM_DESKTOP }}
+          />
         </div>
 
         <div className="relative max-w-[1600px] mx-auto px-6 lg:px-12 pt-36 pb-20 md:pt-44 md:pb-28">
@@ -93,11 +183,10 @@ const Outdoor = () => {
               KAŽDÉ VÝZVY
             </h1>
             <p className="font-body text-sm md:text-base font-medium uppercase tracking-[0.14em] text-foreground/80 leading-relaxed mt-6 max-w-lg">
-              Outdoorové návleky a technická výbava pro turistiku, trekking
-              a běžky
+              Outdoorové návleky pro turistiku, vysoké hory a běžky
             </p>
             <a
-              href="#nabidka"
+              href="#navleky"
               className="inline-flex items-center gap-2 mt-10 bg-primary text-primary-foreground text-[13px] font-bold uppercase tracking-widest px-7 py-4 rounded-md hover:bg-primary/90 transition-colors"
             >
               Prozkoumat kolekci <ArrowRight className="w-4 h-4" />
@@ -106,191 +195,152 @@ const Outdoor = () => {
         </div>
       </section>
 
-      {/* ---------------- NABÍDKA ---------------- */}
-      <section
-        id="nabidka"
-        className="max-w-[1600px] mx-auto px-6 lg:px-12 py-16 md:py-20 scroll-mt-20"
-      >
-        <div className="mb-10">
-          <span className="font-body text-[11px] font-bold tracking-[0.28em] uppercase text-primary">
-            Outdoor
-          </span>
-          <h2 className="font-heading text-3xl md:text-4xl font-bold tracking-tight text-foreground mt-2">
-            Nabídka návleků
-          </h2>
-          <p className="font-body text-muted-foreground leading-relaxed mt-3 max-w-xl">
-            Vyberte střih podle terénu a použití. Vpravo se zobrazí detail
-            s výběrem velikosti a možností přidat do košíku.
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-          {/* --- Levý sloupec: dlaždice produktů --- */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {items.map((p) => {
-              const pov = get(p.id);
-              const isActive = p.id === active.id;
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setActiveId(p.id)}
-                  aria-pressed={isActive}
-                  className={`group text-left bg-card border rounded-xl overflow-hidden flex flex-col transition-all ${
-                    isActive
-                      ? "border-primary ring-2 ring-primary/25 shadow-md"
-                      : "border-border hover:border-[hsl(var(--moss))]/40 hover:shadow-lg"
-                  }`}
-                >
-                  <div className="bg-white aspect-square p-5 overflow-hidden">
-                    <img
-                      src={getPrimaryImage(p, pov)}
-                      alt={p.name}
-                      loading="lazy"
-                      className="w-full h-full object-contain group-hover:scale-[1.04] transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-5 flex flex-col flex-1">
-                    <h3 className="font-heading text-base font-bold text-foreground uppercase tracking-wide leading-snug">
-                      {p.name}
-                    </h3>
-                    <p className="font-body text-sm text-muted-foreground leading-relaxed mt-1.5 line-clamp-2">
-                      {p.shortDescription}
-                    </p>
-                    <div className="mt-auto pt-4 flex items-center justify-between">
-                      <span className="font-heading text-base font-bold text-foreground">
-                        {fmtCZK(pov.price_override ?? p.price)}
-                      </span>
-                      <span className="font-body text-[13px] font-medium text-primary">
-                        {isActive ? "Vybráno" : "Zobrazit"}
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* --- Pravý sloupec: detail vybraného návleku --- */}
-          <aside className="lg:col-span-5 lg:sticky lg:top-24">
-            <div className="bg-card border border-border rounded-xl p-6 md:p-7">
-              {/* Hlavní fotka */}
-              <div className="bg-white rounded-lg aspect-square p-6 overflow-hidden">
+      {/* ---------------- PROČ NAŠE NÁVLEKY ---------------- */}
+      <section className="max-w-[1600px] mx-auto px-6 lg:px-12 py-16 md:py-24">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          {/* Fotka na betonu + velikosti pod ní */}
+          <Reveal>
+            <div className="bg-card border border-border rounded-xl p-6 md:p-8">
+              <div className="bg-white rounded-lg overflow-hidden">
                 <img
-                  src={gallery[imgIndex] ?? gallery[0]}
-                  alt={active.name}
+                  src={SHOWCASE_IMAGE}
+                  alt="Návlek VAPESPORT na betonovém podstavci"
                   className="w-full h-full object-contain"
                   loading="lazy"
                 />
               </div>
 
-              {/* Miniatury */}
-              {gallery.length > 1 && (
-                <div className="flex items-center gap-2 mt-3">
-                  {gallery.slice(0, 5).map((src, i) => (
-                    <button
-                      key={src + i}
-                      type="button"
-                      onClick={() => setImgIndex(i)}
-                      aria-label={`Fotka ${i + 1}`}
-                      className={`w-16 h-16 bg-white rounded-md overflow-hidden border p-1.5 transition-colors ${
-                        i === imgIndex
-                          ? "border-primary"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                    >
-                      <img
-                        src={src}
-                        alt=""
-                        className="w-full h-full object-contain"
-                        loading="lazy"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {/* Název + technologie */}
-              <h3 className="font-heading text-xl font-bold text-foreground uppercase tracking-wide mt-6">
-                {active.name}
-              </h3>
-              <FeatureBadges features={features} className="mt-4" size="md" />
-
-              {/* Cena + kód */}
               <div className="mt-6 pt-6 border-t border-border">
-                <PriceTag
-                  retailGross={price}
-                  b2bNet={ov.b2b_price ?? active.b2b_price ?? null}
-                  size="lg"
-                />
-                <p className="font-mono text-xs text-muted-foreground mt-2">
-                  kód: {code}
+                <p className="font-heading text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">
+                  Velikosti
                 </p>
-              </div>
-
-              {/* Velikost */}
-              <div className="mt-6">
-                <p className="font-heading text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2.5">
-                  Velikost
-                </p>
-                <div className="flex flex-wrap items-center gap-2">
-                  {OUTDOOR_SIZES.map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => setSize(s)}
-                      aria-pressed={size === s}
-                      className={`min-w-[3.25rem] px-4 py-2.5 rounded-md border font-body text-sm font-semibold transition-colors ${
-                        size === s
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border text-foreground hover:border-primary/50"
-                      }`}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {SIZE_OVERVIEW.map((s) => (
+                    <div
+                      key={s.size}
+                      className="border border-border rounded-md px-3 py-3 text-center"
                     >
-                      {s}
-                    </button>
+                      <span className="font-heading text-xl font-bold text-foreground block">
+                        {s.size}
+                      </span>
+                      <span className="font-body text-[11px] text-muted-foreground leading-tight block mt-1">
+                        {s.note}
+                      </span>
+                    </div>
                   ))}
                 </div>
+                <p className="font-body text-xs text-muted-foreground mt-4">
+                  Konkrétní velikosti u každého modelu najdete níže v nabídce.
+                </p>
               </div>
-
-              {/* Počet + do košíku */}
-              <div className="mt-5 flex flex-wrap items-center gap-3">
-                <QuantitySelector value={qty} onChange={setQty} />
-                <button
-                  type="button"
-                  onClick={handleAdd}
-                  disabled={!inStock}
-                  className="flex-1 min-w-[12rem] inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground text-[13px] font-bold uppercase tracking-widest px-6 py-3.5 rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {added ? (
-                    <>
-                      <Check className="w-4 h-4" /> Přidáno
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingCart className="w-4 h-4" />
-                      {inStock ? "Přidat do košíku" : "Nedostupné"}
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* Problém / Funkce / Použití */}
-              <div className="mt-7 pt-7 border-t border-border">
-                <ProblemSolutionBullets
-                  problem={active.problem ?? null}
-                  fn={active.funkce ?? null}
-                  usage={active.pouziti ?? null}
-                />
-              </div>
-
-              <Link
-                to={`/produkt/${active.id}`}
-                className="inline-flex items-center gap-2 mt-7 text-primary font-body font-semibold hover:gap-3 transition-all"
-              >
-                Celý detail produktu <ArrowRight className="w-4 h-4" />
-              </Link>
             </div>
-          </aside>
+          </Reveal>
+
+          {/* Důvody */}
+          <div>
+            <Reveal>
+              <span className="font-body text-[11px] font-bold tracking-[0.28em] uppercase text-primary">
+                Proč VAPESPORT
+              </span>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold tracking-tight text-foreground mt-2 mb-8">
+                Čtyři důvody, proč vzít návlek od nás
+              </h2>
+            </Reveal>
+
+            <ul className="space-y-6">
+              {REASONS.map((r, i) => (
+                <Reveal key={r.title} delay={i * 70}>
+                  <li className="flex gap-4 items-start">
+                    <div className="shrink-0 w-11 h-11 rounded-full bg-primary/10 text-primary border border-border flex items-center justify-center">
+                      <r.icon className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-heading text-base font-bold text-foreground">
+                        {r.title}
+                      </h3>
+                      <p className="font-body text-sm text-muted-foreground leading-relaxed mt-1">
+                        {r.text}
+                      </p>
+                    </div>
+                  </li>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- NABÍDKA + FILTR ---------------- */}
+      <section
+        id="navleky"
+        className="bg-secondary/40 border-y border-border scroll-mt-20"
+      >
+        <div className="max-w-[1600px] mx-auto px-6 lg:px-12 py-16 md:py-20">
+          <div className="mb-8">
+            <span className="font-body text-[11px] font-bold tracking-[0.28em] uppercase text-primary">
+              Nabídka
+            </span>
+            <h2 className="font-heading text-3xl md:text-4xl font-bold tracking-tight text-foreground mt-2">
+              Návleky VAPESPORT
+            </h2>
+            <p className="font-body text-muted-foreground leading-relaxed mt-3 max-w-xl">
+              Vyberte podle toho, kam chodíte. Velikost zvolíte přímo na kartě
+              a návlek přidáte do košíku — bez proklikávání.
+            </p>
+          </div>
+
+          {/* Filtr podle použití */}
+          <div className="flex flex-wrap items-center gap-2 mb-8">
+            {OUTDOOR_USE_CASES.map((u) => {
+              const count =
+                u.id === "vse"
+                  ? visible.length
+                  : visible.filter((p) => matchesUseCase(p.id, u.id)).length;
+              const isActive = use === u.id;
+              return (
+                <button
+                  key={u.id}
+                  type="button"
+                  onClick={() => setUse(u.id)}
+                  aria-pressed={isActive}
+                  className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full border font-body text-[13px] font-semibold transition-colors ${
+                    isActive
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-card text-foreground hover:border-primary/50"
+                  }`}
+                >
+                  {u.label}
+                  <span
+                    className={`font-mono text-[11px] ${
+                      isActive ? "opacity-80" : "text-muted-foreground"
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Karty produktů */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            {shown.map((p) => (
+              <OutdoorCard
+                key={p.id}
+                product={p}
+                onAdd={(id, qty, size) => {
+                  addItem(id, qty, size);
+                  openDrawer();
+                }}
+              />
+            ))}
+          </div>
+
+          {shown.length === 0 && (
+            <p className="font-body text-muted-foreground">
+              Pro tento výběr zatím nic nemáme. Zkuste jinou kategorii.
+            </p>
+          )}
         </div>
       </section>
 
@@ -302,7 +352,7 @@ const Outdoor = () => {
               Nevíte, která velikost je vaše?
             </h2>
             <p className="font-body text-sm md:text-base opacity-85 mt-2 max-w-lg">
-              Napište nám obvod lýtka a velikost obuvi — doporučíme střih
+              Napište nám obvod lýtka a velikost obuvi — doporučíme model
               i velikost.
             </p>
           </div>
@@ -317,6 +367,120 @@ const Outdoor = () => {
 
       <Footer />
     </main>
+  );
+};
+
+/* ------------------------------------------------------------------ */
+
+/**
+ * Karta návleku s výběrem velikosti a přidáním do košíku přímo na místě.
+ * Velikost jde do košíku přes stávající pole `color` — je to jediný
+ * variantní klíč, který košík, pokladna i objednávky už umí. Jednovelikostní
+ * modely posílají null, tedy se chovají jako produkt bez varianty.
+ */
+const OutdoorCard = ({
+  product,
+  onAdd,
+}: {
+  product: (typeof outdoorProducts)[number];
+  onAdd: (id: string, qty: number, size: string | null) => void;
+}) => {
+  const { get } = useProductOverrides();
+  const ov = get(product.id);
+  const sizes = getOutdoorSizes(product.id);
+  const [size, setSize] = useState<string | null>(sizes[0] ?? null);
+  const [added, setAdded] = useState(false);
+
+  const price = ov.price_override ?? product.price;
+  const code = getEffectiveProductCode(product, ov);
+  const inStock = ov.in_stock;
+
+  const handleAdd = () => {
+    onAdd(product.id, 1, size);
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 2000);
+  };
+
+  return (
+    <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col">
+      <Link
+        to={`/produkt/${product.id}`}
+        className="group block bg-white aspect-square p-5 overflow-hidden"
+      >
+        <img
+          src={getPrimaryImage(product, ov)}
+          alt={product.name}
+          loading="lazy"
+          className="w-full h-full object-contain group-hover:scale-[1.04] transition-transform duration-300"
+        />
+      </Link>
+
+      <div className="p-5 flex flex-col flex-1">
+        <Link to={`/produkt/${product.id}`}>
+          <h3 className="font-heading text-base font-bold text-foreground uppercase tracking-wide leading-snug hover:text-primary transition-colors">
+            {product.name}
+          </h3>
+        </Link>
+        <p className="font-mono text-[11px] text-muted-foreground mt-1">
+          kód {code}
+        </p>
+        <p className="font-body text-sm text-muted-foreground leading-relaxed mt-2.5 line-clamp-3">
+          {product.shortDescription}
+        </p>
+
+        {/* Velikost */}
+        <div className="mt-4">
+          {sizes.length > 0 ? (
+            <div className="flex flex-wrap items-center gap-2">
+              {sizes.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setSize(s)}
+                  aria-pressed={size === s}
+                  className={`min-w-[2.75rem] px-3 py-2 rounded-md border font-body text-sm font-semibold transition-colors ${
+                    size === s
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border text-foreground hover:border-primary/50"
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="font-body text-xs text-muted-foreground">
+              Jednovelikostní model
+            </p>
+          )}
+        </div>
+
+        <div className="mt-auto pt-5">
+          <PriceTag
+            retailGross={price}
+            b2bNet={ov.b2b_price ?? product.b2b_price ?? null}
+            size="md"
+          />
+          <button
+            type="button"
+            onClick={handleAdd}
+            disabled={!inStock}
+            className="w-full mt-4 inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground text-[13px] font-bold uppercase tracking-widest px-5 py-3 rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {added ? (
+              <>
+                <Check className="w-4 h-4" /> Přidáno
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="w-4 h-4" />
+                {inStock ? "Do košíku" : "Nedostupné"}
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 
