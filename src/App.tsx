@@ -6,6 +6,7 @@ import { products } from "./data/products";
 import Index from "./pages/Index";
 import Shop from "./pages/Shop";
 import KolekceMorseo from "./pages/KolekceMorseo";
+import Outdoor from "./pages/Outdoor";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
@@ -48,6 +49,7 @@ export const routes: RouteRecord[] = [
       { path: "produkty", element: <Navigate to="/obchod" replace /> },
       { path: "obchod", element: <Shop /> },
       { path: "kolekce-morseo", element: <KolekceMorseo /> },
+      { path: "outdoor", element: <Outdoor /> },
       {
         path: "produkt/:id",
         element: <ProductDetail />,

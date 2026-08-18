@@ -1,10 +1,11 @@
 import { feedProducts } from "./feedProducts";
 import { getProductCutout } from "./productCutouts";
+import { outdoorProducts } from "./outdoorProducts";
 
 export interface Product {
   id: string;
   name: string;
-  category: "morseo-evo" | "vape-legends" | "vapesport";
+  category: "morseo-evo" | "vape-legends" | "vapesport" | "outdoor";
   categoryLabel: string;
   price: number;
   /** Wholesale NET price (VOC bez DPH). Used for B2B partners; admin
@@ -115,7 +116,7 @@ export const legacyProductAliases: Record<string, string> = {
 /** Public product catalogue. MORSEO and Vape Legends base entries stay as a
  *  single card; the color picker on the PDP is driven exclusively by the
  *  admin-configured `colors_override` (no automatic fallback). */
-export const products: Product[] = feedProducts
+export const products: Product[] = [...feedProducts, ...outdoorProducts]
   .filter((p) => p.image.trim().length > 0)
   .map((p) => {
     const cutout = getProductCutout(p.id, p.baseId);

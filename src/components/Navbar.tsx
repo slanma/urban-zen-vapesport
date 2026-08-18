@@ -7,6 +7,7 @@ const navItems = [
   { label: "DOMŮ", href: "/" },
   { label: "KOLEKCE MORSEO", href: "/kolekce-morseo" },
   { label: "OBCHOD", href: "/obchod" },
+  { label: "OUTDOOR", href: "/outdoor" },
   { label: "O NÁS", href: "/o-nas" },
   { label: "APLIKACE A SLUŽBY", href: "/aplikace-a-sluzby" },
   { label: "KONTAKT", href: "/kontakt" },

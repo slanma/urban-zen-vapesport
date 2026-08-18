@@ -45,6 +45,12 @@ const META: Record<string, Meta> = {
       "MORSEO EVO – devět kousků prémiových rámových brašen pro elektrokola a gravel. Úzký profil, voděodolný zip a silikonové pásky, které šetří lak.",
     image: "/og/og-kolekce-morseo.jpg",
   },
+  "/outdoor": {
+    title: "Outdoor návleky – na turistiku, trail i běžky | VAPESPORT",
+    description:
+      "Návleky VAPESPORT pro turistiku, trekking a běžky. Ochrana proti blátu, vodě a sněhu — vysoké, nízké i běžecké střihy ve velikostech M–XL.",
+    image: "/og/og-outdoor.jpg",
+  },
   "/o-nas": {
     title: "O nás – česká značka od roku 1994 | VAPESPORT",
     description:
