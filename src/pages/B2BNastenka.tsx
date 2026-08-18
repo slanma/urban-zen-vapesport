@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
-import { feedProducts } from "@/data/feedProducts";
+import { products } from "@/data/products";
+import { getVariantValues } from "@/lib/variantOptions";
 import { getGtin } from "@/data/productGtins";
 import { resolveColor } from "@/lib/colorPalette";
 import { CARTON_PER_ID } from "@/data/cartons";
@@ -208,14 +209,16 @@ const B2BNastenka = () => {
   // Jeden řádek na každou skladovou barvu. Produkt gatuje visible + in_stock
   // (product_overrides). Produkt bez barevných variant = jeden řádek bez barvy.
   const rowsForBrand = (brand: string) =>
-    feedProducts
+    /* products = feedProducts + outdoor návleky. Dřív se tady čerpalo přímo
+       z feedProducts, takže návleky v podkladech pro partnery chyběly. */
+    products
       .filter((p) => brandOf(p.category) === brand)
       .filter((p) => get(p.id).visible !== false && get(p.id).in_stock !== false)
       .flatMap((p) => {
-        const colors =
-          Array.isArray(p.available_colors) && p.available_colors.length
-            ? p.available_colors
-            : [""];
+        /* U brašen barvy, u návleků velikosti — sloupec „barva/velikost"
+           je pro obojí, protože košík i objednávky mají jediný variantní klíč. */
+        const variants = getVariantValues(p, get(p.id));
+        const colors = variants.length ? variants : [""];
         return colors.map((slug) => ({
           kod: kodOf(p),
           nazev: p.name,

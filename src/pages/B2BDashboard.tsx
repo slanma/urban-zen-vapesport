@@ -3,6 +3,7 @@ import { getCartonSize, partnerHasCartons } from "@/data/cartons";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getProductById, products } from "@/data/products";
+import { getVariantValues } from "@/lib/variantOptions";
 import ImageZoom from "@/components/ImageZoom";
 import { Button } from "@/components/ui/button";
 import {
@@ -530,7 +531,7 @@ const B2BDashboard = () => {
                     const qty = getQty(product.id);
                     const sku = skuMap[product.id] || product.id;
                     const override = getOverride(product.id);
-                    const colors = (override?.colors_override ?? product.available_colors ?? []) as readonly string[];
+                    const colors = getVariantValues(product, override);
                     const detailHref = `/produkt/${product.id}`;
                     const productTotal = colors.length > 1 ? colors.reduce((s, c) => s + getQty(product.id, c), 0) : qty;
                     const carton = cartonEnabled ? getCartonSize(product.id) : null;

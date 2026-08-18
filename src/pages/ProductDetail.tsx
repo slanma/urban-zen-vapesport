@@ -27,6 +27,8 @@ import EbikeBadges from "@/components/product/EbikeBadges";
 import ProblemSolutionBullets from "@/components/product/ProblemSolutionBullets";
 import TechSpecTable from "@/components/product/TechSpecTable";
 import ColorCells from "@/components/product/ColorCells";
+import SizeCells from "@/components/product/SizeCells";
+import { getOutdoorSizes } from "@/data/outdoorProducts";
 import RagSeoBlock from "@/components/product/RagSeoBlock";
 import FeatureBadges from "@/components/FeatureBadges";
 import { isKnownFeature } from "@/lib/productFeatures";
@@ -77,8 +79,17 @@ const ProductDetail = () => {
       null,
     [override?.colors_override, baseProduct?.available_colors],
   );
+  /* Velikosti u návleků (kategorie „outdoor"). Držíme je vedle barev,
+     ne místo nich — barvy mají navíc přepínání fotek a feature řádek
+     „Dostupné barvy", což u velikostí nemá smysl. Do košíku ale jde
+     jediný variantní klíč, takže se na konci sloučí. */
+  const availableSizes = useMemo(
+    () => (baseProduct ? getOutdoorSizes(baseProduct.id) : []),
+    [baseProduct?.id],
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   /** Barva se drží v adrese jako ?barva=slug, aby se dal poslat odkaz
    *  na konkrétní barevnou verzi. Záměrně parametr, ne další cesta —
@@ -130,6 +141,37 @@ const ProductDetail = () => {
     }
   }, [product?.id, availableColors, override?.color_stock]);
 
+  /** Velikost se drží v adrese jako ?velikost=L, aby se dal poslat odkaz
+   *  na konkrétní velikost. Stejný princip jako u barvy — kanonická adresa
+   *  parametr neobsahuje, takže Google vidí jednu stránku. */
+  const writeSizeToUrl = (size: string | null) => {
+    const next = new URLSearchParams(searchParams);
+    if (size) next.set("velikost", size);
+    else next.delete("velikost");
+    setSearchParams(next, { replace: true });
+  };
+
+  // Předvolba velikosti: z adresy, jinak první neprodaná.
+  useEffect(() => {
+    if (availableSizes.length === 0) {
+      setSelectedSize(null);
+      return;
+    }
+    const stock = override?.color_stock ?? null;
+    const wanted = searchParams.get("velikost")?.trim().toLowerCase() ?? null;
+    const fromUrl = wanted
+      ? availableSizes.find((sz) => sz.toLowerCase() === wanted) ?? null
+      : null;
+    setSelectedSize(
+      fromUrl ?? availableSizes.find((sz) => !(stock && stock[sz] === 0)) ?? null,
+    );
+  }, [product?.id, availableSizes, override?.color_stock]);
+
+  const handleSelectSize = (size: string) => {
+    setSelectedSize(size);
+    writeSizeToUrl(size);
+  };
+
   // Klik na barvu přepne hlavní fotku na barevnou verzi (u MORSEO), pokud pro barvu fotka existuje.
   const handleSelectColor = (color: string) => {
     setSelectedColor(color);
@@ -178,10 +220,12 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
+    /* Jediný variantní klíč pro celou aplikaci: u brašen nese barvu,
+       u návleků velikost. Košík, pokladna ani objednávky se tím nemění. */
     addItem(
       product.id,
       quantity,
-      selectedColor,
+      selectedColor ?? selectedSize,
       customImageUrl ? { imageUrl: customImageUrl } : null,
     );
 
@@ -373,6 +417,26 @@ const ProductDetail = () => {
               </div>
             )}
 
+            {/* Velikosti — návleky */}
+            {availableSizes.length > 0 && (
+              <div className="mt-6">
+                <div className="flex items-baseline justify-between mb-3">
+                  <h2 className="font-heading text-xs font-bold uppercase tracking-wider text-foreground">
+                    Velikost
+                  </h2>
+                  <span className="font-body text-sm text-muted-foreground">
+                    {selectedSize ?? "Vyberte"}
+                  </span>
+                </div>
+                <SizeCells
+                  sizes={availableSizes}
+                  stock={override.color_stock}
+                  selected={selectedSize}
+                  onSelect={handleSelectSize}
+                />
+              </div>
+            )}
+
             {/* Prodloužené pásky — jen trojúhelníky, SMB a produkty s dlouhými pásky */}
             {(/troj[uúûù]h|smb/i.test(`${product.name} ${product.id}`) ||
               (product.features ?? []).includes("LongStrap™")) && (
@@ -417,7 +481,11 @@ const ProductDetail = () => {
               <QuantitySelector value={quantity} onChange={setQuantity} disabled={!inStock} />
               <Button
                 size="lg"
-                disabled={!inStock || (!!availableColors && !selectedColor)}
+                disabled={
+                  !inStock ||
+                  (!!availableColors && !selectedColor) ||
+                  (availableSizes.length > 0 && !selectedSize)
+                }
                 onClick={handleAddToCart}
                 className="flex-1 gap-2 text-base font-semibold rounded-full px-8 h-12"
               >

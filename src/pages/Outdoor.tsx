@@ -22,7 +22,7 @@ import {
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useCart } from "@/hooks/useCart";
 import { getPrimaryImage } from "@/lib/productImages";
-import { getEffectiveProductCode } from "@/lib/effectiveProduct";
+import { applyProductOverride, getEffectiveProductCode } from "@/lib/effectiveProduct";
 
 /* Fotky — nahraj do public/images/outdoor/ a přepiš cesty. */
 const HERO_IMAGE = "/images/outdoor/hero-outdoor.jpg";
@@ -387,11 +387,14 @@ const OutdoorCard = ({
 }) => {
   const { get } = useProductOverrides();
   const ov = get(product.id);
+  /* Úpravy z administrace (název, popis, cena, technologie) musí platit
+     i tady, ne jen na detailu produktu — jinak by se texty rozešly. */
+  const p = applyProductOverride(product, ov);
   const sizes = getOutdoorSizes(product.id);
   const [size, setSize] = useState<string | null>(sizes[0] ?? null);
   const [added, setAdded] = useState(false);
 
-  const price = ov.price_override ?? product.price;
+  const price = p.price;
   const code = getEffectiveProductCode(product, ov);
   const inStock = ov.in_stock;
 
@@ -408,8 +411,8 @@ const OutdoorCard = ({
         className="group block bg-white aspect-square p-5 overflow-hidden"
       >
         <img
-          src={getPrimaryImage(product, ov)}
-          alt={product.name}
+          src={getPrimaryImage(p, ov)}
+          alt={p.name}
           loading="lazy"
           className="w-full h-full object-contain group-hover:scale-[1.04] transition-transform duration-300"
         />
@@ -418,14 +421,14 @@ const OutdoorCard = ({
       <div className="p-5 flex flex-col flex-1">
         <Link to={`/produkt/${product.id}`}>
           <h3 className="font-heading text-base font-bold text-foreground uppercase tracking-wide leading-snug hover:text-primary transition-colors">
-            {product.name}
+            {p.name}
           </h3>
         </Link>
         <p className="font-mono text-[11px] text-muted-foreground mt-1">
           kód {code}
         </p>
         <p className="font-body text-sm text-muted-foreground leading-relaxed mt-2.5 line-clamp-3">
-          {product.shortDescription}
+          {p.shortDescription}
         </p>
 
         {/* Velikost */}
@@ -458,7 +461,7 @@ const OutdoorCard = ({
         <div className="mt-auto pt-5">
           <PriceTag
             retailGross={price}
-            b2bNet={ov.b2b_price ?? product.b2b_price ?? null}
+            b2bNet={ov.b2b_price ?? p.b2b_price ?? null}
             size="md"
           />
           <button

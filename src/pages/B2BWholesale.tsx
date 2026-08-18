@@ -13,6 +13,7 @@ import { useCart } from "@/hooks/useCart";
 import { products, type Product } from "@/data/products";
 import { applyProductOverride } from "@/lib/effectiveProduct";
 import { resolveColor } from "@/lib/colorPalette";
+import { getVariantValues, isSizeVariant, variantLabelPlural } from "@/lib/variantOptions";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { fmtCZK, grossFromNet } from "@/lib/vat";
 import { productHotspotEntries, type Hotspot } from "@/data/productHotspots";
@@ -42,6 +43,10 @@ const B2BWholesale = () => {
   const cart = useCart();
 
   const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null);
+  /* Katalog má dvě oddělené sekce. Brašny se řadí podle míst na kole,
+     návleky s tím nemají nic společného — mísit je do jednoho seznamu
+     partnera jen mate. */
+  const [section, setSection] = useState<"brasny" | "outdoor">("brasny");
   const [hoverHotspot, setHoverHotspot] = useState<Hotspot | null>(null);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [showDescription, setShowDescription] = useState<Record<string, boolean>>({});
@@ -82,18 +87,29 @@ const B2BWholesale = () => {
     return m as Record<Hotspot, Set<string>>;
   }, []);
 
+  const outdoorRows = useMemo(
+    () => baseRows.filter((r) => r.base.category === "outdoor"),
+    [baseRows],
+  );
+  const bagRows = useMemo(
+    () => baseRows.filter((r) => r.base.category !== "outdoor"),
+    [baseRows],
+  );
+
   const filteredRows = useMemo(() => {
-    if (!activeHotspot) return baseRows;
+    /* Outdoor sekce se filtrem podle kola neřídí — návlek nemá pozici na kole. */
+    if (section === "outdoor") return outdoorRows;
+    if (!activeHotspot) return bagRows;
     const ids = hotspotIdsByHotspot[activeHotspot] ?? new Set<string>();
-    return baseRows.filter((r) => ids.has(r.baseId));
-  }, [baseRows, activeHotspot, hotspotIdsByHotspot]);
+    return bagRows.filter((r) => ids.has(r.baseId));
+  }, [bagRows, outdoorRows, section, activeHotspot, hotspotIdsByHotspot]);
 
   const getQty = (baseId: string, color: string) => qtyState[`${baseId}::${color}`] ?? 0;
   const setQty = (baseId: string, color: string, q: number) =>
     setQtyState((p) => ({ ...p, [`${baseId}::${color}`]: Math.max(0, q | 0) }));
 
   const modelTotalQty = (row: BaseRow) => {
-    const colors = row.override.colors_override ?? row.base.available_colors ?? [];
+    const colors = getVariantValues(row.base, row.override);
     if (colors.length === 0) return getQty(row.baseId, "__single__");
     return colors.reduce((s, c) => s + getQty(row.baseId, c), 0);
   };
@@ -141,7 +157,7 @@ const B2BWholesale = () => {
   const sendToCart = () => {
     let added = 0;
     baseRows.forEach((row) => {
-      const colors = row.override.colors_override ?? row.base.available_colors ?? [];
+      const colors = getVariantValues(row.base, row.override);
       const list = colors.length ? colors : ["__single__"];
       list.forEach((c) => {
         const q = getQty(row.baseId, c);
@@ -203,7 +219,37 @@ const B2BWholesale = () => {
       </header>
 
       <div className="max-w-[1600px] mx-auto px-4 md:px-6 py-6 space-y-6">
-        {/* Shared interactive bike guide (B2B mode) */}
+        {/* Přepínač sekcí katalogu */}
+        <div className="flex flex-wrap items-center gap-2">
+          {([
+            { id: "brasny", label: "Brašny", count: bagRows.length },
+            { id: "outdoor", label: "Outdoor — návleky", count: outdoorRows.length },
+          ] as const).map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => {
+                setSection(t.id);
+                if (t.id === "outdoor") setActiveHotspot(null);
+                document.getElementById("b2b-matrix-top")?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              aria-pressed={section === t.id}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-semibold transition-colors ${
+                section === t.id
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-background text-foreground hover:border-primary/50"
+              }`}
+            >
+              {t.label}
+              <span className={`font-mono text-[11px] ${section === t.id ? "opacity-80" : "text-muted-foreground"}`}>
+                {t.count}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {/* Shared interactive bike guide (B2B mode) — jen u brašen */}
+        {section === "brasny" && (
         <section className="bg-background border border-border rounded-xl p-5">
           <InteractiveBikeGuide
             mode="b2b"
@@ -228,8 +274,7 @@ const B2BWholesale = () => {
             </div>
           )}
         </section>
-
-
+        )}
 
         {/* ── Right scrollable matrix ─────────────────────── */}
         <main>
@@ -239,13 +284,14 @@ const B2BWholesale = () => {
               <div>Foto</div>
               <div>Kód / Název</div>
               <div className="text-right">B2B / ks bez DPH</div>
-              <div className="text-center">Množství</div>
+              <div className="text-center">{section === "outdoor" ? "Velikost / ks" : "Množství"}</div>
               <div className="text-right">Konečná cena s DPH</div>
               <div />
             </div>
             <div className="divide-y divide-border">
               {filteredRows.map((row) => {
-                const colors = row.override.colors_override ?? row.base.available_colors ?? [];
+                const colors = getVariantValues(row.base, row.override);
+                const bySize = isSizeVariant(row.base);
                 const totalQty = modelTotalQty(row);
                 const isOpen = expanded[row.baseId] ?? true;
                 const showDesc = !!showDescription[row.baseId];
@@ -279,20 +325,34 @@ const B2BWholesale = () => {
                           size="sm"
                         />
                         {colors.length > 0 && (
-                          <div className="flex items-center gap-1.5 mt-1.5" aria-label="Dostupné barvy">
-                            {colors.slice(0, 8).map((c) => {
-                              const { label, hex } = resolveColor(c);
-                              return (
-                                <span
-                                  key={c}
-                                  title={label}
-                                  aria-label={label}
-                                  className="inline-block w-3.5 h-3.5 rounded-full border border-border"
-                                  style={{ backgroundColor: hex }}
-                                />
-                              );
-                            })}
-                            <span className="text-[11px] text-muted-foreground ml-0.5">{colors.length} barev</span>
+                          <div
+                            className="flex items-center gap-1.5 mt-1.5"
+                            aria-label={`Dostupné ${variantLabelPlural(row.base).toLocaleLowerCase("cs")}`}
+                          >
+                            {bySize
+                              ? colors.slice(0, 8).map((c) => (
+                                  <span
+                                    key={c}
+                                    className="inline-flex items-center justify-center min-w-[1.6rem] px-1.5 h-5 rounded border border-border bg-background text-[11px] font-semibold"
+                                  >
+                                    {c}
+                                  </span>
+                                ))
+                              : colors.slice(0, 8).map((c) => {
+                                  const { label, hex } = resolveColor(c);
+                                  return (
+                                    <span
+                                      key={c}
+                                      title={label}
+                                      aria-label={label}
+                                      className="inline-block w-3.5 h-3.5 rounded-full border border-border"
+                                      style={{ backgroundColor: hex }}
+                                    />
+                                  );
+                                })}
+                            <span className="text-[11px] text-muted-foreground ml-0.5">
+                              {colors.length} {bySize ? "velikostí" : "barev"}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -304,7 +364,7 @@ const B2BWholesale = () => {
                         <div className="font-bold text-base">{fmtCZK(modelTotalGross(row))}</div>
                         <div className="text-xs text-muted-foreground">{fmtCZK(modelTotalNet(row))} bez DPH</div>
                       </div>
-                      <button onClick={() => toggleExpand(row.baseId)} className="justify-self-end p-2 hover:bg-muted rounded" aria-label="Sbalit / rozbalit barvy">
+                      <button onClick={() => toggleExpand(row.baseId)} className="justify-self-end p-2 hover:bg-muted rounded" aria-label={`Sbalit / rozbalit ${variantLabelPlural(row.base).toLocaleLowerCase("cs")}`}>
                         {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                       </button>
                     </div>
@@ -342,8 +402,23 @@ const B2BWholesale = () => {
                             const isLast = idx === colorInputKeys.length - 1;
                             return (
                               <div key={color} className="grid grid-cols-[20px_1fr_140px_120px] gap-3 items-center">
-                                <span className="w-4 h-4 rounded-full border border-border" style={{ background: color === "__single__" ? "#CCCCCC" : resolveColor(color).hex }} />
-                                <span className="text-sm font-medium">{color === "__single__" ? "Jediná varianta" : resolveColor(color).label}</span>
+                                {bySize && color !== "__single__" ? (
+                                  <span className="w-4 h-4 flex items-center justify-center text-[10px] font-bold text-muted-foreground">
+                                    {color.charAt(0)}
+                                  </span>
+                                ) : (
+                                  <span
+                                    className="w-4 h-4 rounded-full border border-border"
+                                    style={{ background: color === "__single__" ? "#CCCCCC" : resolveColor(color).hex }}
+                                  />
+                                )}
+                                <span className="text-sm font-medium">
+                                  {color === "__single__"
+                                    ? "Jediná varianta"
+                                    : bySize
+                                      ? `Velikost ${color}`
+                                      : resolveColor(color).label}
+                                </span>
                                 <span className={`text-xs ${stock > 0 ? "text-emerald-600" : "text-muted-foreground"}`}>
                                   {stock > 0 ? `🟢 ${stock} ks skladem` : "Na dotaz"}
                                 </span>
