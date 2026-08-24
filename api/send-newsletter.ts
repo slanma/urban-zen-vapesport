@@ -56,8 +56,12 @@ function unsubToken(email: string): string {
 // Patička se liší podle toho, komu píšeme.
 // Partner = existující obchodní vztah. Prospekt = obchodní sdělení, musí být
 // označené a musí být jasné, odkud adresu máme.
+function unsubUrl(email: string): string {
+  return `${SITE}/api/unsubscribe?e=${encodeURIComponent(email)}&t=${unsubToken(email)}`;
+}
+
 function unsubFooter(email: string, kind: Kind): string {
-  const link = `${SITE}/api/unsubscribe?e=${encodeURIComponent(email)}&t=${unsubToken(email)}`;
+  const link = unsubUrl(email);
   const intro =
     kind === "partner"
       ? "Tento e-mail jste dostali jako registrovaný B2B partner Vapesport."
@@ -67,9 +71,27 @@ function unsubFooter(email: string, kind: Kind): string {
 
 // --- zdroje příjemců -------------------------------------------------------
 
+// PostgREST vrací max 1000 řádků na dotaz. Bez stránkování by se při růstu
+// seznamu tiše zahodil zbytek — příjemci by prostě zmizeli, bez chyby.
+async function fetchAll<T>(path: string): Promise<T[]> {
+  const PAGE = 1000;
+  const out: T[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      headers: { ...svcHeaders, Range: `${from}-${from + PAGE - 1}`, "Range-Unit": "items" },
+    });
+    if (!r.ok) break;
+    const rows: T[] = await r.json();
+    out.push(...rows);
+    if (rows.length < PAGE) break;
+  }
+  return out;
+}
+
 async function loadApproved(): Promise<Map<string, string | null>> {
-  const r = await fetch(`${SUPABASE_URL}/rest/v1/b2b_profiles?status=eq.approved&invoice_email=not.is.null&select=invoice_email,contact_person`, { headers: svcHeaders });
-  const rows: Array<{ invoice_email: string; contact_person: string | null }> = r.ok ? await r.json() : [];
+  const rows = await fetchAll<{ invoice_email: string; contact_person: string | null }>(
+    `b2b_profiles?status=eq.approved&invoice_email=not.is.null&select=invoice_email,contact_person`
+  );
   const map = new Map<string, string | null>();
   for (const row of rows) {
     const e = (row.invoice_email || "").trim().toLowerCase();
@@ -79,8 +101,9 @@ async function loadApproved(): Promise<Map<string, string | null>> {
 }
 
 async function loadContacts(): Promise<Map<string, string | null>> {
-  const r = await fetch(`${SUPABASE_URL}/rest/v1/newsletter_contacts?unsubscribed=eq.false&select=email,contact_person`, { headers: svcHeaders });
-  const rows: Array<{ email: string; contact_person: string | null }> = r.ok ? await r.json() : [];
+  const rows = await fetchAll<{ email: string; contact_person: string | null }>(
+    `newsletter_contacts?unsubscribed=eq.false&bounced=eq.false&select=email,contact_person`
+  );
   const map = new Map<string, string | null>();
   for (const row of rows) {
     const e = (row.email || "").trim().toLowerCase();
@@ -90,8 +113,7 @@ async function loadContacts(): Promise<Map<string, string | null>> {
 }
 
 async function loadUnsub(): Promise<Set<string>> {
-  const r = await fetch(`${SUPABASE_URL}/rest/v1/newsletter_unsubscribes?select=email`, { headers: svcHeaders });
-  const rows: Array<{ email: string }> = r.ok ? await r.json() : [];
+  const rows = await fetchAll<{ email: string }>(`newsletter_unsubscribes?select=email`);
   return new Set(rows.map((x) => x.email.toLowerCase()));
 }
 
@@ -112,7 +134,7 @@ async function markContactsSent(emails: string[]): Promise<void> {
   }
 }
 
-async function sendBatch(items: Array<{ to: string[]; subject: string; html: string }>) {
+async function sendBatch(items: Array<{ to: string[]; subject: string; html: string; headers?: Record<string, string> }>) {
   const key = process.env.RESEND_API_KEY;
   if (!key) throw new Error("Chybí RESEND_API_KEY.");
   const res = await fetch(RESEND_BATCH, { method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" }, body: JSON.stringify(items.map((it) => ({ from: FROM, ...it }))) });
@@ -129,8 +151,9 @@ export default async function handler(req: any, res: any) {
 
     // Seznam potenciálních partnerů pro výběr v adminu
     if (body.action === "contacts") {
-      const r = await fetch(`${SUPABASE_URL}/rest/v1/newsletter_contacts?unsubscribed=eq.false&select=id,email,company_name,city,last_sent_at&order=company_name.asc`, { headers: svcHeaders });
-      const contacts = r.ok ? await r.json() : [];
+      const contacts = await fetchAll(
+        `newsletter_contacts?unsubscribed=eq.false&bounced=eq.false&select=id,email,company_name,city,last_sent_at&order=company_name.asc`
+      );
       return res.status(200).json({ ok: true, contacts });
     }
 
@@ -166,6 +189,13 @@ export default async function handler(req: any, res: any) {
           to: [r.email],
           subject,
           html: html.replace(/\{osloveni\}/g, greeting(r.name)) + unsubFooter(r.email, r.kind),
+          // Gmail a Yahoo vyžadují u hromadných odesílatelů odhlášení
+          // jedním klikem přímo z rozhraní schránky. Bez těchto hlaviček
+          // roste pravděpodobnost, že zprávu vyhodnotí jako nevyžádanou.
+          headers: {
+            "List-Unsubscribe": `<${unsubUrl(r.email)}>`,
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+          },
         }));
         await sendBatch(items);
       }

@@ -28,13 +28,19 @@ function page(title: string, message: string): string {
 }
 
 export default async function handler(req: any, res: any) {
-  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  // Gmail/Yahoo posílají na tuto adresu POST bez lidské interakce
+  // (one-click odhlášení z rozhraní schránky). Odpověď má být prostá,
+  // HTML stránka je jen pro člověka, který klikl v e-mailu.
+  const oneClick = req.method === "POST";
+  if (!oneClick) res.setHeader("Content-Type", "text/html; charset=utf-8");
+
   try {
     const url = new URL(req.url, "https://www.vapesport.cz");
     const email = (url.searchParams.get("e") || "").trim().toLowerCase();
     const token = (url.searchParams.get("t") || "").trim();
 
     if (!email || !token || token !== unsubToken(email)) {
+      if (oneClick) return res.status(400).send("invalid");
       return res.status(400).send(page("Neplatný odkaz", "Odhlašovací odkaz je neplatný nebo poškozený. Pokud problém přetrvává, napište nám na info@vapesport.cz."));
     }
 
@@ -65,11 +71,14 @@ export default async function handler(req: any, res: any) {
     } catch { /* nepovinné – hlavní záznam je v newsletter_unsubscribes */ }
 
     if (!r.ok && r.status !== 409) {
+      if (oneClick) return res.status(500).send("error");
       return res.status(500).send(page("Něco se nepovedlo", "Odhlášení se teď nepodařilo uložit. Zkuste to prosím později, nebo napište na info@vapesport.cz."));
     }
 
+    if (oneClick) return res.status(200).send("ok");
     return res.status(200).send(page("Odhlášeno", `E-mail <strong>${email}</strong> byl odhlášen z odběru novinek. Další newslettery vám už posílat nebudeme.`));
   } catch (e: any) {
+    if (oneClick) return res.status(500).send("error");
     return res.status(500).send(page("Něco se nepovedlo", "Zkuste to prosím později."));
   }
 }
