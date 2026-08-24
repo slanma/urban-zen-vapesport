@@ -8,15 +8,15 @@ import { Loader2, UserPlus, AlertCircle, CheckCircle2, Copy } from "lucide-react
 
 /**
  * Admin → Nový B2B partner
- * Založí přihlašovací účet rovnou s heslem (partner tedy nemusí procházet
- * e-mailovým odkazem) a k němu profil v b2b_profiles.
+ * Založí přihlašovací účet a profil v b2b_profiles. Heslo si partner
+ * nastaví sám přes odkaz, který mu přijde e-mailem.
  */
 
 type Result = {
   email: string;
-  password: string;
   email_sent: boolean;
   email_error?: string | null;
+  set_password_link?: string | null;
 };
 
 const emptyForm = {
@@ -78,9 +78,9 @@ const AdminB2BNovy = () => {
 
       setResult({
         email: data.email,
-        password: data.password,
         email_sent: data.email_sent,
         email_error: data.email_error,
+        set_password_link: data.set_password_link,
       });
       setForm({ ...emptyForm });
     } catch (e: any) {
@@ -89,11 +89,9 @@ const AdminB2BNovy = () => {
     }
   };
 
-  const copyCreds = async () => {
-    if (!result) return;
-    await navigator.clipboard.writeText(
-      `Adresa: https://www.vapesport.cz/b2b-login\nE-mail: ${result.email}\nHeslo: ${result.password}`
-    );
+  const copyLink = async () => {
+    if (!result?.set_password_link) return;
+    await navigator.clipboard.writeText(result.set_password_link);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -121,7 +119,7 @@ const AdminB2BNovy = () => {
       <header className="mb-6">
         <h1 className="text-2xl font-heading font-bold text-foreground">Nový B2B partner</h1>
         <p className="text-muted-foreground mt-1">
-          Účet se založí rovnou s heslem — partner se přihlásí hned, bez odkazu z e-mailu.
+          Partnerovi přijde e-mail s odkazem, přes který si nastaví vlastní heslo.
         </p>
       </header>
 
@@ -133,30 +131,35 @@ const AdminB2BNovy = () => {
               <p className="font-medium text-foreground">Partner založen</p>
               <p className="text-sm text-muted-foreground">
                 {result.email_sent
-                  ? "Přístupové údaje jsme partnerovi poslali e-mailem."
+                  ? `Na ${result.email} jsme poslali odkaz pro nastavení hesla.`
                   : result.email_error
-                  ? `E-mail se nepodařilo odeslat (${result.email_error}). Pošlete údaje ručně.`
-                  : "E-mail jsme neposílali — pošlete údaje ručně."}
+                  ? `E-mail se nepodařilo odeslat (${result.email_error}). Předejte partnerovi odkaz níže.`
+                  : "E-mail jsme neposílali — předejte partnerovi odkaz níže."}
               </p>
             </div>
           </div>
-          <div className="rounded border border-border bg-background p-3 text-sm space-y-1">
-            <div>
-              <span className="text-muted-foreground">E-mail: </span>
-              <strong>{result.email}</strong>
+
+          {result.set_password_link && (
+            <div className="rounded border border-border bg-background p-3">
+              <p className="text-xs text-muted-foreground mb-2">
+                Záložní odkaz — použijte, jen když e-mail nedorazí.
+                Platí 24 hodin a lze ho použít jednou.
+              </p>
+              <Button variant="outline" size="sm" className="gap-2" onClick={copyLink}>
+                <Copy className="w-3.5 h-3.5" />
+                {copied ? "Zkopírováno" : "Zkopírovat odkaz"}
+              </Button>
             </div>
-            <div>
-              <span className="text-muted-foreground">Heslo: </span>
-              <strong className="font-mono">{result.password}</strong>
-            </div>
+          )}
+
+          <div className="mt-3 flex items-start gap-2 rounded border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-200">
+            <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+            <span>
+              Ten odkaz neotvírejte v okně, kde jste přihlášená jako admin —
+              přepsalo by to heslo vám, ne partnerovi. Na testování použijte
+              anonymní okno (Cmd&nbsp;+&nbsp;Shift&nbsp;+&nbsp;N).
+            </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            Heslo se už nikde nezobrazí — zkopírujte si ho teď.
-          </p>
-          <Button variant="outline" size="sm" className="mt-3 gap-2" onClick={copyCreds}>
-            <Copy className="w-3.5 h-3.5" />
-            {copied ? "Zkopírováno" : "Zkopírovat údaje"}
-          </Button>
         </div>
       )}
 
@@ -222,9 +225,12 @@ const AdminB2BNovy = () => {
             onChange={(e) => set("send_email", e.target.checked)}
           />
           <span>
-            Poslat partnerovi přístupové údaje e-mailem
+            Poslat partnerovi e-mail s odkazem na nastavení hesla
             <span className="block text-xs text-muted-foreground">
-              Když necháte nezaškrtnuté, heslo se zobrazí jen tady a pošlete ho sami.
+              Když necháte nezaškrtnuté, partner se jen založí a nic mu nepřijde.
+              Přístup mu pak můžete oznámit hromadně přes Newslettery — v e-mailu
+              stačí odkaz na <strong>vapesport.cz/b2b-heslo</strong>, kde si o heslo
+              požádá sám zadáním svého e-mailu.
             </span>
           </span>
         </label>

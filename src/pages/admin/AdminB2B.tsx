@@ -5,7 +5,8 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Loader2, Check, X, Pencil, Trash2 } from "lucide-react";
+import { Loader2, Check, X, Pencil, Trash2, UserPlus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { Tables } from "@/integrations/supabase/types";
@@ -30,6 +31,7 @@ const EMPTY_FORM: EditForm = {
 };
 
 const AdminB2B = () => {
+  const navigate = useNavigate();
   const [registrations, setRegistrations] = useState<Partner[]>([]);
   const [approved, setApproved] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
@@ -366,7 +368,13 @@ const AdminB2B = () => {
 
   return (
     <section aria-labelledby="b2b-heading" className="p-6 md:p-8">
-      <h1 id="b2b-heading" className="text-2xl font-heading font-bold text-foreground mb-6">B2B Partneři</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <h1 id="b2b-heading" className="text-2xl font-heading font-bold text-foreground">B2B Partneři</h1>
+        <Button className="gap-2" onClick={() => navigate("/admin/b2b-novy")}>
+          <UserPlus className="w-4 h-4" />
+          Nový partner
+        </Button>
+      </div>
       <Tabs defaultValue="approved" className="w-full">
         <TabsList>
           <TabsTrigger value="approved">

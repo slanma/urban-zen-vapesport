@@ -1,9 +1,8 @@
 // api/create-partner.ts
 // Založení nového B2B partnera z administrace.
-// Vytvoří přihlašovací účet (rovnou s heslem, bez čekání na e-mailový odkaz),
-// založí profil v b2b_profiles a volitelně pošle partnerovi přístupové údaje.
-
-import crypto from "node:crypto";
+// Vytvoří přihlašovací účet BEZ hesla, založí profil v b2b_profiles
+// a pošle partnerovi odkaz, přes který si heslo nastaví sám.
+// Heslo tak neputuje e-mailem ani neleží nikomu ve schránce.
 
 const SITE = "https://www.vapesport.cz";
 const FROM = "Vapesport <info@vapesport.cz>";
@@ -37,20 +36,32 @@ async function verifyAdmin(token: string): Promise<boolean> {
   }
 }
 
-/** Heslo, které se dá nadiktovat po telefonu — bez znaků, co se pletou (0/O, 1/l/I). */
-function generatePassword(): string {
-  const abc = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-  const num = "23456789";
-  const pick = (set: string, n: number) =>
-    Array.from({ length: n }, () => set[crypto.randomInt(set.length)]).join("");
-  return `${pick(abc, 4)}-${pick(num, 4)}-${pick(abc, 4)}`;
+/**
+ * Vyrobí jednorázový odkaz, přes který si partner nastaví heslo.
+ * Supabase ho vrací jako action_link — podle verze buď v kořeni odpovědi,
+ * nebo pod properties, proto se sahá na obě místa.
+ */
+async function createSetPasswordLink(email: string): Promise<string | null> {
+  const r = await fetch(`${SUPABASE_URL}/auth/v1/admin/generate_link`, {
+    method: "POST",
+    headers: svcHeaders,
+    body: JSON.stringify({
+      type: "recovery",
+      email,
+      options: { redirect_to: `${SITE}/b2b-heslo` },
+      redirect_to: `${SITE}/b2b-heslo`,
+    }),
+  });
+  if (!r.ok) return null;
+  const data = await r.json();
+  return data?.action_link || data?.properties?.action_link || null;
 }
 
 function isEmail(x: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(x);
 }
 
-async function sendCredentials(email: string, password: string, company: string) {
+async function sendInvite(email: string, link: string, company: string) {
   const key = process.env.RESEND_API_KEY;
   if (!key) return { sent: false, error: "Chybí RESEND_API_KEY." };
 
@@ -58,15 +69,16 @@ async function sendCredentials(email: string, password: string, company: string)
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:#33332e;max-width:560px;">
   <p>Dobrý den,</p>
   <p>založili jsme Vám přístup do velkoobchodního portálu Vapesport pro firmu <strong>${company}</strong>.</p>
-  <table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px 0;border:1px solid #e0dcd3;border-radius:6px;">
-    <tr><td style="padding:14px 18px;">
-      <div style="margin-bottom:6px;"><span style="color:#8a8a80;">Adresa:</span> <a href="${SITE}/b2b-login" style="color:#6E7B4E;">${SITE.replace("https://", "")}/b2b-login</a></div>
-      <div style="margin-bottom:6px;"><span style="color:#8a8a80;">Přihlašovací e-mail:</span> <strong>${email}</strong></div>
-      <div><span style="color:#8a8a80;">Heslo:</span> <strong style="font-family:monospace;font-size:16px;">${password}</strong></div>
-    </td></tr>
-  </table>
-  <p>Heslo si prosím při nejbližší příležitosti změňte na <a href="${SITE}/b2b-heslo" style="color:#6E7B4E;">${SITE.replace("https://", "")}/b2b-heslo</a>.</p>
-  <p>V portálu uvidíte své velkoobchodní ceny a můžete rovnou objednávat. Kdyby cokoliv nefungovalo, dejte nám prosím vědět.</p>
+  <p>Zbývá poslední krok — nastavit si vlastní heslo:</p>
+  <p style="margin:24px 0;">
+    <a href="${link}" style="display:inline-block;background:#6E7B4E;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:4px;font-weight:bold;">Nastavit heslo</a>
+  </p>
+  <p style="font-size:13px;color:#8a8a80;">
+    Odkaz je platný 24 hodin a lze ho použít jednou. Kdyby už nefungoval,
+    otevřete <a href="${SITE}/b2b-heslo" style="color:#6E7B4E;">${SITE.replace("https://", "")}/b2b-heslo</a>,
+    zadejte svůj e-mail <strong>${email}</strong> a nový odkaz Vám přijde obratem.
+  </p>
+  <p>Po nastavení hesla uvidíte v portálu své velkoobchodní ceny a můžete rovnou objednávat.</p>
   <p style="margin-top:24px;">S pozdravem<br>Vapesport.cz</p>
 </div>`.trim();
 
@@ -76,7 +88,7 @@ async function sendCredentials(email: string, password: string, company: string)
     body: JSON.stringify({
       from: FROM,
       to: [email],
-      subject: "Vapesport B2B portál — přístupové údaje",
+      subject: "Vapesport B2B portál — nastavte si heslo",
       html,
     }),
   });
@@ -110,16 +122,15 @@ export default async function handler(req: any, res: any) {
       return res.status(409).json({ error: `Partner s e-mailem ${email} už existuje (${dupRows[0].company_name}).` });
     }
 
-    const password = generatePassword();
-
-    // 1) Přihlašovací účet. Rovnou potvrzený, aby nemusel nic klikat.
+    // 1) Přihlašovací účet BEZ hesla. Potvrzený, aby šel rovnou použít
+    //    odkaz na nastavení hesla a partner nemusel potvrzovat e-mail zvlášť.
     let userId: string | null = null;
     let userWasNew = false;
 
     const cu = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
       method: "POST",
       headers: svcHeaders,
-      body: JSON.stringify({ email, password, email_confirm: true }),
+      body: JSON.stringify({ email, email_confirm: true }),
     });
 
     if (cu.ok) {
@@ -139,12 +150,9 @@ export default async function handler(req: any, res: any) {
       if (!match?.id) {
         return res.status(400).json({ error: "Účet se nepodařilo založit: " + (await cu.text()) });
       }
+      // Účet existuje — heslo mu nepřepisujeme. Kdyby ho už měl nastavené,
+      // přišel by o něj. Odkaz na nastavení hesla dostane tak jako tak.
       userId = match.id;
-      await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${userId}`, {
-        method: "PUT",
-        headers: svcHeaders,
-        body: JSON.stringify({ password, email_confirm: true }),
-      });
     }
 
     if (!userId) return res.status(500).json({ error: "Účet se nepodařilo založit." });
@@ -182,19 +190,27 @@ export default async function handler(req: any, res: any) {
       return res.status(500).json({ error: "Profil se nepodařilo založit: " + detail });
     }
 
-    // 3) Volitelně poslat údaje partnerovi
+    // 3) Odkaz na nastavení hesla + odeslání pozvánky
+    const link = await createSetPasswordLink(email);
+
     let mail: { sent: boolean; error?: string } = { sent: false };
-    if (body.send_email) {
-      mail = await sendCredentials(email, password, company);
+    if (body.send_email !== false) {
+      if (!link) {
+        mail = { sent: false, error: "Odkaz na nastavení hesla se nepodařilo vytvořit." };
+      } else {
+        mail = await sendInvite(email, link, company);
+      }
     }
 
     return res.status(200).json({
       ok: true,
       user_id: userId,
       email,
-      password,
       email_sent: mail.sent,
       email_error: mail.error || null,
+      // Záložní odkaz pro případ, že e-mail nedorazí. Admin ho může
+      // partnerovi předat jinou cestou. Jednorázový, platnost 24 h.
+      set_password_link: link,
     });
   } catch (e: any) {
     return res.status(500).json({ error: String(e?.message || e) });
