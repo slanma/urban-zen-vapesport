@@ -72,6 +72,7 @@ const AdminNewsletters = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [selAllContacts, setSelAllContacts] = useState(false);
   const [selContacts, setSelContacts] = useState<Set<string>>(new Set());
+  const [deletingContact, setDeletingContact] = useState<string | null>(null);
   const [cSearch, setCSearch] = useState("");
   const [hideSent, setHideSent] = useState(false);
   const [firstN, setFirstN] = useState("100");
@@ -245,6 +246,24 @@ const AdminNewsletters = () => {
       n.has(id) ? n.delete(id) : n.add(id);
       return n;
     });
+
+  // Smaže kontakt natrvalo. Na skutečné duplikáty — tedy stejnou adresu dvakrát.
+  // U firmy s víc různými adresami radši nemaž, přijdeš o funkční kontakt.
+  const deleteContact = async (c: Contact) => {
+    const label = c.company_name ? `${c.company_name} (${c.email})` : c.email;
+    if (!confirm(`Opravdu smazat ${label} ze seznamu?\n\nSmazání je nevratné.`)) return;
+    setDeletingContact(c.id);
+    try {
+      await api("/api/send-newsletter", { action: "deleteContact", id: c.id });
+      setContacts((list) => list.filter((x) => x.id !== c.id));
+      setSelContacts((s2) => { const n = new Set(s2); n.delete(c.id); return n; });
+      toast.success("Kontakt smazán");
+    } catch (e: any) {
+      toast.error(e?.message || "Smazání se nepodařilo");
+    } finally {
+      setDeletingContact(null);
+    }
+  };
 
   const toggleContact = (id: string) =>
     setSelContacts((s2) => {
@@ -466,16 +485,29 @@ const AdminNewsletters = () => {
             {!selAllContacts && (
               <div className="max-h-52 overflow-y-auto border border-border rounded-md divide-y divide-border">
                 {contactsFiltered.slice(0, 300).map((c) => (
-                  <label key={c.id} className="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer hover:bg-muted/40">
-                    <input type="checkbox" checked={selContacts.has(c.id)} onChange={() => toggleContact(c.id)} className="w-4 h-4 accent-primary shrink-0" />
-                    <span className="flex-1">
-                      <span className="text-foreground">{c.company_name || c.email}</span>
-                      <span className="text-xs text-muted-foreground block">
-                        {c.email}{c.city ? ` · ${c.city}` : ""}
-                        {c.last_sent_at ? ` · osloveno ${fmtDate(c.last_sent_at)}` : ""}
+                  <div key={c.id} className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/40 group">
+                    <label className="flex items-center gap-2 flex-1 cursor-pointer min-w-0">
+                      <input type="checkbox" checked={selContacts.has(c.id)} onChange={() => toggleContact(c.id)} className="w-4 h-4 accent-primary shrink-0" />
+                      <span className="flex-1 min-w-0">
+                        <span className="text-foreground">{c.company_name || c.email}</span>
+                        <span className="text-xs text-muted-foreground block truncate">
+                          {c.email}{c.city ? ` · ${c.city}` : ""}
+                          {c.last_sent_at ? ` · osloveno ${fmtDate(c.last_sent_at)}` : ""}
+                        </span>
                       </span>
-                    </span>
-                  </label>
+                    </label>
+                    <button
+                      type="button"
+                      title="Smazat kontakt ze seznamu"
+                      onClick={() => deleteContact(c)}
+                      disabled={deletingContact === c.id}
+                      className="shrink-0 p-1.5 rounded text-muted-foreground opacity-0 group-hover:opacity-100 focus:opacity-100 hover:text-destructive hover:bg-destructive/10 transition disabled:opacity-50"
+                    >
+                      {deletingContact === c.id
+                        ? <Loader2 className="w-4 h-4 animate-spin" />
+                        : <Trash2 className="w-4 h-4" />}
+                    </button>
+                  </div>
                 ))}
                 {contactsFiltered.length > 300 && (
                   <div className="px-3 py-2 text-xs text-muted-foreground">

@@ -1,5 +1,5 @@
 // api/send-newsletter.ts
-// Rozeslání newsletteru. Akce: count | send | contacts.
+// Rozeslání newsletteru. Akce: count | send | contacts | deleteContact.
 // Dva zdroje příjemců:
 //   1) b2b_profiles  – schválení B2B partneři (mají účet, slevu, portál)
 //   2) newsletter_contacts – potenciální partneři (jen adresa, žádný účet)
@@ -157,6 +157,26 @@ export default async function handler(req: any, res: any) {
       return res.status(200).json({ ok: true, contacts });
     }
 
+    // Smazání kontaktu ze seznamu potenciálních partnerů.
+    // Používá se na skutečné duplikáty. Maže natrvalo — proto jen podle id,
+    // ne podle e-mailu (na e-mail by šlo omylem trefit víc řádků najednou).
+    if (body.action === "deleteContact") {
+      const id = String(body.id || "").trim();
+      if (!/^[0-9a-f-]{36}$/i.test(id)) return res.status(400).json({ error: "Chybí platné id kontaktu." });
+
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/newsletter_contacts?id=eq.${id}`, {
+        method: "DELETE",
+        headers: { ...svcHeaders, Prefer: "return=representation" },
+      });
+      if (!r.ok) return res.status(500).json({ error: "Smazání se nepodařilo: " + (await r.text()) });
+
+      const deleted = await r.json();
+      if (!Array.isArray(deleted) || !deleted.length) {
+        return res.status(404).json({ error: "Kontakt nenalezen (možná už byl smazaný)." });
+      }
+      return res.status(200).json({ ok: true, deleted: deleted[0]?.email ?? null });
+    }
+
     const requested: string[] = Array.isArray(body.emails) ? body.emails.map((e: string) => String(e).trim().toLowerCase()) : [];
     const [approved, contacts, unsub] = await Promise.all([loadApproved(), loadContacts(), loadUnsub()]);
 
@@ -216,7 +236,7 @@ export default async function handler(req: any, res: any) {
       });
     }
 
-    return res.status(400).json({ error: "Neznámá akce (count / send / contacts)." });
+    return res.status(400).json({ error: "Neznámá akce (count / send / contacts / deleteContact)." });
   } catch (e: any) {
     return res.status(500).json({ error: String(e?.message || e) });
   }
