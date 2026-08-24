@@ -57,6 +57,11 @@ async function createSetPasswordLink(email: string): Promise<string | null> {
   return data?.action_link || data?.properties?.action_link || null;
 }
 
+/** Nevyplněné pole → prázdný text. Sloupce v b2b_profiles jsou NOT NULL. */
+function txt(v: unknown): string {
+  return String(v ?? "").trim();
+}
+
 function isEmail(x: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(x);
 }
@@ -165,16 +170,18 @@ export default async function handler(req: any, res: any) {
         p_user_id: userId,
         p_company_name: company,
         p_invoice_email: email,
-        p_contact_person: body.contact_person || null,
-        p_phone: body.phone || null,
-        p_ico: body.ico || null,
-        p_dic: body.dic || null,
-        p_address: body.address || null,
-        p_city: body.city || null,
-        p_zip: body.zip || null,
+        // Nevyplněná pole posíláme jako prázdný text, ne null.
+        // Část sloupců v b2b_profiles je NOT NULL a null by je shodil.
+        p_contact_person: txt(body.contact_person),
+        p_phone: txt(body.phone),
+        p_ico: txt(body.ico),
+        p_dic: txt(body.dic),
+        p_address: txt(body.address),
+        p_city: txt(body.city),
+        p_zip: txt(body.zip),
         p_discount: Number(body.discount_percent) || 0,
         p_free_shipping: Boolean(body.free_shipping),
-        p_notes: body.notes || null,
+        p_notes: txt(body.notes),
       }),
     });
 
