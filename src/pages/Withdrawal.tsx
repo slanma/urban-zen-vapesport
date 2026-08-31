@@ -77,18 +77,22 @@ const Withdrawal = () => {
     if (!pending) return;
     setLoading(true);
 
-    const { data, error } = await supabase
+    // ID si generujeme sami, abychom po insertu nemuseli volat .select().
+    // RETURNING vyžaduje SELECT právo, které anonymní zákazník na
+    // withdrawal_requests nemá — to shazovalo odeslání na RLS chybě.
+    const requestId = crypto.randomUUID();
+
+    const { error } = await supabase
       .from("withdrawal_requests")
       .insert({
+        id: requestId,
         order_number: pending.order_number,
         email: pending.email,
         full_name: pending.full_name,
         bank_account: pending.bank_account || null,
         items: pending.items || null,
         user_id: user?.id ?? null,
-      })
-      .select()
-      .single();
+      });
 
     if (error) {
       setLoading(false);
@@ -109,7 +113,7 @@ const Withdrawal = () => {
             full_name: pending.full_name,
             bank_account: pending.bank_account || null,
             items: pending.items || null,
-            request_id: data?.id,
+            request_id: requestId,
           },
         },
       );
