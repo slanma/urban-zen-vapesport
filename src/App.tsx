@@ -2,6 +2,7 @@ import type { RouteRecord } from "vite-react-ssg";
 import { Navigate } from "react-router-dom";
 import Layout from "./Layout";
 import { products } from "./data/products";
+import { HolidayNotice } from "./components/HolidayNotice";
 
 import Index from "./pages/Index";
 import Shop from "./pages/Shop";
@@ -43,7 +44,12 @@ const productPaths = products.map((p) => `produkt/${p.id}`);
 export const routes: RouteRecord[] = [
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <>
+        <HolidayNotice />
+        <Layout />
+      </>
+    ),
     children: [
       { index: true, element: <Index /> },
       { path: "produkty", element: <Navigate to="/obchod" replace /> },
