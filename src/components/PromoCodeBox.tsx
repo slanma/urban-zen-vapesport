@@ -1,43 +1,44 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tag, X, Loader2 } from "lucide-react";
-import { usePromoCode } from "@/hooks/usePromoCode";
+import { useDiscounts } from "@/hooks/usePromoCode";
+import { CODE_NOTE_TEXT, type CodeNote } from "@/lib/discounts";
 
 interface Props {
   className?: string;
   compact?: boolean;
+  /** Proč se zadaný kód v tomto košíku neuplatnil (z `evaluate`). */
+  codeNote?: CodeNote;
 }
 
 /**
- * Reusable promo-code input + chip. State is shared across Cart / Checkout /
- * B2B Checkout via `usePromoCode` (localStorage-backed).
+ * Pole pro slevový kód + štítek zadaného kódu. Stav je sdílený přes
+ * `useDiscounts` (Košík, Pokladna, B2B pokladna).
  */
-const PromoCodeBox = ({ className, compact = false }: Props) => {
-  const { appliedPromo, applying, applyPromo, removePromo } = usePromoCode();
+const PromoCodeBox = ({ className, compact = false, codeNote = null }: Props) => {
+  const { code, loading, applyCode, removeCode } = useDiscounts();
   const [value, setValue] = useState("");
 
-  if (appliedPromo) {
+  if (code) {
     return (
       <div className={className}>
         <div className="flex items-center justify-between gap-2 p-3 rounded-lg bg-primary/10 border border-primary/30 text-sm font-body">
           <span className="inline-flex items-center gap-2 text-primary font-semibold">
             <Tag className="w-4 h-4" />
-            Kód „{appliedPromo.code}" aktivní
-            <span className="text-muted-foreground font-normal">
-              ({appliedPromo.type === "percentage"
-                ? `–${appliedPromo.value} %`
-                : `–${appliedPromo.value} Kč`})
-            </span>
+            Kód „{code}“ zadaný
           </span>
           <button
             type="button"
-            onClick={removePromo}
+            onClick={removeCode}
             className="text-muted-foreground hover:text-destructive transition-colors"
             aria-label="Odstranit slevový kód"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
+        {codeNote && (
+          <p className="mt-2 text-xs text-muted-foreground font-body">{CODE_NOTE_TEXT[codeNote]}</p>
+        )}
       </div>
     );
   }
@@ -52,6 +53,12 @@ const PromoCodeBox = ({ className, compact = false }: Props) => {
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter" && value.trim()) {
+              e.preventDefault();
+              if (await applyCode(value)) setValue("");
+            }
+          }}
           placeholder="Zadejte kód"
           className={`flex-1 ${compact ? "h-11" : "h-12"} px-3 text-base font-body bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary uppercase`}
           autoComplete="off"
@@ -60,13 +67,12 @@ const PromoCodeBox = ({ className, compact = false }: Props) => {
           type="button"
           variant="outline"
           onClick={async () => {
-            const ok = await applyPromo(value);
-            if (ok) setValue("");
+            if (await applyCode(value)) setValue("");
           }}
-          disabled={applying || !value.trim()}
+          disabled={loading || !value.trim()}
           className={compact ? "h-11" : "h-12"}
         >
-          {applying ? <Loader2 className="w-4 h-4 animate-spin" /> : "Uplatnit"}
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Uplatnit"}
         </Button>
       </div>
     </div>

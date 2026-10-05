@@ -18,8 +18,10 @@ import { fmtCZK } from "@/lib/vat";
 import { getEffectiveProductCode } from "@/lib/effectiveProduct";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { usePromoCode } from "@/hooks/usePromoCode";
+import { useDiscounts } from "@/hooks/usePromoCode";
 import PromoCodeBox from "@/components/PromoCodeBox";
+import DiscountHintNote from "@/components/DiscountHintNote";
+import { buildDiscountLine, discountLabel, type DiscountLine } from "@/lib/discounts";
 
 
 type ShippingId = "zasilkovna" | "ppl" | "slovensko" | "osobni";
@@ -96,8 +98,9 @@ const Checkout = () => {
   const [orderImageUrl, setOrderImageUrl] = useState<string | null>(null);
   const [placedOrder, setPlacedOrder] = useState<{ number: string; total: number; email: string } | null>(null);
 
-  // Promo code – shared with Cart / B2B Checkout
-  const { appliedPromo, computeDiscountGross } = usePromoCode();
+  // Akce a slevy – sdílené s Košíkem a B2B pokladnou
+  const { evaluate } = useDiscounts();
+  const partnerPercent = isPartner ? profile?.discount_percent ?? 0 : 0;
 
   // Pre-fill from B2B profile once it loads.
   useEffect(() => {
@@ -167,6 +170,7 @@ const Checkout = () => {
             isB2B: pricing.isB2B,
             auto: item.meta?.auto === true,
             imageUrl: item.meta?.imageUrl ?? null,
+            discountLine: buildDiscountLine(product, ov, isPartner, partnerPercent, item.quantity),
           };
         })
         .filter((x): x is {
@@ -179,8 +183,9 @@ const Checkout = () => {
           isB2B: boolean;
           auto: boolean;
           imageUrl: string | null;
+          discountLine: DiscountLine;
         } => !!x),
-    [cartItems, getOverride, isPartner, profile?.discount_percent],
+    [cartItems, getOverride, isPartner, profile?.discount_percent, partnerPercent],
   );
 
 
@@ -189,7 +194,9 @@ const Checkout = () => {
   const paymentPrice = paymentOpt?.price ?? 0;
   const preDiscountGross = subtotalGross + shippingPrice + paymentPrice;
 
-  const discountGross = computeDiscountGross(preDiscountGross);
+  // Sleva jen ze zboží – doprava a platba se nezlevňují.
+  const discount = evaluate(orderLines.map((l) => l.discountLine), partnerPercent);
+  const discountGross = Math.min(discount.applied?.amountGross ?? 0, subtotalGross);
   const grandGross = Math.max(0, preDiscountGross - discountGross);
 
   const handleInput = (field: string, value: string) => {
@@ -286,8 +293,11 @@ const Checkout = () => {
         payment_gross: paymentPrice,
         total_gross: grandGross,
         packeta_point: packetaPoint ? `${packetaPoint.name} (#${packetaPoint.id})` : null,
-        promo_code: appliedPromo?.code ?? null,
+        promo_code: discount.applied?.rule.code ?? null,
         discount_gross: discountGross,
+        discount_source: discount.applied ? "rule" : partnerPercent > 0 ? "partner" : null,
+        discount_rule_id: discount.applied?.rule.id ?? null,
+        discount_percent: discount.applied?.rule.percent ?? (partnerPercent > 0 ? partnerPercent : null),
       } as never);
       if (error) throw error;
 
@@ -314,7 +324,11 @@ const Checkout = () => {
                 qty: l.qty,
                 price: l.unitGross,
               };
-            }),
+            }).concat(
+              discount.applied && discountGross > 0
+                ? [{ name: discountLabel(discount.applied, partnerPercent), qty: 1, price: -discountGross }]
+                : [],
+            ),
             total: grandGross,
             vat: true,
           },
@@ -679,12 +693,13 @@ const Checkout = () => {
                   shippingLabel={shippingOpt?.label ?? "Doprava (nezvoleno)"}
                   paymentLabel={paymentOpt?.label ?? "Platba (nezvoleno)"}
                   discountGross={discountGross}
-                  discountLabel={appliedPromo ? `Sleva (Kód: ${appliedPromo.code})` : "Sleva"}
+                  discountLabel={discount.applied ? discountLabel(discount.applied, partnerPercent) : "Sleva"}
                 />
 
 
                 {/* Promo code */}
-                <PromoCodeBox className="border border-border rounded-lg p-4 bg-muted/20" compact />
+                <DiscountHintNote hint={discount.hint} />
+                <PromoCodeBox className="border border-border rounded-lg p-4 bg-muted/20" compact codeNote={discount.codeNote} />
 
 
                 {(!shipping || !payment) && (

@@ -1,84 +1,173 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import {
+  computeDiscount,
+  type DiscountLine,
+  type DiscountResult,
+  type DiscountRule,
+} from "@/lib/discounts";
 
-export interface AppliedPromo {
-  code: string;
-  type: "percentage" | "fixed_amount";
-  value: number;
+/**
+ * Akce a slevy – sdílený stav pro Košík, Pokladnu a B2B pokladnu.
+ *
+ * Server (RPC `get_applicable_discounts`) vrací jen akce, na které má
+ * aktuální zákazník nárok: aktivní, v termínu, pro jeho skupinu (B2C / B2B
+ * podle partnerské slevy) a – u akcí s kódem – jen když zadal ten kód.
+ * Výběr nejvyšší slevy dělá `computeDiscount` v `src/lib/discounts.ts`.
+ *
+ * Stav je jeden pro celou stránku (všechny komponenty vidí stejný kód),
+ * zadaný kód se pamatuje v localStorage.
+ */
+
+const CODE_KEY = "vapesport_discount_code";
+const LEGACY_KEY = "vapesport_promo";
+
+interface State {
+  code: string | null;
+  rules: DiscountRule[];
+  loading: boolean;
 }
 
-const STORAGE_KEY = "vapesport_promo";
-
-const readStored = (): AppliedPromo | null => {
+const readStoredCode = (): string | null => {
+  if (typeof window === "undefined") return null;
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as AppliedPromo;
+    const current = window.localStorage.getItem(CODE_KEY);
+    if (current) return current;
+    // Převzít kód uložený starou verzí webu.
+    const legacy = window.localStorage.getItem(LEGACY_KEY);
+    window.localStorage.removeItem(LEGACY_KEY);
+    if (legacy) {
+      const parsed = JSON.parse(legacy) as { code?: string };
+      return parsed.code?.toUpperCase() ?? null;
+    }
   } catch {
-    return null;
+    /* ignore */
+  }
+  return null;
+};
+
+let state: State = { code: null, rules: [], loading: false };
+let initialized = false;
+let requestId = 0;
+const listeners = new Set<() => void>();
+
+const setState = (patch: Partial<State>) => {
+  state = { ...state, ...patch };
+  listeners.forEach((l) => l());
+};
+
+const persistCode = (code: string | null) => {
+  if (typeof window === "undefined") return;
+  try {
+    if (code) window.localStorage.setItem(CODE_KEY, code);
+    else window.localStorage.removeItem(CODE_KEY);
+  } catch {
+    /* ignore */
   }
 };
 
-/**
- * Shared promo-code state. Persists the applied promo in localStorage so the
- * Cart, B2C Checkout and B2B Checkout stay in sync. Validation runs against
- * the `validate_promo_code` SECURITY DEFINER RPC.
- */
-export const usePromoCode = () => {
-  const [appliedPromo, setAppliedPromo] = useState<AppliedPromo | null>(readStored);
-  const [applying, setApplying] = useState(false);
+const fetchRules = async () => {
+  const id = ++requestId;
+  setState({ loading: true });
+  try {
+    const { data, error } = await (supabase as any).rpc("get_applicable_discounts", {
+      p_code: state.code,
+    });
+    if (error) throw error;
+    if (id !== requestId) return;
+    const rules: DiscountRule[] = ((data as any[]) ?? []).map((r) => ({
+      id: r.id,
+      name: r.name,
+      code: r.code ?? null,
+      percent: Number(r.percent),
+      min_net: r.min_net == null ? null : Number(r.min_net),
+      collections: r.collections ?? [],
+    }));
+    setState({ rules, loading: false });
+  } catch (err) {
+    console.error("[useDiscounts] načtení akcí selhalo:", err);
+    if (id === requestId) setState({ rules: [], loading: false });
+  }
+};
 
-  useEffect(() => {
-    if (appliedPromo) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appliedPromo));
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  }, [appliedPromo]);
+const ensureInit = () => {
+  if (initialized || typeof window === "undefined") return;
+  initialized = true;
+  state = { ...state, code: readStoredCode() };
+  void fetchRules();
+  // Přihlášení / odhlášení mění, na jaké akce má zákazník nárok.
+  supabase.auth.onAuthStateChange(() => void fetchRules());
+};
 
-  const applyPromo = useCallback(async (rawCode: string) => {
-    const code = rawCode.trim().toUpperCase();
+const subscribe = (cb: () => void) => {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+};
+const getSnapshot = () => state;
+const SERVER_STATE: State = { code: null, rules: [], loading: false };
+const getServerSnapshot = () => SERVER_STATE;
+
+const CODE_STATUS_TEXT: Record<string, string> = {
+  not_found: "Tento kód neexistuje.",
+  inactive: "Tento kód není aktivní.",
+  not_started: "Kód ještě neplatí.",
+  expired: "Platnost kódu skončila.",
+  wrong_audience: "Kód není určen pro váš účet.",
+};
+
+export const useDiscounts = () => {
+  useEffect(ensureInit, []);
+  const snap = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  const applyCode = useCallback(async (raw: string): Promise<boolean> => {
+    const code = raw.trim().toUpperCase();
     if (!code) return false;
-    setApplying(true);
+    setState({ loading: true });
     try {
-      const { data, error } = await supabase.rpc("validate_promo_code", { _code: code });
+      const { data, error } = await (supabase as any).rpc("check_discount_code", { p_code: code });
       if (error) throw error;
-      const row = Array.isArray(data) ? data[0] : data;
-      if (!row) {
-        toast.error("Neplatný nebo neaktivní kód.");
+      const status = String(data ?? "not_found");
+      if (status !== "ok") {
+        setState({ loading: false });
+        toast.error(CODE_STATUS_TEXT[status] ?? "Kód nelze použít.");
         return false;
       }
-      const promo: AppliedPromo = {
-        code: row.code,
-        type: row.type as "percentage" | "fixed_amount",
-        value: Number(row.value),
-      };
-      setAppliedPromo(promo);
-      toast.success(`Slevový kód „${promo.code}" byl uplatněn.`);
+      setState({ code });
+      persistCode(code);
+      await fetchRules();
+      toast.success(`Slevový kód „${code}“ je zadaný.`);
       return true;
     } catch (err) {
-      console.error("[usePromoCode] validate failed:", err);
+      console.error("[useDiscounts] ověření kódu selhalo:", err);
+      setState({ loading: false });
       toast.error("Kód se nepodařilo ověřit.");
       return false;
-    } finally {
-      setApplying(false);
     }
   }, []);
 
-  const removePromo = useCallback(() => setAppliedPromo(null), []);
+  const removeCode = useCallback(() => {
+    setState({ code: null });
+    persistCode(null);
+    void fetchRules();
+  }, []);
 
-  const computeDiscountGross = useCallback(
-    (preDiscountGross: number): number => {
-      if (!appliedPromo) return 0;
-      const raw =
-        appliedPromo.type === "percentage"
-          ? Math.round(preDiscountGross * (Number(appliedPromo.value) / 100))
-          : Math.round(Number(appliedPromo.value));
-      return Math.max(0, Math.min(raw, preDiscountGross));
-    },
-    [appliedPromo],
+  /** Spočítá slevu pro dané řádky košíku. */
+  const evaluate = useCallback(
+    (lines: DiscountLine[], partnerPercent = 0): DiscountResult =>
+      computeDiscount(lines, snap.rules, partnerPercent, snap.code),
+    [snap.rules, snap.code],
   );
 
-  return { appliedPromo, applying, applyPromo, removePromo, computeDiscountGross };
+  return {
+    code: snap.code,
+    rules: snap.rules,
+    loading: snap.loading,
+    applyCode,
+    removeCode,
+    evaluate,
+  };
 };
+
+/** Zpětná kompatibilita se starým názvem. */
+export const usePromoCode = useDiscounts;

@@ -74,7 +74,7 @@ const AdminLayout = () => {
     { to: "/admin/b2b", label: "B2B partneři", icon: Users, badge: counts.pendingB2B },
     { to: "/admin/newslettery", label: "Newslettery", icon: Mail, badge: 0 },
     { to: "/admin/poptavky", label: "Poptávky", icon: Inbox, badge: 0 },
-    { to: "/admin/slevy", label: "Slevové kódy", icon: Ticket, badge: 0 },
+    { to: "/admin/slevy", label: "Akce a slevy", icon: Ticket, badge: 0 },
     { to: "/admin/nastaveni", label: "Nastavení", icon: SettingsIcon, badge: 0 },
   ];
 

@@ -10,15 +10,17 @@ import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { getEffectiveProductCode } from "@/lib/effectiveProduct";
-import { fmtCZK } from "@/lib/vat";
+import { fmtCZK, netFromGross } from "@/lib/vat";
 import PromoCodeBox from "@/components/PromoCodeBox";
-import { usePromoCode } from "@/hooks/usePromoCode";
+import DiscountHintNote from "@/components/DiscountHintNote";
+import { useDiscounts } from "@/hooks/usePromoCode";
+import { buildDiscountLine, discountLabel } from "@/lib/discounts";
 
 const Cart = () => {
   const { items: cart, updateQty, removeItem } = useCart();
   const { get } = useProductOverrides();
   const { isPartner, profile } = useB2BPartner();
-  const { appliedPromo, computeDiscountGross } = usePromoCode();
+  const { evaluate } = useDiscounts();
 
   const lines = cart
     .map((item) => {
@@ -35,7 +37,16 @@ const Cart = () => {
 
   const subtotalGross = lines.reduce((s, l) => s + l.pricing.unitGross * l.item.quantity, 0);
   const subtotalNet = lines.reduce((s, l) => s + l.pricing.unitNet * l.item.quantity, 0);
-  const subtotalVat = subtotalGross - subtotalNet;
+  const partnerPercent = isPartner ? profile?.discount_percent ?? 0 : 0;
+  const discount = evaluate(
+    lines.map((l) => buildDiscountLine(l.product, get(l.product.id), isPartner, partnerPercent, l.item.quantity)),
+    partnerPercent,
+  );
+  const discountGross = discount.applied?.amountGross ?? 0;
+  const discountNet = netFromGross(discountGross);
+  const totalGross = subtotalGross - discountGross;
+  const totalNet = subtotalNet - discountNet;
+  const subtotalVat = totalGross - totalNet;
 
 
   return (
@@ -194,6 +205,12 @@ const Cart = () => {
                       <span>Mezisoučet bez DPH</span>
                       <span className="font-semibold tabular-nums">{fmtCZK(subtotalNet)}</span>
                     </div>
+                    {discount.applied && (
+                      <div className="flex justify-between gap-3 text-primary">
+                        <span>{discountLabel(discount.applied, partnerPercent)}</span>
+                        <span className="font-semibold tabular-nums whitespace-nowrap">−{fmtCZK(discountNet)}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between text-muted-foreground text-sm">
                       <span>DPH 21 %</span>
                       <span className="tabular-nums">{fmtCZK(subtotalVat)}</span>
@@ -204,7 +221,7 @@ const Cart = () => {
                     <div className="border-t border-border pt-3 flex justify-between text-foreground">
                       <span className="font-heading text-lg font-bold">Celkem s DPH</span>
                       <span className="font-heading text-2xl font-bold tabular-nums">
-                        {fmtCZK(subtotalGross)}
+                        {fmtCZK(totalGross)}
                       </span>
                     </div>
                   </div>
@@ -214,23 +231,25 @@ const Cart = () => {
                       <span>Mezisoučet</span>
                       <span className="font-semibold tabular-nums">{fmtCZK(subtotalGross)}</span>
                     </div>
+                    {discount.applied && (
+                      <div className="flex justify-between gap-3 text-primary">
+                        <span>{discountLabel(discount.applied)}</span>
+                        <span className="font-semibold tabular-nums whitespace-nowrap">−{fmtCZK(discountGross)}</span>
+                      </div>
+                    )}
                     <p className="text-xs text-muted-foreground">
                       Dopravu a platbu zvolíte v dalším kroku.
                     </p>
                     <div className="border-t border-border pt-3 flex justify-between text-foreground">
-                      <span className="font-heading text-lg font-bold">Mezisoučet</span>
+                      <span className="font-heading text-lg font-bold">Celkem za zboží</span>
                       <span className="font-heading text-2xl font-bold tabular-nums">
-                        {fmtCZK(subtotalGross)}
+                        {fmtCZK(totalGross)}
                       </span>
                     </div>
                   </div>
                 )}
-                <PromoCodeBox compact />
-                {appliedPromo && computeDiscountGross(subtotalGross) > 0 && (
-                  <p className="text-xs text-muted-foreground font-body -mt-3">
-                    Sleva se uplatní v pokladně po výpočtu dopravy a platby.
-                  </p>
-                )}
+                <DiscountHintNote hint={discount.hint} />
+                <PromoCodeBox compact codeNote={discount.codeNote} />
 
 
                 <Link to="/pokladna" className="block">

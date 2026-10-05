@@ -7,8 +7,11 @@ import { getProductById } from "@/data/products";
 import { fmtCZK, grossFromNet, vatOfGross } from "@/lib/vat";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import ImageUpload from "@/components/ImageUpload";
-import { usePromoCode } from "@/hooks/usePromoCode";
+import { useDiscounts } from "@/hooks/usePromoCode";
 import PromoCodeBox from "@/components/PromoCodeBox";
+import DiscountHintNote from "@/components/DiscountHintNote";
+import { useProductOverrides } from "@/hooks/useProductOverrides";
+import { buildDiscountLine, discountLabel, type DiscountLine } from "@/lib/discounts";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
@@ -67,7 +70,9 @@ const STORAGE_KEY = "vapesport_b2b_checkout";
 const B2BCheckout = () => {
   const navigate = useNavigate();
   const { profile: partnerProfile } = useB2BPartner();
-  const { appliedPromo, computeDiscountGross } = usePromoCode();
+  const { evaluate } = useDiscounts();
+  const { get: getOverride } = useProductOverrides();
+  const partnerPercent = partnerProfile?.discount_percent ?? 0;
   const [payload, setPayload] = useState<B2BCheckoutPayload | null>(null);
   const [step, setStep] = useState(1);
   const [shipping, setShipping] = useState<ShippingId>("osobni");
@@ -150,8 +155,20 @@ const B2BCheckout = () => {
   const freeShipping = partnerProfile?.free_shipping === true;
   const shippingPrice = freeShipping ? 0 : shippingOpt.price;
 
+  // Akce a slevy: ceny v payloadu už obsahují partnerskou slevu, akce vrací
+  // jen dorovnání na vyšší slevu. Doprava se nezlevňuje.
+  const discountLines = useMemo<DiscountLine[]>(
+    () =>
+      (payload?.items ?? []).flatMap((i) => {
+        const product = getProductById(i.productId);
+        if (!product) return [];
+        return [buildDiscountLine(product, getOverride(product.id), true, partnerPercent, i.qty, i.unitPrice)];
+      }),
+    [payload, getOverride, partnerPercent],
+  );
+  const discount = evaluate(discountLines, partnerPercent);
+  const discountGross = Math.min(discount.applied?.amountGross ?? 0, Math.round(itemsSubtotalGross));
   const preDiscountGross = itemsSubtotalGross + shippingPrice;
-  const discountGross = computeDiscountGross(preDiscountGross);
   const totalGross = Math.max(0, preDiscountGross - discountGross);
   const totalVat = vatOfGross(totalGross);
   const totalNet = totalGross - totalVat;
@@ -213,8 +230,11 @@ const B2BCheckout = () => {
       shipping_gross: shippingPrice,
       payment_label: PAYMENT_LABELS[payment],
       payment_gross: 0,
-      promo_code: appliedPromo?.code ?? null,
+      promo_code: discount.applied?.rule.code ?? null,
       discount_gross: discountGross,
+      discount_source: discount.applied ? "rule" : partnerPercent > 0 ? "partner" : null,
+      discount_rule_id: discount.applied?.rule.id ?? null,
+      discount_percent: discount.applied?.rule.percent ?? (partnerPercent > 0 ? partnerPercent : null),
       total_gross: Math.round(totalGross),
       status: "nova",
     };
@@ -561,15 +581,16 @@ const B2BCheckout = () => {
                     </strong>
                   </div>
                   <div className="flex justify-between"><span>Způsob platby – <strong>{PAYMENT_LABELS[payment]}</strong></span><strong>Zdarma</strong></div>
-                  {appliedPromo && discountGross > 0 && (
-                    <div className="flex justify-between text-primary"><span>Sleva (Kód: {appliedPromo.code})</span><strong>−{fmtCZK(discountGross)}</strong></div>
+                  {discount.applied && discountGross > 0 && (
+                    <div className="flex justify-between gap-3 text-primary"><span>{discountLabel(discount.applied, partnerPercent)}</span><strong className="whitespace-nowrap">−{fmtCZK(discountGross)}</strong></div>
                   )}
                   <div className="flex justify-between text-lg border-t border-border pt-3"><span className="font-bold text-primary">K úhradě</span><span className="font-bold text-primary">{fmtCZK(totalGross)}</span></div>
                   <div className="flex justify-between text-sm text-muted-foreground"><span>Cena bez DPH</span><span>{fmtCZK(totalNet)}</span></div>
                   <div className="flex justify-between text-sm text-muted-foreground"><span>DPH 21 %</span><span>{fmtCZK(totalVat)}</span></div>
                 </div>
 
-                <PromoCodeBox className="mb-6" />
+                <DiscountHintNote hint={discount.hint} className="mb-4" />
+                <PromoCodeBox className="mb-6" codeNote={discount.codeNote} />
 
 
                 <label className="flex items-start gap-3 p-4 bg-muted/40 border border-border rounded-md cursor-pointer">
@@ -643,8 +664,8 @@ const B2BCheckout = () => {
                   </dd>
                 </div>
                 <div className="flex justify-between"><dt>Platba</dt><dd>Zdarma</dd></div>
-                {appliedPromo && discountGross > 0 && (
-                  <div className="flex justify-between text-primary"><dt>Sleva ({appliedPromo.code})</dt><dd>−{fmtCZK(discountGross)}</dd></div>
+                {discount.applied && discountGross > 0 && (
+                  <div className="flex justify-between gap-3 text-primary"><dt>{discountLabel(discount.applied, partnerPercent)}</dt><dd className="whitespace-nowrap">−{fmtCZK(discountGross)}</dd></div>
                 )}
                 <div className="flex justify-between border-t border-border pt-3 mt-3">
                   <dt className="font-bold text-foreground">Cena bez DPH</dt>

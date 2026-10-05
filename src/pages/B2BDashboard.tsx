@@ -19,6 +19,8 @@ import {
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
+import { useDiscounts } from "@/hooks/usePromoCode";
+import { buildDiscountLine } from "@/lib/discounts";
 import { fmtCZK, netFromGross, grossFromNet } from "@/lib/vat";
 import { resolveColor } from "@/lib/colorPalette";
 import { supabase } from "@/integrations/supabase/client";
@@ -245,6 +247,17 @@ const B2BDashboard = () => {
     () => cart.reduce((sum, c) => sum + getUnitNet(c.productId) * c.qty, 0),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [cart, discount, getOverride]
+  );
+
+  // Akce a slevy – náhled v liště (sleva se uplatní v pokladně).
+  const { evaluate } = useDiscounts();
+  const cartDiscount = evaluate(
+    cart.flatMap((c) => {
+      const product = getProductById(c.productId);
+      if (!product) return [];
+      return [buildDiscountLine(product, getOverride(c.productId), true, discount, c.qty, getUnitNet(c.productId))];
+    }),
+    discount,
   );
 
   const [submitting, setSubmitting] = useState(false);
@@ -675,6 +688,15 @@ const B2BDashboard = () => {
               <span className="text-sm font-normal opacity-80">s DPH</span>
               <span className="text-sm font-normal opacity-70 ml-2">({fmtCZK(totalPrice)} bez DPH)</span>
             </span>
+            {cartDiscount.applied ? (
+              <span className="text-sm font-semibold">
+                {cartDiscount.applied.rule.name}: −{fmtCZK(netFromGross(cartDiscount.applied.amountGross))} bez DPH v pokladně
+              </span>
+            ) : cartDiscount.hint ? (
+              <span className="text-sm opacity-90">
+                Do slevy {cartDiscount.hint.rule.percent} % chybí {fmtCZK(cartDiscount.hint.missingNet)} bez DPH
+              </span>
+            ) : null}
           </div>
           <Button size="lg" className="h-14 px-10 text-lg font-bold gap-3" disabled={totalItems === 0} onClick={handleSubmitOrder}>
             <ShoppingCart className="w-5 h-5" />
