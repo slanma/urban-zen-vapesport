@@ -18,10 +18,16 @@ const SHOP_EMAIL = "info@vapesport.cz";
 const SUPABASE_URL = (process.env.SUPABASE_URL || "").replace(/\/+$/, "");
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || "";
 
-// --- barvy vapesportu (Concrete Nature) ---
-const MOSS = "#6E7B4E";
-const CHARCOAL = "#2E2E2B";
-const CONCRETE = "#EFECE6";
+// --- barvy a písmo vapesportu (VAPESPORT-AI-SYSTEM v3.0, Concrete Nature) ---
+const MOSS = "#48604B";
+const CHARCOAL = "#1F1F1F";
+const CONCRETE = "#E4E2DE"; // board
+const PAPER = "#F4F3F0";
+const MUTED = "#6F6E69";
+const LINE = "#D6D3CC";
+const HEAD = `'Space Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif`;
+const BODY = `'DM Sans','Helvetica Neue',Helvetica,Arial,sans-serif`;
+const MONO = `'Space Mono','SFMono-Regular',Menlo,Consolas,monospace`;
 
 const czk = (n: number) =>
   new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 }).format(Math.round(n)) + " Kč";
@@ -46,7 +52,7 @@ async function findOrder(orderNumber: string) {
   try {
     const url = `${SUPABASE_URL}/rest/v1/orders?order_number=eq.${encodeURIComponent(
       orderNumber
-    )}&select=email,user_id&limit=1`;
+    )}&select=email,user_id,first_name,last_name,phone,street,city,zip,company_name,ico,note,shipping_label,shipping_gross,payment_label,payment_gross,packeta_point&limit=1`;
     const r = await fetch(url, {
       headers: {
         apikey: SUPABASE_SERVICE_KEY,
@@ -109,92 +115,152 @@ async function sendEmail(opts: {
 }
 
 // --- základní vzhled e-mailu (Concrete Nature) ---
-function layout(title: string, bodyHtml: string) {
-  return `<!DOCTYPE html><html lang="cs"><body style="margin:0;background:${CONCRETE};font-family:Arial,Helvetica,sans-serif;color:${CHARCOAL};">
-  <div style="max-width:560px;margin:0 auto;padding:28px 20px;">
-    <div style="background:${CHARCOAL};color:#fff;padding:22px 26px;border-radius:8px 8px 0 0;">
-      <div style="font-size:12px;letter-spacing:2px;color:#a7b585;text-transform:uppercase;">Vapesport</div>
-      <div style="font-size:22px;font-weight:700;margin-top:4px;">${title}</div>
-    </div>
-    <div style="background:#fff;padding:26px;border:1px solid #e0dcd3;border-top:none;border-radius:0 0 8px 8px;">
+function layout(title: string, bodyHtml: string, preheader = "") {
+  return `<!DOCTYPE html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only"><title>${escapeHtml(title)}</title></head>
+<body style="margin:0;padding:0;background:${CONCRETE};">
+${preheader ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preheader)}</div>` : ""}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${CONCRETE};border-collapse:collapse;">
+<tr><td align="center" style="padding:32px 12px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;border-collapse:collapse;">
+    <tr><td style="padding:0 4px 18px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;"><tr>
+        <td style="font-family:${HEAD};font-size:20px;font-weight:700;letter-spacing:3px;color:${CHARCOAL};">VAPESPORT</td>
+        <td align="right" style="font-family:${MONO};font-size:10px;letter-spacing:2px;text-transform:uppercase;color:${MOSS};">Česká značka od 1994</td>
+      </tr></table>
+    </td></tr>
+    <tr><td style="background:#ffffff;border-top:4px solid ${MOSS};padding:34px 32px 30px;font-family:${BODY};font-size:15px;line-height:1.6;color:${CHARCOAL};">
+      <div style="font-family:${HEAD};font-size:26px;font-weight:600;line-height:1.25;color:${CHARCOAL};margin:0 0 22px;">${escapeHtml(title)}</div>
       ${bodyHtml}
-    </div>
-    <div style="text-align:center;color:#8a8a80;font-size:12px;padding:18px 8px;line-height:1.6;">
-      Vapesport Vlach s.r.o. · Ostrava · <a href="https://www.vapesport.cz" style="color:${MOSS};">vapesport.cz</a><br>
-      info@vapesport.cz · +420 606 080 922
-    </div>
-  </div></body></html>`;
+    </td></tr>
+    <tr><td align="center" style="padding:22px 8px;font-family:${BODY};font-size:12px;line-height:1.7;color:${MUTED};">
+      <a href="https://www.vapesport.cz" style="color:${MOSS};text-decoration:none;font-family:${MONO};letter-spacing:1px;">vapesport.cz</a>
+      · info@vapesport.cz · +420 606 080 922<br>
+      Vapesport Vlach s.r.o. · Paskovská 636/275, 720 00 Ostrava-Hrabová · IČ 05819369
+    </td></tr>
+  </table>
+</td></tr></table></body></html>`;
 }
 
+/** Štítek nad sekcí. */
+const label = (t: string) =>
+  `<div style="font-family:${MONO};font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${MOSS};margin:26px 0 10px;">${t}</div>`;
+
+/** Rámeček s číslem objednávky. */
+const orderBadge = (orderNumber: string, extra = "") =>
+  `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 6px;">
+    <tr><td style="background:${PAPER};border-left:3px solid ${MOSS};padding:14px 18px;">
+      <div style="font-family:${MONO};font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${MUTED};">Objednávka</div>
+      <div style="font-family:${HEAD};font-size:20px;font-weight:700;color:${CHARCOAL};">#${escapeHtml(orderNumber)}</div>
+      ${extra}
+    </td></tr></table>`;
+
 function orderRows(items: Array<{ name: string; qty: number; price: number }>) {
+  const cell = `padding:12px 0;border-bottom:1px solid ${LINE};font-family:${BODY};font-size:14px;color:${CHARCOAL};vertical-align:top;`;
   return items
     .map(
       (it) => `<tr>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;">${it.name} <span style="color:#8a8a80;">× ${it.qty}</span></td>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;white-space:nowrap;">${czk(it.price * it.qty)}</td>
+        <td style="${cell}">${escapeHtml(String(it.name))} <span style="color:${MUTED};">× ${it.qty}</span></td>
+        <td style="${cell}text-align:right;white-space:nowrap;padding-left:16px;">${czk(it.price * it.qty)}</td>
       </tr>`
     )
     .join("");
 }
 
+function itemsTable(items: any[], total: number, vat: boolean, extraRows = "") {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-top:2px solid ${CHARCOAL};">
+    ${orderRows(items || [])}
+    ${extraRows}
+    <tr>
+      <td style="padding:16px 0 0;font-family:${HEAD};font-size:17px;font-weight:700;">Celkem${vat ? ` <span style="font-family:${BODY};font-size:13px;font-weight:400;color:${MUTED};">s DPH</span>` : ""}</td>
+      <td style="padding:16px 0 0;text-align:right;white-space:nowrap;font-family:${HEAD};font-size:17px;font-weight:700;color:${MOSS};">${czk(total || 0)}</td>
+    </tr>
+  </table>`;
+}
+
+/** Doprava a platba z DB (pokud jsou k dispozici) jako řádky tabulky. */
+function deliveryRows(d: any) {
+  if (!d) return "";
+  const cell = `padding:12px 0;border-bottom:1px solid ${LINE};font-family:${BODY};font-size:14px;color:${CHARCOAL};`;
+  const row = (a: string, price: any) =>
+    `<tr><td style="${cell}">${escapeHtml(a)}</td><td style="${cell}text-align:right;white-space:nowrap;">${
+      Number(price) > 0 ? czk(Number(price)) : "zdarma"
+    }</td></tr>`;
+  return (d.shipping_label ? row(d.shipping_label, d.shipping_gross) : "") +
+    (d.payment_label && Number(d.payment_gross) > 0 ? row(d.payment_label, d.payment_gross) : "");
+}
+
+function addressBlock(d: any) {
+  if (!d) return "";
+  const lines: string[] = [];
+  if (d.packeta_point) lines.push(`<strong>Výdejní místo:</strong> ${escapeHtml(d.packeta_point)}`);
+  else if (d.street || d.city)
+    lines.push(`<strong>Doručovací adresa:</strong> ${escapeHtml([d.street, [d.zip, d.city].filter(Boolean).join(" ")].filter(Boolean).join(", "))}`);
+  if (d.payment_label) lines.push(`<strong>Platba:</strong> ${escapeHtml(d.payment_label)}`);
+  return lines.length ? `<p style="margin:18px 0 0;font-size:14px;line-height:1.7;">${lines.join("<br>")}</p>` : "";
+}
+
+const pStyle = `margin:0 0 14px;font-family:${BODY};font-size:15px;line-height:1.6;color:${CHARCOAL};`;
+const small = `margin:16px 0 0;font-family:${BODY};font-size:13px;line-height:1.6;color:${MUTED};`;
+
 function customerOrderEmail(o: any) {
+  const d = o.db || null;
   const b2bInfo =
     o.isB2B && o.company
-      ? `<div style="background:${CONCRETE};border-radius:6px;padding:12px 16px;margin-bottom:18px;font-size:13px;">
-           <strong>Firma:</strong> ${escapeHtml(o.company)}${o.ico ? ` &middot; <strong>IČO:</strong> ${escapeHtml(o.ico)}` : ""}
-         </div>`
+      ? `<div style="margin-top:6px;font-size:13px;color:${MUTED};">${escapeHtml(o.company)}${o.ico ? ` · IČO ${escapeHtml(o.ico)}` : ""}</div>`
       : "";
   const closing = o.isB2B
     ? "Objednávku jsme přijali. Fakturu se splatností 6 dní vám zašleme e-mailem. Kdyby cokoli, stačí odpovědět na tento e-mail."
     : "Objednávku jsme přijali a co nejdřív se do ní pustíme. O dalším průběhu vás budeme informovat. Kdyby cokoli, stačí odpovědět na tento e-mail.";
   const body = `
-    <p style="font-size:16px;margin:0 0 14px;">Dobrý den${o.customerName ? " " + escapeHtml(o.customerName) : ""},</p>
-    <p style="margin:0 0 18px;line-height:1.6;">děkujeme za vaši objednávku. Tady je její shrnutí:</p>
-    <div style="background:${CONCRETE};border-radius:6px;padding:16px 18px;margin-bottom:18px;">
-      <div style="font-size:13px;color:#8a8a80;text-transform:uppercase;letter-spacing:1px;">Objednávka</div>
-      <div style="font-size:18px;font-weight:700;">#${escapeHtml(String(o.orderNumber))}</div>
-    </div>
-    ${b2bInfo}
-    <table style="width:100%;border-collapse:collapse;font-size:14px;">
-      ${orderRows(o.items || [])}
-      <tr>
-        <td style="padding:12px 0 0;font-weight:700;">Celkem${o.vat ? " s DPH" : ""}</td>
-        <td style="padding:12px 0 0;text-align:right;font-weight:700;color:${MOSS};">${czk(o.total || 0)}</td>
-      </tr>
-    </table>
-    <p style="margin:22px 0 0;line-height:1.6;">${closing}</p>
-    <p style="margin:16px 0 0;line-height:1.6;font-size:13px;color:#8a8a80;">${
+    <p style="${pStyle}">Dobrý den${(o.customerName || [o.db?.first_name, o.db?.last_name].filter(Boolean).join(" ")) ? ", " + escapeHtml(o.customerName || [o.db?.first_name, o.db?.last_name].filter(Boolean).join(" ")) : ""},</p>
+    <p style="${pStyle}margin-bottom:22px;">děkujeme za vaši objednávku. Tady je její shrnutí:</p>
+    ${orderBadge(String(o.orderNumber), b2bInfo)}
+    ${label("Shrnutí")}
+    ${itemsTable(o.items, o.total, o.vat, deliveryRows(d))}
+    ${addressBlock(d)}
+    <p style="${pStyle}margin-top:22px;">${closing}</p>
+    <p style="${small}">${
       o.isB2B
         ? "Objednávka se řídí obchodními podmínkami Vapesport Vlach s.r.o. (ustanovení pro podnikatele), které najdete v patičce webu vapesport.cz."
-        : "V příloze najdete obchodní podmínky a formulář pro odstoupení od smlouvy. Od smlouvy můžete odstoupit do 14 dnů od převzetí zboží bez udání důvodu, i online na vapesport.cz/odstoupeni."
+        : `V příloze najdete obchodní podmínky a formulář pro odstoupení od smlouvy. Od smlouvy můžete odstoupit do 14 dnů od převzetí zboží bez udání důvodu, i online na <a href="https://www.vapesport.cz/odstoupeni" style="color:${MOSS};">vapesport.cz/odstoupeni</a>.`
     }</p>
   `;
-  return layout("Potvrzení objednávky", body);
+  return layout("Potvrzení objednávky", body, `Objednávka #${o.orderNumber} je přijatá.`);
 }
 
 function shopOrderEmail(o: any) {
+  const d = o.db || {};
+  const name = o.customerName || [d.first_name, d.last_name].filter(Boolean).join(" ");
+  const phone = o.phone || d.phone;
+  const company = o.company || d.company_name;
+  const ico = o.ico || d.ico;
+  const cell = `padding:6px 0;font-family:${BODY};font-size:14px;`;
+  const row = (k: string, v: string) =>
+    v ? `<tr><td style="${cell}color:${MUTED};width:110px;">${k}</td><td style="${cell}">${v}</td></tr>` : "";
   const body = `
-    <p style="font-size:16px;margin:0 0 14px;font-weight:700;">Nová objednávka${o.isB2B ? " (B2B)" : ""} #${escapeHtml(String(o.orderNumber))}</p>
-    <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:14px;">
-      <tr><td style="padding:4px 0;color:#8a8a80;">Zákazník</td><td style="padding:4px 0;text-align:right;">${escapeHtml(o.customerName || "—")}</td></tr>
-      <tr><td style="padding:4px 0;color:#8a8a80;">E-mail</td><td style="padding:4px 0;text-align:right;">${escapeHtml(o.customerEmail || "—")}</td></tr>
-      ${o.phone ? `<tr><td style="padding:4px 0;color:#8a8a80;">Telefon</td><td style="padding:4px 0;text-align:right;">${escapeHtml(o.phone)}</td></tr>` : ""}
-      ${o.company ? `<tr><td style="padding:4px 0;color:#8a8a80;">Firma</td><td style="padding:4px 0;text-align:right;">${escapeHtml(o.company)}</td></tr>` : ""}
-      ${o.ico ? `<tr><td style="padding:4px 0;color:#8a8a80;">IČO</td><td style="padding:4px 0;text-align:right;">${escapeHtml(o.ico)}</td></tr>` : ""}
+    ${orderBadge(String(o.orderNumber), o.isB2B ? `<div style="margin-top:6px;font-family:${MONO};font-size:11px;letter-spacing:2px;color:${MOSS};">B2B</div>` : "")}
+    ${label("Zákazník")}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+      ${row("Jméno", escapeHtml(name || "—"))}
+      ${row("E-mail", o.customerEmail ? `<a href="mailto:${escapeHtml(o.customerEmail)}" style="color:${MOSS};">${escapeHtml(o.customerEmail)}</a>` : "—")}
+      ${row("Telefon", phone ? `<a href="tel:${escapeHtml(String(phone).replace(/\s/g, ""))}" style="color:${MOSS};">${escapeHtml(phone)}</a>` : "")}
+      ${row("Firma", company ? escapeHtml(company) : "")}
+      ${row("IČO", ico ? escapeHtml(ico) : "")}
     </table>
-    <table style="width:100%;border-collapse:collapse;font-size:14px;">
-      ${orderRows(o.items || [])}
-      <tr><td style="padding:12px 0 0;font-weight:700;">Celkem</td><td style="padding:12px 0 0;text-align:right;font-weight:700;">${czk(o.total || 0)}</td></tr>
-    </table>
+    ${label("Položky")}
+    ${itemsTable(o.items, o.total, false, deliveryRows(o.db))}
+    ${addressBlock(o.db)}
+    ${d.note ? `<p style="margin:16px 0 0;padding:12px 16px;background:${PAPER};font-size:14px;"><strong>Poznámka zákazníka:</strong> ${escapeHtml(d.note)}</p>` : ""}
   `;
-  return layout("Nová objednávka", body);
+  return layout(`Nová objednávka${o.isB2B ? " (B2B)" : ""}`, body);
 }
 
 function registrationEmail(u: any) {
   const body = `
-    <p style="font-size:16px;margin:0 0 14px;">Vítejte${u.name ? " " + escapeHtml(u.name) : ""}!</p>
-    <p style="margin:0 0 18px;line-height:1.6;">Váš účet u Vapesportu je hotový. Můžete si prohlédnout náš sortiment brašen a příslušenství pro e-bike a gravel — česká značka od roku 1994.</p>
-    <a href="https://www.vapesport.cz/obchod" style="display:inline-block;background:${MOSS};color:#fff;text-decoration:none;padding:12px 22px;border-radius:4px;font-weight:700;">Prohlédnout obchod →</a>
+    <p style="${pStyle}">Vítejte${u.name ? " " + escapeHtml(u.name) : ""}!</p>
+    <p style="${pStyle}">Váš účet u Vapesportu je hotový. Můžete si prohlédnout náš sortiment brašen a příslušenství pro e-bike a gravel — česká značka od roku 1994.</p>
+    <a href="https://www.vapesport.cz/obchod" style="display:inline-block;background:${MOSS};color:#fff;text-decoration:none;padding:13px 24px;font-family:${HEAD};font-weight:600;letter-spacing:0.5px;">Prohlédnout obchod →</a>
   `;
   return layout("Vítejte ve Vapesportu", body);
 }
@@ -203,9 +269,9 @@ function registrationEmail(u: any) {
 function b2bPendingEmail(u: any) {
   const jmeno = u.contactName || u.company || "";
   const body = `
-    <p style="font-size:16px;margin:0 0 14px;">Dobrý den${jmeno ? " " + escapeHtml(jmeno) : ""},</p>
-    <p style="margin:0 0 18px;line-height:1.6;">děkujeme za registraci do velkoobchodu Vapesport${u.company ? ` (<strong>${escapeHtml(u.company)}</strong>)` : ""}. Vaši žádost jsme přijali a nyní ji zkontrolujeme.</p>
-    <div style="background:${CONCRETE};border-radius:6px;padding:14px 18px;margin-bottom:18px;font-size:14px;line-height:1.7;">
+    <p style="${pStyle}">Dobrý den${jmeno ? ", " + escapeHtml(jmeno) : ""},</p>
+    <p style="${pStyle}">děkujeme za registraci do velkoobchodu Vapesport${u.company ? ` (<strong>${escapeHtml(u.company)}</strong>)` : ""}. Vaši žádost jsme přijali a nyní ji zkontrolujeme.</p>
+    <div style="background:${PAPER};border-left:3px solid ${MOSS};padding:14px 18px;margin-bottom:18px;font-size:14px;line-height:1.7;">
       Jakmile žádost schválíme, dáme vám vědět e-mailem a budete se moci přihlásit s velkoobchodními cenami.
     </div>
     <p style="margin:0;line-height:1.6;">Kdyby cokoli, stačí odpovědět na tento e-mail. Děkujeme za zájem!</p>
@@ -217,9 +283,9 @@ function b2bPendingEmail(u: any) {
 function b2bApprovedEmail(u: any) {
   const jmeno = u.contactName || u.company || "";
   const body = `
-    <p style="font-size:16px;margin:0 0 14px;">Dobrý den${jmeno ? " " + escapeHtml(jmeno) : ""},</p>
-    <p style="margin:0 0 18px;line-height:1.6;">máme pro vás dobrou zprávu — váš velkoobchodní účet Vapesport${u.company ? ` (<strong>${escapeHtml(u.company)}</strong>)` : ""} byl <strong>schválen</strong>. Nyní se můžete přihlásit a nakupovat s velkoobchodními cenami.</p>
-    <a href="https://www.vapesport.cz/b2b-login" style="display:inline-block;background:${MOSS};color:#fff;text-decoration:none;padding:12px 22px;border-radius:4px;font-weight:700;">Přihlásit se do B2B →</a>
+    <p style="${pStyle}">Dobrý den${jmeno ? ", " + escapeHtml(jmeno) : ""},</p>
+    <p style="${pStyle}">máme pro vás dobrou zprávu — váš velkoobchodní účet Vapesport${u.company ? ` (<strong>${escapeHtml(u.company)}</strong>)` : ""} byl <strong>schválen</strong>. Nyní se můžete přihlásit a nakupovat s velkoobchodními cenami.</p>
+    <a href="https://www.vapesport.cz/b2b-login" style="display:inline-block;background:${MOSS};color:#fff;text-decoration:none;padding:13px 24px;font-family:${HEAD};font-weight:600;letter-spacing:0.5px;">Přihlásit se do B2B →</a>
     <p style="margin:18px 0 0;line-height:1.6;">Přihlašujete se e-mailem a heslem, které jste zadali při registraci. Kdyby cokoli, stačí odpovědět na tento e-mail.</p>
   `;
   return layout("Váš B2B účet byl schválen", body);
@@ -244,11 +310,11 @@ const STATUS_TEXT: Record<string, { title: string; subject: string; body: string
 
 function statusEmail(o: any, statusKey: string) {
   const t = STATUS_TEXT[statusKey];
-  const jmeno = o.customerName ? " " + escapeHtml(String(o.customerName)) : "";
+  const jmeno = o.customerName ? ", " + escapeHtml(String(o.customerName)) : "";
   const tracking =
     o.trackingUrl || o.trackingNumber
-      ? `<div style="margin:0 0 18px;padding:14px 16px;background:${CONCRETE};border-radius:6px;">
-           <div style="font-size:12px;color:#8a8a80;text-transform:uppercase;letter-spacing:1px;">Sledování zásilky</div>
+      ? `<div style="margin:0 0 18px;padding:14px 16px;background:${PAPER};border-left:3px solid ${MOSS};">
+           <div style="font-size:12px;color:${MUTED};text-transform:uppercase;letter-spacing:1px;">Sledování zásilky</div>
            ${o.trackingNumber ? `<div style="font-weight:700;margin-top:4px;">${escapeHtml(String(o.trackingNumber))}</div>` : ""}
            ${o.trackingUrl ? `<div style="margin-top:6px;"><a href="${escapeHtml(String(o.trackingUrl))}" style="color:${MOSS};">Zobrazit stav zásilky</a></div>` : ""}
          </div>`
@@ -257,12 +323,12 @@ function statusEmail(o: any, statusKey: string) {
   return layout(
     t.title,
     `
-    <p style="font-size:16px;margin:0 0 14px;">Dobrý den${jmeno},</p>
-    <p style="margin:0 0 18px;line-height:1.6;">${t.body}</p>
-    <div style="margin:0 0 18px;padding:14px 16px;background:${CONCRETE};border-radius:6px;">
-      <div style="font-size:12px;color:#8a8a80;text-transform:uppercase;letter-spacing:1px;">Objednávka</div>
+    <p style="${pStyle}">Dobrý den${jmeno},</p>
+    <p style="${pStyle}">${t.body}</p>
+    <div style="margin:0 0 18px;padding:14px 16px;background:${PAPER};border-left:3px solid ${MOSS};">
+      <div style="font-size:12px;color:${MUTED};text-transform:uppercase;letter-spacing:1px;">Objednávka</div>
       <div style="font-size:18px;font-weight:700;">#${escapeHtml(String(o.orderNumber))}</div>
-      ${o.total != null ? `<div style="margin-top:4px;color:#8a8a80;">Celkem ${czk(Number(o.total))}</div>` : ""}
+      ${o.total != null ? `<div style="margin-top:4px;color:${MUTED};">Celkem ${czk(Number(o.total))}</div>` : ""}
     </div>
     ${tracking}
     ${
@@ -270,7 +336,7 @@ function statusEmail(o: any, statusKey: string) {
         ? `<table role="presentation" width="100%" style="border-collapse:collapse;font-size:14px;margin:0 0 18px;">${orderRows(o.items)}</table>`
         : ""
     }
-    <p style="margin:0;line-height:1.6;color:#8a8a80;font-size:14px;">
+    <p style="margin:0;line-height:1.6;color:${MUTED};font-size:14px;">
       Máte dotaz? Odpovězte na tento e-mail nebo zavolejte na +420 606 080 922.
     </p>`
   );
@@ -281,17 +347,17 @@ function paymentEmail(p: any) {
   const qrBlock = p.qrCid
     ? `<div style="text-align:center;margin:18px 0;">
          <img src="cid:${p.qrCid}" alt="QR platba" width="200" height="200" style="border:1px solid #e0dcd3;border-radius:8px;padding:8px;background:#fff;" />
-         <div style="font-size:12px;color:#8a8a80;margin-top:6px;">Naskenujte v bankovní aplikaci</div>
+         <div style="font-size:12px;color:${MUTED};margin-top:6px;">Naskenujte v bankovní aplikaci</div>
        </div>`
     : "";
   const body = `
-    <p style="font-size:16px;margin:0 0 14px;">Dobrý den,</p>
-    <p style="margin:0 0 18px;line-height:1.6;">zasíláme podklady k platbě objednávky <strong>#${escapeHtml(String(p.orderNumber))}</strong>.</p>
-    <div style="background:${CONCRETE};border-radius:6px;padding:16px 18px;font-size:14px;line-height:1.9;">
-      <div><span style="color:#8a8a80;">Banka:</span> <strong>${escapeHtml(p.bankName || "")}</strong></div>
-      <div><span style="color:#8a8a80;">IBAN:</span> <strong>${escapeHtml(p.iban || "")}</strong></div>
-      <div><span style="color:#8a8a80;">Částka:</span> <strong>${czk(p.amount || 0)}</strong></div>
-      <div><span style="color:#8a8a80;">Variabilní symbol:</span> <strong>${escapeHtml(vs)}</strong></div>
+    <p style="${pStyle}">Dobrý den,</p>
+    <p style="${pStyle}">zasíláme podklady k platbě objednávky <strong>#${escapeHtml(String(p.orderNumber))}</strong>.</p>
+    <div style="background:${PAPER};border-left:3px solid ${MOSS};padding:16px 18px;font-size:14px;line-height:1.9;">
+      <div><span style="color:${MUTED};">Banka:</span> <strong>${escapeHtml(p.bankName || "")}</strong></div>
+      <div><span style="color:${MUTED};">IBAN:</span> <strong>${escapeHtml(p.iban || "")}</strong></div>
+      <div><span style="color:${MUTED};">Částka:</span> <strong>${czk(p.amount || 0)}</strong></div>
+      <div><span style="color:${MUTED};">Variabilní symbol:</span> <strong>${escapeHtml(vs)}</strong></div>
     </div>
     ${qrBlock}
     <p style="margin:18px 0 0;line-height:1.6;">Zaplatit můžete naskenováním QR kódu v bankovní aplikaci, nebo klasickým převodem podle údajů výše. Po připsání platby objednávku připravíme a odešleme. Děkujeme!</p>
@@ -492,7 +558,7 @@ function withdrawalDocument(orderNumber: string) {
      ${field("Číslo bankovního účtu pro vrácení peněz:")}
      ${field("Podpis spotřebitele/spotřebitelů (pouze pokud je tento formulář zasílán v listinné podobě):")}
      ${field("Datum:")}
-     <p style="font-size:12px;color:#8a8a80">(*) Nehodící se škrtněte nebo údaje doplňte.</p>`
+     <p style="font-size:12px;color:${MUTED}">(*) Nehodící se škrtněte nebo údaje doplňte.</p>`
   );
 }
 
@@ -523,8 +589,10 @@ export default async function handler(req: any, res: any) {
       // Adresát se hledá ve třech krocích. Chybějící e-mail v požadavku NESMÍ
       // zablokovat oznámení do obchodu — jinak o objednávce nikdo neví.
       let recipient: string | null = o.customerEmail || null;
+      let dbRow: any = null;
       try {
         const dbOrder = await findOrder(o.orderNumber);
+        dbRow = dbOrder;
         if (dbOrder?.email) {
           recipient = dbOrder.email;
         } else if (!recipient && dbOrder?.user_id) {
@@ -539,7 +607,7 @@ export default async function handler(req: any, res: any) {
         await sendEmail({
           to: recipient,
           subject: `Potvrzení objednávky #${o.orderNumber} — Vapesport`,
-          html: customerOrderEmail({ ...o, customerEmail: recipient }),
+          html: customerOrderEmail({ ...o, customerEmail: recipient, db: dbRow }),
           replyTo: SHOP_EMAIL,
           // Spotřebitel (B2C) musí dostat podmínky na trvalém nosiči; B2B stačí odkaz.
           ...(o.isB2B ? {} : { attachments: b2cAttachments(String(o.orderNumber)) }),
@@ -553,7 +621,7 @@ export default async function handler(req: any, res: any) {
           ? `Nová objednávka${o.isB2B ? " (B2B)" : ""} #${o.orderNumber}`
           : `⚠️ Objednávka BEZ E-MAILU${o.isB2B ? " (B2B)" : ""} #${o.orderNumber}`,
         html:
-          shopOrderEmail({ ...o, customerEmail: recipient || "" }) +
+          shopOrderEmail({ ...o, customerEmail: recipient || "", db: dbRow }) +
           (recipient
             ? ""
             : `<p style="margin-top:16px;padding:12px;background:#fdeaea;border:1px solid #e5b4b4;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
