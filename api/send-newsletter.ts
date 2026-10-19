@@ -5,6 +5,17 @@
 //   2) newsletter_contacts – potenciální partneři (jen adresa, žádný účet)
 // Výběr dělá admin a posílá seznam e-mailů; server pustí jen ty, které zná,
 // a vyřadí odhlášené. Do HTML nahradí {osloveni} a připojí patičku podle typu.
+//
+// PRAVIDLA ROZESÍLKY (od 10/2026):
+//   - nepošle se na adresy, které se vracejí (bounced / email_bounced)
+//   - nepošle se tomu, kdo označil mail jako spam
+//   - nepošle se „spícím": kdo NEOTEVŘEL 2 newslettery po sobě
+//     (neotevreno_v_rade >= 2). Počítadlo se zvedá při každém odeslání
+//     a nuluje se, když Resend nahlásí otevření (api/resend-webhook.ts).
+// Nic z toho se netýká objednávkových e-mailů (api/send-email.ts) —
+// ty odcházejí vždy.
+
+const SPICI_PO = 2; // po kolika neotevřených newsletterech po sobě se přestane posílat
 
 import crypto from "node:crypto";
 
@@ -80,7 +91,9 @@ async function fetchAll<T>(path: string): Promise<T[]> {
     const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
       headers: { ...svcHeaders, Range: `${from}-${from + PAGE - 1}`, "Range-Unit": "items" },
     });
-    if (!r.ok) break;
+    // Chyba (např. chybějící sloupec v DB) nesmí tiše vrátit prázdný seznam —
+    // rozesílka by pak potichu vynechala všechny. Raději spadnout s hláškou.
+    if (!r.ok) throw new Error(`Načtení příjemců selhalo (${path.split("?")[0]}): ${await r.text()}`);
     const rows: T[] = await r.json();
     out.push(...rows);
     if (rows.length < PAGE) break;
@@ -90,7 +103,9 @@ async function fetchAll<T>(path: string): Promise<T[]> {
 
 async function loadApproved(): Promise<Map<string, string | null>> {
   const rows = await fetchAll<{ invoice_email: string; contact_person: string | null }>(
-    `b2b_profiles?status=eq.approved&invoice_email=not.is.null&select=invoice_email,contact_person`
+    `b2b_profiles?status=eq.approved&invoice_email=not.is.null` +
+      `&email_bounced=is.false&newsletter_stiznost=is.false&neotevreno_v_rade=lt.${SPICI_PO}` +
+      `&select=invoice_email,contact_person`
   );
   const map = new Map<string, string | null>();
   for (const row of rows) {
@@ -102,7 +117,7 @@ async function loadApproved(): Promise<Map<string, string | null>> {
 
 async function loadContacts(): Promise<Map<string, string | null>> {
   const rows = await fetchAll<{ email: string; contact_person: string | null }>(
-    `newsletter_contacts?unsubscribed=eq.false&bounced=eq.false&select=email,contact_person`
+    `newsletter_contacts?unsubscribed=eq.false&bounced=eq.false&neotevreno_v_rade=lt.${SPICI_PO}&select=email,contact_person`
   );
   const map = new Map<string, string | null>();
   for (const row of rows) {
@@ -131,6 +146,22 @@ async function markContactsSent(emails: string[]): Promise<void> {
         body: JSON.stringify({ last_sent_at: new Date().toISOString() }),
       });
     } catch { /* razítko není kritické, rozesílka už proběhla */ }
+  }
+}
+
+// Po odeslání každému příjemci přičte jeden neotevřený newsletter.
+// Když mail otevře, webhook mu počítadlo vynuluje.
+async function markNewsletterSent(emails: string[]): Promise<void> {
+  if (!emails.length) return;
+  const CHUNK = 500;
+  for (let i = 0; i < emails.length; i += CHUNK) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/rpc/newsletter_po_odeslani`, {
+        method: "POST",
+        headers: svcHeaders,
+        body: JSON.stringify({ p_emails: emails.slice(i, i + CHUNK) }),
+      });
+    } catch { /* počítadlo není kritické, rozesílka už proběhla */ }
   }
 }
 
@@ -182,7 +213,8 @@ export default async function handler(req: any, res: any) {
 
     // Partner má přednost před prospektem, kdyby náhodou byla adresa v obou
     const recipients: Recipient[] = [];
-    for (const e of new Set(requested)) {
+    const requestedSet = new Set(requested);
+    for (const e of requestedSet) {
       if (unsub.has(e)) continue;
       if (approved.has(e)) recipients.push({ email: e, name: approved.get(e) ?? null, kind: "partner" });
       else if (contacts.has(e)) recipients.push({ email: e, name: contacts.get(e) ?? null, kind: "contact" });
@@ -194,6 +226,8 @@ export default async function handler(req: any, res: any) {
         count: recipients.length,
         partners: recipients.filter((r) => r.kind === "partner").length,
         contacts: recipients.filter((r) => r.kind === "contact").length,
+        // vybraní, kterým se nepošle (odhlášení, vracející se adresy, spící)
+        skipped: requestedSet.size - recipients.length,
       });
     }
 
@@ -221,6 +255,7 @@ export default async function handler(req: any, res: any) {
       }
 
       await markContactsSent(recipients.filter((r) => r.kind === "contact").map((r) => r.email));
+      await markNewsletterSent(recipients.map((r) => r.email));
 
       await fetch(`${SUPABASE_URL}/rest/v1/newsletter_sends`, {
         method: "POST",
@@ -233,6 +268,7 @@ export default async function handler(req: any, res: any) {
         sent: recipients.length,
         partners: recipients.filter((r) => r.kind === "partner").length,
         contacts: recipients.filter((r) => r.kind === "contact").length,
+        skipped: requestedSet.size - recipients.length,
       });
     }
 
