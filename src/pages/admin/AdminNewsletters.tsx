@@ -18,13 +18,14 @@ interface Contact {
   city: string | null;
   last_sent_at: string | null;
   segment?: string | null; // hudy | cyklo | zima | zima_cyklo | outdoor | sport_nezarazeno | nezarazeno
+  zeme?: string | null; // CZ | SK | PL
+  overeno?: boolean | null; // ověřeno: aktuální seznam výrobce / web
 }
 
 // Skupiny potenciálních partnerů (sloupec segment v newsletter_contacts)
 const SEGMENTS: { key: string; label: string }[] = [
   { key: "zima_cyklo", label: "Zima + cyklo" },
   { key: "zima", label: "Zima" },
-  { key: "outdoor", label: "Outdoor" },
   { key: "cyklo", label: "Cyklo" },
   { key: "sport_nezarazeno", label: "Sport (nezařazeno)" },
   { key: "nezarazeno", label: "Nezařazeno" },
@@ -91,7 +92,10 @@ const AdminNewsletters = () => {
   // sekce Hudy Sport a Outdoor + filtr skupin u potenciálních
   const [selHudy, setSelHudy] = useState(false);
   const [selOutdoor, setSelOutdoor] = useState(false);
+  const [selNaseOutdoor, setSelNaseOutdoor] = useState(false);
   const [segFilter, setSegFilter] = useState<Set<string>>(new Set());
+  const [zemeFilter, setZemeFilter] = useState<"vse" | "CZ" | "SK">("CZ");
+  const [jenOverene, setJenOverene] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -189,7 +193,10 @@ const AdminNewsletters = () => {
     setHideSent(false);
     setSelHudy(false);
     setSelOutdoor(false);
+    setSelNaseOutdoor(false);
     setSegFilter(new Set());
+    setZemeFilter("CZ");
+    setJenOverene(false);
     try {
       const [rp, rc] = await Promise.all([
         api("/api/newsletters", { action: "partners" }),
@@ -202,9 +209,15 @@ const AdminNewsletters = () => {
     }
   };
 
+  // Partneři se dělí na: stálé (vše kromě Hudy a outdooru), Hudy a „naše outdoor prodejny“.
+  // Outdoorová prodejna, která se zaregistruje, dostane v DB skupinu outdoor (pravidlo v databázi)
+  // a objeví se v sekci „Naše outdoor prodejny“ – ne mezi potenciálními.
+  const regularPartners = partners.filter((p) => p.segment !== "hudy" && p.segment !== "outdoor");
+  const ourOutdoor = partners.filter((p) => p.segment === "outdoor");
+
   // seskupení podle slevy (unikátní hodnoty + počty)
   const discountGroups = Array.from(
-    partners.reduce((m, p) => {
+    regularPartners.reduce((m, p) => {
       const d = Number(p.discount_percent) || 0;
       m.set(d, (m.get(d) || 0) + 1);
       return m;
@@ -212,10 +225,17 @@ const AdminNewsletters = () => {
   ).sort((a, b) => a[0] - b[0]);
 
   // potenciální partneři po filtru (hledání + skrytí už oslovených)
+  // Každý kontakt patří právě do jedné sekce: Hudy / Outdoor / Potenciální (podle skupiny) – nic se nezdvojuje.
+  // Země a „jen ověřené“ platí pro Outdoor i Potenciální; Hudy se posílají vždy všem.
+  const zemeOf = (c: Contact) => (c.zeme || (c.email.toLowerCase().endsWith(".sk") ? "SK" : c.email.toLowerCase().endsWith(".pl") ? "PL" : "CZ"));
+  const hasOvereno = contacts.some((c) => c.overeno !== undefined && c.overeno !== null);
+  const passZO = (c: Contact) =>
+    (zemeFilter === "vse" ? zemeOf(c) !== "PL" : zemeOf(c) === zemeFilter) && (!jenOverene || !!c.overeno);
+  const zemeCount = (z: string) => contacts.filter((c) => c.segment !== "hudy" && zemeOf(c) === z).length;
   const hudyContacts = contacts.filter((c) => c.segment === "hudy");
   const hudyPartners = partners.filter((p) => p.segment === "hudy");
-  const outdoorContacts = contacts.filter((c) => c.segment === "outdoor");
-  const prospects = contacts.filter((c) => c.segment !== "hudy"); // Hudy nejsou potenciální, mají vlastní sekci
+  const outdoorContacts = contacts.filter((c) => c.segment === "outdoor" && passZO(c));
+  const prospects = contacts.filter((c) => c.segment !== "hudy" && c.segment !== "outdoor" && passZO(c));
   const segCounts = prospects.reduce((m, c) => { const k = segOf(c); m.set(k, (m.get(k) || 0) + 1); return m; }, new Map<string, number>());
   const toggleSeg = (k: string) =>
     setSegFilter((s2) => { const n = new Set(s2); n.has(k) ? n.delete(k) : n.add(k); return n; });
@@ -236,7 +256,10 @@ const AdminNewsletters = () => {
       const e = (p.invoice_email || "").trim().toLowerCase();
       if (!e) continue;
       const d = Number(p.discount_percent) || 0;
-      if (selAll || selDiscounts.has(d) || selManual.has(p.id) || (selHudy && p.segment === "hudy")) set.add(e);
+      const regular = p.segment !== "hudy" && p.segment !== "outdoor";
+      if (regular && (selAll || selDiscounts.has(d) || selManual.has(p.id))) set.add(e);
+      if (selHudy && p.segment === "hudy") set.add(e);
+      if (selNaseOutdoor && p.segment === "outdoor") set.add(e);
     }
     return set;
   })();
@@ -256,17 +279,20 @@ const AdminNewsletters = () => {
   const recipientEmails = [...new Set([...partnerEmails, ...contactEmails])];
 
   const partnerLabel = selAll
-    ? "Partneři: všichni"
+    ? "Stálí partneři: všichni"
     : [
         [...selDiscounts].sort((a, b) => a - b).map((d) => `${d} %`).join(", "),
         selManual.size ? `${selManual.size} ručně` : "",
       ].filter(Boolean).join(" + ");
   const poolCount = (selAllContacts ? contactsFiltered : contacts.filter((c) => selContacts.has(c.id))).length;
   const segNames = [...segFilter].map((k) => SEGMENTS.find((x) => x.key === k)?.label || k).join(", ");
-  const contactLabel = poolCount ? `Potenciální${segNames ? ` (${segNames})` : ""}: ${poolCount}` : "";
+  const zemeLabel = zemeFilter === "vse" ? "CZ+SK" : zemeFilter;
+  const ovLabel = jenOverene ? ", jen ověřené" : "";
+  const contactLabel = poolCount ? `Potenciální ${zemeLabel}${segNames ? ` (${segNames}${ovLabel})` : ovLabel ? ` (${ovLabel.slice(2)})` : ""}: ${poolCount}` : "";
   const segmentLabel = [
     selHudy ? `Hudy Sport: ${hudyContacts.length + hudyPartners.length}` : "",
-    selOutdoor ? `Outdoor: ${outdoorContacts.length}` : "",
+    selNaseOutdoor ? `Naše outdoor: ${ourOutdoor.length}` : "",
+    selOutdoor ? `Outdoor noví ${zemeLabel}${ovLabel}: ${outdoorContacts.length}` : "",
     partnerLabel,
     contactLabel,
   ].filter(Boolean).join(" · ") || "—";
@@ -446,7 +472,8 @@ const AdminNewsletters = () => {
           <div>
             <label className="flex items-center gap-2 mb-2 cursor-pointer">
               <input type="checkbox" checked={selAll} onChange={(e) => setSelAll(e.target.checked)} className="w-4 h-4 accent-primary" />
-              <span className="text-sm font-medium text-foreground">Všichni ({partners.length})</span>
+              <span className="text-sm font-medium text-foreground">Stálí partneři – všichni ({regularPartners.length})</span>
+              <span className="text-xs text-muted-foreground">· bez Hudy a bez outdoorových</span>
             </label>
             {!selAll && (
               <>
@@ -463,7 +490,7 @@ const AdminNewsletters = () => {
                 <p className="text-sm text-muted-foreground mb-1">Nebo vyber ručně:</p>
                 <Input placeholder="Hledat partnera…" value={pSearch} onChange={(e) => setPSearch(e.target.value)} className="h-9 mb-2" />
                 <div className="max-h-52 overflow-y-auto border border-border rounded-md divide-y divide-border">
-                  {partners
+                  {regularPartners
                     .filter((p) => {
                       const q = pSearch.trim().toLowerCase();
                       if (!q) return true;
@@ -484,6 +511,15 @@ const AdminNewsletters = () => {
             )}
           </div>
 
+          {/* Naše outdoor prodejny (zaregistrovaní partneři se skupinou outdoor) */}
+          <div className="border-t border-border pt-4">
+            <label className={`flex items-center gap-2 ${ourOutdoor.length ? "cursor-pointer" : "opacity-60"}`}>
+              <input type="checkbox" disabled={!ourOutdoor.length} checked={selNaseOutdoor} onChange={(e) => setSelNaseOutdoor(e.target.checked)} className="w-4 h-4 accent-primary" />
+              <span className="text-sm font-medium text-foreground">Naše outdoor prodejny ({ourOutdoor.length})</span>
+              <span className="text-xs text-muted-foreground">· outdoor, se kterými už spolupracujeme (partnerská patička){ourOutdoor.length ? "" : " – zatím nikdo, po registraci se sem přesunou samy"}</span>
+            </label>
+          </div>
+
           {/* Hudy Sport */}
           <div className="border-t border-border pt-4">
             <label className="flex items-center gap-2 cursor-pointer">
@@ -493,11 +529,31 @@ const AdminNewsletters = () => {
             </label>
           </div>
 
+          {/* Země + ověření – platí pro Outdoor i Potenciální */}
+          <div className="border-t border-border pt-4">
+            <p className="text-sm text-muted-foreground mb-1.5">Země a ověření (pro Outdoor i Potenciální):</p>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {([["CZ", `Česko (${zemeCount("CZ")})`], ["SK", `Slovensko (${zemeCount("SK")})`], ["vse", "Česko + Slovensko"]] as const).map(([k, label]) => (
+                <label key={k} className={`flex items-center gap-1.5 text-sm border rounded-md px-2.5 py-1 cursor-pointer ${zemeFilter === k ? "border-primary bg-primary/10" : "border-border"}`}>
+                  <input type="radio" name="zeme" checked={zemeFilter === k} onChange={() => setZemeFilter(k)} className="w-3.5 h-3.5 accent-primary" />
+                  {label}
+                </label>
+              ))}
+              {hasOvereno && (
+                <label className={`flex items-center gap-1.5 text-sm border rounded-md px-2.5 py-1 cursor-pointer ml-2 ${jenOverene ? "border-primary bg-primary/10" : "border-border"}`}>
+                  <input type="checkbox" checked={jenOverene} onChange={(e) => setJenOverene(e.target.checked)} className="w-3.5 h-3.5 accent-primary" />
+                  Jen ověřené
+                </label>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">Polské kontakty se neposílají.</p>
+          </div>
+
           {/* Outdoor prodejny */}
           <div className="border-t border-border pt-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={selOutdoor} onChange={(e) => setSelOutdoor(e.target.checked)} className="w-4 h-4 accent-primary" />
-              <span className="text-sm font-medium text-foreground">Outdoor prodejny ({outdoorContacts.length})</span>
+              <span className="text-sm font-medium text-foreground">Outdoor prodejny – noví ({outdoorContacts.length})</span>
               <span className="text-xs text-muted-foreground">· turistika a outdoor – nabídka návleků na turistiku</span>
             </label>
           </div>

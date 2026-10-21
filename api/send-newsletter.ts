@@ -195,9 +195,14 @@ export default async function handler(req: any, res: any) {
 
     // Seznam potenciálních partnerů pro výběr v adminu
     if (body.action === "contacts") {
-      const contacts = await fetchAll(
-        `newsletter_contacts?unsubscribed=eq.false&bounced=eq.false&select=id,email,company_name,city,last_sent_at,segment&order=company_name.asc`
-      );
+      // zeme + overeno jsou novější sloupce – když v DB ještě nejsou, načti bez nich
+      const base = `newsletter_contacts?unsubscribed=eq.false&bounced=eq.false&order=company_name.asc&select=id,email,company_name,city,last_sent_at,segment`;
+      let contacts: unknown[];
+      try {
+        contacts = await fetchAll(base + ",zeme,overeno");
+      } catch {
+        contacts = await fetchAll(base);
+      }
       return res.status(200).json({ ok: true, contacts });
     }
 
