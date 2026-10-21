@@ -11,7 +11,7 @@
 //   - nepošle se tomu, kdo označil mail jako spam
 //   - nepošle se „spícím": kdo NEOTEVŘEL 2 newslettery po sobě
 //     (neotevreno_v_rade >= 2). Počítadlo se zvedá při každém odeslání
-//     a nuluje se, když Resend nahlásí otevření (api/resend-webhook.ts).
+//     a nuluje se, když se mail otevře (neviditelný obrázek → api/nl-open.ts).
 // Nic z toho se netýká objednávkových e-mailů (api/send-email.ts) —
 // ty odcházejí vždy.
 
@@ -36,6 +36,7 @@ interface Recipient {
   email: string;
   name: string | null; // kontaktní osoba pro {osloveni}
   kind: Kind;
+  segment?: string | null; // hudy | cyklo | zima | zima_cyklo | outdoor | …
 }
 
 async function verifyAdmin(token: string): Promise<boolean> {
@@ -71,10 +72,22 @@ function unsubUrl(email: string): string {
   return `${SITE}/api/unsubscribe?e=${encodeURIComponent(email)}&t=${unsubToken(email)}`;
 }
 
-function unsubFooter(email: string, kind: Kind): string {
+// Neviditelný obrázek 1×1 px. Když se mail otevře, schránka si ho stáhne
+// z našeho webu a api/nl-open.ts zapíše „otevřeno" (vynuluje počítadlo spících).
+// Nepotřebuje žádné nastavení v Resendu ani DNS.
+function openPixel(email: string): string {
+  const src = `${SITE}/api/nl-open?e=${encodeURIComponent(email)}&t=${unsubToken(email)}`;
+  return `<img src="${src}" width="1" height="1" alt="" style="display:block;border:0;width:1px;height:1px;opacity:0;" />`;
+}
+
+function unsubFooter(email: string, kind: Kind, segment?: string | null): string {
   const link = unsubUrl(email);
+  // Prodejny sítě HUDY jsou uložené mezi kontakty (nemají vlastní účet),
+  // ale jsou to obchodní partneři – nesmí dostat patičku „obchodní sdělení“.
   const intro =
-    kind === "partner"
+    segment === "hudy"
+      ? "Tento e-mail jste dostali jako prodejna HUDY – obchodní partner Vapesport."
+      : kind === "partner"
       ? "Tento e-mail jste dostali jako registrovaný B2B partner Vapesport."
       : "Obchodní sdělení společnosti Vapesport Vlach s.r.o., Paskovská 636/275, Ostrava-Hrabová.<br>Vaši adresu máme z veřejně dostupných zdrojů jako na prodejce v oboru cyklistiky.";
   return `<div style="margin-top:28px;padding-top:16px;border-top:1px solid #e0dcd3;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#8a8a80;text-align:center;">${intro}<br><a href="${link}" style="color:#6E7B4E;">Odhlásit odběr novinek</a></div>`;
@@ -115,14 +128,14 @@ async function loadApproved(): Promise<Map<string, string | null>> {
   return map;
 }
 
-async function loadContacts(): Promise<Map<string, string | null>> {
-  const rows = await fetchAll<{ email: string; contact_person: string | null }>(
-    `newsletter_contacts?unsubscribed=eq.false&bounced=eq.false&neotevreno_v_rade=lt.${SPICI_PO}&select=email,contact_person`
+async function loadContacts(): Promise<Map<string, { name: string | null; segment: string | null }>> {
+  const rows = await fetchAll<{ email: string; contact_person: string | null; segment: string | null }>(
+    `newsletter_contacts?unsubscribed=eq.false&bounced=eq.false&neotevreno_v_rade=lt.${SPICI_PO}&select=email,contact_person,segment`
   );
-  const map = new Map<string, string | null>();
+  const map = new Map<string, { name: string | null; segment: string | null }>();
   for (const row of rows) {
     const e = (row.email || "").trim().toLowerCase();
-    if (e && !map.has(e)) map.set(e, row.contact_person);
+    if (e && !map.has(e)) map.set(e, { name: row.contact_person, segment: row.segment });
   }
   return map;
 }
@@ -183,7 +196,7 @@ export default async function handler(req: any, res: any) {
     // Seznam potenciálních partnerů pro výběr v adminu
     if (body.action === "contacts") {
       const contacts = await fetchAll(
-        `newsletter_contacts?unsubscribed=eq.false&bounced=eq.false&select=id,email,company_name,city,last_sent_at&order=company_name.asc`
+        `newsletter_contacts?unsubscribed=eq.false&bounced=eq.false&select=id,email,company_name,city,last_sent_at,segment&order=company_name.asc`
       );
       return res.status(200).json({ ok: true, contacts });
     }
@@ -217,7 +230,10 @@ export default async function handler(req: any, res: any) {
     for (const e of requestedSet) {
       if (unsub.has(e)) continue;
       if (approved.has(e)) recipients.push({ email: e, name: approved.get(e) ?? null, kind: "partner" });
-      else if (contacts.has(e)) recipients.push({ email: e, name: contacts.get(e) ?? null, kind: "contact" });
+      else if (contacts.has(e)) {
+        const c = contacts.get(e)!;
+        recipients.push({ email: e, name: c.name ?? null, kind: "contact", segment: c.segment });
+      }
     }
 
     if (body.action === "count") {
@@ -242,7 +258,7 @@ export default async function handler(req: any, res: any) {
         const items = recipients.slice(i, i + CHUNK).map((r) => ({
           to: [r.email],
           subject,
-          html: html.replace(/\{osloveni\}/g, greeting(r.name)) + unsubFooter(r.email, r.kind),
+          html: html.replace(/\{osloveni\}/g, greeting(r.name)) + unsubFooter(r.email, r.kind, r.segment) + openPixel(r.email),
           // Gmail a Yahoo vyžadují u hromadných odesílatelů odhlášení
           // jedním klikem přímo z rozhraní schránky. Bez těchto hlaviček
           // roste pravděpodobnost, že zprávu vyhodnotí jako nevyžádanou.

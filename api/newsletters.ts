@@ -84,7 +84,7 @@ export default async function handler(req: any, res: any) {
 
     if (action === "partners") {
       const r = await fetch(
-        `${SUPABASE_URL}/rest/v1/b2b_profiles?status=eq.approved&invoice_email=not.is.null&select=id,company_name,contact_person,invoice_email,discount_percent&order=company_name.asc`,
+        `${SUPABASE_URL}/rest/v1/b2b_profiles?status=eq.approved&invoice_email=not.is.null&select=id,company_name,contact_person,invoice_email,discount_percent,segment&email_bounced=is.false&order=company_name.asc`,
         { headers: svcHeaders },
       );
       return res.status(200).json({ ok: true, partners: await r.json() });

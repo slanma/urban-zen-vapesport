@@ -17,7 +17,19 @@ interface Contact {
   company_name: string | null;
   city: string | null;
   last_sent_at: string | null;
+  segment?: string | null; // hudy | cyklo | zima | zima_cyklo | outdoor | sport_nezarazeno | nezarazeno
 }
+
+// Skupiny potenciálních partnerů (sloupec segment v newsletter_contacts)
+const SEGMENTS: { key: string; label: string }[] = [
+  { key: "zima_cyklo", label: "Zima + cyklo" },
+  { key: "zima", label: "Zima" },
+  { key: "outdoor", label: "Outdoor" },
+  { key: "cyklo", label: "Cyklo" },
+  { key: "sport_nezarazeno", label: "Sport (nezařazeno)" },
+  { key: "nezarazeno", label: "Nezařazeno" },
+];
+const segOf = (c: { segment?: string | null }) => c.segment || "nezarazeno";
 interface SendRecord {
   id: string;
   subject: string;
@@ -61,7 +73,7 @@ const AdminNewsletters = () => {
 
   // odesílání
   const [sendTarget, setSendTarget] = useState<Newsletter | null>(null);
-  const [partners, setPartners] = useState<{ id: string; company_name: string; contact_person: string | null; invoice_email: string; discount_percent: number }[]>([]);
+  const [partners, setPartners] = useState<{ id: string; company_name: string; contact_person: string | null; invoice_email: string; discount_percent: number; segment?: string | null }[]>([]);
   const [selAll, setSelAll] = useState(false);
   const [selDiscounts, setSelDiscounts] = useState<Set<number>>(new Set());
   const [selManual, setSelManual] = useState<Set<string>>(new Set());
@@ -76,6 +88,10 @@ const AdminNewsletters = () => {
   const [cSearch, setCSearch] = useState("");
   const [hideSent, setHideSent] = useState(false);
   const [firstN, setFirstN] = useState("100");
+  // sekce Hudy Sport a Outdoor + filtr skupin u potenciálních
+  const [selHudy, setSelHudy] = useState(false);
+  const [selOutdoor, setSelOutdoor] = useState(false);
+  const [segFilter, setSegFilter] = useState<Set<string>>(new Set());
 
   const load = async () => {
     setLoading(true);
@@ -171,6 +187,9 @@ const AdminNewsletters = () => {
     setSelContacts(new Set());
     setCSearch("");
     setHideSent(false);
+    setSelHudy(false);
+    setSelOutdoor(false);
+    setSegFilter(new Set());
     try {
       const [rp, rc] = await Promise.all([
         api("/api/newsletters", { action: "partners" }),
@@ -193,13 +212,22 @@ const AdminNewsletters = () => {
   ).sort((a, b) => a[0] - b[0]);
 
   // potenciální partneři po filtru (hledání + skrytí už oslovených)
-  const contactsFiltered = contacts.filter((c) => {
+  const hudyContacts = contacts.filter((c) => c.segment === "hudy");
+  const hudyPartners = partners.filter((p) => p.segment === "hudy");
+  const outdoorContacts = contacts.filter((c) => c.segment === "outdoor");
+  const prospects = contacts.filter((c) => c.segment !== "hudy"); // Hudy nejsou potenciální, mají vlastní sekci
+  const segCounts = prospects.reduce((m, c) => { const k = segOf(c); m.set(k, (m.get(k) || 0) + 1); return m; }, new Map<string, number>());
+  const toggleSeg = (k: string) =>
+    setSegFilter((s2) => { const n = new Set(s2); n.has(k) ? n.delete(k) : n.add(k); return n; });
+
+  const contactsFiltered = prospects.filter((c) => {
+    if (segFilter.size && !segFilter.has(segOf(c))) return false;
     if (hideSent && c.last_sent_at) return false;
     const q = cSearch.trim().toLowerCase();
     if (!q) return true;
     return [c.company_name, c.email, c.city].filter(Boolean).join(" ").toLowerCase().includes(q);
   });
-  const contactsNeverSent = contacts.filter((c) => !c.last_sent_at).length;
+  const contactsNeverSent = prospects.filter((c) => !c.last_sent_at).length;
 
   // spočítej příjemce (e-maily) z aktuálního výběru
   const partnerEmails = (() => {
@@ -208,7 +236,7 @@ const AdminNewsletters = () => {
       const e = (p.invoice_email || "").trim().toLowerCase();
       if (!e) continue;
       const d = Number(p.discount_percent) || 0;
-      if (selAll || selDiscounts.has(d) || selManual.has(p.id)) set.add(e);
+      if (selAll || selDiscounts.has(d) || selManual.has(p.id) || (selHudy && p.segment === "hudy")) set.add(e);
     }
     return set;
   })();
@@ -220,6 +248,8 @@ const AdminNewsletters = () => {
       const e = (c.email || "").trim().toLowerCase();
       if (e) set.add(e);
     }
+    if (selHudy) for (const c of hudyContacts) set.add(c.email.trim().toLowerCase());
+    if (selOutdoor) for (const c of outdoorContacts) set.add(c.email.trim().toLowerCase());
     return set;
   })();
 
@@ -231,8 +261,15 @@ const AdminNewsletters = () => {
         [...selDiscounts].sort((a, b) => a - b).map((d) => `${d} %`).join(", "),
         selManual.size ? `${selManual.size} ručně` : "",
       ].filter(Boolean).join(" + ");
-  const contactLabel = contactEmails.size ? `Potenciální: ${contactEmails.size}` : "";
-  const segmentLabel = [partnerLabel, contactLabel].filter(Boolean).join(" · ") || "—";
+  const poolCount = (selAllContacts ? contactsFiltered : contacts.filter((c) => selContacts.has(c.id))).length;
+  const segNames = [...segFilter].map((k) => SEGMENTS.find((x) => x.key === k)?.label || k).join(", ");
+  const contactLabel = poolCount ? `Potenciální${segNames ? ` (${segNames})` : ""}: ${poolCount}` : "";
+  const segmentLabel = [
+    selHudy ? `Hudy Sport: ${hudyContacts.length + hudyPartners.length}` : "",
+    selOutdoor ? `Outdoor: ${outdoorContacts.length}` : "",
+    partnerLabel,
+    contactLabel,
+  ].filter(Boolean).join(" · ") || "—";
 
   const toggleDiscount = (d: number) =>
     setSelDiscounts((s2) => {
@@ -447,6 +484,24 @@ const AdminNewsletters = () => {
             )}
           </div>
 
+          {/* Hudy Sport */}
+          <div className="border-t border-border pt-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={selHudy} onChange={(e) => setSelHudy(e.target.checked)} className="w-4 h-4 accent-primary" />
+              <span className="text-sm font-medium text-foreground">Hudy Sport ({hudyContacts.length + hudyPartners.length})</span>
+              <span className="text-xs text-muted-foreground">· všechny prodejny Hudy, dostanou partnerskou patičku</span>
+            </label>
+          </div>
+
+          {/* Outdoor prodejny */}
+          <div className="border-t border-border pt-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={selOutdoor} onChange={(e) => setSelOutdoor(e.target.checked)} className="w-4 h-4 accent-primary" />
+              <span className="text-sm font-medium text-foreground">Outdoor prodejny ({outdoorContacts.length})</span>
+              <span className="text-xs text-muted-foreground">· turistika a outdoor – nabídka návleků na turistiku</span>
+            </label>
+          </div>
+
           {/* Potenciální partneři */}
           <div className="border-t border-border pt-4">
             <label className="flex items-center gap-2 mb-2 cursor-pointer">
@@ -467,6 +522,16 @@ const AdminNewsletters = () => {
             <p className="text-xs text-muted-foreground mb-2">
               Nemají účet ani slevu. Dostanou patičku označenou jako obchodní sdělení.
             </p>
+
+            <p className="text-sm text-muted-foreground mb-1">Podle skupiny (nic nevybráno = všechny):</p>
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {SEGMENTS.filter((g) => segCounts.get(g.key)).map((g) => (
+                <label key={g.key} className={`flex items-center gap-1.5 text-sm border rounded-md px-2.5 py-1 cursor-pointer ${segFilter.has(g.key) ? "border-primary bg-primary/10" : "border-border"}`}>
+                  <input type="checkbox" checked={segFilter.has(g.key)} onChange={() => toggleSeg(g.key)} className="w-3.5 h-3.5 accent-primary" />
+                  {g.label} <span className="text-muted-foreground">({segCounts.get(g.key)})</span>
+                </label>
+              ))}
+            </div>
 
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <Input placeholder="Hledat firmu, e-mail, město…" value={cSearch} onChange={(e) => setCSearch(e.target.value)} className="h-9 flex-1 min-w-[180px]" />
