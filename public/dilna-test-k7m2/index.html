@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101012">
+<link rel="apple-touch-icon" href="./ikona.png">
+<link rel="manifest" href="./manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dílna MORSEO">
+<meta name="robots" content="noindex,nofollow">
+<title>Noční směna · Dílna MORSEO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Space+Mono:wght@400;700&display=swap&subset=latin-ext" rel="stylesheet">
+<link rel="stylesheet" href="./hra.css">
+<script src="./gate.js"></script>
+</head>
+<body>
+<div id="gate" style="position:fixed;inset:0;z-index:100;background:#101012;display:flex;align-items:center;justify-content:center;padding:24px">
+<form id="gateForm" style="max-width:360px;width:100%;display:flex;flex-direction:column;gap:12px">
+<p class="mono" style="color:#969696;font-size:13px">DÍLNA MORSEO · TESTOVACÍ VERZE</p>
+<h1 class="cap" style="font-size:34px">Heslo, <mark>prosím.</mark></h1>
+<input id="gatePw" type="password" autocomplete="current-password" placeholder="Heslo" style="font:inherit;font-size:20px;padding:14px 16px;border-radius:14px;border:2px solid #2a2a2f;background:#1a1a1d;color:#edece8">
+<button class="btn" type="submit" style="align-self:stretch">Vstoupit</button>
+<p id="gateMsg" style="color:#ee6a55;min-height:1.2em"></p>
+</form></div>
+
+<div id="app">
+  <header id="hud">
+    <div id="hudNight"><b id="hudName">Noc 1</b><span id="hudProgress">0 / 3</span></div>
+    <div id="orders" aria-label="Objednávky"></div>
+    <div id="hudRight">
+      <div id="battery" aria-label="Sociální baterka"><div class="cell"><i id="batFill" style="width:100%"></i></div><span id="batTxt">100 %</span></div>
+      <button class="iconbtn" id="pauseBtn" aria-label="Pauza">II</button>
+    </div>
+  </header>
+  <main id="stage">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <canvas id="cv" width="720" height="1000" aria-label="Herní plocha dílny"></canvas>
+    <div id="toast" aria-live="polite"><span></span></div>
+  </main>
+  <footer id="controls">
+    <div id="hint"></div>
+    <div id="inv" aria-label="Kapsy"></div>
+    <button id="protoBtn">Protokol</button>
+    <button id="abilityBtn"><div class="cd" id="abilityCd"></div><span id="abilityName">Schopnost</span></button>
+  </footer>
+
+  <div id="dlg" role="dialog" aria-live="polite"><img id="dlgPic" alt=""><div><b id="dlgName"></b><p id="dlgText"></p><div id="dlgChoices"></div></div><span class="more" aria-hidden="true">dál ›</span></div>
+  <section class="screen on" id="sTitle">
+    <div>
+      <p class="knock">ťuk · ťuk · ťuk</p>
+      <h1 class="title-xl" style="margin-top:10px">Noční<br>směna</h1>
+      <p class="lead" style="margin-top:16px">Ve tři ráno v Dílně MORSEO někdo ťuká. Brašny se ale samy neudělají. Vyber si pomocníka, plň objednávky a doruč brašny portálem k lidem na kolech, než ti dojde sociální baterka.</p>
+    </div>
+    <div class="parta" id="parta"></div>
+    <div>
+      <div class="row"><button class="btn" id="storyBtn">Příběh: Ztracená nabíječka</button><button class="btn ghost" id="startBtn">Noční směny</button><button class="btn ghost" id="muteBtn" aria-pressed="false">Zvuk: zapnutý</button><button class="btn ghost" id="viewBtn" style="display:none">Pohled: 3D</button></div>
+      <p class="muted" style="margin-top:14px;font-size:14px;line-height:1.45">Pro každého, kdo už seděl na poradě, která mohla být e-mail.</p>
+    </div>
+  </section>
+
+  <section class="screen" id="sSelect">
+    <h2 class="cap">Kdo jde dnes <mark>na noční?</mark></h2>
+    <div class="grid" id="charGrid"></div>
+    <div id="charDetail"></div>
+    <div class="sticky"><div class="row"><button class="btn" id="toMissions">Pokračovat</button><button class="btn ghost" id="backTitle">Zpět</button></div></div>
+  </section>
+
+  <section class="screen" id="sMissions">
+    <h2 class="cap">Sedm nocí. <mark>Žádné volno.</mark></h2>
+    <div class="nights" id="nightList"></div>
+    <div class="row" style="margin-top:18px"><button class="btn ghost" id="backSelect">Změnit pomocníka</button></div>
+  </section>
+
+  <section class="screen" id="sBrief">
+    <p class="mono muted" id="briefNum" style="font-size:14px">Noc 1</p>
+    <h2 class="cap" id="briefCap" style="margin-top:10px"></h2>
+    <p class="lead" id="briefGoal" style="margin-top:18px"></p>
+    <div class="keys"><span class="desktop-only">Pohyb <kbd>W A S D</kbd> nebo šipky · schopnost <kbd>mezerník</kbd> · pauza <kbd>P</kbd><br></span><span class="touch-only">Táhni prstem kdekoli po dílně a postavička jde tím směrem. Schopnost je velké tlačítko vpravo dole.<br></span>Na stanici stačí chvíli postát. Ve skladu stoupni na roli v barvě objednávky.</div>
+    <div class="row" style="margin-top:22px"><button class="btn" id="goBtn">Začít noc</button><button class="btn ghost" id="backMissions">Zpět</button></div>
+  </section>
+
+  <section class="screen" id="sChapters">
+    <p class="mono" style="font-size:13px;color:var(--accent)">ŤUK-ŤUK · PROLOG</p>
+    <h2 class="cap" style="margin-top:8px">Kdo ve 3:00 <mark>ťuká?</mark></h2>
+    <p class="lead" style="margin-top:12px">Hraješ za Bzučáka, dobrovolníka na noční hlídku. Neumí říct ne, takže úkol mu dá každý. Kapitoly se odemykají spolu s Instagramem @morseo.dilna.</p>
+    <div class="nights" id="chList2"></div>
+    <div class="row" style="margin-top:18px"><button class="btn ghost" id="chBack">Zpět</button></div>
+  </section>
+  <section class="screen" id="sChapter"></section>
+  <div id="puz" role="dialog"></div>
+  <div id="credits"></div>
+  <section class="screen dim" id="sPause">
+    <h2 class="cap">Pauza. <mark>Konečně.</mark></h2>
+    <p class="lead" style="margin-top:14px">Objednávky počkají. Zákazníci ne, ale to tady nikdo neřeší.</p>
+    <div class="row" style="margin-top:22px"><button class="btn" id="resumeBtn">Pokračovat</button><button class="btn ghost" id="quitBtn">Ukončit noc</button></div>
+  </section>
+
+  <section class="screen" id="sResult">
+    <p class="stars" id="resStars" style="font-size:30px">★★★</p>
+    <h2 class="cap" id="resCap" style="margin-top:8px"></h2>
+    <div class="res-grid">
+      <div class="stat"><b id="resScore">0</b><span>bodů</span></div>
+      <div class="stat"><b id="resBags">0</b><span>doručených brašen</span></div>
+      <div class="stat"><b id="resTime">0:00</b><span>čas směny</span></div>
+    </div>
+    <p class="muted" id="resBest" style="margin:-6px 0 16px;font-size:14px"></p>
+    <div class="bagcard" id="bagCard"></div>
+    <div class="row"><button class="btn" id="nextBtn">Další noc</button><button class="btn ghost" id="retryBtn">Znovu</button><button class="btn ghost" id="menuBtn">Seznam nocí</button></div>
+  </section>
+</div>
+
+<script src="./three.min.js"></script>
+<script src="./hra.js"></script>
+</body>
+</html>
