@@ -11,14 +11,18 @@
  */
 
 export const HUDY_SHIPPING_PRICE = 180;
+/** Doprava na Slovensko pro síť HUDY (s DPH). */
+export const HUDY_SHIPPING_PRICE_SK = 200;
 export const HUDY_FREE_SHIPPING_FROM_NET = 10000;
 
 export const isHudyProfile = (p: { segment?: string | null } | null | undefined): boolean =>
   p?.segment === "hudy";
 
-/** Cena dopravy pro Hudy před uplatněním dopravy zdarma. */
-export const hudyOptionPrice = (standardPrice: number): number =>
-  standardPrice > 0 ? HUDY_SHIPPING_PRICE : 0;
+/** Cena dopravy pro Hudy před uplatněním dopravy zdarma (ČR 180 Kč, Slovensko 200 Kč). */
+export const hudyOptionPrice = (opt: { id: string; price: number }): number => {
+  if (opt.price <= 0) return 0;
+  return opt.id === "slovensko" ? HUDY_SHIPPING_PRICE_SK : HUDY_SHIPPING_PRICE;
+};
 
 /** True, když má Hudy objednávka dopravu zdarma. */
 export const hudyHasFreeShipping = (itemsSubtotalNet: number): boolean =>

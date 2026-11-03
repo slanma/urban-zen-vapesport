@@ -1,6 +1,6 @@
 import { Lock, Sparkles } from "lucide-react";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
-import { usesPartnerPrice } from "@/lib/hudy";
+import { usesPartnerPrice, isHudyProfile } from "@/lib/hudy";
 import { fmtCZK, netFromGross, grossFromNet } from "@/lib/vat";
 
 interface PriceTagProps {
@@ -60,7 +60,7 @@ const PriceTag = ({ retailGross, b2bNet, size = "md", className = "", category }
         {discount > 0 && (
           <span className="inline-flex items-center gap-1 mt-1 text-xs font-semibold text-primary">
             <Sparkles className="w-3 h-3" />
-            Vaše věrnostní sleva {discount} %
+            {isHudyProfile(profile) ? `Sleva pro síť HUDY −${discount} %` : `Vaše věrnostní sleva ${discount} %`}
           </span>
         )}
       </div>
@@ -84,7 +84,7 @@ const PriceTag = ({ retailGross, b2bNet, size = "md", className = "", category }
         </span>
         <span className="inline-flex items-center gap-1 mt-1 text-xs font-semibold text-primary">
           <Sparkles className="w-3 h-3" />
-          Vaše věrnostní sleva {discount} %
+          {isHudyProfile(profile) ? `Sleva pro síť HUDY −${discount} %` : `Vaše věrnostní sleva ${discount} %`}
         </span>
       </div>
     );

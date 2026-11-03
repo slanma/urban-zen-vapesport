@@ -439,6 +439,8 @@ const B2BNastenka = () => {
         </section>)}
 
         {/* Feed ke stažení */}
+        {/* Hudy mají jen návleky – feedy brašen nepotřebují */}
+        {!isHudy && (
         <section className="mb-10">
           <h2 className="font-heading text-lg font-bold text-foreground mb-4">Feed produktů ke stažení</h2>
           <div className="grid sm:grid-cols-2 gap-5">
@@ -470,7 +472,7 @@ const B2BNastenka = () => {
           <p className="text-xs text-muted-foreground mt-3">
             Vapesport feed obsahuje jen produkty označené jako dostupné. Dojezdové kusy stačí v administraci skrýt a z feedu automaticky zmizí.
           </p>
-        </section>
+        </section>)}
 
         {/* Objednávky */}
         <section className="rounded-2xl border border-border bg-card p-6">

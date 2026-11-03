@@ -386,7 +386,7 @@ const B2BDashboard = () => {
             {isHudy && (
               <p className="mt-3 inline-block rounded-md bg-primary/10 text-foreground text-base px-4 py-2">
                 Ceník pro síť <strong>HUDY sport</strong>: sleva {discount} % je už v cenách.
-                Doprava 180 Kč, od 10 000 Kč bez DPH zdarma.
+                Doprava 180 Kč (na Slovensko 200 Kč), od 10 000 Kč bez DPH zdarma.
               </p>
             )}
           </header>

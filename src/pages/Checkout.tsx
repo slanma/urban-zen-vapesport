@@ -11,6 +11,7 @@ import {
   isHudyProfile,
   usesPartnerPrice,
   HUDY_SHIPPING_PRICE,
+  HUDY_SHIPPING_PRICE_SK,
   hudyOptionPrice,
   hudyHasFreeShipping,
   hudyMissingForFreeShipping,
@@ -203,7 +204,7 @@ const Checkout = () => {
   const hudyFreeShipping = isHudy && hudyHasFreeShipping(subtotalNet);
   const freeShipping = (isPartner && profile?.free_shipping === true) || hudyFreeShipping;
   /** Cena možnosti dopravy pro tohoto zákazníka (před dopravou zdarma). */
-  const optionPrice = (o: { price: number }) => (isHudy ? hudyOptionPrice(o.price) : o.price);
+  const optionPrice = (o: { id: string; price: number }) => (isHudy ? hudyOptionPrice(o) : o.price);
   const baseShippingPrice = shippingOpt ? optionPrice(shippingOpt) : 0;
   const shippingPrice = freeShipping ? 0 : baseShippingPrice;
   /** Hudy smí objednat jen návleky – jiné zboží v košíku objednávku zablokuje. */
@@ -531,7 +532,7 @@ const Checkout = () => {
               )}
               {isHudy && !freeShipping && (
                 <div className="mb-4 p-3 rounded-lg bg-muted border border-border text-sm font-body text-foreground">
-                  Doprava {fmtCZK(HUDY_SHIPPING_PRICE)}. Do dopravy zdarma chybí{" "}
+                  Doprava {fmtCZK(HUDY_SHIPPING_PRICE)}, na Slovensko {fmtCZK(HUDY_SHIPPING_PRICE_SK)}. Do dopravy zdarma chybí{" "}
                   <strong>{fmtCZK(hudyMissingForFreeShipping(subtotalNet))} bez DPH</strong>.
                 </div>
               )}

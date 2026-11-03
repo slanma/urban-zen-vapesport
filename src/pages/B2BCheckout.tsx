@@ -9,6 +9,7 @@ import { useB2BPartner } from "@/hooks/useB2BPartner";
 import {
   isHudyProfile,
   HUDY_SHIPPING_PRICE,
+  HUDY_SHIPPING_PRICE_SK,
   hudyOptionPrice,
   hudyHasFreeShipping,
   hudyMissingForFreeShipping,
@@ -178,10 +179,10 @@ const B2BCheckout = () => {
   // Doprava zdarma se uplatní POUZE pokud je v administraci nastavena na profilu B2B partnera.
   const hudyFreeShipping = isHudy && hudyHasFreeShipping(itemsSubtotalNet);
   const freeShipping = partnerProfile?.free_shipping === true || hudyFreeShipping;
-  const baseShippingPrice = isHudy ? hudyOptionPrice(shippingOpt.price) : shippingOpt.price;
+  const baseShippingPrice = isHudy ? hudyOptionPrice(shippingOpt) : shippingOpt.price;
   const shippingPrice = freeShipping ? 0 : baseShippingPrice;
   /** Cena konkrétní možnosti dopravy pro tohoto partnera (před dopravou zdarma). */
-  const optionPrice = (o: { price: number }) => (isHudy ? hudyOptionPrice(o.price) : o.price);
+  const optionPrice = (o: { id: string; price: number }) => (isHudy ? hudyOptionPrice(o) : o.price);
   const missingForFreeShippingNet = isHudy ? hudyMissingForFreeShipping(itemsSubtotalNet) : 0;
 
   // Akce a slevy: ceny v payloadu už obsahují partnerskou slevu, akce vrací
@@ -465,7 +466,7 @@ const B2BCheckout = () => {
                 )}
                 {isHudy && !freeShipping && (
                   <div className="mb-4 p-3 rounded-md bg-muted border border-border text-sm text-foreground">
-                    Doprava {fmtCZK(HUDY_SHIPPING_PRICE)}. Do dopravy zdarma chybí{" "}
+                    Doprava {fmtCZK(HUDY_SHIPPING_PRICE)}, na Slovensko {fmtCZK(HUDY_SHIPPING_PRICE_SK)}. Do dopravy zdarma chybí{" "}
                     <strong>{fmtCZK(missingForFreeShippingNet)} bez DPH</strong>.
                   </div>
                 )}
