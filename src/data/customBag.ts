@@ -49,8 +49,6 @@ export interface MaterialGroup {
   id: string;
   label: string;
   extra: number;
-  /** Fotka skutečných vzorků látky. */
-  photo: string;
   colors: Swatch[];
 }
 
@@ -60,7 +58,6 @@ export const MATERIAL_GROUPS: MaterialGroup[] = [
     id: "material-1",
     label: "Materiál 1",
     extra: 50,
-    photo: "/images/produkty-vapesport/brasna-na-miru/latky/material-1.jpg",
     colors: [
       { id: "tmave-modra", label: "Tmavě modrá", hex: "#1F3A8A", img: "/images/produkty-vapesport/brasna-na-miru/latky/m1-tmave-modra.webp" },
       { id: "svetle-modra", label: "Světle modrá", hex: "#8DB4DA", img: "/images/produkty-vapesport/brasna-na-miru/latky/m1-svetle-modra.webp" },
@@ -72,7 +69,6 @@ export const MATERIAL_GROUPS: MaterialGroup[] = [
     id: "material-2",
     label: "Materiál 2",
     extra: 50,
-    photo: "/images/produkty-vapesport/brasna-na-miru/latky/material-2.jpg",
     colors: [
       { id: "vinova-jemna", label: "Vínová jemná", hex: "#9E1438", img: "/images/produkty-vapesport/brasna-na-miru/latky/m2-vinova-jemna.webp" },
       { id: "kremove-bila", label: "Krémově bílá", hex: "#D9DCD6", img: "/images/produkty-vapesport/brasna-na-miru/latky/m2-kremove-bila.webp" },
@@ -82,7 +78,6 @@ export const MATERIAL_GROUPS: MaterialGroup[] = [
     id: "material-3",
     label: "Materiál 3",
     extra: 50,
-    photo: "/images/produkty-vapesport/brasna-na-miru/latky/material-3.jpg",
     colors: [
       { id: "okrova", label: "Okrová", hex: "#D18A12", img: "/images/produkty-vapesport/brasna-na-miru/latky/m3-okrova.webp" },
       { id: "fialova", label: "Fialová", hex: "#6A2FC4", img: "/images/produkty-vapesport/brasna-na-miru/latky/m3-fialova.webp" },
@@ -93,7 +88,6 @@ export const MATERIAL_GROUPS: MaterialGroup[] = [
     id: "material-4",
     label: "Materiál 4",
     extra: 50,
-    photo: "/images/produkty-vapesport/brasna-na-miru/latky/material-4.jpg",
     colors: [
       { id: "cervena", label: "Červená", hex: "#C8123C", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-cervena.webp" },
       { id: "tmave-zelena", label: "Tmavě zelená", hex: "#1E403E", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-tmave-zelena.webp" },
@@ -111,7 +105,6 @@ export const MATERIAL_GROUPS: MaterialGroup[] = [
     id: "material-5",
     label: "Materiál 5",
     extra: 50,
-    photo: "/images/produkty-vapesport/brasna-na-miru/latky/material-5.jpg",
     colors: [
       { id: "seda-struktura", label: "Šedá struktura", hex: "#7E8790", img: "/images/produkty-vapesport/brasna-na-miru/latky/m5-seda-struktura.webp" },
       { id: "cervena-struktura", label: "Červená struktura", hex: "#C8202E", img: "/images/produkty-vapesport/brasna-na-miru/latky/m5-cervena-struktura.webp" },

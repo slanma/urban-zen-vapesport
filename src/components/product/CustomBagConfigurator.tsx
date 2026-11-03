@@ -373,17 +373,6 @@ const CustomBagConfigurator = ({ basePrice = CUSTOM_BAG_BASE_PRICE, productName 
               <div>
                 <SwatchDots items={group.colors} value={fabric.id} onChange={setColorId} />
                 <p className="font-body text-xs text-muted-foreground mt-2">Vybráno: {fabric.label}</p>
-                <figure className="mt-3">
-                  <img
-                    src={group.photo}
-                    alt={`${group.label} – skutečné vzorky látek`}
-                    loading="lazy"
-                    className="w-full max-w-[280px] rounded-lg border border-border object-cover"
-                  />
-                  <figcaption className="font-body text-[11px] text-muted-foreground mt-1">
-                    Všechny vzorky téhle látky pohromadě.
-                  </figcaption>
-                </figure>
               </div>
             )}
           </div>
