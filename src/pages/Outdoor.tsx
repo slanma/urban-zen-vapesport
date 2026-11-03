@@ -567,6 +567,7 @@ const OutdoorCard = ({
             retailGross={price}
             b2bNet={ov.b2b_price ?? p.b2b_price ?? null}
             size="md"
+            category="outdoor"
           />
           <button
             type="button"

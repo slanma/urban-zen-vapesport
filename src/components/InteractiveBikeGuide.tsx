@@ -13,6 +13,7 @@ import { getPrimaryImage } from "@/lib/productImages";
 import { fmtCZK, grossFromNet } from "@/lib/vat";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { usesPartnerPrice } from "@/lib/hudy";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -245,7 +246,7 @@ const InteractiveBikeGuide = ({
                 const pricing = getEffectiveUnitPricing(
                   p,
                   ov,
-                  mode === "b2b" && isPartner,
+                  mode === "b2b" && usesPartnerPrice(isPartner, profile, p.category),
                   profile?.discount_percent ?? 0,
                 );
                 const netPrice = Math.round(pricing.unitNet);

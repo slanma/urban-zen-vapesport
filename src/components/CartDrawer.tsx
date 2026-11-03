@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { usesPartnerPrice } from "@/lib/hudy";
 import { getProductById } from "@/data/products";
 import { fmtCZK, netFromGross } from "@/lib/vat";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
@@ -20,7 +21,7 @@ const CartDrawer = () => {
       if (!p) return null;
       const ov = get(p.id);
       if (ov?.visible === false) return null;
-      const pricing = getEffectiveUnitPricing(p, ov, isPartner, profile?.discount_percent);
+      const pricing = getEffectiveUnitPricing(p, ov, usesPartnerPrice(isPartner, profile, p.category), profile?.discount_percent);
       return { item: i, product: p, pricing };
     })
     .filter((x): x is { item: typeof items[0]; product: NonNullable<ReturnType<typeof getProductById>>; pricing: ReturnType<typeof getEffectiveUnitPricing> } => !!x);

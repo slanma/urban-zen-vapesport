@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { usesPartnerPrice } from "@/lib/hudy";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { getEffectiveProductCode } from "@/lib/effectiveProduct";
 import { fmtCZK, netFromGross } from "@/lib/vat";
@@ -28,7 +29,7 @@ const Cart = () => {
       if (!product) return null;
       const ov = get(product.id);
       if (ov?.visible === false) return null;
-      const pricing = getEffectiveUnitPricing(product, ov, isPartner, profile?.discount_percent);
+      const pricing = getEffectiveUnitPricing(product, ov, usesPartnerPrice(isPartner, profile, product.category), profile?.discount_percent);
       const code = getEffectiveProductCode(product, ov);
       const isAuto = item.meta?.auto === true;
       return { item, product, pricing, code, isAuto };
@@ -39,7 +40,7 @@ const Cart = () => {
   const subtotalNet = lines.reduce((s, l) => s + l.pricing.unitNet * l.item.quantity, 0);
   const partnerPercent = isPartner ? profile?.discount_percent ?? 0 : 0;
   const discount = evaluate(
-    lines.map((l) => buildDiscountLine(l.product, get(l.product.id), isPartner, partnerPercent, l.item.quantity)),
+    lines.map((l) => buildDiscountLine(l.product, get(l.product.id), usesPartnerPrice(isPartner, profile, l.product.category), usesPartnerPrice(isPartner, profile, l.product.category) ? partnerPercent : 0, l.item.quantity)),
     partnerPercent,
   );
   const discountGross = discount.applied?.amountGross ?? 0;

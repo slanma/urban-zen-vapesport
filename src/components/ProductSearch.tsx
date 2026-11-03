@@ -125,6 +125,7 @@ const ProductSearch = () => {
                     retailGross={getOverride(product.id).price_override ?? product.price}
                     b2bNet={getOverride(product.id).b2b_price ?? product.b2b_price ?? null}
                     size="md"
+                    category={product.category}
                   />
                   <span className="text-primary flex items-center gap-1 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
                     Detail <ArrowRight className="w-4 h-4" />

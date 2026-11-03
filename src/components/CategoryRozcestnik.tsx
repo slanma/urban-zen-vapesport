@@ -205,6 +205,7 @@ const RozcestnikCard = ({
             retailGross={ov.price_override ?? product.price}
             b2bNet={ov.b2b_price ?? product.b2b_price ?? null}
             size="md"
+            category={product.category}
           />
         </div>
       </div>

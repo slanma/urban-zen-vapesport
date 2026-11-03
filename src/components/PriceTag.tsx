@@ -1,5 +1,6 @@
 import { Lock, Sparkles } from "lucide-react";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { usesPartnerPrice } from "@/lib/hudy";
 import { fmtCZK, netFromGross, grossFromNet } from "@/lib/vat";
 
 interface PriceTagProps {
@@ -12,6 +13,8 @@ interface PriceTagProps {
   b2bNet?: number | null;
   size?: "sm" | "md" | "lg";
   className?: string;
+  /** Kategorie produktu – síť HUDY vidí B2B cenu jen u návleků ("outdoor"). */
+  category?: string;
 }
 
 const sizeMap = {
@@ -28,8 +31,10 @@ const sizeMap = {
  *    crossed-out + "Vaše věrnostní sleva X %" label. Falls back to discounted
  *    retail when the product has no VOC price.
  */
-const PriceTag = ({ retailGross, b2bNet, size = "md", className = "" }: PriceTagProps) => {
-  const { isPartner, profile } = useB2BPartner();
+const PriceTag = ({ retailGross, b2bNet, size = "md", className = "", category }: PriceTagProps) => {
+  const { isPartner: partnerAccount, profile } = useB2BPartner();
+  // Hudy: u brašen a dalšího zboží běžná cena, B2B cena jen u návleků.
+  const isPartner = usesPartnerPrice(partnerAccount, profile, category);
   const s = sizeMap[size];
   const discount = isPartner ? Math.max(0, Math.min(100, profile?.discount_percent ?? 0)) : 0;
   const factor = 1 - discount / 100;

@@ -9,6 +9,7 @@ import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
 import {
   isHudyProfile,
+  usesPartnerPrice,
   HUDY_SHIPPING_PRICE,
   hudyOptionPrice,
   hudyHasFreeShipping,
@@ -166,7 +167,7 @@ const Checkout = () => {
           if (!product) return null;
           const ov = getOverride(product.id);
           if (ov?.visible === false) return null;
-          const pricing = getEffectiveUnitPricing(product, ov, isPartner, profile?.discount_percent);
+          const pricing = getEffectiveUnitPricing(product, ov, usesPartnerPrice(isPartner, profile, product.category), profile?.discount_percent);
           const code = getEffectiveProductCode(product, ov);
           return {
             code,
@@ -178,7 +179,7 @@ const Checkout = () => {
             isB2B: pricing.isB2B,
             auto: item.meta?.auto === true,
             imageUrl: item.meta?.imageUrl ?? null,
-            discountLine: buildDiscountLine(product, ov, isPartner, partnerPercent, item.quantity),
+            discountLine: buildDiscountLine(product, ov, usesPartnerPrice(isPartner, profile, product.category), usesPartnerPrice(isPartner, profile, product.category) ? partnerPercent : 0, item.quantity),
           };
         })
         .filter((x): x is {

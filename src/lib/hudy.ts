@@ -49,3 +49,14 @@ export const hudyNeedsBilling = (
   !(p.address ?? "").trim() ||
   !(p.city ?? "").trim() ||
   !(p.zip ?? "").trim();
+
+/**
+ * Má se tomuto zákazníkovi u daného produktu ukázat B2B (VOC) cena?
+ * Hudy mají B2B ceny jen u návleků (kategorie "outdoor"). U brašen a
+ * ostatního zboží vidí běžnou cenu pro zákazníky, i když jsou přihlášení.
+ */
+export const usesPartnerPrice = (
+  isPartner: boolean,
+  profile: { segment?: string | null } | null | undefined,
+  category: string | null | undefined,
+): boolean => isPartner && !(isHudyProfile(profile) && category !== "outdoor");
