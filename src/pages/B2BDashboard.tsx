@@ -156,7 +156,7 @@ const B2BDashboard = () => {
   const [activeHotspot, setActiveHotspot] = useState<HotspotFilter>("All");
 
   const { get: getOverride } = useProductOverrides();
-  const { profile: b2bProfile } = useB2BPartner();
+  const { profile: b2bProfile, loading: partnerLoading } = useB2BPartner();
   const discount = b2bProfile?.discount_percent ?? 0;
   /** Síť HUDY sport vidí v B2B jen návleky. */
   const isHudy = isHudyProfile(b2bProfile);
@@ -315,7 +315,8 @@ const B2BDashboard = () => {
     }
   };
 
-  if (checkingAccess) {
+  // Čekáme i na profil partnera, jinak by Hudy na mžik viděly kolo a brašny.
+  if (checkingAccess || partnerLoading) {
     return (
       <div className="min-h-screen bg-secondary flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
