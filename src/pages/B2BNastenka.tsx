@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { useB2BPartner, isHudyProfile } from "@/hooks/useB2BPartner";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { products } from "@/data/products";
 import { getVariantValues } from "@/lib/variantOptions";
@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/sonner";
-import { Download, RotateCcw, Package, Award, ShoppingBag, Building2 } from "lucide-react";
+import { Download, RotateCcw, Package, Award, ShoppingBag, Building2, ChevronDown } from "lucide-react";
 
 /** Věrnostní slevový systém (útrata bez DPH → sleva). */
 const TIERY = [
@@ -42,7 +42,27 @@ interface OrderRow {
   total_gross: number | null;
   status: string;
   items: unknown;
+  shipping_label?: string | null;
+  shipping_gross?: number | null;
+  note?: string | null;
 }
+
+/** Jedna položka objednávky – B2B pokladna i běžná pokladna ukládají trochu jiná pole. */
+type OrderItem = {
+  name?: string;
+  sku?: string;
+  code?: string;
+  product_id?: string;
+  color?: string | null;
+  qty?: number;
+};
+
+const SIZES = new Set(["XS", "S", "M", "L", "XL", "XXL", "UNI"]);
+const variantLabel = (c?: string | null) => {
+  if (!c) return "";
+  if (SIZES.has(c.toUpperCase())) return `velikost ${c}`;
+  return resolveColor(c).label;
+};
 
 const brandOf = (cat: string) => (cat === "morseo-evo" ? "Morseovape" : "Vapesport");
 
@@ -67,9 +87,12 @@ const czechColor = (slug: string) =>
 const B2BNastenka = () => {
   const navigate = useNavigate();
   const { isPartner, profile, loading } = useB2BPartner();
+  /** Síť HUDY má pevnou slevu 10 % – věrnostní úrovně ostatních obchodníků jim neukazujeme. */
+  const isHudy = isHudyProfile(profile);
   const { get } = useProductOverrides();
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
+  const [openOrder, setOpenOrder] = useState<string | null>(null);
 
   // Firemní údaje – partner si je může sám opravit
   const [firma, setFirma] = useState({
@@ -140,7 +163,7 @@ const B2BNastenka = () => {
       setOrdersLoading(true);
       const { data, error } = await supabase
         .from("orders")
-        .select("id,order_number,created_at,total_gross,status,items")
+        .select("id,order_number,created_at,total_gross,status,items,shipping_label,shipping_gross,note")
         .eq("user_id", profile.user_id)
         .order("created_at", { ascending: false });
       if (!active) return;
@@ -371,12 +394,13 @@ const B2BNastenka = () => {
             <Award className="w-5 h-5 text-primary mb-3" />
             <div className="font-heading text-2xl font-bold text-foreground">{profile.discount_percent} %</div>
             <div className="text-sm text-muted-foreground mt-1">
-              vaše aktuální sleva{profile.free_shipping ? " · doprava zdarma" : ""}
+              {isHudy ? "sleva pro síť HUDY sport" : "vaše aktuální sleva"}{profile.free_shipping ? " · doprava zdarma" : ""}
             </div>
           </div>
         </div>
 
         {/* Věrnostní program */}
+        {!isHudy && (
         <section className="rounded-2xl border border-border bg-card p-6 mb-10">
           <h2 className="font-heading text-lg font-bold text-foreground mb-1">Věrnostní sleva</h2>
           {obrat2026 > 0 ? (
@@ -412,7 +436,7 @@ const B2BNastenka = () => {
               </span>
             ))}
           </div>
-        </section>
+        </section>)}
 
         {/* Feed ke stažení */}
         <section className="mb-10">
@@ -466,24 +490,69 @@ const B2BNastenka = () => {
             <p className="text-muted-foreground text-sm">Zatím žádné objednávky.</p>
           ) : (
             <ul className="divide-y divide-border">
-              {orders.map((o) => (
-                <li key={o.id} className="py-3 flex items-center justify-between gap-4">
-                  <div>
-                    <p className="font-medium text-foreground text-sm">{o.order_number}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(o.created_at).toLocaleDateString("cs-CZ")}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <span className="inline-block text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-secondary text-foreground mb-1">
-                      {STATUS_LABELS[o.status] ?? o.status}
-                    </span>
-                    <p className="font-heading font-bold text-foreground text-sm">
-                      {o.total_gross != null ? fmtCZK(o.total_gross) : "—"}
-                    </p>
-                  </div>
+              {orders.map((o) => {
+                const isOpen = openOrder === o.id;
+                const items = (Array.isArray(o.items) ? o.items : []) as OrderItem[];
+                return (
+                <li key={o.id} className="py-1">
+                  <button
+                    type="button"
+                    onClick={() => setOpenOrder(isOpen ? null : o.id)}
+                    aria-expanded={isOpen}
+                    className="w-full py-2 flex items-center justify-between gap-4 text-left rounded-md hover:bg-secondary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary px-2 -mx-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                      <div>
+                        <p className="font-medium text-foreground text-sm">{o.order_number}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(o.created_at).toLocaleDateString("cs-CZ")} · {isOpen ? "skrýt detail" : "zobrazit detail"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="inline-block text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-secondary text-foreground mb-1">
+                        {STATUS_LABELS[o.status] ?? o.status}
+                      </span>
+                      <p className="font-heading font-bold text-foreground text-sm">
+                        {o.total_gross != null ? fmtCZK(o.total_gross) : "—"}
+                      </p>
+                    </div>
+                  </button>
+                  {isOpen && (
+                    <div className="mt-2 mb-3 ml-6 rounded-lg bg-secondary/60 p-4 text-sm space-y-3">
+                      {items.length === 0 ? (
+                        <p className="text-muted-foreground">Položky objednávky nejsou k dispozici.</p>
+                      ) : (
+                        <ul className="space-y-1.5">
+                          {items.map((it, idx) => (
+                            <li key={idx} className="flex justify-between gap-4">
+                              <span className="text-foreground">
+                                {it.name || it.sku || it.code || it.product_id}
+                                {it.color ? <span className="text-muted-foreground"> – {variantLabel(it.color)}</span> : null}
+                              </span>
+                              <span className="font-semibold text-foreground whitespace-nowrap">{it.qty ?? 0} ks</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <div className="border-t border-border pt-2 space-y-1 text-muted-foreground">
+                        {o.shipping_label && (
+                          <p>
+                            Doprava: <span className="text-foreground">{o.shipping_label}</span>
+                            {o.shipping_gross ? ` (${fmtCZK(o.shipping_gross)})` : ""}
+                          </p>
+                        )}
+                        {o.note && <p>Poznámka: <span className="text-foreground">{o.note}</span></p>}
+                        <p>
+                          Celkem s DPH: <span className="font-semibold text-foreground">{o.total_gross != null ? fmtCZK(o.total_gross) : "—"}</span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </li>
-              ))}
+                );
+              })}
             </ul>
           )}
         </section>
