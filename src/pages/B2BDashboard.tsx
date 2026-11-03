@@ -632,7 +632,26 @@ const B2BDashboard = () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          {colors.length > 1 ? (
+                          {colors.length > 1 && product.category === "outdoor" ? (
+                            // Návleky: velikosti vedle sebe, nad každým políčkem jen písmeno velikosti.
+                            <div className="flex items-end gap-2 min-w-[220px]">
+                              {colors.map((c) => (
+                                <label key={c} className="flex flex-col items-center gap-1">
+                                  <span className="text-sm font-semibold text-foreground">{c}</span>
+                                  <input
+                                    type="number"
+                                    min={0}
+                                    inputMode="numeric"
+                                    value={getQty(product.id, c) || ""}
+                                    placeholder="0"
+                                    onChange={(e) => setQty(product.id, Math.max(0, parseInt(e.target.value) || 0), c)}
+                                    className="w-16 h-11 text-center text-base font-bold bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                                    aria-label={`${product.name} – velikost ${c}`}
+                                  />
+                                </label>
+                              ))}
+                            </div>
+                          ) : colors.length > 1 ? (
                             <div className="space-y-1.5 min-w-[220px]">
                               {colors.map((c) => {
                                 // Návleky mají velikosti, ne barvy – bez barevné tečky a s „Velikost …“.
