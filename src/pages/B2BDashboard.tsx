@@ -635,19 +635,25 @@ const B2BDashboard = () => {
                           {colors.length > 1 ? (
                             <div className="space-y-1.5 min-w-[220px]">
                               {colors.map((c) => {
-                                const { label, hex } = resolveColor(c);
+                                // Návleky mají velikosti, ne barvy – bez barevné tečky a s „Velikost …“.
+                                const isSize = product.category === "outdoor";
+                                const { label: colorLabel, hex } = resolveColor(c);
+                                const label = isSize ? `Velikost ${c}` : colorLabel;
                                 const cq = getQty(product.id, c);
                                 return (
                                   <div key={c} className="flex items-center gap-2">
-                                    <span className="w-4 h-4 rounded-full border border-border shrink-0" style={{ backgroundColor: hex }} title={label} />
-                                    <span className="text-sm text-foreground flex-1 truncate">{label}</span>
+                                    {!isSize && (
+                                      <span className="w-4 h-4 rounded-full border border-border shrink-0" style={{ backgroundColor: hex }} title={label} />
+                                    )}
+                                    <span className={`text-sm text-foreground flex-1 truncate ${isSize ? "font-semibold" : ""}`}>{label}</span>
                                     <input
                                       type="number"
                                       min={0}
+                                      inputMode="numeric"
                                       value={cq || ""}
                                       placeholder="0"
                                       onChange={(e) => setQty(product.id, Math.max(0, parseInt(e.target.value) || 0), c)}
-                                      className="w-16 h-9 text-center text-base font-bold bg-secondary border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                                      className={`w-16 h-9 text-center text-base font-bold border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary ${isSize ? "bg-background" : "bg-secondary"}`}
                                       aria-label={`${product.name} – ${label}`}
                                     />
                                   </div>
