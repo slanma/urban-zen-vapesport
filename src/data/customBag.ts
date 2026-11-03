@@ -12,6 +12,8 @@ export interface Choice {
   label: string;
   extra: number;
   hint?: string;
+  /** Cena není pevná — upřesníme po konzultaci. */
+  priceTbd?: boolean;
 }
 
 export interface Swatch {
@@ -21,6 +23,8 @@ export interface Swatch {
   hex: string;
   /** Vzor přes barvu (mřížka / tečky). */
   pattern?: "grid" | "dots" | "grid-white";
+  /** Výřez ze skutečné fotky látky. */
+  img?: string;
 }
 
 /** Krok 1 — kam na kole brašna patří. */
@@ -45,6 +49,8 @@ export interface MaterialGroup {
   id: string;
   label: string;
   extra: number;
+  /** Fotka skutečných vzorků látky. */
+  photo: string;
   colors: Swatch[];
 }
 
@@ -54,57 +60,62 @@ export const MATERIAL_GROUPS: MaterialGroup[] = [
     id: "material-1",
     label: "Materiál 1",
     extra: 50,
+    photo: "/images/produkty-vapesport/brasna-na-miru/latky/material-1.jpg",
     colors: [
-      { id: "tmave-modra", label: "Tmavě modrá", hex: "#1F3A6B" },
-      { id: "svetle-modra", label: "Světle modrá", hex: "#7FB2DE" },
-      { id: "zluta", label: "Žlutá", hex: "#E8C34A" },
-      { id: "cervena", label: "Červená", hex: "#C8302B" },
+      { id: "tmave-modra", label: "Tmavě modrá", hex: "#1F3A8A", img: "/images/produkty-vapesport/brasna-na-miru/latky/m1-tmave-modra.webp" },
+      { id: "svetle-modra", label: "Světle modrá", hex: "#8DB4DA", img: "/images/produkty-vapesport/brasna-na-miru/latky/m1-svetle-modra.webp" },
+      { id: "zluta", label: "Žlutá", hex: "#D9B21E", img: "/images/produkty-vapesport/brasna-na-miru/latky/m1-zluta.webp" },
+      { id: "cervena", label: "Červená", hex: "#A51C2E", img: "/images/produkty-vapesport/brasna-na-miru/latky/m1-cervena.webp" },
     ],
   },
   {
     id: "material-2",
     label: "Materiál 2",
     extra: 50,
+    photo: "/images/produkty-vapesport/brasna-na-miru/latky/material-2.jpg",
     colors: [
-      { id: "malinova", label: "Malinová", hex: "#B02A5B" },
-      { id: "bezova", label: "Béžová", hex: "#D6C3A3" },
+      { id: "vinova-jemna", label: "Vínová jemná", hex: "#9E1438", img: "/images/produkty-vapesport/brasna-na-miru/latky/m2-vinova-jemna.webp" },
+      { id: "kremove-bila", label: "Krémově bílá", hex: "#D9DCD6", img: "/images/produkty-vapesport/brasna-na-miru/latky/m2-kremove-bila.webp" },
     ],
   },
   {
     id: "material-3",
     label: "Materiál 3",
     extra: 50,
+    photo: "/images/produkty-vapesport/brasna-na-miru/latky/material-3.jpg",
     colors: [
-      { id: "horcicova", label: "Hořčicová", hex: "#C99A2E" },
-      { id: "fialova", label: "Fialová", hex: "#6A3F8F" },
-      { id: "neon-zelena", label: "Neonově zelená", hex: "#9BE23C" },
+      { id: "okrova", label: "Okrová", hex: "#D18A12", img: "/images/produkty-vapesport/brasna-na-miru/latky/m3-okrova.webp" },
+      { id: "fialova", label: "Fialová", hex: "#6A2FC4", img: "/images/produkty-vapesport/brasna-na-miru/latky/m3-fialova.webp" },
+      { id: "neonove-zelena", label: "Neonově zelená", hex: "#7CF02C", img: "/images/produkty-vapesport/brasna-na-miru/latky/m3-neonove-zelena.webp" },
     ],
   },
   {
     id: "material-4",
     label: "Materiál 4",
     extra: 50,
+    photo: "/images/produkty-vapesport/brasna-na-miru/latky/material-4.jpg",
     colors: [
-      { id: "cerna", label: "Černá", hex: "#222222" },
-      { id: "cervena", label: "Červená", hex: "#B8312B" },
-      { id: "tmave-zelena", label: "Tmavě zelená", hex: "#2F4B36" },
-      { id: "oranzova", label: "Oranžová", hex: "#E0702A" },
-      { id: "kralovska-modra", label: "Královská modrá", hex: "#2F5EA8" },
-      { id: "vinova", label: "Vínová", hex: "#6B2232" },
-      { id: "piskova", label: "Písková", hex: "#C9B48A" },
-      { id: "olivova", label: "Olivová", hex: "#6B6B3A" },
-      { id: "modra-mrizka", label: "Modrá s mřížkou", hex: "#2F5EA8", pattern: "grid" },
-      { id: "cerna-tecky", label: "Černá s tečkami", hex: "#222222", pattern: "dots" },
+      { id: "cervena", label: "Červená", hex: "#C8123C", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-cervena.webp" },
+      { id: "tmave-zelena", label: "Tmavě zelená", hex: "#1E403E", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-tmave-zelena.webp" },
+      { id: "oranzova", label: "Oranžová", hex: "#F0661E", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-oranzova.webp" },
+      { id: "modra", label: "Modrá", hex: "#1E40C8", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-modra.webp" },
+      { id: "vinova", label: "Vínová", hex: "#5E1626", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-vinova.webp" },
+      { id: "bezova", label: "Béžová", hex: "#C9C5B4", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-bezova.webp" },
+      { id: "khaki", label: "Khaki", hex: "#4A4C3E", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-khaki.webp" },
+      { id: "cerna", label: "Černá", hex: "#16171B", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-cerna.webp" },
+      { id: "modra-mrizka", label: "Modrá s mřížkou", hex: "#1530B0", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-modra-mrizka.webp" },
+      { id: "cerna-teckovana", label: "Černá tečkovaná", hex: "#111111", img: "/images/produkty-vapesport/brasna-na-miru/latky/m4-cerna-teckovana.webp" },
     ],
   },
   {
     id: "material-5",
     label: "Materiál 5",
     extra: 50,
+    photo: "/images/produkty-vapesport/brasna-na-miru/latky/material-5.jpg",
     colors: [
-      { id: "seda", label: "Šedá", hex: "#8A8A88" },
-      { id: "cervena", label: "Červená", hex: "#B8312B" },
-      { id: "cerna-bila-mrizka", label: "Černá s bílou mřížkou", hex: "#222222", pattern: "grid-white" },
+      { id: "seda-struktura", label: "Šedá struktura", hex: "#7E8790", img: "/images/produkty-vapesport/brasna-na-miru/latky/m5-seda-struktura.webp" },
+      { id: "cervena-struktura", label: "Červená struktura", hex: "#C8202E", img: "/images/produkty-vapesport/brasna-na-miru/latky/m5-cervena-struktura.webp" },
+      { id: "cerna-ctverecky", label: "Černá se čtverečky", hex: "#202020", img: "/images/produkty-vapesport/brasna-na-miru/latky/m5-cerna-ctverecky.webp" },
     ],
   },
 ];
@@ -141,7 +152,7 @@ export const STIFFENER: Choice[] = [
 /** Kapsy — jedna možnost. */
 export const POCKETS: Choice[] = [
   { id: "jedna-hluboka", label: "Jedna hluboká kapsa", extra: 0 },
-  { id: "dve-kapsy", label: "Dvě kapsy", extra: 0 },
+  { id: "dve-kapsy", label: "Dvě kapsy", extra: 0, priceTbd: true },
 ];
 
 /** Doplňky — lze víc. Cenu určíme podle rozměrů a složitosti. */

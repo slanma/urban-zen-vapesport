@@ -38,7 +38,8 @@ interface Props {
   productName: string;
 }
 
-const priceLabel = (extra: number) => (extra > 0 ? `+${fmtCZK(extra)}` : "v ceně");
+const priceLabel = (extra: number, tbd = false) =>
+  tbd ? "cenu upřesníme" : extra > 0 ? `+${fmtCZK(extra)}` : "";
 
 /* ---------- drobné stavební kameny ---------- */
 
@@ -77,17 +78,34 @@ const Pill = ({
   </button>
 );
 
-const ChoiceRow = ({ items, value, onChange }: { items: Choice[]; value: string; onChange: (id: string) => void }) => (
+const ChoiceRow = ({
+  items,
+  value,
+  onChange,
+  showPrice = true,
+}: {
+  items: Choice[];
+  value: string;
+  onChange: (id: string) => void;
+  /** Umístění a tvar nemají pevný příplatek — cenu neukazujeme vůbec. */
+  showPrice?: boolean;
+}) => (
   <div className="flex flex-wrap gap-2">
-    {items.map((c) => (
-      <Pill key={c.id} active={value === c.id} onClick={() => onChange(c.id)} sub={c.hint ? `${priceLabel(c.extra)} · ${c.hint}` : priceLabel(c.extra)}>
+    {items.map((c) => {
+      const price = showPrice ? priceLabel(c.extra, c.priceTbd) : "";
+      const sub = [price, c.hint].filter(Boolean).join(" · ") || undefined;
+      return (
+      <Pill key={c.id} active={value === c.id} onClick={() => onChange(c.id)} sub={sub}>
         {c.label}
       </Pill>
-    ))}
+      );
+    })}
   </div>
 );
 
 const patternStyle = (s: Swatch): React.CSSProperties => {
+  if (s.img)
+    return { backgroundColor: s.hex, backgroundImage: `url(${s.img})`, backgroundSize: "cover", backgroundPosition: "center" };
   if (s.pattern === "grid")
     return { backgroundColor: s.hex, backgroundImage: "linear-gradient(rgba(255,255,255,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.35) 1px,transparent 1px)", backgroundSize: "6px 6px" };
   if (s.pattern === "grid-white")
@@ -109,7 +127,7 @@ const SwatchDots = ({ items, value, onChange }: { items: Swatch[]; value: string
           aria-label={s.label}
           aria-pressed={active}
           onClick={() => onChange(s.id)}
-          className={`relative w-9 h-9 rounded-full border transition-transform ${
+          className={`relative ${s.img ? "w-12 h-12" : "w-9 h-9"} rounded-full border transition-transform ${
             active ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-105" : "border-border hover:scale-105"
           }`}
           style={patternStyle(s)}
@@ -159,14 +177,21 @@ const BagPreview = ({ fabric, zip }: { fabric: Swatch; zip: string }) => (
         <pattern id="pv-grid" width="7" height="7" patternUnits="userSpaceOnUse">
           <path d="M7 0 L0 0 0 7" fill="none" stroke={fabric.pattern === "grid-white" ? "#fff" : "rgba(255,255,255,.35)"} strokeWidth="1" />
         </pattern>
+        {fabric.img && (
+          <pattern id="pv-img" width="60" height="60" patternUnits="userSpaceOnUse">
+            <image href={fabric.img} x="-13" y="-13" width="86" height="86" preserveAspectRatio="xMidYMid slice" />
+          </pattern>
+        )}
         <pattern id="pv-dots" width="6" height="6" patternUnits="userSpaceOnUse">
           <circle cx="3" cy="3" r="1" fill="rgba(255,255,255,.7)" />
         </pattern>
       </defs>
       <path d="M20 100 L180 100 L100 20 Z" fill={fabric.hex} stroke="#111" strokeWidth="2" strokeLinejoin="round" />
-      {fabric.pattern && (
+      {fabric.img ? (
+        <path d="M20 100 L180 100 L100 20 Z" fill="url(#pv-img)" />
+      ) : fabric.pattern ? (
         <path d="M20 100 L180 100 L100 20 Z" fill={fabric.pattern === "dots" ? "url(#pv-dots)" : "url(#pv-grid)"} />
-      )}
+      ) : null}
       {/* zip */}
       <path d="M34 94 L100 30 L166 94" fill="none" stroke={zip} strokeWidth="3.5" strokeLinecap="round" />
       {/* pásky */}
@@ -175,6 +200,14 @@ const BagPreview = ({ fabric, zip }: { fabric: Swatch; zip: string }) => (
     </svg>
   </div>
 );
+
+/** Co změřit — bez vymyšlených čísel, jen co a kde. */
+const DIMS_PLACEHOLDER: Record<string, string> = {
+  ram: "Vnitřní délky stran prostoru v rámu v cm (nahoře, vzadu, dole) a šířka trubek",
+  "horni-trubka": "Délka a šířka místa na horní trubce v cm",
+  nosic: "Délka a šířka nosiče v cm",
+  jine: "Rozměry místa, kam má brašna přijít, v cm",
+};
 
 /* ---------- hlavní komponenta ---------- */
 
@@ -227,7 +260,7 @@ const CustomBagConfigurator = ({ basePrice = CUSTOM_BAG_BASE_PRICE, productName 
           : ZIP_PLAIN.label,
     ],
     ["Výztuha", STIFFENER.find((s) => s.id === stiffener)?.label ?? ""],
-    ["Kapsy", POCKETS.find((k) => k.id === pocket)?.label ?? ""],
+    ["Kapsy", (() => { const k = POCKETS.find((x) => x.id === pocket); return k ? (k.priceTbd ? `${k.label} (cenu upřesníme)` : k.label) : ""; })()],
     ["Doplňky", EXTRAS.filter((e) => extras.includes(e.id)).map((e) => e.label).join(", ") || "žádné"],
   ];
 
@@ -305,15 +338,15 @@ const CustomBagConfigurator = ({ basePrice = CUSTOM_BAG_BASE_PRICE, productName 
 
   return (
     <div className="mt-6 space-y-5">
-      <Step n={1} title="Kam chcete brašnu" hint="Klikněte na místo na kole, nebo vyberte níže.">
+      <Step n={1} title="Kam chcete brašnu" hint="Klikněte na místo na kole, nebo vyberte níže. Cenu určíme podle rozměrů.">
         <BikePicker value={place} onChange={setPlace} />
         <div className="mt-3">
-          <ChoiceRow items={PLACES} value={place} onChange={setPlace} />
+          <ChoiceRow items={PLACES} value={place} onChange={setPlace} showPrice={false} />
         </div>
         {place === "ram" && (
           <div className="mt-4">
             <p className="font-body text-xs font-semibold text-foreground mb-2">Jak velká v rámu?</p>
-            <ChoiceRow items={FRAME_SHAPES} value={shape} onChange={setShape} />
+            <ChoiceRow items={FRAME_SHAPES} value={shape} onChange={setShape} showPrice={false} />
           </div>
         )}
       </Step>
@@ -322,7 +355,7 @@ const CustomBagConfigurator = ({ basePrice = CUSTOM_BAG_BASE_PRICE, productName 
         <div className="grid sm:grid-cols-[1fr_200px] gap-4 items-start">
           <div className="space-y-3">
             <div className="flex flex-wrap gap-2">
-              <Pill active={!group} onClick={() => { setGroupId("cerna"); setColorId(null); }} sub="v ceně">
+              <Pill active={!group} onClick={() => { setGroupId("cerna"); setColorId(null); }}>
                 {BLACK.label}
               </Pill>
               {MATERIAL_GROUPS.map((g) => (
@@ -340,6 +373,17 @@ const CustomBagConfigurator = ({ basePrice = CUSTOM_BAG_BASE_PRICE, productName 
               <div>
                 <SwatchDots items={group.colors} value={fabric.id} onChange={setColorId} />
                 <p className="font-body text-xs text-muted-foreground mt-2">Vybráno: {fabric.label}</p>
+                <figure className="mt-3">
+                  <img
+                    src={group.photo}
+                    alt={`${group.label} – skutečné vzorky látek`}
+                    loading="lazy"
+                    className="w-full max-w-[280px] rounded-lg border border-border object-cover"
+                  />
+                  <figcaption className="font-body text-[11px] text-muted-foreground mt-1">
+                    Všechny vzorky téhle látky pohromadě.
+                  </figcaption>
+                </figure>
               </div>
             )}
           </div>
@@ -385,10 +429,10 @@ const CustomBagConfigurator = ({ basePrice = CUSTOM_BAG_BASE_PRICE, productName 
         </div>
       </Step>
 
-      <Step n={8} title="Rozměry a fotka" hint="Rozměry vnitřku rámu (v cm), nebo fotka rámu s metrem. Když nevíte, nevadí, doladíme to spolu.">
+      <Step n={8} title="Rozměry a fotka" hint="Změřte v cm prostor, kam má brašna přijít. Nejlíp pošlete i fotku s metrem přiloženým ke kolu.">
         <textarea
           className={`${field} min-h-[70px]`}
-          placeholder="Např. horní trubka 52 cm, spodní 58 cm, sedlová 45 cm"
+          placeholder={DIMS_PLACEHOLDER[place] ?? DIMS_PLACEHOLDER.jine}
           value={form.dims}
           onChange={(e) => set("dims", e.target.value)}
         />

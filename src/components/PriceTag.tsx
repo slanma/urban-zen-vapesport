@@ -15,6 +15,8 @@ interface PriceTagProps {
   className?: string;
   /** Kategorie produktu – síť HUDY vidí B2B cenu jen u návleků ("outdoor"). */
   category?: string;
+  /** Zobrazí „od" před cenou (produkty na míru). */
+  from?: boolean;
 }
 
 const sizeMap = {
@@ -31,7 +33,8 @@ const sizeMap = {
  *    crossed-out + "Vaše věrnostní sleva X %" label. Falls back to discounted
  *    retail when the product has no VOC price.
  */
-const PriceTag = ({ retailGross, b2bNet, size = "md", className = "", category }: PriceTagProps) => {
+const PriceTag = ({ retailGross, b2bNet, size = "md", className = "", category, from = false }: PriceTagProps) => {
+  const od = from ? <span className="font-body font-normal text-[0.7em] mr-1">od</span> : null;
   const { isPartner: partnerAccount, profile } = useB2BPartner();
   // Hudy: u brašen a dalšího zboží běžná cena, B2B cena jen u návleků.
   const isPartner = usesPartnerPrice(partnerAccount, profile, category);
@@ -47,6 +50,7 @@ const PriceTag = ({ retailGross, b2bNet, size = "md", className = "", category }
       <div className={`flex flex-col leading-tight ${className}`}>
         <span className={`font-heading font-bold text-primary inline-flex items-center gap-1.5 flex-wrap ${s.primary}`}>
           <Lock className="w-4 h-4" />
+          {od}
           {fmtCZK(discountedGross)} <span className="font-body font-normal text-primary/70 text-[0.7em]">s DPH</span>
           {discount > 0 && (
             <span className="font-body text-muted-foreground text-sm line-through font-normal">
@@ -55,7 +59,7 @@ const PriceTag = ({ retailGross, b2bNet, size = "md", className = "", category }
           )}
         </span>
         <span className={`font-body text-muted-foreground ${s.secondary}`}>
-          Vaše VOC bez DPH: {fmtCZK(discountedNet)}
+          Vaše VOC bez DPH: {from && "od "}{fmtCZK(discountedNet)}
         </span>
         {discount > 0 && (
           <span className="inline-flex items-center gap-1 mt-1 text-xs font-semibold text-primary">
@@ -74,13 +78,14 @@ const PriceTag = ({ retailGross, b2bNet, size = "md", className = "", category }
       <div className={`flex flex-col leading-tight ${className}`}>
         <span className={`font-heading font-bold text-primary inline-flex items-center gap-1.5 flex-wrap ${s.primary}`}>
           <Lock className="w-4 h-4" />
+          {od}
           {fmtCZK(discountedGross)} <span className="font-body font-normal text-primary/70 text-[0.7em]">s DPH</span>
           <span className="font-body text-muted-foreground text-sm line-through font-normal">
             {fmtCZK(retailGross)}
           </span>
         </span>
         <span className={`font-body text-muted-foreground ${s.secondary}`}>
-          bez DPH: {fmtCZK(netFromGross(discountedGross))}
+          bez DPH: {from && "od "}{fmtCZK(netFromGross(discountedGross))}
         </span>
         <span className="inline-flex items-center gap-1 mt-1 text-xs font-semibold text-primary">
           <Sparkles className="w-3 h-3" />
@@ -95,10 +100,11 @@ const PriceTag = ({ retailGross, b2bNet, size = "md", className = "", category }
   return (
     <div className={`flex flex-col leading-tight ${className}`}>
       <span className={`font-heading font-bold text-foreground ${s.primary}`}>
+        {od}
         {fmtCZK(retailGross)} <span className="font-body font-normal text-muted-foreground text-[0.7em]">s DPH</span>
       </span>
       <span className={`font-body text-muted-foreground ${s.secondary}`}>
-        bez DPH: {fmtCZK(net)}
+        bez DPH: {from && "od "}{fmtCZK(net)}
       </span>
     </div>
   );

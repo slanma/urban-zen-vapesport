@@ -20,6 +20,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import ImageUpload from "@/components/ImageUpload";
+import CustomBagConfigurator from "@/components/product/CustomBagConfigurator";
+import { CUSTOM_BAG_ID } from "@/data/customBag";
 import { useCart } from "@/hooks/useCart";
 import { toast } from "@/hooks/use-toast";
 import QuantitySelector from "@/components/product/QuantitySelector";
@@ -359,7 +361,7 @@ const ProductDetail = () => {
           <div className="lg:col-span-5 flex flex-col">
             {/* Price — partner sees wholesale dominant */}
             <div className="border-b border-border pb-6">
-              <PriceTag retailGross={grossPrice} b2bNet={b2bPrice} size="lg" category={product.category} />
+              <PriceTag retailGross={grossPrice} b2bNet={b2bPrice} size="lg" category={product.category} from={product.id === CUSTOM_BAG_ID} />
               <div className="mt-3 flex items-center gap-4 text-xs font-body text-muted-foreground">
                 <span>
                   Kód: <span className="font-mono text-foreground">{sku}</span>
@@ -458,8 +460,13 @@ const ProductDetail = () => {
             </div>
             )}
 
+            {/* Brašna na míru — konfigurátor s poptávkou místo košíku */}
+            {product.id === CUSTOM_BAG_ID && (
+              <CustomBagConfigurator basePrice={effectivePrice || undefined} productName={product.name} />
+            )}
+
             {/* Obrázek pro produkty na míru */}
-            {(/na m[ií]ru/i.test(product.name) || CUSTOM_UPLOAD_IDS.includes(product.id)) && (
+            {product.id !== CUSTOM_BAG_ID && (/na m[ií]ru/i.test(product.name) || CUSTOM_UPLOAD_IDS.includes(product.id)) && (
               <div className="mt-6 rounded-lg border border-border bg-secondary/40 p-4">
                 <Label className="font-heading text-xs font-bold uppercase tracking-wider text-foreground">
                   Přiložte obrázek (volitelné)
@@ -477,6 +484,7 @@ const ProductDetail = () => {
             )}
 
             {/* Quantity + Add to cart */}
+            {product.id !== CUSTOM_BAG_ID && (
             <div className="mt-8 flex items-center gap-3">
               <QuantitySelector value={quantity} onChange={setQuantity} disabled={!inStock} />
               <Button
@@ -493,6 +501,7 @@ const ProductDetail = () => {
                 {inStock ? "Přidat do košíku" : "Vyprodáno"}
               </Button>
             </div>
+            )}
 
             {/* BLOCK C — Problém / Funkce / Použití (napevno z feedu) */}
             {(product.problem || product.funkce || product.pouziti) && (
