@@ -6,6 +6,13 @@ import { Button } from "@/components/ui/button";
 import { getProductById } from "@/data/products";
 import { fmtCZK, grossFromNet, vatOfGross } from "@/lib/vat";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
+import {
+  isHudyProfile,
+  HUDY_SHIPPING_PRICE,
+  hudyOptionPrice,
+  hudyHasFreeShipping,
+  hudyMissingForFreeShipping,
+} from "@/lib/hudy";
 import ImageUpload from "@/components/ImageUpload";
 import { useDiscounts } from "@/hooks/usePromoCode";
 import PromoCodeBox from "@/components/PromoCodeBox";
@@ -73,6 +80,7 @@ const B2BCheckout = () => {
   const { evaluate } = useDiscounts();
   const { get: getOverride } = useProductOverrides();
   const partnerPercent = partnerProfile?.discount_percent ?? 0;
+  const isHudy = isHudyProfile(partnerProfile);
   const [payload, setPayload] = useState<B2BCheckoutPayload | null>(null);
   const [step, setStep] = useState(1);
   const [shipping, setShipping] = useState<ShippingId>("osobni");
@@ -140,6 +148,22 @@ const B2BCheckout = () => {
     }));
   }, [partnerProfile]);
 
+  // Hudy smí objednat jen návleky – cokoli jiného z košíku vyřadíme.
+  useEffect(() => {
+    if (!isHudy || !payload) return;
+    const allowed = payload.items.filter((i) => getProductById(i.productId)?.category === "outdoor");
+    if (allowed.length === payload.items.length) return;
+    toast.error("Pro síť HUDY jsou v B2B jen návleky – ostatní položky jsme z objednávky odebrali.");
+    if (allowed.length === 0) {
+      sessionStorage.removeItem(STORAGE_KEY);
+      navigate("/b2b-dashboard", { replace: true });
+      return;
+    }
+    const next = { ...payload, items: allowed };
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    setPayload(next);
+  }, [isHudy, payload, navigate]);
+
   // Items are stored as NET (VOC bez DPH). Compute gross with VAT.
   const itemsSubtotalNet = useMemo(
     () => (payload?.items ?? []).reduce((s, i) => s + i.unitPrice * i.qty, 0),
@@ -152,8 +176,13 @@ const B2BCheckout = () => {
 
   const shippingOpt = SHIPPING_OPTIONS.find((s) => s.id === shipping)!;
   // Doprava zdarma se uplatní POUZE pokud je v administraci nastavena na profilu B2B partnera.
-  const freeShipping = partnerProfile?.free_shipping === true;
-  const shippingPrice = freeShipping ? 0 : shippingOpt.price;
+  const hudyFreeShipping = isHudy && hudyHasFreeShipping(itemsSubtotalNet);
+  const freeShipping = partnerProfile?.free_shipping === true || hudyFreeShipping;
+  const baseShippingPrice = isHudy ? hudyOptionPrice(shippingOpt.price) : shippingOpt.price;
+  const shippingPrice = freeShipping ? 0 : baseShippingPrice;
+  /** Cena konkrétní možnosti dopravy pro tohoto partnera (před dopravou zdarma). */
+  const optionPrice = (o: { price: number }) => (isHudy ? hudyOptionPrice(o.price) : o.price);
+  const missingForFreeShippingNet = isHudy ? hudyMissingForFreeShipping(itemsSubtotalNet) : 0;
 
   // Akce a slevy: ceny v payloadu už obsahují partnerskou slevu, akce vrací
   // jen dorovnání na vyšší slevu. Doprava se nezlevňuje.
@@ -224,8 +253,8 @@ const B2BCheckout = () => {
         line_total: i.unitPrice * i.qty,
       })),
       subtotal_gross: Math.round(itemsSubtotalGross),
-      shipping_label: freeShipping && shippingOpt.price > 0
-        ? `${shippingOpt.label} (zdarma – B2B)`
+      shipping_label: freeShipping && baseShippingPrice > 0
+        ? `${shippingOpt.label} (zdarma – ${hudyFreeShipping ? "HUDY nad 10 000 Kč" : "B2B"})`
         : shippingOpt.label,
       shipping_gross: shippingPrice,
       payment_label: PAYMENT_LABELS[payment],
@@ -429,13 +458,21 @@ const B2BCheckout = () => {
                 {freeShipping && (
                   <div className="mb-4 p-3 rounded-md bg-primary/10 border border-primary/30 text-sm font-semibold text-primary flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4" />
-                    Doprava zdarma (B2B Partner) — všechny způsoby dopravy máte za 0 Kč.
+                    {hudyFreeShipping
+                      ? "Doprava zdarma — objednávka je nad 10 000 Kč bez DPH."
+                      : "Doprava zdarma (B2B Partner) — všechny způsoby dopravy máte za 0 Kč."}
+                  </div>
+                )}
+                {isHudy && !freeShipping && (
+                  <div className="mb-4 p-3 rounded-md bg-muted border border-border text-sm text-foreground">
+                    Doprava {fmtCZK(HUDY_SHIPPING_PRICE)}. Do dopravy zdarma chybí{" "}
+                    <strong>{fmtCZK(missingForFreeShippingNet)} bez DPH</strong>.
                   </div>
                 )}
                 <div className="space-y-3 mb-8">
                   {SHIPPING_OPTIONS.map((opt) => {
-                    const effectivePrice = freeShipping ? 0 : opt.price;
-                    const wasFree = freeShipping && opt.price > 0;
+                    const effectivePrice = freeShipping ? 0 : optionPrice(opt);
+                    const wasFree = freeShipping && optionPrice(opt) > 0;
                     return (
                       <label
                         key={opt.id}
@@ -454,7 +491,7 @@ const B2BCheckout = () => {
                           {opt.label} –{" "}
                           {wasFree ? (
                             <>
-                              <span className="line-through text-muted-foreground mr-1">{fmtCZK(opt.price)}</span>
+                              <span className="line-through text-muted-foreground mr-1">{fmtCZK(optionPrice(opt))}</span>
                               <span className="font-bold text-primary">Zdarma</span>
                             </>
                           ) : effectivePrice === 0 ? (
@@ -572,9 +609,9 @@ const B2BCheckout = () => {
                   <div className="flex justify-between">
                     <span>Způsob dopravy – <strong>{shippingOpt.label}</strong></span>
                     <strong>
-                      {freeShipping && shippingOpt.price > 0 ? (
+                      {freeShipping && baseShippingPrice > 0 ? (
                         <>
-                          <span className="line-through text-muted-foreground mr-2 font-normal">{fmtCZK(shippingOpt.price)}</span>
+                          <span className="line-through text-muted-foreground mr-2 font-normal">{fmtCZK(baseShippingPrice)}</span>
                           Zdarma
                         </>
                       ) : shippingPrice === 0 ? "Zdarma" : fmtCZK(shippingPrice)}
@@ -658,7 +695,7 @@ const B2BCheckout = () => {
                 <div className="flex justify-between">
                   <dt>Doprava</dt>
                   <dd>
-                    {freeShipping && shippingOpt.price > 0 ? (
+                    {freeShipping && baseShippingPrice > 0 ? (
                       <span className="text-primary font-semibold">Zdarma (B2B)</span>
                     ) : shippingPrice === 0 ? "Zdarma" : fmtCZK(shippingPrice)}
                   </dd>

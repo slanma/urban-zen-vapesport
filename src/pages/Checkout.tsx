@@ -7,6 +7,13 @@ import { getProductById } from "@/data/products";
 import { useCart } from "@/hooks/useCart";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner } from "@/hooks/useB2BPartner";
+import {
+  isHudyProfile,
+  HUDY_SHIPPING_PRICE,
+  hudyOptionPrice,
+  hudyHasFreeShipping,
+  hudyMissingForFreeShipping,
+} from "@/lib/hudy";
 import { useAuth } from "@/hooks/useAuth";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { ShieldCheck, Lock, ChevronLeft, MapPin, Building2, Loader2, CheckCircle2 } from "lucide-react";
@@ -145,7 +152,8 @@ const Checkout = () => {
     return base;
   }, [shipping, isPartner]);
 
-  const freeShipping = isPartner && profile?.free_shipping === true;
+  /** Síť HUDY sport: jen návleky, dopravné 180 Kč, od 10 000 Kč bez DPH zdarma. */
+  const isHudy = isPartner && isHudyProfile(profile);
 
   const shippingOpt = shipping ? SHIPPING_OPTIONS.find((s) => s.id === shipping)! : null;
   const paymentOpt = payment ? availablePayments.find((p) => p.id === payment) ?? null : null;
@@ -190,7 +198,16 @@ const Checkout = () => {
 
 
   const subtotalGross = orderLines.reduce((s, it) => s + it.unitGross * it.qty, 0);
-  const shippingPrice = freeShipping ? 0 : (shippingOpt?.price ?? 0);
+  const subtotalNet = orderLines.reduce((s, it) => s + it.unitNet * it.qty, 0);
+  const hudyFreeShipping = isHudy && hudyHasFreeShipping(subtotalNet);
+  const freeShipping = (isPartner && profile?.free_shipping === true) || hudyFreeShipping;
+  /** Cena možnosti dopravy pro tohoto zákazníka (před dopravou zdarma). */
+  const optionPrice = (o: { price: number }) => (isHudy ? hudyOptionPrice(o.price) : o.price);
+  const baseShippingPrice = shippingOpt ? optionPrice(shippingOpt) : 0;
+  const shippingPrice = freeShipping ? 0 : baseShippingPrice;
+  /** Hudy smí objednat jen návleky – jiné zboží v košíku objednávku zablokuje. */
+  const hudyBlocked =
+    isHudy && cartItems.some((item) => getProductById(item.productId)?.category !== "outdoor");
   const paymentPrice = paymentOpt?.price ?? 0;
   const preDiscountGross = subtotalGross + shippingPrice + paymentPrice;
 
@@ -284,8 +301,8 @@ const Checkout = () => {
 
         subtotal_gross: subtotalGross,
         shipping_label: shippingOpt
-          ? freeShipping && shippingOpt.price > 0
-            ? `${shippingOpt.label} (zdarma – B2B)`
+          ? freeShipping && baseShippingPrice > 0
+            ? `${shippingOpt.label} (zdarma – ${hudyFreeShipping ? "HUDY nad 10 000 Kč" : "B2B"})`
             : shippingOpt.label
           : null,
         shipping_gross: shippingPrice,
@@ -506,13 +523,21 @@ const Checkout = () => {
               {freeShipping && (
                 <div className="mb-4 p-3 rounded-lg bg-primary/10 border border-primary/30 text-sm font-body text-primary font-semibold flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4" />
-                  Doprava zdarma (B2B Partner) — všechny způsoby dopravy máte za 0 Kč.
+                  {hudyFreeShipping
+                    ? "Doprava zdarma — objednávka je nad 10 000 Kč bez DPH."
+                    : "Doprava zdarma (B2B Partner) — všechny způsoby dopravy máte za 0 Kč."}
+                </div>
+              )}
+              {isHudy && !freeShipping && (
+                <div className="mb-4 p-3 rounded-lg bg-muted border border-border text-sm font-body text-foreground">
+                  Doprava {fmtCZK(HUDY_SHIPPING_PRICE)}. Do dopravy zdarma chybí{" "}
+                  <strong>{fmtCZK(hudyMissingForFreeShipping(subtotalNet))} bez DPH</strong>.
                 </div>
               )}
               <div className="space-y-3">
                 {SHIPPING_OPTIONS.map((opt) => {
-                  const effectivePrice = freeShipping ? 0 : opt.price;
-                  const wasFree = freeShipping && opt.price > 0;
+                  const effectivePrice = freeShipping ? 0 : optionPrice(opt);
+                  const wasFree = freeShipping && optionPrice(opt) > 0;
                   return (
                     <label
                       key={opt.id}
@@ -544,7 +569,7 @@ const Checkout = () => {
                             Zdarma
                             {wasFree && (
                               <span className="ml-1.5 text-xs text-muted-foreground line-through font-normal">
-                                {fmtCZK(opt.price)}
+                                {fmtCZK(optionPrice(opt))}
                               </span>
                             )}
                           </span>
@@ -707,6 +732,11 @@ const Checkout = () => {
                     Pro dokončení vyberte způsob dopravy a platby.
                   </p>
                 )}
+                {hudyBlocked && (
+                  <p className="text-xs text-destructive font-body">
+                    Pro síť HUDY jsou v B2B jen návleky. Odeberte prosím z košíku ostatní zboží.
+                  </p>
+                )}
                 {isPartner && !b2bFieldsOk && (
                   <p className="text-xs text-destructive font-body">
                     Vyplňte název firmy a IČO pro fakturu.
@@ -756,6 +786,7 @@ const Checkout = () => {
                     orderLines.length === 0 ||
                     (shipping === "zasilkovna" && !packetaPoint) ||
                     !b2bFieldsOk ||
+                    hudyBlocked ||
                     !emailOk
                   }
                   className="w-full h-16 text-base md:text-lg font-extrabold rounded-full tracking-wide gap-2 px-4 text-center bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed"

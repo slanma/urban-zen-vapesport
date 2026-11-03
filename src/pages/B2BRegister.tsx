@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, UserPlus, Loader2, CheckCircle } from "lucide-react";
 import { registerB2B } from "@/lib/b2bRegistration";
+import { isHudyEmail } from "@/lib/hudy";
 
 const B2BRegister = () => {
   const navigate = useNavigate();
@@ -104,14 +105,23 @@ const B2BRegister = () => {
           <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-4">
             Registrace dokončena!
           </h1>
-          <p className="text-lg text-muted-foreground mb-2">
-            Vaše žádost o B2B partnerský účet byla odeslána ke schválení.
-          </p>
-          <p className="text-base text-muted-foreground mb-8">
-            O schválení vás budeme informovat na e-mail <strong className="text-foreground">{form.email}</strong>.
-          </p>
+          {isHudyEmail(form.email) ? (
+            <p className="text-lg text-muted-foreground mb-8">
+              Účet prodejny HUDY sport je rovnou aktivní. Přihlaste se e-mailem{" "}
+              <strong className="text-foreground">{form.email}</strong> a heslem, které jste právě zadali.
+            </p>
+          ) : (
+            <>
+              <p className="text-lg text-muted-foreground mb-2">
+                Vaše žádost o B2B partnerský účet byla odeslána ke schválení.
+              </p>
+              <p className="text-base text-muted-foreground mb-8">
+                O schválení vás budeme informovat na e-mail <strong className="text-foreground">{form.email}</strong>.
+              </p>
+            </>
+          )}
           <Button size="lg" className="h-14 text-lg font-bold" onClick={() => navigate("/b2b-login")}>
-            Zpět na přihlášení
+            {isHudyEmail(form.email) ? "Přihlásit se" : "Zpět na přihlášení"}
           </Button>
         </section>
       </main>

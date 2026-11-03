@@ -17,7 +17,7 @@ import {
   type Hotspot,
 } from "@/data/productHotspots";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
-import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { useB2BPartner, isHudyProfile } from "@/hooks/useB2BPartner";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { useDiscounts } from "@/hooks/usePromoCode";
 import { buildDiscountLine } from "@/lib/discounts";
@@ -156,6 +156,8 @@ const B2BDashboard = () => {
   const { get: getOverride } = useProductOverrides();
   const { profile: b2bProfile } = useB2BPartner();
   const discount = b2bProfile?.discount_percent ?? 0;
+  /** Síť HUDY sport vidí v B2B jen návleky. */
+  const isHudy = isHudyProfile(b2bProfile);
 
   /**
    * VOC unit price (net) for a product respecting admin overrides and the
@@ -175,6 +177,7 @@ const B2BDashboard = () => {
   );
 
   const visibleProducts = useMemo(() => {
+    if (isHudy) return outdoorProductsList;
     const base =
       activeHotspot === "All"
         ? products
@@ -191,7 +194,7 @@ const B2BDashboard = () => {
       const bm = b.category === "morseo-evo" ? 0 : 1;
       return am - bm;
     });
-  }, [activeHotspot, outdoorProductsList]);
+  }, [activeHotspot, outdoorProductsList, isHudy]);
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -369,10 +372,16 @@ const B2BDashboard = () => {
             <p className="text-lg text-muted-foreground">
               Vyberte produkty a zadejte množství.&nbsp;
             </p>
+            {isHudy && (
+              <p className="mt-3 inline-block rounded-md bg-primary/10 text-foreground text-base px-4 py-2">
+                Ceník pro síť <strong>HUDY sport</strong>: sleva {discount} % je už v cenách.
+                Doprava 180 Kč, od 10 000 Kč bez DPH zdarma.
+              </p>
+            )}
           </header>
 
-          {/* Interactive e-bike filter */}
-          <section
+          {/* Interactive e-bike filter – Hudy ho nevidí, mají jen návleky */}
+          {!isHudy && (<section
             aria-label="Filtrace produktů podle umístění na elektrokole"
             className="mb-8 bg-background border border-border rounded-lg p-4 md:p-6"
           >
@@ -550,7 +559,7 @@ const B2BDashboard = () => {
                 </p>
               </div>
             </div>
-          </section>
+          </section>)}
 
 
           <div className="bg-background border border-border rounded-lg overflow-hidden">
@@ -601,6 +610,14 @@ const B2BDashboard = () => {
                             <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
                               VOC {fmtCZK(getUnitNet(product.id))} bez DPH
                             </span>
+                            {isHudy && discount > 0 && (() => {
+                              const base = getEffectiveUnitPricing(product, override, true, 0).unitNet;
+                              return (
+                                <span className="text-[11px] text-muted-foreground">
+                                  <span className="line-through">{fmtCZK(base)}</span> · sleva HUDY −{discount} %
+                                </span>
+                              );
+                            })()}
                           </div>
                         </TableCell>
                         <TableCell>

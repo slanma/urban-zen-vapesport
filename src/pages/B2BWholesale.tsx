@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
-import { useB2BPartner } from "@/hooks/useB2BPartner";
+import { useB2BPartner, isHudyProfile } from "@/hooks/useB2BPartner";
 import { useProductOverrides, type ProductOverride } from "@/hooks/useProductOverrides";
 import { useCart } from "@/hooks/useCart";
 import { products, type Product } from "@/data/products";
@@ -58,6 +58,14 @@ const B2BWholesale = () => {
   /** key = baseId::color → qty */
   const [qtyState, setQtyState] = useState<Record<string, number>>({});
   const rowRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  /** Síť HUDY sport vidí v B2B jen návleky – sekce brašen se jim nezobrazí. */
+  const isHudy = isHudyProfile(profile);
+  useEffect(() => {
+    if (isHudy) {
+      setSection("outdoor");
+      setActiveHotspot(null);
+    }
+  }, [isHudy]);
 
   useEffect(() => {
     if (authLoading || partnerLoading) return;
@@ -103,11 +111,11 @@ const B2BWholesale = () => {
 
   const filteredRows = useMemo(() => {
     /* Outdoor sekce se filtrem podle kola neřídí — návlek nemá pozici na kole. */
-    if (section === "outdoor") return outdoorRows;
+    if (isHudy || section === "outdoor") return outdoorRows;
     if (!activeHotspot) return bagRows;
     const ids = hotspotIdsByHotspot[activeHotspot] ?? new Set<string>();
     return bagRows.filter((r) => ids.has(r.baseId));
-  }, [bagRows, outdoorRows, section, activeHotspot, hotspotIdsByHotspot]);
+  }, [bagRows, outdoorRows, section, activeHotspot, hotspotIdsByHotspot, isHudy]);
 
   const getQty = (baseId: string, color: string) => qtyState[`${baseId}::${color}`] ?? 0;
   const setQty = (baseId: string, color: string, q: number) =>
@@ -235,7 +243,7 @@ const B2BWholesale = () => {
           {([
             { id: "brasny", label: "Brašny", count: bagRows.length },
             { id: "outdoor", label: "Outdoor — návleky", count: outdoorRows.length },
-          ] as const).map((t) => (
+          ] as const).filter((t) => !isHudy || t.id === "outdoor").map((t) => (
             <button
               key={t.id}
               type="button"
@@ -260,7 +268,7 @@ const B2BWholesale = () => {
         </div>
 
         {/* Shared interactive bike guide (B2B mode) — jen u brašen */}
-        {section === "brasny" && (
+        {!isHudy && section === "brasny" && (
         <section className="bg-background border border-border rounded-xl p-5">
           <InteractiveBikeGuide
             mode="b2b"

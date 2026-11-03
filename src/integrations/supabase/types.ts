@@ -38,6 +38,7 @@ export type Database = {
           obrat_2025: number | null
           obrat_2026: number | null
           phone: string
+          segment: string | null
           status: Database["public"]["Enums"]["b2b_status"]
           updated_at: string
           user_id: string
@@ -66,6 +67,7 @@ export type Database = {
           obrat_2025?: number | null
           obrat_2026?: number | null
           phone: string
+          segment?: string | null
           status?: Database["public"]["Enums"]["b2b_status"]
           updated_at?: string
           user_id: string
@@ -94,6 +96,7 @@ export type Database = {
           obrat_2025?: number | null
           obrat_2026?: number | null
           phone?: string
+          segment?: string | null
           status?: Database["public"]["Enums"]["b2b_status"]
           updated_at?: string
           user_id?: string

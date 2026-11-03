@@ -23,7 +23,11 @@ export interface B2BProfile {
   delivery_zip: string | null;
   delivery_contact: string | null;
   delivery_phone: string | null;
+  /** Skupina partnera, např. "hudy" – Hudy vidí jen návleky. */
+  segment: string | null;
 }
+
+export { isHudyProfile } from "@/lib/hudy";
 
 /**
  * Returns true only for authenticated users that have an APPROVED
@@ -51,7 +55,7 @@ export const useB2BPartner = () => {
       }
       const { data } = await supabase
         .from("b2b_profiles")
-        .select("user_id,company_name,ico,dic,contact_person,phone,address,city,zip,discount_percent,free_shipping,obrat_2025,obrat_2026,invoice_email,delivery_same,delivery_company,delivery_address,delivery_city,delivery_zip,delivery_contact,delivery_phone,status")
+        .select("user_id,company_name,ico,dic,contact_person,phone,address,city,zip,discount_percent,free_shipping,obrat_2025,obrat_2026,invoice_email,delivery_same,delivery_company,delivery_address,delivery_city,delivery_zip,delivery_contact,delivery_phone,segment,status")
         .eq("user_id", user.id)
         .maybeSingle();
       const approved = data?.status === "approved";
