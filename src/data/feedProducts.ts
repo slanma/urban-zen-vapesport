@@ -2273,7 +2273,7 @@ export const feedProducts: Product[] = [
     "category": "vapesport",
     "categoryLabel": "BRAŠNY NA KOLO",
     "price": 2500,
-    "shortDescription": "Brašna na míru pro váš rám. Společně projdeme krátkou konzultaci a dodáte přesné rozměry – my připravíme návrh a výrobu. Cena od 2 500 Kč. O…",
+    "shortDescription": "Brašna na míru pro váš rám. Vyberte si umístění, barvu, zip a výbavu, pošlete rozměry a my připravíme návrh a výrobu. Cena od 2 500 Kč, konečnou potvrdíme po konzultaci.",
     "problem": "Váš rám má atypický tvar a žádná sériová brašna na něj přesně nesedne.",
     "funkce": "Brašna vyrobená na míru vašemu rámu — po krátké konzultaci a zaslání rozměrů připravíme návrh a výrobu. Cena od 2 500 Kč.",
     "pouziti": "Pro atypické rámy a specifické požadavky, kde potřebujete přesné padnutí.",
