@@ -7,6 +7,7 @@ import { fmtCZK } from "@/lib/vat";
 import { resolveColor } from "@/lib/colorPalette";
 import { feedProducts } from "@/data/feedProducts";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
+import { grossFromNet } from "@/lib/vat";
 import { DataTableToolbar, type ChipFilter } from "@/components/admin/DataTableToolbar";
 import { DataTablePagination } from "@/components/admin/DataTablePagination";
 import { toast } from "sonner";
@@ -83,6 +84,8 @@ interface StoredOrderItem {
   qty: number | string;
   unit_gross?: number | string;
   unitGross?: number | string;
+  /** B2B pokladna (/b2b-pokladna) ukládá cenu za kus BEZ DPH do unit_price. */
+  unit_price?: number | string;
   color?: string | null;
 }
 
@@ -250,6 +253,10 @@ const AdminOrders = () => {
       }
       // Cena: použij uloženou; když je 0 (staré testovací objednávky), dopočítej z produktu.
       let unitGross = Number(it.unit_gross ?? it.unitGross ?? 0);
+      // Objednávky z rychlé B2B objednávky mají jen unit_price (bez DPH) – dopočítáme s DPH.
+      if (!unitGross && it.unit_price != null && Number(it.unit_price) > 0) {
+        unitGross = grossFromNet(Number(it.unit_price));
+      }
       if (!unitGross) {
         const prod = productByName.get(normName(baseName));
         if (prod) unitGross = getEffectiveUnitPricing(prod, null, isB2B, 0).unitGross;
