@@ -111,6 +111,22 @@ export default async function handler(req: any, res: any) {
       return res.status(401).json({ error: "Přístup jen pro administrátora." });
     }
 
+    // Hudy: seznam prodejen ze skupiny „hudy“ v newsletteru, které ještě
+    // nemají B2B účet. Admin je pak zakládá po jedné (viz AdminB2BNovy).
+    if (body.action === "hudy_pending") {
+      const nc = await fetch(
+        `${SUPABASE_URL}/rest/v1/newsletter_contacts?segment=eq.hudy&unsubscribed=is.false&bounced=is.false&select=email,company_name,city,address,zip,phone&order=company_name.asc`,
+        { headers: svcHeaders }
+      );
+      if (!nc.ok) return res.status(500).json({ error: "Seznam Hudy se nepodařilo načíst: " + (await nc.text()) });
+      const contacts: any[] = await nc.json();
+      const pr = await fetch(`${SUPABASE_URL}/rest/v1/b2b_profiles?select=invoice_email`, { headers: svcHeaders });
+      const profiles: any[] = pr.ok ? await pr.json() : [];
+      const have = new Set(profiles.map((p) => String(p.invoice_email || "").toLowerCase()).filter(Boolean));
+      const pending = contacts.filter((c) => c.email && !have.has(String(c.email).toLowerCase()));
+      return res.status(200).json({ ok: true, pending });
+    }
+
     const email = String(body.invoice_email || "").trim().toLowerCase();
     const company = String(body.company_name || "").trim();
 

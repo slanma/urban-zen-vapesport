@@ -18,6 +18,8 @@ import {
 } from "@/data/productHotspots";
 import { useProductOverrides } from "@/hooks/useProductOverrides";
 import { useB2BPartner, isHudyProfile } from "@/hooks/useB2BPartner";
+import { hudyNeedsBilling } from "@/lib/hudy";
+import HudyFakturaceGate from "@/components/HudyFakturaceGate";
 import { getEffectiveUnitPricing } from "@/lib/pricing";
 import { useDiscounts } from "@/hooks/usePromoCode";
 import { buildDiscountLine } from "@/lib/discounts";
@@ -334,6 +336,14 @@ const B2BDashboard = () => {
             Zpět na přihlášení
           </Button>
         </section>
+      </main>
+    );
+  }
+
+  if (isHudy && b2bProfile && hudyNeedsBilling(b2bProfile)) {
+    return (
+      <main className="min-h-screen bg-secondary px-4 py-10">
+        <HudyFakturaceGate profile={b2bProfile} />
       </main>
     );
   }

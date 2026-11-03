@@ -35,3 +35,17 @@ export const isHudyEmail = (email: string): boolean => {
   const e = email.trim().toLowerCase();
   return HUDY_EMAIL_DOMAINS.some((d) => e.endsWith(d));
 };
+
+/**
+ * Hudy musí po nastavení hesla vyplnit fakturační údaje (firma, IČO,
+ * ulice, město, PSČ). Dokud je nemá, B2B katalog se jim neotevře.
+ */
+export const hudyNeedsBilling = (
+  p: { company_name?: string | null; ico?: string | null; address?: string | null; city?: string | null; zip?: string | null } | null | undefined,
+): boolean =>
+  !p ||
+  !(p.company_name ?? "").trim() ||
+  !(p.ico ?? "").trim() ||
+  !(p.address ?? "").trim() ||
+  !(p.city ?? "").trim() ||
+  !(p.zip ?? "").trim();

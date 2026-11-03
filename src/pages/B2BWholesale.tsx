@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useB2BPartner, isHudyProfile } from "@/hooks/useB2BPartner";
+import { hudyNeedsBilling } from "@/lib/hudy";
+import HudyFakturaceGate from "@/components/HudyFakturaceGate";
 import { useProductOverrides, type ProductOverride } from "@/hooks/useProductOverrides";
 import { useCart } from "@/hooks/useCart";
 import { products, type Product } from "@/data/products";
@@ -221,6 +223,14 @@ const B2BWholesale = () => {
     const sameKind = row.base.category === "outdoor" ? outdoorRows : bagRows;
     return sameKind.filter((r) => r.baseId !== row.baseId).slice(0, 4);
   };
+
+  if (isHudy && profile && hudyNeedsBilling(profile)) {
+    return (
+      <main className="min-h-screen bg-secondary px-4 py-10">
+        <HudyFakturaceGate profile={profile} />
+      </main>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-secondary">

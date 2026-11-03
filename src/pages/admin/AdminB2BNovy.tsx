@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import HudyBulkCreate from "@/components/admin/HudyBulkCreate";
 import { Loader2, UserPlus, AlertCircle, CheckCircle2, Copy } from "lucide-react";
 
 /**
@@ -122,6 +123,10 @@ const AdminB2BNovy = () => {
           Partnerovi přijde e-mail s odkazem, přes který si nastaví vlastní heslo.
         </p>
       </header>
+
+      <div className="mb-6">
+        <HudyBulkCreate />
+      </div>
 
       {result && (
         <div className="mb-6 rounded-md border border-primary/30 bg-primary/5 p-4">
